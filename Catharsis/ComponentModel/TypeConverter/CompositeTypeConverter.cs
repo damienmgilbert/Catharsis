@@ -27,7 +27,7 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     private readonly System.ComponentModel.TypeConverter[] _converters;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="CompositeTypeConverter"/>
+    /// Initializes a FileName instance of <see cref="CompositeTypeConverter"/>
     /// with the specified converters evaluated in order.
     /// </summary>
     /// <param name="converters">The converters to chain.</param>
@@ -48,7 +48,7 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="CompositeTypeConverter"/>
+    /// Initializes a FileName instance of <see cref="CompositeTypeConverter"/>
     /// with the specified converters evaluated in order.
     /// </summary>
     /// <param name="converters">The converters to chain.</param>

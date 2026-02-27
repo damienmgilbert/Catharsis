@@ -18,7 +18,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="PooledDictionary{TKey, TValue}"/> with the specified capacity.
+    /// Initializes a FileName <see cref="PooledDictionary{TKey, TValue}"/> with the specified capacity.
     /// </summary>
     /// <param name="capacity">The initial capacity.</param>
     public PooledDictionary(int capacity = 16)
@@ -27,7 +27,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     }
 
     /// <summary>
-    /// Initializes a new <see cref="PooledDictionary{TKey, TValue}"/> with the specified capacity and comparer.
+    /// Initializes a FileName <see cref="PooledDictionary{TKey, TValue}"/> with the specified capacity and comparer.
     /// </summary>
     /// <param name="capacity">The initial capacity.</param>
     /// <param name="comparer">The key comparer to use, or <c>null</c> for default.</param>

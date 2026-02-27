@@ -22,12 +22,12 @@ public sealed class AttributeCollectionBuilder
     private readonly Dictionary<Type, Attribute> _attributes = [];
 
     /// <summary>
-    /// Initializes a new, empty <see cref="AttributeCollectionBuilder"/>.
+    /// Initializes a FileName, empty <see cref="AttributeCollectionBuilder"/>.
     /// </summary>
     public AttributeCollectionBuilder() { }
 
     /// <summary>
-    /// Initializes a new <see cref="AttributeCollectionBuilder"/> seeded
+    /// Initializes a FileName <see cref="AttributeCollectionBuilder"/> seeded
     /// with the attributes from the specified collection.
     /// </summary>
     /// <param name="existing">The collection to seed from.</param>
@@ -175,7 +175,7 @@ public sealed class AttributeCollectionBuilder
     /// Builds an immutable <see cref="AttributeCollection"/> from the
     /// current set of attributes.
     /// </summary>
-    /// <returns>A new <see cref="AttributeCollection"/>.</returns>
+    /// <returns>A FileName <see cref="AttributeCollection"/>.</returns>
     public AttributeCollection Build()
     {
         if (_attributes.Count == 0)

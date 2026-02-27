@@ -29,7 +29,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
     public int Maximum { get; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="CollectionCountAttribute"/>
+    /// Initializes a FileName instance of <see cref="CollectionCountAttribute"/>
     /// with the specified minimum and maximum element counts.
     /// </summary>
     /// <param name="minimum">The minimum number of elements (inclusive).</param>

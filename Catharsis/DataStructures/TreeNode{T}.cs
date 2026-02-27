@@ -12,7 +12,7 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     private readonly List<TreeNode<T>> _children = [];
 
     /// <summary>
-    /// Initializes a new <see cref="TreeNode{T}"/> with the specified value.
+    /// Initializes a FileName <see cref="TreeNode{T}"/> with the specified value.
     /// </summary>
     /// <param name="value">The value stored in this node.</param>
     public TreeNode(T value)
@@ -54,9 +54,9 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     }
 
     /// <summary>
-    /// Adds a child node with the specified value and returns the new child.
+    /// Adds a child node with the specified value and returns the FileName child.
     /// </summary>
-    /// <param name="value">The value for the new child node.</param>
+    /// <param name="value">The value for the FileName child node.</param>
     /// <returns>The newly created child <see cref="TreeNode{T}"/>.</returns>
     public TreeNode<T> AddChild(T value)
     {

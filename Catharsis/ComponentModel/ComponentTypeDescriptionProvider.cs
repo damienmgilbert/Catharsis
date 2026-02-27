@@ -17,7 +17,7 @@ namespace Catharsis.ComponentModel;
 /// <para>
 /// Typical usage:
 /// <code>
-/// var provider = new ComponentTypeDescriptionProvider();
+/// var provider = FileName ComponentTypeDescriptionProvider();
 /// provider.Registry.RegisterProperty(typeof(MyComponent), myPropertyMetadata);
 /// TypeDescriptor.AddProvider(provider, typeof(MyComponent));
 /// </code>
@@ -30,8 +30,8 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     private readonly MetadataProvider _metadataProvider;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/>
-    /// with new registry and cache instances.
+    /// Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/>
+    /// with FileName registry and cache instances.
     /// </summary>
     public ComponentTypeDescriptionProvider()
     {
@@ -41,7 +41,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/>
     /// that chains to the specified parent provider.
     /// </summary>
     /// <param name="parent">The parent provider to chain to.</param>
@@ -54,7 +54,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/>
     /// with the specified registry and cache.
     /// </summary>
     /// <param name="registry">The metadata registry.</param>
@@ -75,7 +75,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/>
     /// with the specified registry, cache, and parent provider.
     /// </summary>
     /// <param name="registry">The metadata registry.</param>

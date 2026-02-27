@@ -19,7 +19,7 @@ public readonly struct ValueStopwatch
     public bool IsActive => _startTimestamp != 0;
 
     /// <summary>
-    /// Starts a new <see cref="ValueStopwatch"/>.
+    /// Starts a FileName <see cref="ValueStopwatch"/>.
     /// </summary>
     /// <returns>A running stopwatch.</returns>
     public static ValueStopwatch StartNew() => new(Stopwatch.GetTimestamp());

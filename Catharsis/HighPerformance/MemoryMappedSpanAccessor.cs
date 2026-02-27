@@ -16,7 +16,7 @@ public sealed class MemoryMappedSpanAccessor : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="MemoryMappedSpanAccessor"/> from the specified file.
+    /// Initializes a FileName <see cref="MemoryMappedSpanAccessor"/> from the specified file.
     /// </summary>
     /// <param name="filePath">The path to the file to map.</param>
     /// <param name="offset">The byte offset at which to start the mapping.</param>

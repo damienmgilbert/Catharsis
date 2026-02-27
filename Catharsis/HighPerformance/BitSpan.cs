@@ -14,7 +14,7 @@ public ref struct BitSpan
     private readonly int _bitLength;
 
     /// <summary>
-    /// Initializes a new <see cref="BitSpan"/> over the specified byte span.
+    /// Initializes a FileName <see cref="BitSpan"/> over the specified byte span.
     /// </summary>
     /// <param name="storage">The underlying byte storage.</param>
     /// <param name="bitCount">The number of bits to expose (must be ≤ storage.Length * 8).</param>

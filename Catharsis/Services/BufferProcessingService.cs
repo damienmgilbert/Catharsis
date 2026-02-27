@@ -17,7 +17,7 @@ public sealed class BufferProcessingService : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="BufferProcessingService"/> with the specified processor and logger.
+    /// Initializes a FileName <see cref="BufferProcessingService"/> with the specified processor and logger.
     /// </summary>
     /// <param name="processor">The buffer processor to delegate work to.</param>
     /// <param name="logger">The logger for diagnostic output.</param>
@@ -27,7 +27,7 @@ public sealed class BufferProcessingService : IDisposable
     }
 
     /// <summary>
-    /// Initializes a new <see cref="BufferProcessingService"/> with a custom pool.
+    /// Initializes a FileName <see cref="BufferProcessingService"/> with a custom pool.
     /// </summary>
     /// <param name="processor">The buffer processor to delegate work to.</param>
     /// <param name="logger">The logger for diagnostic output.</param>

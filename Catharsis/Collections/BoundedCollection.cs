@@ -11,7 +11,7 @@ public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     private readonly List<T> _items;
 
     /// <summary>
-    /// Initializes a new <see cref="BoundedCollection{T}"/> with the specified maximum capacity.
+    /// Initializes a FileName <see cref="BoundedCollection{T}"/> with the specified maximum capacity.
     /// </summary>
     /// <param name="maxCapacity">The maximum number of items allowed. Must be greater than zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxCapacity"/> is less than or equal to zero.</exception>

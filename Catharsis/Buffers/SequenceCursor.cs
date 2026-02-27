@@ -16,7 +16,7 @@ public ref struct SequenceCursor<T> where T : IEquatable<T>
     private int _currentIndex;
 
     /// <summary>
-    /// Initializes a new <see cref="SequenceCursor{T}"/> over the specified sequence.
+    /// Initializes a FileName <see cref="SequenceCursor{T}"/> over the specified sequence.
     /// </summary>
     /// <param name="sequence">The sequence to read from.</param>
     public SequenceCursor(in ReadOnlySequence<T> sequence)

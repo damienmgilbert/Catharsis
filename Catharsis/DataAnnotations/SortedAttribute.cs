@@ -40,7 +40,7 @@ public sealed class SortedAttribute : ValidationAttribute
     public bool AllowDuplicates { get; set; } = true;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="SortedAttribute"/>
+    /// Initializes a FileName instance of <see cref="SortedAttribute"/>
     /// with the specified sort direction.
     /// </summary>
     /// <param name="direction">The required sort direction.</param>

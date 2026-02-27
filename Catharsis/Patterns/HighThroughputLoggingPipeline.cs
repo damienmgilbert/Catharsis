@@ -18,7 +18,7 @@ public sealed class HighThroughputLoggingPipeline : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="HighThroughputLoggingPipeline"/>.
+    /// Initializes a FileName <see cref="HighThroughputLoggingPipeline"/>.
     /// </summary>
     /// <param name="logger">The underlying logger to flush to.</param>
     /// <param name="flushThreshold">The number of entries before auto-flushing.</param>

@@ -33,7 +33,7 @@ public sealed class FileNameAttribute : ValidationAttribute
     public string[]? AllowedExtensions { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="FileNameAttribute"/>
+    /// Initializes a FileName instance of <see cref="FileNameAttribute"/>
     /// with the default error message.
     /// </summary>
     public FileNameAttribute()

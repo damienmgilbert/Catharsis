@@ -27,7 +27,7 @@ public sealed class ComponentContainer : IContainer, IServiceProvider
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentContainer"/>.
+    /// Initializes a FileName instance of <see cref="ComponentContainer"/>.
     /// </summary>
     /// <param name="designMode">
     /// <c>true</c> to indicate components are in design mode; otherwise, <c>false</c>.

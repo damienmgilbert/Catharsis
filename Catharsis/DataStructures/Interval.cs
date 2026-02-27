@@ -7,7 +7,7 @@ namespace Catharsis.DataStructures;
 public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparable<T>
 {
     /// <summary>
-    /// Initializes a new <see cref="Interval{T}"/> with the specified bounds.
+    /// Initializes a FileName <see cref="Interval{T}"/> with the specified bounds.
     /// If <paramref name="start"/> is greater than <paramref name="end"/>, the values are swapped
     /// so the interval is always well-formed.
     /// </summary>
@@ -76,7 +76,7 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     /// Returns the smallest interval that covers both this interval and <paramref name="other"/>.
     /// </summary>
     /// <param name="other">The other interval.</param>
-    /// <returns>A new interval spanning both intervals.</returns>
+    /// <returns>A FileName interval spanning both intervals.</returns>
     public Interval<T> Union(Interval<T> other)
     {
         T newStart = Start.CompareTo(other.Start) <= 0 ? Start : other.Start;

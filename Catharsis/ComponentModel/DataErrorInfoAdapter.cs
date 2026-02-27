@@ -13,7 +13,7 @@ public sealed class DataErrorInfoAdapter : IDataErrorInfo
     private readonly INotifyDataErrorInfo _source;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DataErrorInfoAdapter"/>
+    /// Initializes a FileName instance of <see cref="DataErrorInfoAdapter"/>
     /// wrapping the specified <see cref="INotifyDataErrorInfo"/> source.
     /// </summary>
     /// <param name="source">The validation source to adapt.</param>

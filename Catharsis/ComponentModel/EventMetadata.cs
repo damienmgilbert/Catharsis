@@ -15,7 +15,7 @@ namespace Catharsis.ComponentModel;
 public sealed class EventMetadata
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="EventMetadata"/>.
+    /// Initializes a FileName instance of <see cref="EventMetadata"/>.
     /// </summary>
     /// <param name="name">The event name.</param>
     /// <param name="eventType">The delegate type of the event handler.</param>

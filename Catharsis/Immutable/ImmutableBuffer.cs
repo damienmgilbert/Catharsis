@@ -14,7 +14,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     private readonly ImmutableArray<T> _data;
 
     /// <summary>
-    /// Initializes a new <see cref="ImmutableBuffer{T}"/> from the specified immutable array.
+    /// Initializes a FileName <see cref="ImmutableBuffer{T}"/> from the specified immutable array.
     /// </summary>
     /// <param name="data">The immutable array backing this buffer.</param>
     public ImmutableBuffer(ImmutableArray<T> data)
@@ -23,7 +23,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     }
 
     /// <summary>
-    /// Initializes a new <see cref="ImmutableBuffer{T}"/> from the specified span by copying the data.
+    /// Initializes a FileName <see cref="ImmutableBuffer{T}"/> from the specified span by copying the data.
     /// </summary>
     /// <param name="data">The source span to copy from.</param>
     public ImmutableBuffer(ReadOnlySpan<T> data)
@@ -60,11 +60,11 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     public ReadOnlyMemory<T> Memory => _data.AsMemory();
 
     /// <summary>
-    /// Returns a new buffer containing a slice of this buffer.
+    /// Returns a FileName buffer containing a slice of this buffer.
     /// </summary>
     /// <param name="start">The start index.</param>
     /// <param name="length">The number of elements.</param>
-    /// <returns>A new immutable buffer with the sliced data.</returns>
+    /// <returns>A FileName immutable buffer with the sliced data.</returns>
     public ImmutableBuffer<T> Slice(int start, int length)
     {
         Guard.IsGreaterThanOrEqualTo(start, 0);
@@ -78,7 +78,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     /// Creates an <see cref="ImmutableBuffer{T}"/> from a span.
     /// </summary>
     /// <param name="data">The source data.</param>
-    /// <returns>A new immutable buffer.</returns>
+    /// <returns>A FileName immutable buffer.</returns>
     public static ImmutableBuffer<T> Create(ReadOnlySpan<T> data) => new(data);
 
     /// <inheritdoc />

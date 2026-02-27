@@ -26,7 +26,7 @@ public static class DictionaryExtensions
     }
 
     /// <summary>
-    /// Adds or updates the entry for <paramref name="key"/> using a factory for new values and an updater for existing values.
+    /// Adds or updates the entry for <paramref name="key"/> using a factory for FileName values and an updater for existing values.
     /// </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
@@ -34,7 +34,7 @@ public static class DictionaryExtensions
     /// <param name="key">The key to add or update.</param>
     /// <param name="addFactory">A function that produces the value when the key does not exist.</param>
     /// <param name="updateFactory">A function that produces the updated value given the existing value when the key already exists.</param>
-    /// <returns>The new or updated value.</returns>
+    /// <returns>The FileName or updated value.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="addFactory"/>, or <paramref name="updateFactory"/> is <c>null</c>.</exception>
     public static TValue AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> addFactory, Func<TKey, TValue, TValue> updateFactory)
     {
@@ -133,7 +133,7 @@ public static class DictionaryExtensions
     /// <typeparam name="TValue">The value type.</typeparam>
     /// <param name="source">The target dictionary.</param>
     /// <param name="key">The key whose value to replace.</param>
-    /// <param name="newValue">The new value.</param>
+    /// <param name="newValue">The FileName value.</param>
     /// <returns><c>true</c> if the key was found and replaced; otherwise <c>false</c>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static bool ReplaceValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue newValue)

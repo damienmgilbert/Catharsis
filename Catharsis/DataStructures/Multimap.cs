@@ -14,7 +14,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     private readonly Dictionary<TKey, List<TValue>> _map;
 
     /// <summary>
-    /// Initializes a new empty <see cref="Multimap{TKey, TValue}"/>
+    /// Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/>
     /// using the default key equality comparer.
     /// </summary>
     public Multimap()
@@ -23,7 +23,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     }
 
     /// <summary>
-    /// Initializes a new empty <see cref="Multimap{TKey, TValue}"/>
+    /// Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/>
     /// with the specified key equality comparer.
     /// </summary>
     /// <param name="comparer">The comparer used for key equality.</param>

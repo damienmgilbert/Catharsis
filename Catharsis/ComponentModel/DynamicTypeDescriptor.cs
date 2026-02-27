@@ -13,12 +13,12 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     private readonly List<PropertyDescriptor> _properties = [];
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DynamicTypeDescriptor"/>.
+    /// Initializes a FileName instance of <see cref="DynamicTypeDescriptor"/>.
     /// </summary>
     public DynamicTypeDescriptor() { }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DynamicTypeDescriptor"/>
+    /// Initializes a FileName instance of <see cref="DynamicTypeDescriptor"/>
     /// that delegates to the specified parent descriptor for defaults.
     /// </summary>
     /// <param name="parent">The parent type descriptor.</param>
@@ -112,7 +112,7 @@ public sealed class DictionaryPropertyDescriptor : PropertyDescriptor
     private readonly Type _propertyType;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DictionaryPropertyDescriptor"/>.
+    /// Initializes a FileName instance of <see cref="DictionaryPropertyDescriptor"/>.
     /// </summary>
     /// <param name="name">The property name.</param>
     /// <param name="propertyType">The type of the property value.</param>

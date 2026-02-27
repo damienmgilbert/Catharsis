@@ -16,7 +16,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="PooledStringBuilder"/> with the specified initial capacity.
+    /// Initializes a FileName <see cref="PooledStringBuilder"/> with the specified initial capacity.
     /// </summary>
     /// <param name="initialCapacity">The initial buffer capacity.</param>
     public PooledStringBuilder(int initialCapacity = 256)
@@ -25,7 +25,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     }
 
     /// <summary>
-    /// Initializes a new <see cref="PooledStringBuilder"/> with the specified pool and capacity.
+    /// Initializes a FileName <see cref="PooledStringBuilder"/> with the specified pool and capacity.
     /// </summary>
     /// <param name="pool">The array pool to rent from.</param>
     /// <param name="initialCapacity">The initial buffer capacity.</param>

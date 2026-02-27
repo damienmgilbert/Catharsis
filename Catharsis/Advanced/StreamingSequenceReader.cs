@@ -16,7 +16,7 @@ public sealed class StreamingSequenceReader : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="StreamingSequenceReader"/> with the specified buffer size.
+    /// Initializes a FileName <see cref="StreamingSequenceReader"/> with the specified buffer size.
     /// </summary>
     /// <param name="readBufferSize">The size of each read chunk.</param>
     public StreamingSequenceReader(int readBufferSize = 4096)
@@ -25,7 +25,7 @@ public sealed class StreamingSequenceReader : IDisposable
     }
 
     /// <summary>
-    /// Initializes a new <see cref="StreamingSequenceReader"/> with a specified pool and buffer size.
+    /// Initializes a FileName <see cref="StreamingSequenceReader"/> with a specified pool and buffer size.
     /// </summary>
     /// <param name="pool">The array pool to use.</param>
     /// <param name="readBufferSize">The size of each read chunk.</param>

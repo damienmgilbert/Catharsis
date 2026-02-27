@@ -18,7 +18,7 @@ public sealed class ImmutablePooledHybrid<T> : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="ImmutablePooledHybrid{T}"/>.
+    /// Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
     /// </summary>
     /// <param name="initialCapacity">The initial mutable buffer capacity.</param>
     public ImmutablePooledHybrid(int initialCapacity = 256)

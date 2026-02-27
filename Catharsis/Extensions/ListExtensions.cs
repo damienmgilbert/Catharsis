@@ -8,7 +8,7 @@ public static class ListExtensions
 {
     /// <summary>
     /// Replaces a range of elements in the list starting at <paramref name="index"/> with <paramref name="items"/>.
-    /// The existing elements in the range are removed and the new items are inserted in their place.
+    /// The existing elements in the range are removed and the FileName items are inserted in their place.
     /// </summary>
     /// <typeparam name="T">The element type.</typeparam>
     /// <param name="source">The target list.</param>

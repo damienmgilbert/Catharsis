@@ -13,7 +13,7 @@ public readonly struct SequenceSlice<T>
     private readonly ReadOnlySequence<T> _source;
 
     /// <summary>
-    /// Initializes a new <see cref="SequenceSlice{T}"/> over the specified sequence.
+    /// Initializes a FileName <see cref="SequenceSlice{T}"/> over the specified sequence.
     /// </summary>
     /// <param name="source">The source sequence.</param>
     public SequenceSlice(in ReadOnlySequence<T> source)
@@ -22,7 +22,7 @@ public readonly struct SequenceSlice<T>
     }
 
     /// <summary>
-    /// Initializes a new <see cref="SequenceSlice{T}"/> from a range of a source sequence.
+    /// Initializes a FileName <see cref="SequenceSlice{T}"/> from a range of a source sequence.
     /// </summary>
     /// <param name="source">The source sequence.</param>
     /// <param name="start">The start position.</param>
@@ -57,7 +57,7 @@ public readonly struct SequenceSlice<T>
     /// </summary>
     /// <param name="offset">The byte offset from the start.</param>
     /// <param name="length">The length of the sub-slice.</param>
-    /// <returns>A new <see cref="SequenceSlice{T}"/>.</returns>
+    /// <returns>A FileName <see cref="SequenceSlice{T}"/>.</returns>
     public SequenceSlice<T> Slice(long offset, long length)
     {
         Guard.IsGreaterThanOrEqualTo(offset, 0);
@@ -69,7 +69,7 @@ public readonly struct SequenceSlice<T>
     }
 
     /// <summary>
-    /// Copies the slice data to a new array.
+    /// Copies the slice data to a FileName array.
     /// </summary>
     /// <returns>An array containing all elements in the slice.</returns>
     public T[] ToArray()

@@ -18,7 +18,7 @@ public sealed class ComponentSite : ISite
     private readonly IServiceProvider? _serviceProvider;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentSite"/> binding
+    /// Initializes a FileName instance of <see cref="ComponentSite"/> binding
     /// the specified component to the given container.
     /// </summary>
     /// <param name="container">The container hosting the component.</param>

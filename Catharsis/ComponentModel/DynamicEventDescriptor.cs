@@ -11,7 +11,7 @@ namespace Catharsis.ComponentModel;
 /// <para>
 /// The add and remove delegates receive the component instance and the handler
 /// delegate to attach or detach. Use <see cref="WithMergedAttributes"/> to
-/// produce a new descriptor with additional attributes.
+/// produce a FileName descriptor with additional attributes.
 /// </para>
 /// </remarks>
 public sealed class DynamicEventDescriptor : EventDescriptor
@@ -22,7 +22,7 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     private readonly Type _componentType;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DynamicEventDescriptor"/>.
+    /// Initializes a FileName instance of <see cref="DynamicEventDescriptor"/>.
     /// </summary>
     /// <param name="name">The event name.</param>
     /// <param name="eventType">The delegate type of the event handler.</param>
@@ -55,7 +55,7 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DynamicEventDescriptor"/>
+    /// Initializes a FileName instance of <see cref="DynamicEventDescriptor"/>
     /// from <see cref="EventMetadata"/> and delegate handlers.
     /// </summary>
     /// <param name="metadata">The event metadata.</param>
@@ -110,11 +110,11 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     }
 
     /// <summary>
-    /// Creates a new <see cref="DynamicEventDescriptor"/> with the specified
+    /// Creates a FileName <see cref="DynamicEventDescriptor"/> with the specified
     /// attributes merged onto the existing attribute set.
     /// </summary>
     /// <param name="additionalAttributes">The attributes to merge.</param>
-    /// <returns>A new descriptor with the merged attributes.</returns>
+    /// <returns>A FileName descriptor with the merged attributes.</returns>
     public DynamicEventDescriptor WithMergedAttributes(params Attribute[] additionalAttributes)
     {
         var builder = new AttributeCollectionBuilder(Attributes)

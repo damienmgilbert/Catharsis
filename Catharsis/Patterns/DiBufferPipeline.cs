@@ -38,7 +38,7 @@ public static class DiBufferPipeline
         private readonly ILogger<PipelineRunner> _logger;
 
         /// <summary>
-        /// Initializes a new <see cref="PipelineRunner"/>.
+        /// Initializes a FileName <see cref="PipelineRunner"/>.
         /// </summary>
         /// <param name="processingService">The buffer processing service.</param>
         /// <param name="logger">The logger.</param>

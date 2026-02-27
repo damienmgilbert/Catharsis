@@ -16,7 +16,7 @@ public sealed class ChangeTokenBufferWatcher : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="ChangeTokenBufferWatcher"/> that monitors the specified notifier.
+    /// Initializes a FileName <see cref="ChangeTokenBufferWatcher"/> that monitors the specified notifier.
     /// </summary>
     /// <param name="notifier">The buffer change notifier to monitor.</param>
     /// <param name="onChange">The callback to invoke when a change is detected.</param>

@@ -27,7 +27,7 @@ public sealed class ComponentServiceProvider : IServiceProvider
     private readonly IServiceProvider? _parent;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentServiceProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentServiceProvider"/>
     /// with an optional parent provider for fallback resolution.
     /// </summary>
     /// <param name="parent">

@@ -105,7 +105,7 @@ public sealed class CompositeValidationResult
     private readonly IReadOnlyList<ValidationResult> _results;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="CompositeValidationResult"/>
+    /// Initializes a FileName instance of <see cref="CompositeValidationResult"/>
     /// with the collected validation results.
     /// </summary>
     /// <param name="results">The validation results.</param>

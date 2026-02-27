@@ -16,7 +16,7 @@ public class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>, IReadO
     private readonly HashSet<TElement> _elements;
 
     /// <summary>
-    /// Initializes a new empty <see cref="PriorityBucket{TElement, TPriority}"/>.
+    /// Initializes a FileName empty <see cref="PriorityBucket{TElement, TPriority}"/>.
     /// </summary>
     public PriorityBucket()
         : this(Comparer<TPriority>.Default)
@@ -24,7 +24,7 @@ public class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>, IReadO
     }
 
     /// <summary>
-    /// Initializes a new empty <see cref="PriorityBucket{TElement, TPriority}"/>
+    /// Initializes a FileName empty <see cref="PriorityBucket{TElement, TPriority}"/>
     /// with the specified priority comparer.
     /// </summary>
     /// <param name="comparer">The comparer used to order priorities.</param>

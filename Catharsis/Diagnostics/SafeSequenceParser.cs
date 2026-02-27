@@ -16,7 +16,7 @@ public sealed class SafeSequenceParser
     private int _failureCount;
 
     /// <summary>
-    /// Initializes a new <see cref="SafeSequenceParser"/> wrapping the specified parser.
+    /// Initializes a FileName <see cref="SafeSequenceParser"/> wrapping the specified parser.
     /// </summary>
     /// <param name="inner">The inner parser to wrap with safety checks.</param>
     /// <param name="mode">The validation mode to apply.</param>

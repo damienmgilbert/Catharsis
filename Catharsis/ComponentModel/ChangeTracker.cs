@@ -19,7 +19,7 @@ public sealed class ChangeTracker<T> : IRevertibleChangeTracking, INotifyPropert
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ChangeTracker{T}"/>
+    /// Initializes a FileName instance of <see cref="ChangeTracker{T}"/>
     /// with the specified initial value.
     /// </summary>
     /// <param name="initialValue">The initial (accepted) value.</param>
@@ -31,7 +31,7 @@ public sealed class ChangeTracker<T> : IRevertibleChangeTracking, INotifyPropert
 
     /// <summary>
     /// Gets or sets the current value. Setting this marks the tracker as changed
-    /// if the new value differs from the original.
+    /// if the FileName value differs from the original.
     /// </summary>
     public T Value
     {
@@ -56,7 +56,7 @@ public sealed class ChangeTracker<T> : IRevertibleChangeTracking, INotifyPropert
     public bool IsChanged => !EqualityComparer<T>.Default.Equals(_currentValue, _originalValue);
 
     /// <summary>
-    /// Accepts the current value as the new baseline, resetting <see cref="IsChanged"/> to <c>false</c>.
+    /// Accepts the current value as the FileName baseline, resetting <see cref="IsChanged"/> to <c>false</c>.
     /// </summary>
     public void AcceptChanges()
     {

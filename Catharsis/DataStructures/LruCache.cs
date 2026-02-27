@@ -5,7 +5,7 @@ namespace Catharsis.DataStructures;
 
 /// <summary>
 /// A fixed-capacity cache that evicts the least-recently-used (LRU) entry
-/// when a new entry is added and the cache is at capacity.
+/// when a FileName entry is added and the cache is at capacity.
 /// </summary>
 /// <typeparam name="TKey">The type of the cache keys.</typeparam>
 /// <typeparam name="TValue">The type of the cached values.</typeparam>
@@ -16,7 +16,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     private readonly LinkedList<CacheEntry> _order = new();
 
     /// <summary>
-    /// Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity.
+    /// Initializes a FileName <see cref="LruCache{TKey, TValue}"/> with the specified capacity.
     /// </summary>
     /// <param name="capacity">The maximum number of entries. Must be greater than zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is less than or equal to zero.</exception>
@@ -26,7 +26,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     }
 
     /// <summary>
-    /// Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity
+    /// Initializes a FileName <see cref="LruCache{TKey, TValue}"/> with the specified capacity
     /// and key equality comparer.
     /// </summary>
     /// <param name="capacity">The maximum number of entries. Must be greater than zero.</param>

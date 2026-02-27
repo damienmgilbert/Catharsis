@@ -35,7 +35,7 @@ public sealed class ConverterContext
     public static ConverterContext Invariant { get; } = new(CultureInfo.InvariantCulture);
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ConverterContext"/>.
+    /// Initializes a FileName instance of <see cref="ConverterContext"/>.
     /// </summary>
     /// <param name="culture">The culture to use for parsing and formatting.</param>
     /// <param name="format">An optional format string.</param>
@@ -115,10 +115,10 @@ public sealed class ConverterContext
     }
 
     /// <summary>
-    /// Creates a new context with the specified culture, preserving all other settings.
+    /// Creates a FileName context with the specified culture, preserving all other settings.
     /// </summary>
-    /// <param name="culture">The new culture.</param>
-    /// <returns>A new <see cref="ConverterContext"/> with the updated culture.</returns>
+    /// <param name="culture">The FileName culture.</param>
+    /// <returns>A FileName <see cref="ConverterContext"/> with the updated culture.</returns>
     public ConverterContext WithCulture(CultureInfo culture)
     {
         ArgumentNullException.ThrowIfNull(culture);
@@ -126,10 +126,10 @@ public sealed class ConverterContext
     }
 
     /// <summary>
-    /// Creates a new context with the specified format string, preserving all other settings.
+    /// Creates a FileName context with the specified format string, preserving all other settings.
     /// </summary>
-    /// <param name="format">The new format string, or <c>null</c>.</param>
-    /// <returns>A new <see cref="ConverterContext"/> with the updated format.</returns>
+    /// <param name="format">The FileName format string, or <c>null</c>.</param>
+    /// <returns>A FileName <see cref="ConverterContext"/> with the updated format.</returns>
     public ConverterContext WithFormat(string? format) =>
         new(Culture, format, IgnoreCase, AllowLeadingWhiteSpace, AllowTrailingWhiteSpace);
 }

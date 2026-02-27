@@ -15,7 +15,7 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     private readonly ImmutableArray<T> _data;
 
     /// <summary>
-    /// Initializes a new <see cref="ImmutableSequence{T}"/> from the specified data.
+    /// Initializes a FileName <see cref="ImmutableSequence{T}"/> from the specified data.
     /// </summary>
     /// <param name="data">The immutable array backing this sequence.</param>
     public ImmutableSequence(ImmutableArray<T> data)
@@ -48,7 +48,7 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     /// by copying the data into an immutable array.
     /// </summary>
     /// <param name="sequence">The source sequence.</param>
-    /// <returns>A new immutable sequence.</returns>
+    /// <returns>A FileName immutable sequence.</returns>
     public static ImmutableSequence<T> CreateFrom(in ReadOnlySequence<T> sequence)
     {
         if (sequence.IsEmpty)
@@ -70,7 +70,7 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     /// Creates an <see cref="ImmutableSequence{T}"/> from a span.
     /// </summary>
     /// <param name="data">The source data.</param>
-    /// <returns>A new immutable sequence.</returns>
+    /// <returns>A FileName immutable sequence.</returns>
     public static ImmutableSequence<T> Create(ReadOnlySpan<T> data)
     {
         if (data.IsEmpty)
@@ -80,18 +80,18 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     }
 
     /// <summary>
-    /// Returns a new sequence with the specified element appended.
+    /// Returns a FileName sequence with the specified element appended.
     /// </summary>
     /// <param name="item">The item to append.</param>
-    /// <returns>A new immutable sequence with the item appended.</returns>
+    /// <returns>A FileName immutable sequence with the item appended.</returns>
     public ImmutableSequence<T> Add(T item) => new(_data.Add(item));
 
     /// <summary>
-    /// Returns a new sequence containing a slice of this sequence.
+    /// Returns a FileName sequence containing a slice of this sequence.
     /// </summary>
     /// <param name="start">The start index.</param>
     /// <param name="length">The number of elements.</param>
-    /// <returns>A new immutable sequence.</returns>
+    /// <returns>A FileName immutable sequence.</returns>
     public ImmutableSequence<T> Slice(int start, int length)
     {
         Guard.IsGreaterThanOrEqualTo(start, 0);

@@ -17,7 +17,7 @@ public sealed class ImageBuffer<TPixel> : IDisposable where TPixel : unmanaged
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="ImageBuffer{TPixel}"/> with the specified dimensions.
+    /// Initializes a FileName <see cref="ImageBuffer{TPixel}"/> with the specified dimensions.
     /// </summary>
     /// <param name="width">The width in pixels.</param>
     /// <param name="height">The height in pixels.</param>
@@ -27,7 +27,7 @@ public sealed class ImageBuffer<TPixel> : IDisposable where TPixel : unmanaged
     }
 
     /// <summary>
-    /// Initializes a new <see cref="ImageBuffer{TPixel}"/> with the specified dimensions and pool.
+    /// Initializes a FileName <see cref="ImageBuffer{TPixel}"/> with the specified dimensions and pool.
     /// </summary>
     /// <param name="width">The width in pixels.</param>
     /// <param name="height">The height in pixels.</param>

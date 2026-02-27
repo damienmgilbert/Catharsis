@@ -36,7 +36,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     public bool DisallowEmptyStrings { get; set; } = true;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="RequiredIfAttribute"/>.
+    /// Initializes a FileName instance of <see cref="RequiredIfAttribute"/>.
     /// </summary>
     /// <param name="dependentProperty">
     /// The name of the sibling property that controls the requirement.

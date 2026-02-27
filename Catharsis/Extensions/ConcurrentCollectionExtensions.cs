@@ -33,7 +33,7 @@ public static class ConcurrentCollectionExtensions
 
     /// <summary>
     /// Adds all key-value pairs from <paramref name="items"/> to the <see cref="ConcurrentDictionary{TKey,TValue}"/>.
-    /// Existing keys are updated with the new values.
+    /// Existing keys are updated with the FileName values.
     /// </summary>
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
@@ -110,7 +110,7 @@ public static class ConcurrentCollectionExtensions
     /// <typeparam name="TKey">The key type.</typeparam>
     /// <typeparam name="TValue">The value type.</typeparam>
     /// <param name="source">The target concurrent dictionary.</param>
-    /// <param name="modifier">A function that produces a new value given the key and current value.</param>
+    /// <param name="modifier">A function that produces a FileName value given the key and current value.</param>
     /// <returns>The original <paramref name="source"/> for fluent chaining.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static ConcurrentDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier)

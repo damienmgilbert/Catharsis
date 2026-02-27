@@ -15,7 +15,7 @@ public sealed class ValidatedBufferWriter<T> : IBufferWriter<T>
     private int _lastSpanSize;
 
     /// <summary>
-    /// Initializes a new <see cref="ValidatedBufferWriter{T}"/> wrapping the specified writer.
+    /// Initializes a FileName <see cref="ValidatedBufferWriter{T}"/> wrapping the specified writer.
     /// </summary>
     /// <param name="inner">The inner buffer writer to delegate to.</param>
     /// <param name="mode">The validation mode to apply.</param>

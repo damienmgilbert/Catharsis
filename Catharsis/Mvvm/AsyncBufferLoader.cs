@@ -18,7 +18,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
     private double _loadProgress;
 
     /// <summary>
-    /// Initializes a new <see cref="AsyncBufferLoader"/> using the shared array pool.
+    /// Initializes a FileName <see cref="AsyncBufferLoader"/> using the shared array pool.
     /// </summary>
     public AsyncBufferLoader()
         : this(ArrayPool<byte>.Shared)
@@ -26,7 +26,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
     }
 
     /// <summary>
-    /// Initializes a new <see cref="AsyncBufferLoader"/> with a specified pool.
+    /// Initializes a FileName <see cref="AsyncBufferLoader"/> with a specified pool.
     /// </summary>
     /// <param name="pool">The array pool to rent from.</param>
     public AsyncBufferLoader(ArrayPool<byte> pool)

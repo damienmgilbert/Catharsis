@@ -32,7 +32,7 @@ public class CultureAwareConverter<T> : System.ComponentModel.TypeConverter
     private readonly ConverterContext _context;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="CultureAwareConverter{T}"/>
+    /// Initializes a FileName instance of <see cref="CultureAwareConverter{T}"/>
     /// using the specified context.
     /// </summary>
     /// <param name="context">

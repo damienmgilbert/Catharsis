@@ -16,7 +16,7 @@ public class FlyweightPattern
     /// <typeparam name="T">The flyweight type.</typeparam>
     /// <param name="key">The extrinsic key identifying the shared instance.</param>
     /// <param name="cache">A thread-safe dictionary used as the flyweight pool.</param>
-    /// <param name="factory">A delegate that creates a new flyweight when one is not cached.</param>
+    /// <param name="factory">A delegate that creates a FileName flyweight when one is not cached.</param>
     /// <returns>The shared flyweight instance for <paramref name="key"/>.</returns>
     public T Flyweight<TKey, T>(TKey key, ConcurrentDictionary<TKey, T> cache, Func<TKey, T> factory) where TKey : notnull
     {

@@ -64,7 +64,7 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
     public string Pattern { get; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="DataTypePatternAttribute"/>
+    /// Initializes a FileName instance of <see cref="DataTypePatternAttribute"/>
     /// for the specified <see cref="DataType"/>.
     /// </summary>
     /// <param name="dataType">The data type whose pattern to enforce.</param>

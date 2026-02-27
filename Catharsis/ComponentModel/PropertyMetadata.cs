@@ -15,7 +15,7 @@ namespace Catharsis.ComponentModel;
 public sealed class PropertyMetadata
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="PropertyMetadata"/>.
+    /// Initializes a FileName instance of <see cref="PropertyMetadata"/>.
     /// </summary>
     /// <param name="name">The property name.</param>
     /// <param name="propertyType">The CLR type of the property value.</param>

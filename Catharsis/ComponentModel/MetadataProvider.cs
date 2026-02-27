@@ -22,7 +22,7 @@ public sealed class MetadataProvider
     private readonly ComponentReflectionCache _cache;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="MetadataProvider"/> with the
+    /// Initializes a FileName instance of <see cref="MetadataProvider"/> with the
     /// specified registry and reflection cache.
     /// </summary>
     /// <param name="registry">The metadata registry to consult first.</param>

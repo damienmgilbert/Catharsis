@@ -35,7 +35,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
     public string? GroupName { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="MutuallyExclusiveAttribute"/>
+    /// Initializes a FileName instance of <see cref="MutuallyExclusiveAttribute"/>
     /// with the property names that must be mutually exclusive.
     /// </summary>
     /// <param name="propertyNames">

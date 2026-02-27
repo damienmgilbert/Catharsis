@@ -32,7 +32,7 @@ public class GenericTypeConverter<T> : System.ComponentModel.TypeConverter
     private readonly Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? _convertTo;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="GenericTypeConverter{T}"/>.
+    /// Initializes a FileName instance of <see cref="GenericTypeConverter{T}"/>.
     /// </summary>
     /// <param name="convertFrom">
     /// A delegate that converts a source value to <typeparamref name="T"/>.

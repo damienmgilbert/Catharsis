@@ -33,7 +33,7 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
     public string MethodName { get; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="PredicateValidationAttribute"/>.
+    /// Initializes a FileName instance of <see cref="PredicateValidationAttribute"/>.
     /// </summary>
     /// <param name="validatorType">The type containing the predicate method.</param>
     /// <param name="methodName">The name of the <c>public static bool</c> method.</param>

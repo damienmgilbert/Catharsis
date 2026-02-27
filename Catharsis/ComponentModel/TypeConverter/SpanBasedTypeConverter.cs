@@ -64,7 +64,7 @@ public sealed class SpanBasedTypeConverter<T> : System.ComponentModel.TypeConver
     private readonly ConverterContext _context;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="SpanBasedTypeConverter{T}"/>.
+    /// Initializes a FileName instance of <see cref="SpanBasedTypeConverter{T}"/>.
     /// </summary>
     /// <param name="tryParse">
     /// A delegate that attempts to parse <typeparamref name="T"/> from a character span.

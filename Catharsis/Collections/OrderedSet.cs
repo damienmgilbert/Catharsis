@@ -13,7 +13,7 @@ public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     private readonly HashSet<T> _set;
 
     /// <summary>
-    /// Initializes a new <see cref="OrderedSet{T}"/> using the default equality comparer.
+    /// Initializes a FileName <see cref="OrderedSet{T}"/> using the default equality comparer.
     /// </summary>
     public OrderedSet()
         : this(EqualityComparer<T>.Default)
@@ -21,7 +21,7 @@ public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     }
 
     /// <summary>
-    /// Initializes a new <see cref="OrderedSet{T}"/> with the specified equality comparer.
+    /// Initializes a FileName <see cref="OrderedSet{T}"/> with the specified equality comparer.
     /// </summary>
     /// <param name="comparer">The comparer used to determine element equality.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>

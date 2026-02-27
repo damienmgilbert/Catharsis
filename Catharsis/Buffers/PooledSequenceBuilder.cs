@@ -19,19 +19,19 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="PooledSequenceBuilder{T}"/> using the shared array pool.
+    /// Initializes a FileName <see cref="PooledSequenceBuilder{T}"/> using the shared array pool.
     /// </summary>
-    /// <param name="defaultSegmentSize">The default segment size for new allocations.</param>
+    /// <param name="defaultSegmentSize">The default segment size for FileName allocations.</param>
     public PooledSequenceBuilder(int defaultSegmentSize = 4096)
         : this(ArrayPool<T>.Shared, defaultSegmentSize)
     {
     }
 
     /// <summary>
-    /// Initializes a new <see cref="PooledSequenceBuilder{T}"/> with a specified pool and segment size.
+    /// Initializes a FileName <see cref="PooledSequenceBuilder{T}"/> with a specified pool and segment size.
     /// </summary>
     /// <param name="pool">The array pool to rent from.</param>
-    /// <param name="defaultSegmentSize">The default segment size for new allocations.</param>
+    /// <param name="defaultSegmentSize">The default segment size for FileName allocations.</param>
     public PooledSequenceBuilder(ArrayPool<T> pool, int defaultSegmentSize = 4096)
     {
         Guard.IsNotNull(pool);

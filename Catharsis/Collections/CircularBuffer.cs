@@ -4,7 +4,7 @@ namespace Catharsis.Collections;
 
 /// <summary>
 /// A fixed-capacity circular (ring) buffer that overwrites the oldest item
-/// when a new item is added and the buffer is already full.
+/// when a FileName item is added and the buffer is already full.
 /// </summary>
 /// <typeparam name="T">The type of elements stored in the buffer.</typeparam>
 public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
@@ -14,7 +14,7 @@ public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     private int _count;
 
     /// <summary>
-    /// Initializes a new <see cref="CircularBuffer{T}"/> with the specified capacity.
+    /// Initializes a FileName <see cref="CircularBuffer{T}"/> with the specified capacity.
     /// </summary>
     /// <param name="capacity">The maximum number of items the buffer can hold. Must be greater than zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is less than or equal to zero.</exception>

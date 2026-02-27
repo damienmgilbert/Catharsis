@@ -19,7 +19,7 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
+    /// Initializes a FileName <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
     /// </summary>
     /// <param name="logger">The logger for diagnostic output.</param>
     /// <param name="maxPoolSize">The maximum number of objects to keep in the pool.</param>
@@ -42,7 +42,7 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
     public int TotalReturned => _totalReturned;
 
     /// <summary>
-    /// Rents an object from the pool, or creates a new one if the pool is empty.
+    /// Rents an object from the pool, or creates a FileName one if the pool is empty.
     /// </summary>
     /// <returns>A pooled or newly created object.</returns>
     public T Rent()
@@ -56,7 +56,7 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
         }
 
         Interlocked.Increment(ref _totalCreated);
-        _logger.LogTrace("Created new {TypeName} instance (total: {Total}).", typeof(T).Name, _totalCreated);
+        _logger.LogTrace("Created FileName {TypeName} instance (total: {Total}).", typeof(T).Name, _totalCreated);
         return new T();
     }
 

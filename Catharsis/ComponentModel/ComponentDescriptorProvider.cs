@@ -25,7 +25,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     private readonly ComponentMetadataRegistry _registry;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentDescriptorProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/>
     /// with the specified metadata registry.
     /// </summary>
     /// <param name="registry">The registry containing property and event metadata.</param>
@@ -39,7 +39,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ComponentDescriptorProvider"/>
+    /// Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/>
     /// with the specified metadata registry and parent provider.
     /// </summary>
     /// <param name="registry">The registry containing property and event metadata.</param>

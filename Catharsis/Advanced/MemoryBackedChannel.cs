@@ -16,7 +16,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Initializes a new <see cref="MemoryBackedChannel{T}"/> with the specified capacity.
+    /// Initializes a FileName <see cref="MemoryBackedChannel{T}"/> with the specified capacity.
     /// </summary>
     /// <param name="capacity">The maximum number of segments that can be buffered. Use 0 for unbounded.</param>
     public MemoryBackedChannel(int capacity = 0)
@@ -25,7 +25,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     }
 
     /// <summary>
-    /// Initializes a new <see cref="MemoryBackedChannel{T}"/> with a specified pool and capacity.
+    /// Initializes a FileName <see cref="MemoryBackedChannel{T}"/> with a specified pool and capacity.
     /// </summary>
     /// <param name="pool">The memory pool to rent from.</param>
     /// <param name="capacity">The channel capacity. Use 0 for unbounded.</param>

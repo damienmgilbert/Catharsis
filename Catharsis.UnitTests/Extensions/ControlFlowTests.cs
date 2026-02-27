@@ -4966,7 +4966,7 @@ public class ControlFlowTests
     /// <summary>
     /// Tests that ReturnIfNullAsync works with object type.
     /// Input: Null object of type object.
-    /// Expected: Action is called and returns new object.
+    /// Expected: Action is called and returns FileName object.
     /// </summary>
     [TestMethod]
     public async Task ReturnIfNullAsync_ObjectType_WorksCorrectly()
@@ -7324,7 +7324,7 @@ public class ControlFlowTests
 
     /// <summary>
     /// Tests that ReturnIfNullAsync calls action and returns its result when object is null.
-    /// Input: Null object and valid action returning a new object.
+    /// Input: Null object and valid action returning a FileName object.
     /// Expected: Action is called and its result is returned.
     /// </summary>
     [TestMethod]

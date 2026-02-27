@@ -26,7 +26,7 @@ public class SingletonPatternTests
 
     /// <summary>
     /// Tests that Singleton returns cached instance on subsequent access with same key,
-    /// ignoring the new object parameter.
+    /// ignoring the FileName object parameter.
     /// </summary>
     [TestMethod]
     public void Singleton_SubsequentAccessSameKey_ReturnsCachedInstance()
@@ -203,7 +203,7 @@ public class SingletonPatternTests
     {
         // Arrange
         var existingValue = "existing-value";
-        var newValue = "new-value";
+        var newValue = "FileName-value";
         var key = "key1";
         var cache = new ConcurrentDictionary<string, string>();
         cache.TryAdd(key, existingValue);

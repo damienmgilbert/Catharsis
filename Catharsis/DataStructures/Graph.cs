@@ -12,7 +12,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
     private readonly Dictionary<T, HashSet<T>> _adjacency;
 
     /// <summary>
-    /// Initializes a new empty <see cref="Graph{T}"/> using the default equality comparer.
+    /// Initializes a FileName empty <see cref="Graph{T}"/> using the default equality comparer.
     /// </summary>
     public Graph()
         : this(EqualityComparer<T>.Default)
@@ -20,7 +20,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
     }
 
     /// <summary>
-    /// Initializes a new empty <see cref="Graph{T}"/> with the specified equality comparer.
+    /// Initializes a FileName empty <see cref="Graph{T}"/> with the specified equality comparer.
     /// </summary>
     /// <param name="comparer">The comparer used to determine vertex equality.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>

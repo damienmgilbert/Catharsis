@@ -17,7 +17,7 @@ namespace Catharsis.DataAnnotations;
 public sealed class UniqueElementsAttribute : ValidationAttribute
 {
     /// <summary>
-    /// Initializes a new instance of <see cref="UniqueElementsAttribute"/>
+    /// Initializes a FileName instance of <see cref="UniqueElementsAttribute"/>
     /// with the default error message.
     /// </summary>
     public UniqueElementsAttribute()
