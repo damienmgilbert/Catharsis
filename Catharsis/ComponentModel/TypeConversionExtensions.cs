@@ -65,13 +65,13 @@ public static class TypeConversionExtensions
     }
 
     /// <summary>
-    /// Gets the <see cref="TypeConverter"/> for the specified type using
+    /// Gets the <see cref="System.ComponentModel.TypeConverter"/> for the specified type using
     /// <see cref="TypeDescriptor.GetConverter(Type)"/>.
     /// </summary>
     /// <param name="type">The type whose converter to retrieve.</param>
-    /// <returns>The <see cref="TypeConverter"/> for the type.</returns>
+    /// <returns>The <see cref="System.ComponentModel.TypeConverter"/> for the type.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="type"/> is <c>null</c>.</exception>
-    public static TypeConverter GetTypeConverter(this Type type)
+    public static System.ComponentModel.TypeConverter GetTypeConverter(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         return TypeDescriptor.GetConverter(type);
