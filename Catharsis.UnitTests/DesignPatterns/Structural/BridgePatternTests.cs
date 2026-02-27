@@ -1,0 +1,281 @@
+using Catharsis.DesignPatterns.Structural;
+
+namespace Catharsis.Extensions.UnitTests;
+
+[TestClass]
+public class BridgePatternTests
+{
+    /// <summary>
+    /// Test mediator type used for testing.
+    /// </summary>
+    private class TestMediator
+    {
+    }
+
+    /// <summary>
+    /// Custom mediator type for testing complex scenarios.
+    /// </summary>
+    private class CustomMediator
+    {
+        public int ProcessingId { get; set; }
+    }
+
+    /// <summary>
+    /// Custom request type for testing complex scenarios.
+    /// </summary>
+    private class CustomRequest
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// Custom response type for testing complex scenarios.
+    /// </summary>
+    private class CustomResponse
+    {
+        public int RequestId { get; set; }
+        public int ProcessedBy { get; set; }
+    }
+
+    /// <summary>
+    /// Tests that Bridge correctly invokes the operation and returns the expected result.
+    /// Input: Various combinations of value types, reference types, and result types
+    /// Expected: Operation is invoked with correct parameters and result is returned
+    /// </summary>
+    [TestMethod]
+    [DataRow("hello", 5, "hello5", DisplayName = "String + Int -> String")]
+    [DataRow(10, 20, 30, DisplayName = "Int + Int -> Int")]
+    [DataRow(3.14, 2.71, 5.85, DisplayName = "Double + Double -> Double")]
+    public void Bridge_ValidOperation_ReturnsExpectedResult(object objValue, object implValue, object expected)
+    {
+        // Arrange & Act & Assert based on type
+        if (objValue is string strObj && implValue is int intImpl && expected is string strExpected)
+        {
+            var result = new BridgePattern().Bridge(strObj, intImpl, (s, i) => s + i.ToString());
+            Assert.AreEqual(strExpected, result);
+        }
+        else if (objValue is int intObj && implValue is int intImpl2 && expected is int intExpected)
+        {
+            var result = new BridgePattern().Bridge(intObj, intImpl2, (a, b) => a + b);
+            Assert.AreEqual(intExpected, result);
+        }
+        else if (objValue is double dblObj && implValue is double dblImpl && expected is double dblExpected)
+        {
+            var result = new BridgePattern().Bridge(dblObj, dblImpl, (a, b) => a + b);
+            Assert.AreEqual(dblExpected, result, 0.0001);
+        }
+    }
+
+    /// <summary>
+    /// Tests that Bridge passes the correct obj and implementation parameters to the operation.
+    /// Input: obj = specific value, implementation = specific value, operation = capturing lambda
+    /// Expected: Operation receives the exact obj and implementation values passed to Bridge
+    /// </summary>
+    [TestMethod]
+    public void Bridge_ValidOperation_PassesCorrectParametersToOperation()
+    {
+        // Arrange
+        var expectedObj = "testObject";
+        var expectedImpl = 123;
+        string? actualObj = null;
+        int? actualImpl = null;
+        Func<string, int, bool> operation = (obj, impl) =>
+        {
+            actualObj = obj;
+            actualImpl = impl;
+            return true;
+        };
+        // Act
+        new BridgePattern().Bridge(expectedObj, expectedImpl, operation);
+        // Assert
+        Assert.AreEqual(expectedObj, actualObj);
+        Assert.AreEqual(expectedImpl, actualImpl);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with reference types including null values.
+    /// Input: obj = null (nullable reference), implementation = null (nullable reference)
+    /// Expected: Operation is invoked with null values and returns expected result
+    /// </summary>
+    [TestMethod]
+    public void Bridge_NullableReferenceTypes_HandlesNullValues()
+    {
+        // Arrange
+        string? nullObj = null;
+        string? nullImpl = null;
+        // Act
+        var result = new BridgePattern().Bridge(nullObj, nullImpl, (obj, impl) => (obj == null ? "null" : obj) + "_" + (impl == null ? "null" : impl));
+        // Assert
+        Assert.AreEqual("null_null", result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with complex reference types and returns complex results.
+    /// Input: obj = List of ints, implementation = HashSet of ints, operation = combine and count
+    /// Expected: Operation combines collections and returns correct count
+    /// </summary>
+    [TestMethod]
+    public void Bridge_ComplexTypes_ReturnsExpectedResult()
+    {
+        // Arrange
+        var list = new List<int>
+        {
+            1,
+            2,
+            3
+        };
+        var set = new HashSet<int>
+        {
+            3,
+            4,
+            5
+        };
+        // Act
+        var result = new BridgePattern().Bridge(list, set, (l, s) =>
+        {
+            var combined = new HashSet<int>(l);
+            combined.UnionWith(s);
+            return combined.Count;
+        });
+        // Assert
+        Assert.AreEqual(5, result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge allows operation to return null when TResult is nullable.
+    /// Input: obj = any value, implementation = any value, operation = returns null
+    /// Expected: Null is returned from Bridge
+    /// </summary>
+    [TestMethod]
+    public void Bridge_OperationReturnsNull_ReturnsNull()
+    {
+        // Arrange
+        var obj = 42;
+        var impl = "test";
+        // Act
+        var result = new BridgePattern().Bridge(obj, impl, (o, i) => (string?)null);
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with value types at boundary values.
+    /// Input: int.MinValue, int.MaxValue, operation = add
+    /// Expected: Overflow occurs as expected in unchecked context
+    /// </summary>
+    [TestMethod]
+    public void Bridge_BoundaryValueTypes_HandlesEdgeCases()
+    {
+        // Arrange
+        var minValue = int.MinValue;
+        var maxValue = int.MaxValue;
+        // Act
+        var result = new BridgePattern().Bridge(minValue, maxValue, (a, b) => unchecked(a + b));
+        // Assert
+        Assert.AreEqual(-1, result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with floating-point special values.
+    /// Input: double.NaN, double.PositiveInfinity, operation = combine
+    /// Expected: NaN result due to NaN operand
+    /// </summary>
+    [TestMethod]
+    public void Bridge_FloatingPointSpecialValues_HandlesNaN()
+    {
+        // Arrange
+        var nan = double.NaN;
+        var infinity = double.PositiveInfinity;
+        // Act
+        var result = new BridgePattern().Bridge(nan, infinity, (a, b) => a + b);
+        // Assert
+        Assert.IsTrue(double.IsNaN(result));
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with floating-point infinity values.
+    /// Input: double.PositiveInfinity, double.NegativeInfinity, operation = add
+    /// Expected: NaN result due to infinity - infinity
+    /// </summary>
+    [TestMethod]
+    public void Bridge_FloatingPointInfinity_HandlesInfinityOperations()
+    {
+        // Arrange
+        var positiveInfinity = double.PositiveInfinity;
+        var negativeInfinity = double.NegativeInfinity;
+        // Act
+        var result = new BridgePattern().Bridge(positiveInfinity, negativeInfinity, (a, b) => a + b);
+        // Assert
+        Assert.IsTrue(double.IsNaN(result));
+    }
+
+    /// <summary>
+    /// Tests that Bridge works correctly when obj and implementation are the same type.
+    /// Input: obj = 5, implementation = 10, both int
+    /// Expected: Operation receives both values correctly
+    /// </summary>
+    [TestMethod]
+    public void Bridge_SameTypeForObjAndImpl_WorksCorrectly()
+    {
+        // Arrange
+        var obj = 5;
+        var impl = 10;
+        // Act
+        var result = new BridgePattern().Bridge(obj, impl, (a, b) => a * b);
+        // Assert
+        Assert.AreEqual(50, result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works when all three type parameters are the same.
+    /// Input: obj = "hello", implementation = "world", operation = concatenate
+    /// Expected: Returns concatenated string
+    /// </summary>
+    [TestMethod]
+    public void Bridge_AllSameType_WorksCorrectly()
+    {
+        // Arrange
+        var obj = "hello";
+        var impl = "world";
+        // Act
+        var result = new BridgePattern().Bridge(obj, impl, (a, b) => a + " " + b);
+        // Assert
+        Assert.AreEqual("hello world", result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge works with boolean operations.
+    /// Input: obj = true, implementation = false, operation = logical AND
+    /// Expected: Returns false
+    /// </summary>
+    [TestMethod]
+    public void Bridge_BooleanOperations_ReturnsExpectedResult()
+    {
+        // Arrange
+        var obj = true;
+        var impl = false;
+        // Act
+        var result = new BridgePattern().Bridge(obj, impl, (a, b) => a && b);
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    /// <summary>
+    /// Tests that Bridge can be used to create tuples from disparate types.
+    /// Input: obj = string, implementation = int
+    /// Expected: Returns tuple containing both values
+    /// </summary>
+    [TestMethod]
+    public void Bridge_CreateTuple_ReturnsExpectedTuple()
+    {
+        // Arrange
+        var obj = "key";
+        var impl = 42;
+        // Act
+        var result = new BridgePattern().Bridge(obj, impl, (a, b) => (a, b));
+        // Assert
+        Assert.AreEqual("key", result.Item1);
+        Assert.AreEqual(42, result.Item2);
+    }
+}

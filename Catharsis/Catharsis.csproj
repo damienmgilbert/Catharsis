@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
+	  <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+	  <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
 	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
 	  <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.3" />

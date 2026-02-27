@@ -777,13 +777,7 @@ public class ControlFlowTests
         CollectionAssert.AreEqual(new[] { 4, 5, 6 }, result);
     }
 
-    /// <summary>
-    /// Helper class for testing with custom reference types.
-    /// </summary>
-    private class TestClass
-    {
-        public int Value { get; set; }
-    }
+
 
     /// <summary>
     /// Verifies that ReturnIfAsync executes action and returns its result when condition returns true synchronously.
@@ -2048,13 +2042,6 @@ public class ControlFlowTests
         }
     }
 
-    /// <summary>
-    /// Helper class for testing reference type behavior.
-    /// </summary>
-    private class TestObject
-    {
-        public int Value { get; set; }
-    }
 
     /// <summary>
     /// Tests that ReturnIfElse executes ifAction and returns its result when condition evaluates to true.
