@@ -19,7 +19,7 @@ public sealed record ChangeEntry(
     /// <summary>
     /// Gets the UTC timestamp when the change occurred.
     /// </summary>
-    public DateTime Timestamp { get; } = Timestamp ?? DateTime.UtcNow;
+    public DateTime? Timestamp { get; } = Timestamp ?? DateTime.UtcNow;
 
     /// <inheritdoc />
     public override string ToString() =>
