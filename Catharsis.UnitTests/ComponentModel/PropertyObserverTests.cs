@@ -1,66 +1,63 @@
-using Catharsis.ComponentModel;
 using System.ComponentModel;
+using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
 [TestClass]
 public class PropertyObserverTests
 {
-    private sealed class NotifySource : INotifyPropertyChanged
+    #region Public methods
+    [TestMethod]
+    public void Constructor_NullSource_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyObserver(null!)); }
+    [TestMethod]
+    public void Dispose_CalledTwice_DoesNotThrow()
     {
-        private string _name = string.Empty;
+        NotifySource source = new NotifySource();
+        PropertyObserver observer = new PropertyObserver(source);
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
-            }
-        }
-
-        public void RaiseAllPropertiesChanged() =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+        observer.Dispose();
+        observer.Dispose(); // should not throw
     }
 
     [TestMethod]
-    public void OnChanged_InvokesHandlerWhenPropertyChanges()
+    public void Dispose_UnsubscribesFromSource()
     {
-        var source = new NotifySource();
-        var callCount = 0;
+        NotifySource source = new NotifySource();
+        int callCount = 0;
 
-        using var observer = new PropertyObserver(source)
+        PropertyObserver observer = new PropertyObserver(source)
             .OnChanged(nameof(NotifySource.Name), () => callCount++);
 
-        source.Name = "Alice";
-
-        Assert.AreEqual(1, callCount);
-    }
-
-    [TestMethod]
-    public void OnChanged_DoesNotInvokeForOtherProperties()
-    {
-        var source = new NotifySource();
-        var callCount = 0;
-
-        using var observer = new PropertyObserver(source)
-            .OnChanged("OtherProperty", () => callCount++);
-
+        observer.Dispose();
         source.Name = "Alice";
 
         Assert.AreEqual(0, callCount);
     }
 
     [TestMethod]
+    public void MultipleHandlers_SameProperty_AllInvoked()
+    {
+        NotifySource source = new NotifySource();
+        int count1 = 0;
+        int count2 = 0;
+
+        using PropertyObserver observer = new PropertyObserver(source)
+            .OnChanged(nameof(NotifySource.Name), () => count1++)
+            .OnChanged(nameof(NotifySource.Name), () => count2++);
+
+        source.Name = "Test";
+
+        Assert.AreEqual(1, count1);
+        Assert.AreEqual(1, count2);
+    }
+
+    [TestMethod]
     public void NullPropertyName_InvokesAllHandlers()
     {
-        var source = new NotifySource();
-        var callCount = 0;
+        NotifySource source = new NotifySource();
+        int callCount = 0;
 
-        using var observer = new PropertyObserver(source)
+        using PropertyObserver observer = new PropertyObserver(source)
             .OnChanged(nameof(NotifySource.Name), () => callCount++);
 
         source.RaiseAllPropertiesChanged();
@@ -69,14 +66,28 @@ public class PropertyObserverTests
     }
 
     [TestMethod]
-    public void StopObserving_RemovesHandlersForProperty()
+    public void OnChanged_AfterDispose_Throws()
     {
-        var source = new NotifySource();
-        var callCount = 0;
+        NotifySource source = new NotifySource();
+        PropertyObserver observer = new PropertyObserver(source);
+        observer.Dispose();
 
-        using var observer = new PropertyObserver(source)
-            .OnChanged(nameof(NotifySource.Name), () => callCount++)
-            .StopObserving(nameof(NotifySource.Name));
+        Assert.ThrowsExactly<ObjectDisposedException>(
+        () => observer.OnChanged(
+              "Name",
+              () =>
+        {
+        }));
+    }
+
+    [TestMethod]
+    public void OnChanged_DoesNotInvokeForOtherProperties()
+    {
+        NotifySource source = new NotifySource();
+        int callCount = 0;
+
+        using PropertyObserver observer = new PropertyObserver(source)
+            .OnChanged("OtherProperty", () => callCount++);
 
         source.Name = "Alice";
 
@@ -84,12 +95,26 @@ public class PropertyObserverTests
     }
 
     [TestMethod]
+    public void OnChanged_InvokesHandlerWhenPropertyChanges()
+    {
+        NotifySource source = new NotifySource();
+        int callCount = 0;
+
+        using PropertyObserver observer = new PropertyObserver(source)
+            .OnChanged(nameof(NotifySource.Name), () => callCount++);
+
+        source.Name = "Alice";
+
+        Assert.AreEqual(1, callCount);
+    }
+
+    [TestMethod]
     public void StopAll_RemovesAllHandlers()
     {
-        var source = new NotifySource();
-        var callCount = 0;
+        NotifySource source = new NotifySource();
+        int callCount = 0;
 
-        using var observer = new PropertyObserver(source)
+        using PropertyObserver observer = new PropertyObserver(source)
             .OnChanged(nameof(NotifySource.Name), () => callCount++)
             .StopAll();
 
@@ -99,60 +124,45 @@ public class PropertyObserverTests
     }
 
     [TestMethod]
-    public void Dispose_UnsubscribesFromSource()
+    public void StopObserving_RemovesHandlersForProperty()
     {
-        var source = new NotifySource();
-        var callCount = 0;
+        NotifySource source = new NotifySource();
+        int callCount = 0;
 
-        var observer = new PropertyObserver(source)
-            .OnChanged(nameof(NotifySource.Name), () => callCount++);
+        using PropertyObserver observer = new PropertyObserver(source)
+            .OnChanged(nameof(NotifySource.Name), () => callCount++)
+            .StopObserving(nameof(NotifySource.Name));
 
-        observer.Dispose();
         source.Name = "Alice";
 
         Assert.AreEqual(0, callCount);
     }
+    #endregion
 
-    [TestMethod]
-    public void Dispose_CalledTwice_DoesNotThrow()
+    sealed class NotifySource : INotifyPropertyChanged
     {
-        var source = new NotifySource();
-        var observer = new PropertyObserver(source);
+        #region Fields
+        string _name = string.Empty;
+        #endregion
 
-        observer.Dispose();
-        observer.Dispose(); // should not throw
-    }
+        #region Events
+        public event PropertyChangedEventHandler? PropertyChanged;
+        #endregion
 
-    [TestMethod]
-    public void Constructor_NullSource_Throws()
-    {
-        Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyObserver(null!));
-    }
+        #region Public methods
+        public void RaiseAllPropertiesChanged() { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null)); }
+        #endregion
 
-    [TestMethod]
-    public void OnChanged_AfterDispose_Throws()
-    {
-        var source = new NotifySource();
-        var observer = new PropertyObserver(source);
-        observer.Dispose();
-
-        Assert.ThrowsExactly<ObjectDisposedException>(() => observer.OnChanged("Name", () => { }));
-    }
-
-    [TestMethod]
-    public void MultipleHandlers_SameProperty_AllInvoked()
-    {
-        var source = new NotifySource();
-        var count1 = 0;
-        var count2 = 0;
-
-        using var observer = new PropertyObserver(source)
-            .OnChanged(nameof(NotifySource.Name), () => count1++)
-            .OnChanged(nameof(NotifySource.Name), () => count2++);
-
-        source.Name = "Test";
-
-        Assert.AreEqual(1, count1);
-        Assert.AreEqual(1, count2);
+        #region Public properties
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+            }
+        }
+        #endregion
     }
 }

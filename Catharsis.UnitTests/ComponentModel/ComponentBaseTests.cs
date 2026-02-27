@@ -1,23 +1,201 @@
 ﻿using System.ComponentModel;
+using Catharsis.ComponentModel;
 
-namespace Catharsis.ComponentModel.UnitTests;
+namespace Catharsis.UnitTests.ComponentModel;
 
-
-/// <summary>
-/// Unit tests for the <see cref="ComponentBase"/> class.
-/// </summary>
+///<summary>
+///Unit tests for the <see cref="ComponentBase"/> class.
+///</summary>
 [TestClass]
 public class ComponentBaseTests
 {
-    /// <summary>
-    /// Tests that adding a handler to the Disposed event works correctly and the handler is invoked during disposal.
-    /// </summary>
+    #region Public methods
+
+    ///<summary>
+    ///Tests that Container returns the Site's Container when both Site and Site.Container are not null.
+    ///</summary>
+    [TestMethod]
+    public void Container_WhenSiteAndContainerAreNotNull_ReturnsContainer()
+    {
+        // Arrange
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+
+        // Act
+        IContainer? container = component.ExposedContainer;
+
+        // Assert
+        Assert.IsNotNull(container);
+        Assert.AreSame(stubContainer, container);
+    }
+
+    ///<summary>
+    ///Tests that Container returns null when Site is changed from non-null to null.
+    ///</summary>
+    [TestMethod]
+    public void Container_WhenSiteChangedFromNonNullToNull_ReturnsNull()
+    {
+        // Arrange
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+
+        // Act
+        component.Site = null;
+        IContainer? container = component.ExposedContainer;
+
+        // Assert
+        Assert.IsNull(container);
+    }
+
+    ///<summary>
+    ///Tests that Container updates when Site is changed from null to non-null.
+    ///</summary>
+    [TestMethod]
+    public void Container_WhenSiteChangedFromNullToNonNull_ReturnsNewContainer()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+
+        // Act
+        component.Site = stubSite;
+        IContainer? container = component.ExposedContainer;
+
+        // Assert
+        Assert.IsNotNull(container);
+        Assert.AreSame(stubContainer, container);
+    }
+
+    ///<summary>
+    ///Tests that Container returns null when Site is not null but Site.Container is null.
+    ///</summary>
+    [TestMethod]
+    public void Container_WhenSiteContainerIsNull_ReturnsNull()
+    {
+        // Arrange
+        StubSite stubSite = new StubSite { ContainerValue = null };
+        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+
+        // Act
+        IContainer? container = component.ExposedContainer;
+
+        // Assert
+        Assert.IsNull(container);
+    }
+
+    ///<summary>
+    ///Tests that Container returns null when Site is null.
+    ///</summary>
+    [TestMethod]
+    public void Container_WhenSiteIsNull_ReturnsNull()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+
+        // Act
+        IContainer? container = component.ExposedContainer;
+
+        // Assert
+        Assert.IsNull(container);
+    }
+
+    ///<summary>
+    ///Tests that Dispose raises the Disposed event with correct arguments.
+    ///</summary>
+    [TestMethod]
+    public void Dispose_FirstCall_RaisesDisposedEvent()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+        object? eventSender = null;
+        EventArgs? eventArgs = null;
+        component.Disposed += (sender, args) =>
+        {
+            eventSender = sender;
+            eventArgs = args;
+        };
+
+        // Act
+        component.Dispose();
+
+        // Assert
+        Assert.IsNotNull(eventSender);
+        Assert.AreSame(component, eventSender);
+        Assert.IsNotNull(eventArgs);
+        Assert.AreSame(EventArgs.Empty, eventArgs);
+    }
+
+    ///<summary>
+    ///Tests that Dispose raises the Disposed event only once when called multiple times.
+    ///</summary>
+    [TestMethod]
+    public void Dispose_MultipleCalls_RaisesEventOnlyOnce()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+        int eventRaisedCount = 0;
+        component.Disposed += (sender, args) => eventRaisedCount++;
+
+        // Act
+        component.Dispose();
+        component.Dispose();
+        component.Dispose();
+
+        // Assert
+        Assert.AreEqual(1, eventRaisedCount);
+    }
+
+    ///<summary>
+    ///Tests that Dispose clears the Site property.
+    ///</summary>
+    [TestMethod]
+    public void Dispose_WithSite_ClearsSite()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        component.Site = stubSite;
+
+        // Act
+        component.Dispose();
+
+        // Assert
+        Assert.IsNull(component.Site);
+    }
+
+    ///<summary>
+    ///Tests that Dispose removes the component from its container when sited.
+    ///</summary>
+    [TestMethod]
+    public void Dispose_WithSite_RemovesFromContainer()
+    {
+        // Arrange
+        TestableComponentBase component = new TestableComponentBase();
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        component.Site = stubSite;
+
+        // Act
+        component.Dispose();
+
+        // Assert
+        Assert.AreEqual(1, stubContainer.RemoveCallCount);
+        Assert.AreSame(component, stubContainer.LastRemovedComponent);
+    }
+
+    ///<summary>
+    ///Tests that adding a handler to the Disposed event works correctly and the handler is invoked during disposal.
+    ///</summary>
     [TestMethod]
     public void Disposed_AddHandler_HandlerInvokedOnDispose()
     {
         // Arrange
-        var component = new TestComponent();
-        var eventRaised = false;
+        TestComponent component = new TestComponent();
+        bool eventRaised = false;
         object? capturedSender = null;
         EventArgs? capturedArgs = null;
 
@@ -38,38 +216,61 @@ public class ComponentBaseTests
         Assert.AreSame(EventArgs.Empty, capturedArgs, "EventArgs should be EventArgs.Empty");
     }
 
-    /// <summary>
-    /// Tests that removing a handler from the Disposed event works correctly and the handler is not invoked after removal.
-    /// </summary>
+    ///<summary>
+    ///Tests that adding and removing the same handler multiple times works correctly.
+    ///</summary>
     [TestMethod]
-    public void Disposed_RemoveHandler_HandlerNotInvokedOnDispose()
+    public void Disposed_AddRemoveSameHandlerMultipleTimes_BehavesCorrectly()
     {
         // Arrange
-        var component = new TestComponent();
-        var eventRaised = false;
+        TestComponent component = new TestComponent();
+        int invocationCount = 0;
 
-        EventHandler handler = (sender, e) => eventRaised = true;
-        component.Disposed += handler;
+        EventHandler handler = (sender, e) => invocationCount++;
 
         // Act
+        component.Disposed += handler;
+        component.Disposed += handler;
         component.Disposed -= handler;
         component.Dispose();
 
         // Assert
-        Assert.IsFalse(eventRaised, "Disposed event should not be raised after handler removal");
+        Assert.AreEqual(1, invocationCount, "Handler should be invoked once (second add creates duplicate, first remove removes one)");
     }
 
-    /// <summary>
-    /// Tests that multiple handlers can be added to the Disposed event and all are invoked during disposal.
-    /// </summary>
+    ///<summary>
+    ///Tests that the Disposed event is only raised once even when Dispose is called multiple times.
+    ///</summary>
+    [TestMethod]
+    public void Disposed_MultipleDisposes_EventRaisedOnlyOnce()
+    {
+        // Arrange
+        TestComponent component = new TestComponent();
+        int invocationCount = 0;
+
+        EventHandler handler = (sender, e) => invocationCount++;
+
+        // Act
+        component.Disposed += handler;
+        component.Dispose();
+        component.Dispose();
+        component.Dispose();
+
+        // Assert
+        Assert.AreEqual(1, invocationCount, "Disposed event should only be raised once");
+    }
+
+    ///<summary>
+    ///Tests that multiple handlers can be added to the Disposed event and all are invoked during disposal.
+    ///</summary>
     [TestMethod]
     public void Disposed_MultipleHandlers_AllHandlersInvoked()
     {
         // Arrange
-        var component = new TestComponent();
-        var handler1Invoked = false;
-        var handler2Invoked = false;
-        var handler3Invoked = false;
+        TestComponent component = new TestComponent();
+        bool handler1Invoked = false;
+        bool handler2Invoked = false;
+        bool handler3Invoked = false;
 
         EventHandler handler1 = (sender, e) => handler1Invoked = true;
         EventHandler handler2 = (sender, e) => handler2Invoked = true;
@@ -87,74 +288,69 @@ public class ComponentBaseTests
         Assert.IsTrue(handler3Invoked, "Third handler should be invoked");
     }
 
-    /// <summary>
-    /// Tests that the Disposed event is only raised once even when Dispose is called multiple times.
-    /// </summary>
-    [TestMethod]
-    public void Disposed_MultipleDisposes_EventRaisedOnlyOnce()
-    {
-        // Arrange
-        var component = new TestComponent();
-        var invocationCount = 0;
-
-        EventHandler handler = (sender, e) => invocationCount++;
-
-        // Act
-        component.Disposed += handler;
-        component.Dispose();
-        component.Dispose();
-        component.Dispose();
-
-        // Assert
-        Assert.AreEqual(1, invocationCount, "Disposed event should only be raised once");
-    }
-
-    /// <summary>
-    /// Tests that when no handlers are subscribed, disposing does not throw an exception.
-    /// </summary>
+    ///<summary>
+    ///Tests that when no handlers are subscribed, disposing does not throw an exception.
+    ///</summary>
     [TestMethod]
     public void Disposed_NoHandlers_DisposalDoesNotThrow()
     {
         // Arrange
-        var component = new TestComponent();
+        TestComponent component = new TestComponent();
 
         // Act & Assert
         component.Dispose(); // Should not throw
     }
 
-    /// <summary>
-    /// Tests that adding and removing the same handler multiple times works correctly.
-    /// </summary>
+    ///<summary>
+    ///Tests that removing a handler from the Disposed event works correctly and the handler is not invoked after
+    ///removal.
+    ///</summary>
     [TestMethod]
-    public void Disposed_AddRemoveSameHandlerMultipleTimes_BehavesCorrectly()
+    public void Disposed_RemoveHandler_HandlerNotInvokedOnDispose()
     {
         // Arrange
-        var component = new TestComponent();
-        var invocationCount = 0;
+        TestComponent component = new TestComponent();
+        bool eventRaised = false;
 
-        EventHandler handler = (sender, e) => invocationCount++;
+        EventHandler handler = (sender, e) => eventRaised = true;
+        component.Disposed += handler;
 
         // Act
-        component.Disposed += handler;
-        component.Disposed += handler;
         component.Disposed -= handler;
         component.Dispose();
 
         // Assert
-        Assert.AreEqual(1, invocationCount, "Handler should be invoked once (second add creates duplicate, first remove removes one)");
+        Assert.IsFalse(eventRaised, "Disposed event should not be raised after handler removal");
     }
 
-    /// <summary>
-    /// Tests that when multiple handlers are subscribed and one is removed, the remaining handlers are still invoked.
-    /// </summary>
+    ///<summary>
+    ///Tests that removing a handler that was never added does not cause any issues.
+    ///</summary>
+    [TestMethod]
+    public void Disposed_RemoveNonExistentHandler_DoesNotThrow()
+    {
+        // Arrange
+        TestComponent component = new TestComponent();
+        EventHandler handler = (sender, e) =>
+        {
+        };
+
+        // Act & Assert
+        component.Disposed -= handler; // Should not throw
+        component.Dispose(); // Should not throw
+    }
+
+    ///<summary>
+    ///Tests that when multiple handlers are subscribed and one is removed, the remaining handlers are still invoked.
+    ///</summary>
     [TestMethod]
     public void Disposed_RemoveOneOfMultipleHandlers_RemainingHandlersInvoked()
     {
         // Arrange
-        var component = new TestComponent();
-        var handler1Invoked = false;
-        var handler2Invoked = false;
-        var handler3Invoked = false;
+        TestComponent component = new TestComponent();
+        bool handler1Invoked = false;
+        bool handler2Invoked = false;
+        bool handler3Invoked = false;
 
         EventHandler handler1 = (sender, e) => handler1Invoked = true;
         EventHandler handler2 = (sender, e) => handler2Invoked = true;
@@ -174,424 +370,241 @@ public class ComponentBaseTests
         Assert.IsTrue(handler3Invoked, "Third handler should be invoked");
     }
 
-    /// <summary>
-    /// Tests that removing a handler that was never added does not cause any issues.
-    /// </summary>
-    [TestMethod]
-    public void Disposed_RemoveNonExistentHandler_DoesNotThrow()
-    {
-        // Arrange
-        var component = new TestComponent();
-        EventHandler handler = (sender, e) => { };
-
-        // Act & Assert
-        component.Disposed -= handler; // Should not throw
-        component.Dispose(); // Should not throw
-    }
-
-    /// <summary>
-    /// Minimal concrete implementation of ComponentBase for testing purposes.
-    /// </summary>
-    private class TestComponent : ComponentBase
-    {
-        // No additional implementation needed for event testing
-    }
-
-    /// <summary>
-    /// Tests that Container returns null when Site is null.
-    /// </summary>
-    [TestMethod]
-    public void Container_WhenSiteIsNull_ReturnsNull()
-    {
-        // Arrange
-        var component = new TestableComponentBase();
-
-        // Act
-        var container = component.ExposedContainer;
-
-        // Assert
-        Assert.IsNull(container);
-    }
-
-    /// <summary>
-    /// Tests that Container returns null when Site is not null but Site.Container is null.
-    /// </summary>
-    [TestMethod]
-    public void Container_WhenSiteContainerIsNull_ReturnsNull()
-    {
-        // Arrange
-        var stubSite = new StubSite { ContainerValue = null };
-        var component = new TestableComponentBase
-        {
-            Site = stubSite
-        };
-
-        // Act
-        var container = component.ExposedContainer;
-
-        // Assert
-        Assert.IsNull(container);
-    }
-
-    /// <summary>
-    /// Tests that Container returns the Site's Container when both Site and Site.Container are not null.
-    /// </summary>
-    [TestMethod]
-    public void Container_WhenSiteAndContainerAreNotNull_ReturnsContainer()
-    {
-        // Arrange
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
-        var component = new TestableComponentBase
-        {
-            Site = stubSite
-        };
-
-        // Act
-        var container = component.ExposedContainer;
-
-        // Assert
-        Assert.IsNotNull(container);
-        Assert.AreSame(stubContainer, container);
-    }
-
-    /// <summary>
-    /// Tests that Container updates when Site is changed from null to non-null.
-    /// </summary>
-    [TestMethod]
-    public void Container_WhenSiteChangedFromNullToNonNull_ReturnsNewContainer()
-    {
-        // Arrange
-        var component = new TestableComponentBase();
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
-
-        // Act
-        component.Site = stubSite;
-        var container = component.ExposedContainer;
-
-        // Assert
-        Assert.IsNotNull(container);
-        Assert.AreSame(stubContainer, container);
-    }
-
-    /// <summary>
-    /// Tests that Container returns null when Site is changed from non-null to null.
-    /// </summary>
-    [TestMethod]
-    public void Container_WhenSiteChangedFromNonNullToNull_ReturnsNull()
-    {
-        // Arrange
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
-        var component = new TestableComponentBase
-        {
-            Site = stubSite
-        };
-
-        // Act
-        component.Site = null;
-        var container = component.ExposedContainer;
-
-        // Assert
-        Assert.IsNull(container);
-    }
-
-    /// <summary>
-    /// Helper class that exposes protected members of ComponentBase for testing.
-    /// </summary>
-    private class TestableComponentBase : ComponentBase
-    {
-        /// <summary>
-        /// Exposes the protected Container property for testing.
-        /// </summary>
-        public IContainer? ExposedContainer => Container;
-    }
-
-    /// <summary>
-    /// Tests that GetService returns the component itself when requesting IComponent type.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetService returns the component itself when requesting IComponent type.
+    ///</summary>
     [TestMethod]
     public void GetService_RequestIComponent_ReturnsThis()
     {
         // Arrange
-        var component = new TestComponent();
+        TestComponent component = new TestComponent();
 
         // Act
-        var result = component.GetService(typeof(IComponent));
+        object? result = component.GetService(typeof(IComponent));
 
         // Assert
         Assert.AreSame(component, result);
     }
 
-    /// <summary>
-    /// Tests that GetService returns null when requesting ISite and Site is not set.
-    /// </summary>
-    [TestMethod]
-    public void GetService_RequestISiteWithNullSite_ReturnsNull()
-    {
-        // Arrange
-        var component = new TestComponent
-        {
-            Site = null
-        };
-
-        // Act
-        var result = component.GetService(typeof(ISite));
-
-        // Assert
-        Assert.IsNull(result);
-    }
-
-    /// <summary>
-    /// Tests that GetService returns the site when requesting ISite and Site is set.
-    /// </summary>
-    [TestMethod]
-    public void GetService_RequestISiteWithSiteSet_ReturnsSite()
-    {
-        // Arrange
-        var stubSite = new StubSite();
-        var component = new TestComponent
-        {
-            Site = stubSite
-        };
-
-        // Act
-        var result = component.GetService(typeof(ISite));
-
-        // Assert
-        Assert.AreSame(stubSite, result);
-    }
-
-    /// <summary>
-    /// Tests that GetService returns null when requesting IContainer and Site is not set.
-    /// </summary>
-    [TestMethod]
-    public void GetService_RequestIContainerWithNullSite_ReturnsNull()
-    {
-        // Arrange
-        var component = new TestComponent
-        {
-            Site = null
-        };
-
-        // Act
-        var result = component.GetService(typeof(IContainer));
-
-        // Assert
-        Assert.IsNull(result);
-    }
-
-    /// <summary>
-    /// Tests that GetService returns null when requesting IContainer and Site.Container is null.
-    /// </summary>
-    [TestMethod]
-    public void GetService_RequestIContainerWithNullContainer_ReturnsNull()
-    {
-        // Arrange
-        var stubSite = new StubSite { ContainerValue = null };
-        var component = new TestComponent
-        {
-            Site = stubSite
-        };
-
-        // Act
-        var result = component.GetService(typeof(IContainer));
-
-        // Assert
-        Assert.IsNull(result);
-    }
-
-    /// <summary>
-    /// Tests that GetService returns the container when requesting IContainer and Site.Container is set.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetService returns the container when requesting IContainer and Site.Container is set.
+    ///</summary>
     [TestMethod]
     public void GetService_RequestIContainerWithContainerSet_ReturnsContainer()
     {
         // Arrange
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
-        var component = new TestComponent
-        {
-            Site = stubSite
-        };
+        StubContainer stubContainer = new StubContainer();
+        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestComponent component = new TestComponent { Site = stubSite };
 
         // Act
-        var result = component.GetService(typeof(IContainer));
+        object? result = component.GetService(typeof(IContainer));
 
         // Assert
         Assert.AreSame(stubContainer, result);
     }
 
-    /// <summary>
-    /// Tests that GetService returns null when requesting other service and Site is not set.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetService returns null when requesting IContainer and Site.Container is null.
+    ///</summary>
     [TestMethod]
-    public void GetService_RequestOtherServiceWithNullSite_ReturnsNull()
+    public void GetService_RequestIContainerWithNullContainer_ReturnsNull()
     {
         // Arrange
-        var component = new TestComponent
-        {
-            Site = null
-        };
+        StubSite stubSite = new StubSite { ContainerValue = null };
+        TestComponent component = new TestComponent { Site = stubSite };
 
         // Act
-        var result = component.GetService(typeof(IServiceProvider));
+        object? result = component.GetService(typeof(IContainer));
 
         // Assert
         Assert.IsNull(result);
     }
 
-    /// <summary>
-    /// Tests that GetService delegates to Site.GetService when requesting other service and Site is set.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetService returns null when requesting IContainer and Site is not set.
+    ///</summary>
+    [TestMethod]
+    public void GetService_RequestIContainerWithNullSite_ReturnsNull()
+    {
+        // Arrange
+        TestComponent component = new TestComponent { Site = null };
+
+        // Act
+        object? result = component.GetService(typeof(IContainer));
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    ///<summary>
+    ///Tests that GetService returns null when requesting ISite and Site is not set.
+    ///</summary>
+    [TestMethod]
+    public void GetService_RequestISiteWithNullSite_ReturnsNull()
+    {
+        // Arrange
+        TestComponent component = new TestComponent { Site = null };
+
+        // Act
+        object? result = component.GetService(typeof(ISite));
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    ///<summary>
+    ///Tests that GetService returns the site when requesting ISite and Site is set.
+    ///</summary>
+    [TestMethod]
+    public void GetService_RequestISiteWithSiteSet_ReturnsSite()
+    {
+        // Arrange
+        StubSite stubSite = new StubSite();
+        TestComponent component = new TestComponent { Site = stubSite };
+
+        // Act
+        object? result = component.GetService(typeof(ISite));
+
+        // Assert
+        Assert.AreSame(stubSite, result);
+    }
+
+    ///<summary>
+    ///Tests that GetService returns null when requesting other service and Site is not set.
+    ///</summary>
+    [TestMethod]
+    public void GetService_RequestOtherServiceWithNullSite_ReturnsNull()
+    {
+        // Arrange
+        TestComponent component = new TestComponent { Site = null };
+
+        // Act
+        object? result = component.GetService(typeof(IServiceProvider));
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    ///<summary>
+    ///Tests that GetService returns null when requesting other service and Site.GetService returns null.
+    ///</summary>
+    [TestMethod]
+    public void GetService_RequestOtherServiceWithSiteReturningNull_ReturnsNull()
+    {
+        // Arrange
+        StubSite stubSite = new StubSite();
+        TestComponent component = new TestComponent { Site = stubSite };
+
+        // Act
+        object? result = component.GetService(typeof(IServiceProvider));
+
+        // Assert
+        Assert.IsNull(result);
+        Assert.AreEqual(1, stubSite.GetServiceCallCount);
+    }
+
+    ///<summary>
+    ///Tests that GetService delegates to Site.GetService when requesting other service and Site is set.
+    ///</summary>
     [TestMethod]
     public void GetService_RequestOtherServiceWithSiteSet_DelegatesToSiteGetService()
     {
         // Arrange
-        var expectedService = new object();
-        var stubSite = new StubSite();
+        object expectedService = new object();
+        StubSite stubSite = new StubSite();
         stubSite.Services[typeof(IServiceProvider)] = expectedService;
-        var component = new TestComponent
-        {
-            Site = stubSite
-        };
+        TestComponent component = new TestComponent { Site = stubSite };
 
         // Act
-        var result = component.GetService(typeof(IServiceProvider));
+        object? result = component.GetService(typeof(IServiceProvider));
 
         // Assert
         Assert.AreSame(expectedService, result);
         Assert.AreEqual(1, stubSite.GetServiceCallCount);
     }
 
-    /// <summary>
-    /// Tests that GetService returns null when requesting other service and Site.GetService returns null.
-    /// </summary>
     [TestMethod]
-    public void GetService_RequestOtherServiceWithSiteReturningNull_ReturnsNull()
+    public void Site_InitialValue_ReturnsNull()
     {
         // Arrange
-        var stubSite = new StubSite();
-        var component = new TestComponent
-        {
-            Site = stubSite
-        };
+        TestableComponentBase component = new TestableComponentBase();
 
         // Act
-        var result = component.GetService(typeof(IServiceProvider));
+        ISite? result = component.Site;
 
         // Assert
         Assert.IsNull(result);
-        Assert.AreEqual(1, stubSite.GetServiceCallCount);
     }
 
-    /// <summary>
-    /// Tests that Dispose raises the Disposed event with correct arguments.
-    /// </summary>
+    ///<summary>
+    ///Verifies that setting the Site property multiple times returns the last set value. Tests that the setter properly
+    ///overwrites the previous value. Expected: Returns the second ISite instance that was set.
+    ///</summary>
     [TestMethod]
-    public void Dispose_FirstCall_RaisesDisposedEvent()
+    public void Site_SetMultipleTimes_ReturnsLastValue()
     {
         // Arrange
-        var component = new TestableComponentBase();
-        object? eventSender = null;
-        EventArgs? eventArgs = null;
-        component.Disposed += (sender, args) =>
-        {
-            eventSender = sender;
-            eventArgs = args;
-        };
+        TestableComponentBase component = new TestableComponentBase();
+        StubSite stubSite1 = new StubSite();
+        StubSite stubSite2 = new StubSite();
 
         // Act
-        component.Dispose();
+        component.Site = stubSite1;
+        component.Site = stubSite2;
+        ISite result = component.Site;
 
         // Assert
-        Assert.IsNotNull(eventSender);
-        Assert.AreSame(component, eventSender);
-        Assert.IsNotNull(eventArgs);
-        Assert.AreSame(EventArgs.Empty, eventArgs);
+        Assert.AreSame(stubSite2, result);
     }
 
-    /// <summary>
-    /// Tests that Dispose removes the component from its container when sited.
-    /// </summary>
+    ///<summary>
+    ///Verifies that the Site property can be set to null and returns null. Tests setting null after having a previous
+    ///non-null value. Expected: Returns null.
+    ///</summary>
     [TestMethod]
-    public void Dispose_WithSite_RemovesFromContainer()
+    public void Site_SetNull_ReturnsNull()
     {
         // Arrange
-        var component = new TestableComponentBase();
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new TestableComponentBase();
+        StubSite stubSite = new StubSite();
         component.Site = stubSite;
 
         // Act
-        component.Dispose();
+        component.Site = null;
+        ISite? result = component.Site;
 
         // Assert
-        Assert.AreEqual(1, stubContainer.RemoveCallCount);
-        Assert.AreSame(component, stubContainer.LastRemovedComponent);
+        Assert.IsNull(result);
     }
 
-    /// <summary>
-    /// Tests that Dispose clears the Site property.
-    /// </summary>
+    ///<summary>
+    ///Verifies that the Site property returns the value that was set. Tests both setter and getter with a valid ISite
+    ///instance. Expected: Returns the same ISite instance that was set.
+    ///</summary>
     [TestMethod]
-    public void Dispose_WithSite_ClearsSite()
+    public void Site_SetValue_ReturnsSetValue()
     {
         // Arrange
-        var component = new TestableComponentBase();
-        var stubContainer = new StubContainer();
-        var stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new TestableComponentBase();
+        StubSite stubSite = new StubSite();
+
+        // Act
         component.Site = stubSite;
-
-        // Act
-        component.Dispose();
+        ISite result = component.Site;
 
         // Assert
-        Assert.IsNull(component.Site);
+        Assert.AreSame(stubSite, result);
     }
 
-    /// <summary>
-    /// Tests that Dispose raises the Disposed event only once when called multiple times.
-    /// </summary>
-    [TestMethod]
-    public void Dispose_MultipleCalls_RaisesEventOnlyOnce()
-    {
-        // Arrange
-        var component = new TestableComponentBase();
-        int eventRaisedCount = 0;
-        component.Disposed += (sender, args) => eventRaisedCount++;
-
-        // Act
-        component.Dispose();
-        component.Dispose();
-        component.Dispose();
-
-        // Assert
-        Assert.AreEqual(1, eventRaisedCount);
-    }
-
-    /// <summary>
-    /// Tests that ThrowIfDisposed does not throw when the component has not been disposed.
-    /// </summary>
-    [TestMethod]
-    public void ThrowIfDisposed_WhenNotDisposed_DoesNotThrow()
-    {
-        // Arrange
-        using var component = new TestableComponent();
-
-        // Act & Assert
-        component.ExposeThrowIfDisposed();
-    }
-
-    /// <summary>
-    /// Tests that ThrowIfDisposed can be called multiple times when not disposed without throwing.
-    /// </summary>
+    ///<summary>
+    ///Tests that ThrowIfDisposed can be called multiple times when not disposed without throwing.
+    ///</summary>
     [TestMethod]
     public void ThrowIfDisposed_CalledMultipleTimesWhenNotDisposed_DoesNotThrow()
     {
         // Arrange
-        using var component = new TestableComponent();
+        using TestableComponent component = new TestableComponent();
 
         // Act & Assert
         component.ExposeThrowIfDisposed();
@@ -599,20 +612,22 @@ public class ComponentBaseTests
         component.ExposeThrowIfDisposed();
     }
 
-    /// <summary>
-    /// Testable concrete implementation of ComponentBase for testing protected members.
-    /// </summary>
-    private sealed class TestableComponent : ComponentBase
+    ///<summary>
+    ///Tests that ThrowIfDisposed does not throw when the component has not been disposed.
+    ///</summary>
+    [TestMethod]
+    public void ThrowIfDisposed_WhenNotDisposed_DoesNotThrow()
     {
-        /// <summary>
-        /// Exposes the protected ThrowIfDisposed method for testing.
-        /// </summary>
-        public void ExposeThrowIfDisposed() => ThrowIfDisposed();
+        // Arrange
+        using TestableComponent component = new TestableComponent();
+
+        // Act & Assert
+        component.ExposeThrowIfDisposed();
     }
 
-    /// <summary>
-    /// Tests that ToString returns only the type name when Site is null.
-    /// </summary>
+    ///<summary>
+    ///Tests that ToString returns only the type name when Site is null.
+    ///</summary>
     [TestMethod]
     public void ToString_SiteIsNull_ReturnsTypeName()
     {
@@ -627,56 +642,15 @@ public class ComponentBaseTests
         Assert.AreEqual(expectedTypeName, result);
     }
 
-    /// <summary>
-    /// Tests that ToString returns only the type name when Site is not null but Site.Name is null.
-    /// </summary>
-    [TestMethod]
-    public void ToString_SiteNameIsNull_ReturnsTypeName()
-    {
-        // Arrange
-        TestComponent component = new();
-        var stubSite = new StubSite { NameValue = null };
-        component.Site = stubSite;
-        string expectedTypeName = "TestComponent";
-
-        // Act
-        string result = component.ToString();
-
-        // Assert
-        Assert.AreEqual(expectedTypeName, result);
-    }
-
-    /// <summary>
-    /// Tests that ToString returns formatted string with type name and site name when both are available.
-    /// </summary>
-    [TestMethod]
-    [DataRow("MyComponent")]
-    [DataRow("Component1")]
-    [DataRow("Test")]
-    public void ToString_SiteNameIsNotNull_ReturnsFormattedString(string siteName)
-    {
-        // Arrange
-        TestComponent component = new();
-        var stubSite = new StubSite { NameValue = siteName };
-        component.Site = stubSite;
-        string expected = $"TestComponent [{siteName}]";
-
-        // Act
-        string result = component.ToString();
-
-        // Assert
-        Assert.AreEqual(expected, result);
-    }
-
-    /// <summary>
-    /// Tests that ToString returns formatted string with empty brackets when Site.Name is empty string.
-    /// </summary>
+    ///<summary>
+    ///Tests that ToString returns formatted string with empty brackets when Site.Name is empty string.
+    ///</summary>
     [TestMethod]
     public void ToString_SiteNameIsEmpty_ReturnsFormattedStringWithEmptyBrackets()
     {
         // Arrange
         TestComponent component = new();
-        var stubSite = new StubSite { NameValue = string.Empty };
+        StubSite stubSite = new StubSite { NameValue = string.Empty };
         component.Site = stubSite;
         string expected = "TestComponent []";
 
@@ -687,16 +661,57 @@ public class ComponentBaseTests
         Assert.AreEqual(expected, result);
     }
 
-    /// <summary>
-    /// Tests that ToString returns formatted string with whitespace in brackets when Site.Name is whitespace.
-    /// </summary>
+    ///<summary>
+    ///Tests that ToString returns formatted string with type name and site name when both are available.
+    ///</summary>
+    [TestMethod]
+    [DataRow("MyComponent")]
+    [DataRow("Component1")]
+    [DataRow("Test")]
+    public void ToString_SiteNameIsNotNull_ReturnsFormattedString(string siteName)
+    {
+        // Arrange
+        TestComponent component = new();
+        StubSite stubSite = new StubSite { NameValue = siteName };
+        component.Site = stubSite;
+        string expected = $"TestComponent [{siteName}]";
+
+        // Act
+        string result = component.ToString();
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    ///<summary>
+    ///Tests that ToString returns only the type name when Site is not null but Site.Name is null.
+    ///</summary>
+    [TestMethod]
+    public void ToString_SiteNameIsNull_ReturnsTypeName()
+    {
+        // Arrange
+        TestComponent component = new();
+        StubSite stubSite = new StubSite { NameValue = null };
+        component.Site = stubSite;
+        string expectedTypeName = "TestComponent";
+
+        // Act
+        string result = component.ToString();
+
+        // Assert
+        Assert.AreEqual(expectedTypeName, result);
+    }
+
+    ///<summary>
+    ///Tests that ToString returns formatted string with whitespace in brackets when Site.Name is whitespace.
+    ///</summary>
     [TestMethod]
     public void ToString_SiteNameIsWhitespace_ReturnsFormattedStringWithWhitespaceBrackets()
     {
         // Arrange
         TestComponent component = new();
         string whitespace = "   ";
-        var stubSite = new StubSite { NameValue = whitespace };
+        StubSite stubSite = new StubSite { NameValue = whitespace };
         component.Site = stubSite;
         string expected = $"TestComponent [{whitespace}]";
 
@@ -706,139 +721,111 @@ public class ComponentBaseTests
         // Assert
         Assert.AreEqual(expected, result);
     }
-
-    #region Dispose(bool) Tests
-
     #endregion
 
-    #region Helper Classes
-
-    #endregion
-
-    /// <summary>
-    /// Verifies that the Site property returns null when first accessed without being set.
-    /// Tests the getter with the initial default value.
-    /// Expected: Returns null.
-    /// </summary>
-    [TestMethod]
-    public void Site_InitialValue_ReturnsNull()
+    ///<summary>
+    ///Minimal concrete implementation of ComponentBase for testing purposes.
+    ///</summary>
+    class TestComponent : ComponentBase
     {
-        // Arrange
-        var component = new TestableComponentBase();
-
-        // Act
-        var result = component.Site;
-
-        // Assert
-        Assert.IsNull(result);
+        // No additional implementation needed for event testing
     }
 
-    /// <summary>
-    /// Verifies that the Site property returns the value that was set.
-    /// Tests both setter and getter with a valid ISite instance.
-    /// Expected: Returns the same ISite instance that was set.
-    /// </summary>
-    [TestMethod]
-    public void Site_SetValue_ReturnsSetValue()
+    ///<summary>
+    ///Helper class that exposes protected members of ComponentBase for testing.
+    ///</summary>
+    class TestableComponentBase : ComponentBase
     {
-        // Arrange
-        var component = new TestableComponentBase();
-        var stubSite = new StubSite();
+        #region Public properties
 
-        // Act
-        component.Site = stubSite;
-        var result = component.Site;
-
-        // Assert
-        Assert.AreSame(stubSite, result);
+        ///<summary>
+        ///Exposes the protected Container property for testing.
+        ///</summary>
+        public IContainer? ExposedContainer => Container;
+        #endregion
     }
 
-    /// <summary>
-    /// Verifies that the Site property can be set to null and returns null.
-    /// Tests setting null after having a previous non-null value.
-    /// Expected: Returns null.
-    /// </summary>
-    [TestMethod]
-    public void Site_SetNull_ReturnsNull()
+    ///<summary>
+    ///Testable concrete implementation of ComponentBase for testing protected members.
+    ///</summary>
+    sealed class TestableComponent : ComponentBase
     {
-        // Arrange
-        var component = new TestableComponentBase();
-        var stubSite = new StubSite();
-        component.Site = stubSite;
+        #region Public methods
 
-        // Act
-        component.Site = null;
-        var result = component.Site;
-
-        // Assert
-        Assert.IsNull(result);
+        ///<summary>
+        ///Exposes the protected ThrowIfDisposed method for testing.
+        ///</summary>
+        public void ExposeThrowIfDisposed() { ThrowIfDisposed(); }
+        #endregion
     }
 
-    /// <summary>
-    /// Verifies that setting the Site property multiple times returns the last set value.
-    /// Tests that the setter properly overwrites the previous value.
-    /// Expected: Returns the second ISite instance that was set.
-    /// </summary>
-    [TestMethod]
-    public void Site_SetMultipleTimes_ReturnsLastValue()
+    sealed class StubSite : ISite
     {
-        // Arrange
-        var component = new TestableComponentBase();
-        var stubSite1 = new StubSite();
-        var stubSite2 = new StubSite();
-
-        // Act
-        component.Site = stubSite1;
-        component.Site = stubSite2;
-        var result = component.Site;
-
-        // Assert
-        Assert.AreSame(stubSite2, result);
-    }
-
-    private sealed class StubSite : ISite
-    {
-        public IContainer? ContainerValue { get; set; }
-        public string? NameValue { get; set; }
-        public Dictionary<Type, object?> Services { get; } = [];
-        public int GetServiceCallCount { get; private set; }
-
-        public IComponent Component { get; set; } = null!;
-        public IContainer Container => ContainerValue!;
-        public bool DesignMode { get; set; }
-        public string? Name { get => NameValue; set => NameValue = value; }
-
+        #region Public methods
         public object? GetService(Type serviceType)
         {
             GetServiceCallCount++;
-            return Services.TryGetValue(serviceType, out var service) ? service : null;
+            return Services.TryGetValue(serviceType, out object? service) ? service : null;
         }
+        #endregion
+
+        #region Public properties
+        public IComponent Component { get; set; } = null!;
+
+        public IContainer Container => ContainerValue!;
+
+        public IContainer? ContainerValue { get; set; }
+
+        public bool DesignMode { get; set; }
+
+        public int GetServiceCallCount { get; private set; }
+
+        public string? Name { get => NameValue; set => NameValue = value; }
+
+        public string? NameValue { get; set; }
+
+        public Dictionary<Type, object?> Services { get; } = [];
+        #endregion
     }
 
-    private sealed class StubContainer : IContainer
+    sealed class StubContainer : IContainer
     {
-        private readonly List<IComponent> _components = [];
-        public int RemoveCallCount { get; private set; }
-        public IComponent? LastRemovedComponent { get; private set; }
+        #region Fields
+        readonly List<IComponent> _components = [];
+        #endregion
 
-        public ComponentCollection Components => new([.. _components]);
-
-        public void Add(IComponent? component) => Add(component, null);
+        #region Public methods
+        public void Add(IComponent? component) { Add(component, null); }
 
         public void Add(IComponent? component, string? name)
         {
-            if (component is not null)
+            if(component is not null)
+            {
                 _components.Add(component);
+            }
+        }
+
+        public void Dispose()
+        {
         }
 
         public void Remove(IComponent? component)
         {
             RemoveCallCount++;
             LastRemovedComponent = component;
-            if (component is not null)
+            if(component is not null)
+            {
                 _components.Remove(component);
+            }
         }
+        #endregion
 
-        public void Dispose() { }
+        #region Public properties
+        public ComponentCollection Components => new([ .. _components ]);
+
+        public IComponent? LastRemovedComponent { get; private set; }
+
+        public int RemoveCallCount { get; private set; }
+        #endregion
     }
 }

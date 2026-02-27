@@ -1,42 +1,80 @@
-using System.Buffers;
-using System.Collections.Immutable;
 using Catharsis.Buffers;
 using Catharsis.Immutable;
 using CommunityToolkit.Diagnostics;
 
 namespace Catharsis.Patterns;
 
-/// <summary>
-/// Demonstrates a hybrid data structure that uses pooled buffers for mutable
-/// construction and freezes them into immutable form for thread-safe read access.
-/// </summary>
+///<summary>
+///Demonstrates a hybrid data structure that uses pooled buffers for mutable construction and freezes them into
+///immutable form for thread-safe read access.
+///</summary>
 public sealed class ImmutablePooledHybrid<T> : IDisposable
 {
-    private readonly PooledBuffer<T> _mutableBuffer;
-    private ImmutableBuffer<T> _frozen;
-    private bool _isFrozen;
-    private bool _disposed;
+    #region Fields
+    bool _disposed;
+    ImmutableBuffer<T> _frozen;
+    bool _isFrozen;
+    readonly PooledBuffer<T> _mutableBuffer;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
-    /// </summary>
-    /// <param name="initialCapacity">The initial mutable buffer capacity.</param>
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
+    ///</summary>
+    ///<param name="initialCapacity">The initial mutable buffer capacity.</param>
     public ImmutablePooledHybrid(int initialCapacity = 256)
     {
         _mutableBuffer = new PooledBuffer<T>(initialCapacity);
         _frozen = ImmutableBuffer<T>.Empty;
     }
+    #endregion
 
-    /// <summary>Gets whether the buffer has been frozen into immutable form.</summary>
-    public bool IsFrozen => _isFrozen;
+    #region Public methods
+    ///<inheritdoc/>
+    public void Dispose()
+    {
+        if(_disposed)
+        {
+            return;
+        }
 
-    /// <summary>Gets the number of elements.</summary>
-    public int Count => _isFrozen ? _frozen.Count : _mutableBuffer.WrittenCount;
+        _disposed = true;
+        _mutableBuffer.Dispose();
+    }
 
-    /// <summary>
-    /// Writes data to the mutable buffer. Throws if already frozen.
-    /// </summary>
-    /// <param name="data">The data to write.</param>
+    ///<summary>
+    ///Freezes the mutable buffer into an immutable snapshot. After freezing, no more writes are allowed but reads
+    ///become thread-safe.
+    ///</summary>
+    ///<returns>The immutable buffer.</returns>
+    public ImmutableBuffer<T> Freeze()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if(!_isFrozen)
+        {
+            _frozen = new ImmutableBuffer<T>(_mutableBuffer.WrittenSpan);
+            _isFrozen = true;
+        }
+
+        return _frozen;
+    }
+
+    ///<summary>
+    ///Resets the hybrid to mutable mode, discarding the frozen snapshot.
+    ///</summary>
+    public void Reset()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        _mutableBuffer.Reset();
+        _frozen = ImmutableBuffer<T>.Empty;
+        _isFrozen = false;
+    }
+
+    ///<summary>
+    ///Writes data to the mutable buffer. Throws if already frozen.
+    ///</summary>
+    ///<param name="data">The data to write.</param>
     public void Write(ReadOnlySpan<T> data)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -46,47 +84,22 @@ public sealed class ImmutablePooledHybrid<T> : IDisposable
         data.CopyTo(span);
         _mutableBuffer.Advance(data.Length);
     }
+    #endregion
 
-    /// <summary>
-    /// Freezes the mutable buffer into an immutable snapshot. After freezing,
-    /// no more writes are allowed but reads become thread-safe.
-    /// </summary>
-    /// <returns>The immutable buffer.</returns>
-    public ImmutableBuffer<T> Freeze()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
+    #region Public properties
+    ///<summary>
+    ///Gets the number of elements.
+    ///</summary>
+    public int Count => _isFrozen ? _frozen.Count : _mutableBuffer.WrittenCount;
 
-        if (!_isFrozen)
-        {
-            _frozen = new ImmutableBuffer<T>(_mutableBuffer.WrittenSpan);
-            _isFrozen = true;
-        }
+    ///<summary>
+    ///Gets whether the buffer has been frozen into immutable form.
+    ///</summary>
+    public bool IsFrozen => _isFrozen;
 
-        return _frozen;
-    }
-
-    /// <summary>
-    /// Gets the data as a read-only span. Returns the frozen data if frozen,
-    /// otherwise returns the current mutable data.
-    /// </summary>
+    ///<summary>
+    ///Gets the data as a read-only span. Returns the frozen data if frozen, otherwise returns the current mutable data.
+    ///</summary>
     public ReadOnlySpan<T> Span => _isFrozen ? _frozen.Span : _mutableBuffer.WrittenSpan;
-
-    /// <summary>
-    /// Resets the hybrid to mutable mode, discarding the frozen snapshot.
-    /// </summary>
-    public void Reset()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        _mutableBuffer.Reset();
-        _frozen = ImmutableBuffer<T>.Empty;
-        _isFrozen = false;
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        _mutableBuffer.Dispose();
-    }
+    #endregion
 }

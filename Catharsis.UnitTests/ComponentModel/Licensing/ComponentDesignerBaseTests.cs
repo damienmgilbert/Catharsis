@@ -1,84 +1,16 @@
-using Catharsis.ComponentModel.Licensing;
 using System.ComponentModel;
+using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
 [TestClass]
 public sealed class ComponentDesignerBaseTests
 {
-    [TestMethod]
-    public void Initialize_NullComponent_ThrowsArgumentNullException()
-    {
-        using var designer = new TestDesigner();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => designer.Initialize(null!));
-    }
-
-    [TestMethod]
-    public void Initialize_ValidComponent_SetsComponent()
-    {
-        using var designer = new TestDesigner();
-        var component = new StubComponent();
-
-        designer.Initialize(component);
-
-        Assert.AreSame(component, designer.Component);
-    }
-
-    [TestMethod]
-    public void Initialize_CalledTwice_ThrowsInvalidOperationException()
-    {
-        using var designer = new TestDesigner();
-        designer.Initialize(new StubComponent());
-
-        Assert.ThrowsExactly<InvalidOperationException>(
-            () => designer.Initialize(new StubComponent()));
-    }
-
-    [TestMethod]
-    public void Initialize_AfterDispose_ThrowsObjectDisposedException()
-    {
-        var designer = new TestDesigner();
-        designer.Dispose();
-
-        Assert.ThrowsExactly<ObjectDisposedException>(
-            () => designer.Initialize(new StubComponent()));
-    }
-
-    [TestMethod]
-    public void Initialize_CallsOnInitialize()
-    {
-        using var designer = new TestDesigner();
-
-        designer.Initialize(new StubComponent());
-
-        Assert.IsTrue(designer.OnInitializeCalled);
-    }
-
-    [TestMethod]
-    public void Initialize_WithContainer_PassesContainerToContext()
-    {
-        using var designer = new TestDesigner();
-        var container = new StubContainer();
-
-        designer.Initialize(new StubComponent(), container);
-
-        Assert.AreSame(container, designer.ExposedContext!.Container);
-    }
-
-    [TestMethod]
-    public void Component_BeforeInitialize_ReturnsNull()
-    {
-        using var designer = new TestDesigner();
-
-        Assert.IsNull(designer.Component);
-    }
-
+    #region Public methods
     [TestMethod]
     public void ActionList_DefaultCreateActionList_ReturnsNull()
     {
-        using var designer = new TestDesigner();
+        using TestDesigner designer = new TestDesigner();
         designer.Initialize(new StubComponent());
 
         Assert.IsNull(designer.ActionList);
@@ -87,37 +19,34 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void ActionList_OverriddenCreateActionList_ReturnsActionList()
     {
-        using var designer = new DesignerWithActions();
+        using DesignerWithActions designer = new DesignerWithActions();
         designer.Initialize(new StubComponent());
 
         Assert.IsNotNull(designer.ActionList);
     }
 
     [TestMethod]
-    public void NotifyComponentChanged_NullPropertyName_ThrowsArgumentNullException()
+    public void Component_BeforeInitialize_ReturnsNull()
     {
-        using var designer = new TestDesigner();
-        designer.Initialize(new StubComponent());
+        using TestDesigner designer = new TestDesigner();
 
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => designer.NotifyComponentChanged(null!));
+        Assert.IsNull(designer.Component);
     }
 
     [TestMethod]
-    public void NotifyComponentChanged_CallsOnComponentChanged()
+    public void Dispose_CalledTwice_DoesNotThrow()
     {
-        using var designer = new TestDesigner();
+        TestDesigner designer = new TestDesigner();
         designer.Initialize(new StubComponent());
 
-        designer.NotifyComponentChanged("Name");
-
-        Assert.AreEqual("Name", designer.LastChangedProperty);
+        designer.Dispose();
+        designer.Dispose();
     }
 
     [TestMethod]
     public void Dispose_ClearsContextAndActionList()
     {
-        var designer = new DesignerWithActions();
+        DesignerWithActions designer = new DesignerWithActions();
         designer.Initialize(new StubComponent());
         Assert.IsNotNull(designer.ActionList);
 
@@ -128,50 +57,143 @@ public sealed class ComponentDesignerBaseTests
     }
 
     [TestMethod]
-    public void Dispose_CalledTwice_DoesNotThrow()
+    public void Initialize_AfterDispose_ThrowsObjectDisposedException()
     {
-        var designer = new TestDesigner();
+        TestDesigner designer = new TestDesigner();
+        designer.Dispose();
+
+        Assert.ThrowsExactly<ObjectDisposedException>(() => designer.Initialize(new StubComponent()));
+    }
+
+    [TestMethod]
+    public void Initialize_CalledTwice_ThrowsInvalidOperationException()
+    {
+        using TestDesigner designer = new TestDesigner();
         designer.Initialize(new StubComponent());
 
-        designer.Dispose();
-        designer.Dispose();
+        Assert.ThrowsExactly<InvalidOperationException>(() => designer.Initialize(new StubComponent()));
     }
 
-    private class TestDesigner : ComponentDesignerBase
+    [TestMethod]
+    public void Initialize_CallsOnInitialize()
     {
-        public bool OnInitializeCalled { get; private set; }
-        public string? LastChangedProperty { get; private set; }
+        using TestDesigner designer = new TestDesigner();
+
+        designer.Initialize(new StubComponent());
+
+        Assert.IsTrue(designer.OnInitializeCalled);
+    }
+
+    [TestMethod]
+    public void Initialize_NullComponent_ThrowsArgumentNullException()
+    {
+        using TestDesigner designer = new TestDesigner();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => designer.Initialize(null!));
+    }
+
+    [TestMethod]
+    public void Initialize_ValidComponent_SetsComponent()
+    {
+        using TestDesigner designer = new TestDesigner();
+        StubComponent component = new StubComponent();
+
+        designer.Initialize(component);
+
+        Assert.AreSame(component, designer.Component);
+    }
+
+    [TestMethod]
+    public void Initialize_WithContainer_PassesContainerToContext()
+    {
+        using TestDesigner designer = new TestDesigner();
+        StubContainer container = new StubContainer();
+
+        designer.Initialize(new StubComponent(), container);
+
+        Assert.AreSame(container, designer.ExposedContext!.Container);
+    }
+
+    [TestMethod]
+    public void NotifyComponentChanged_CallsOnComponentChanged()
+    {
+        using TestDesigner designer = new TestDesigner();
+        designer.Initialize(new StubComponent());
+
+        designer.NotifyComponentChanged("Name");
+
+        Assert.AreEqual("Name", designer.LastChangedProperty);
+    }
+
+    [TestMethod]
+    public void NotifyComponentChanged_NullPropertyName_ThrowsArgumentNullException()
+    {
+        using TestDesigner designer = new TestDesigner();
+        designer.Initialize(new StubComponent());
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => designer.NotifyComponentChanged(null!));
+    }
+    #endregion
+
+    class TestDesigner : ComponentDesignerBase
+    {
+        #region Protected methods
+        protected override void OnComponentChanged(string propertyName) { LastChangedProperty = propertyName; }
+        protected override void OnInitialize(ComponentDesignContext context) { OnInitializeCalled = true; }
+        #endregion
+
+        #region Public properties
         public ComponentDesignContext? ExposedContext => Context;
 
-        protected override void OnInitialize(ComponentDesignContext context) =>
-            OnInitializeCalled = true;
+        public string? LastChangedProperty { get; private set; }
 
-        protected override void OnComponentChanged(string propertyName) =>
-            LastChangedProperty = propertyName;
+        public bool OnInitializeCalled { get; private set; }
+        #endregion
     }
 
-    private sealed class DesignerWithActions : TestDesigner
+    sealed class DesignerWithActions : TestDesigner
     {
-        protected override ComponentActionList? CreateActionList(ComponentDesignContext context) =>
-            new TestActionList(context);
+        #region Protected methods
+        protected override ComponentActionList? CreateActionList(ComponentDesignContext context) { return new TestActionList(context); }
+        #endregion
 
-        private sealed class TestActionList(ComponentDesignContext context)
-            : ComponentActionList(context);
+        sealed class TestActionList(ComponentDesignContext context) : ComponentActionList(context);
     }
 
-    private sealed class StubComponent : IComponent
+    sealed class StubComponent : IComponent
     {
-        public ISite? Site { get; set; }
+        #region Events
         public event EventHandler? Disposed;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #endregion
+
+        #region Public methods
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 
-    private sealed class StubContainer : IContainer
+    sealed class StubContainer : IContainer
     {
+        #region Public methods
+        public void Add(IComponent? component)
+        {
+        }
+        public void Add(IComponent? component, string? name)
+        {
+        }
+        public void Dispose()
+        {
+        }
+        public void Remove(IComponent? component)
+        {
+        }
+        #endregion
+
+        #region Public properties
         public ComponentCollection Components => new([]);
-        public void Add(IComponent? component) { }
-        public void Add(IComponent? component, string? name) { }
-        public void Remove(IComponent? component) { }
-        public void Dispose() { }
+        #endregion
     }
 }

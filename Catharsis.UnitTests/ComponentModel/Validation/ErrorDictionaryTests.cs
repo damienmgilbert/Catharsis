@@ -5,18 +5,27 @@ namespace Catharsis.UnitTests.ComponentModel.Validation;
 [TestClass]
 public sealed class ErrorDictionaryTests
 {
+    #region Public methods
     [TestMethod]
-    public void HasErrors_NoErrors_ReturnsFalse()
+    public void AddError_NullError_ThrowsArgumentNullException()
     {
-        var dict = new ErrorDictionary();
+        ErrorDictionary dict = new ErrorDictionary();
 
-        Assert.IsFalse(dict.HasErrors);
+        Assert.ThrowsExactly<ArgumentNullException>(() => dict.AddError("Name", null!));
+    }
+
+    [TestMethod]
+    public void AddError_NullPropertyName_ThrowsArgumentNullException()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => dict.AddError(null!, new ErrorInfo("msg")));
     }
 
     [TestMethod]
     public void AddError_SingleError_HasErrorsReturnsTrue()
     {
-        var dict = new ErrorDictionary();
+        ErrorDictionary dict = new ErrorDictionary();
 
         dict.AddError("Name", new ErrorInfo("Required."));
 
@@ -24,120 +33,9 @@ public sealed class ErrorDictionaryTests
     }
 
     [TestMethod]
-    public void AddError_NullPropertyName_ThrowsArgumentNullException()
-    {
-        var dict = new ErrorDictionary();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => dict.AddError(null!, new ErrorInfo("msg")));
-    }
-
-    [TestMethod]
-    public void AddError_NullError_ThrowsArgumentNullException()
-    {
-        var dict = new ErrorDictionary();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => dict.AddError("Name", null!));
-    }
-
-    [TestMethod]
-    public void GetErrors_ByPropertyName_ReturnsOnlyThatProperty()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("Required."));
-        dict.AddError("Age", new ErrorInfo("Out of range."));
-
-        var errors = dict.GetErrors("Name").Cast<ErrorInfo>().ToList();
-
-        Assert.AreEqual(1, errors.Count);
-        Assert.AreEqual("Required.", errors[0].Message);
-    }
-
-    [TestMethod]
-    public void GetErrors_NullOrEmpty_ReturnsAllErrors()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err1"));
-        dict.AddError("Age", new ErrorInfo("err2"));
-
-        var errors = dict.GetErrors(null).Cast<ErrorInfo>().ToList();
-
-        Assert.AreEqual(2, errors.Count);
-    }
-
-    [TestMethod]
-    public void GetErrors_UnknownProperty_ReturnsEmptyList()
-    {
-        var dict = new ErrorDictionary();
-
-        var errors = dict.GetErrors("Unknown").Cast<ErrorInfo>().ToList();
-
-        Assert.AreEqual(0, errors.Count);
-    }
-
-    [TestMethod]
-    public void GetErrorInfos_ReturnsTypedList()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("Required."));
-
-        IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
-
-        Assert.AreEqual(1, errors.Count);
-        Assert.AreEqual("Required.", errors[0].Message);
-    }
-
-    [TestMethod]
-    public void SetErrors_ReplacesExistingErrors()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("old"));
-
-        dict.SetErrors("Name", [new ErrorInfo("new1"), new ErrorInfo("new2")]);
-
-        var errors = dict.GetErrorInfos("Name");
-        Assert.AreEqual(2, errors.Count);
-        Assert.AreEqual("new1", errors[0].Message);
-    }
-
-    [TestMethod]
-    public void SetErrors_EmptyList_ClearsErrors()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err"));
-
-        dict.SetErrors("Name", []);
-
-        Assert.IsFalse(dict.HasErrors);
-    }
-
-    [TestMethod]
-    public void SetErrors_NullPropertyName_ThrowsArgumentNullException()
-    {
-        var dict = new ErrorDictionary();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => dict.SetErrors(null!, [new ErrorInfo("msg")]));
-    }
-
-    [TestMethod]
-    public void ClearErrors_RemovesErrorsForProperty()
-    {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err"));
-        dict.AddError("Age", new ErrorInfo("err"));
-
-        dict.ClearErrors("Name");
-
-        Assert.AreEqual(0, dict.GetErrorInfos("Name").Count);
-        Assert.AreEqual(1, dict.GetErrorInfos("Age").Count);
-    }
-
-    [TestMethod]
     public void ClearAll_RemovesAllErrors()
     {
-        var dict = new ErrorDictionary();
+        ErrorDictionary dict = new ErrorDictionary();
         dict.AddError("Name", new ErrorInfo("err"));
         dict.AddError("Age", new ErrorInfo("err"));
 
@@ -149,31 +47,51 @@ public sealed class ErrorDictionaryTests
     }
 
     [TestMethod]
-    public void PropertyErrorCount_ReturnsDistinctPropertyCount()
+    public void ClearErrors_RemovesErrorsForProperty()
     {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err1"));
-        dict.AddError("Name", new ErrorInfo("err2"));
-        dict.AddError("Age", new ErrorInfo("err3"));
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err"));
+        dict.AddError("Age", new ErrorInfo("err"));
 
-        Assert.AreEqual(2, dict.PropertyErrorCount);
+        dict.ClearErrors("Name");
+
+        Assert.AreEqual(0, dict.GetErrorInfos("Name").Count);
+        Assert.AreEqual(1, dict.GetErrorInfos("Age").Count);
     }
 
     [TestMethod]
-    public void TotalErrorCount_ReturnsSumOfAllErrors()
+    public void ErrorsChanged_NotRaisedWhenClearingEmptyProperty()
     {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err1"));
-        dict.AddError("Name", new ErrorInfo("err2"));
-        dict.AddError("Age", new ErrorInfo("err3"));
+        ErrorDictionary dict = new ErrorDictionary();
+        bool raised = false;
+        dict.ErrorsChanged += (s, e) => raised = true;
 
-        Assert.AreEqual(3, dict.TotalErrorCount);
+        dict.ClearErrors("NonExistent");
+
+        Assert.IsFalse(raised);
+    }
+
+    [TestMethod]
+    public void ErrorsChanged_RaisedForEachPropertyOnClearAll()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err"));
+        dict.AddError("Age", new ErrorInfo("err"));
+
+        List<string> changedProperties = new List<string>();
+        dict.ErrorsChanged += (s, e) => changedProperties.Add(e.PropertyName!);
+
+        dict.ClearAll();
+
+        Assert.AreEqual(2, changedProperties.Count);
+        CollectionAssert.Contains(changedProperties, "Name");
+        CollectionAssert.Contains(changedProperties, "Age");
     }
 
     [TestMethod]
     public void ErrorsChanged_RaisedOnAddError()
     {
-        var dict = new ErrorDictionary();
+        ErrorDictionary dict = new ErrorDictionary();
         string? changedProperty = null;
         dict.ErrorsChanged += (s, e) => changedProperty = e.PropertyName;
 
@@ -185,7 +103,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ErrorsChanged_RaisedOnClearErrors()
     {
-        var dict = new ErrorDictionary();
+        ErrorDictionary dict = new ErrorDictionary();
         dict.AddError("Name", new ErrorInfo("err"));
 
         string? changedProperty = null;
@@ -197,31 +115,112 @@ public sealed class ErrorDictionaryTests
     }
 
     [TestMethod]
-    public void ErrorsChanged_RaisedForEachPropertyOnClearAll()
+    public void GetErrorInfos_ReturnsTypedList()
     {
-        var dict = new ErrorDictionary();
-        dict.AddError("Name", new ErrorInfo("err"));
-        dict.AddError("Age", new ErrorInfo("err"));
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("Required."));
 
-        var changedProperties = new List<string>();
-        dict.ErrorsChanged += (s, e) => changedProperties.Add(e.PropertyName!);
+        IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
 
-        dict.ClearAll();
-
-        Assert.AreEqual(2, changedProperties.Count);
-        CollectionAssert.Contains(changedProperties, "Name");
-        CollectionAssert.Contains(changedProperties, "Age");
+        Assert.AreEqual(1, errors.Count);
+        Assert.AreEqual("Required.", errors[0].Message);
     }
 
     [TestMethod]
-    public void ErrorsChanged_NotRaisedWhenClearingEmptyProperty()
+    public void GetErrors_ByPropertyName_ReturnsOnlyThatProperty()
     {
-        var dict = new ErrorDictionary();
-        var raised = false;
-        dict.ErrorsChanged += (s, e) => raised = true;
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("Required."));
+        dict.AddError("Age", new ErrorInfo("Out of range."));
 
-        dict.ClearErrors("NonExistent");
+        List<ErrorInfo> errors = dict.GetErrors("Name").Cast<ErrorInfo>().ToList();
 
-        Assert.IsFalse(raised);
+        Assert.AreEqual(1, errors.Count);
+        Assert.AreEqual("Required.", errors[0].Message);
     }
+
+    [TestMethod]
+    public void GetErrors_NullOrEmpty_ReturnsAllErrors()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err1"));
+        dict.AddError("Age", new ErrorInfo("err2"));
+
+        List<ErrorInfo> errors = dict.GetErrors(null).Cast<ErrorInfo>().ToList();
+
+        Assert.AreEqual(2, errors.Count);
+    }
+
+    [TestMethod]
+    public void GetErrors_UnknownProperty_ReturnsEmptyList()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+
+        List<ErrorInfo> errors = dict.GetErrors("Unknown").Cast<ErrorInfo>().ToList();
+
+        Assert.AreEqual(0, errors.Count);
+    }
+
+    [TestMethod]
+    public void HasErrors_NoErrors_ReturnsFalse()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+
+        Assert.IsFalse(dict.HasErrors);
+    }
+
+    [TestMethod]
+    public void PropertyErrorCount_ReturnsDistinctPropertyCount()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err1"));
+        dict.AddError("Name", new ErrorInfo("err2"));
+        dict.AddError("Age", new ErrorInfo("err3"));
+
+        Assert.AreEqual(2, dict.PropertyErrorCount);
+    }
+
+    [TestMethod]
+    public void SetErrors_EmptyList_ClearsErrors()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err"));
+
+        dict.SetErrors("Name", []);
+
+        Assert.IsFalse(dict.HasErrors);
+    }
+
+    [TestMethod]
+    public void SetErrors_NullPropertyName_ThrowsArgumentNullException()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => dict.SetErrors(null!, [ new ErrorInfo("msg") ]));
+    }
+
+    [TestMethod]
+    public void SetErrors_ReplacesExistingErrors()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("old"));
+
+        dict.SetErrors("Name", [ new ErrorInfo("new1"), new ErrorInfo("new2") ]);
+
+        IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
+        Assert.AreEqual(2, errors.Count);
+        Assert.AreEqual("new1", errors[0].Message);
+    }
+
+    [TestMethod]
+    public void TotalErrorCount_ReturnsSumOfAllErrors()
+    {
+        ErrorDictionary dict = new ErrorDictionary();
+        dict.AddError("Name", new ErrorInfo("err1"));
+        dict.AddError("Name", new ErrorInfo("err2"));
+        dict.AddError("Age", new ErrorInfo("err3"));
+
+        Assert.AreEqual(3, dict.TotalErrorCount);
+    }
+    #endregion
 }

@@ -2,8 +2,9 @@ using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using Catharsis.Buffers;
 
-namespace Catharsis.Buffers.UnitTests;
+namespace Catharsis.UnitTests.Buffers;
 
 /// <summary>
 /// Unit tests for the <see cref="SpanWriter"/> ref struct.

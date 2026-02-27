@@ -1,0 +1,82 @@
+using Catharsis.Mvvm;
+
+namespace Catharsis.UnitTests.Mvvm;
+
+[TestClass]
+public class ObservablePooledBufferTests
+{
+    #region Public methods
+    [TestMethod]
+    public void Clear_ResetsCount()
+    {
+        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        buf.Write([ 1, 2, 3 ]);
+        buf.Clear();
+        Assert.AreEqual(0, buf.Count);
+    }
+
+    [TestMethod]
+    public void Constructor_Default_InitialState()
+    {
+        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        Assert.AreEqual(0, buf.Count);
+        Assert.IsTrue(buf.Capacity >= 256);
+    }
+
+    [TestMethod]
+    public void Dispose_IsIdempotent()
+    {
+        ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        buf.Dispose();
+        buf.Dispose();
+    }
+
+    [TestMethod]
+    public void PropertyChanged_FiredOnWrite()
+    {
+        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        List<string> changedProps = new List<string>();
+        buf.PropertyChanged += (_, e) => changedProps.Add(e.PropertyName!);
+
+        buf.Write([ 42 ]);
+
+        Assert.IsTrue(changedProps.Contains("Count"));
+    }
+
+    [TestMethod]
+    public void ToArray_ReturnsCopy()
+    {
+        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        buf.Write([ 10, 20, 30 ]);
+        int[] arr = buf.ToArray();
+        CollectionAssert.AreEqual(new[] { 10, 20, 30 }, arr);
+    }
+
+    [TestMethod]
+    public void Write_GrowsBufferAutomatically()
+    {
+        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>(4);
+        byte[] data = new byte[100];
+        buf.Write(data);
+        Assert.AreEqual(100, buf.Count);
+    }
+
+    [TestMethod]
+    public void Write_IncreasesCount()
+    {
+        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        buf.Write([ 1, 2, 3 ]);
+        Assert.AreEqual(3, buf.Count);
+    }
+
+    [TestMethod]
+    public void WrittenMemory_ReturnsWrittenData()
+    {
+        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        buf.Write([ 10, 20 ]);
+        ReadOnlyMemory<byte> mem = buf.WrittenMemory;
+        Assert.AreEqual(2, mem.Length);
+        Assert.AreEqual(10, mem.Span[0]);
+    }
+    #endregion
+}

@@ -2,158 +2,166 @@ using System.ComponentModel;
 
 namespace Catharsis.ComponentModel.Lifecycle;
 
-/// <summary>
-/// Represents a directed acyclic graph of <see cref="ComponentGraphNode"/> instances,
-/// modeling component dependencies and enabling topologically-ordered lifecycle
-/// operations (activation, deactivation, disposal).
-/// </summary>
-/// <remarks>
-/// <para>
-/// Use <see cref="ComponentGraphBuilder"/> to construct graph instances. The graph
-/// provides <see cref="GetActivationOrder"/> for startup sequencing and
-/// <see cref="GetDeactivationOrder"/> for shutdown sequencing.
-/// </para>
-/// </remarks>
+///<summary>
+///Represents a directed acyclic graph of <see cref="ComponentGraphNode"/> instances, modeling component dependencies
+///and enabling topologically-ordered lifecycle operations (activation, deactivation, disposal).
+///</summary>
+///<remarks>
+///<para> Use <see cref="ComponentGraphBuilder"/> to construct graph instances. The graph provides <see
+///cref="GetActivationOrder"/> for startup sequencing and<see cref="GetDeactivationOrder"/> for shutdown
+///sequencing.</para>
+///</remarks>
 public sealed class ComponentGraph
 {
-    private readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
+    #region Fields
+    readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
+    #endregion
 
-    /// <summary>
-    /// Gets all nodes in the graph.
-    /// </summary>
-    public IReadOnlyCollection<ComponentGraphNode> Nodes => _nodes.Values;
-
-    /// <summary>
-    /// Gets the number of nodes in the graph.
-    /// </summary>
-    public int Count => _nodes.Count;
-
-    /// <summary>
-    /// Gets the node for the specified component.
-    /// </summary>
-    /// <param name="component">The component to look up.</param>
-    /// <returns>The graph node, or <c>null</c> if the component is not in the graph.</returns>
-    public ComponentGraphNode? GetNode(IComponent component)
+    #region Private methods
+    IReadOnlyList<ComponentGraphNode> TopologicalSort(bool reverse)
     {
-        ArgumentNullException.ThrowIfNull(component);
-        return _nodes.GetValueOrDefault(component);
+        List<ComponentGraphNode> sorted = new List<ComponentGraphNode>(_nodes.Count);
+        HashSet<ComponentGraphNode> visited = new HashSet<ComponentGraphNode>();
+        HashSet<ComponentGraphNode> visiting = new HashSet<ComponentGraphNode>();
+
+        foreach(ComponentGraphNode node in _nodes.Values)
+        {
+            if(!visited.Contains(node))
+            {
+                Visit(node, visited, visiting, sorted);
+            }
+        }
+
+        if(reverse)
+        {
+            sorted.Reverse();
+        }
+
+        return sorted;
     }
 
-    /// <summary>
-    /// Determines whether the graph contains the specified component.
-    /// </summary>
-    /// <param name="component">The component to look for.</param>
-    /// <returns><c>true</c> if the component is in the graph; otherwise, <c>false</c>.</returns>
+    static void Visit(ComponentGraphNode node, HashSet<ComponentGraphNode> visited, HashSet<ComponentGraphNode> visiting, List<ComponentGraphNode> sorted)
+    {
+        if(visiting.Contains(node))
+        {
+            throw new InvalidOperationException($"Cycle detected involving node '{node.Name}'.");
+        }
+
+        if(visited.Contains(node))
+        {
+            return;
+        }
+
+        visiting.Add(node);
+
+        foreach(ComponentGraphNode dependency in node.Dependencies)
+        {
+            Visit(dependency, visited, visiting, sorted);
+        }
+
+        visiting.Remove(node);
+        visited.Add(node);
+        sorted.Add(node);
+    }
+    #endregion
+
+    #region Internal methods
+    ///<summary>
+    ///Adds a node to the graph. Called by <see cref="ComponentGraphBuilder"/>.
+    ///</summary>
+    internal void AddNode(ComponentGraphNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        _nodes[node.Component] = node;
+    }
+    #endregion
+
+    #region Public methods
+    ///<summary>
+    ///Determines whether the graph contains the specified component.
+    ///</summary>
+    ///<param name="component">The component to look for.</param>
+    ///<returns><c>true</c> if the component is in the graph; otherwise, <c>false</c>.</returns>
     public bool Contains(IComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);
         return _nodes.ContainsKey(component);
     }
 
-    /// <summary>
-    /// Returns the nodes in topological order suitable for activation
-    /// (dependencies before dependents).
-    /// </summary>
-    /// <returns>An ordered list of nodes.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// The graph contains a cycle.
-    /// </exception>
-    public IReadOnlyList<ComponentGraphNode> GetActivationOrder()
-    {
-        return TopologicalSort(reverse: false);
-    }
+    ///<summary>
+    ///Returns the nodes in topological order suitable for activation (dependencies before dependents).
+    ///</summary>
+    ///<returns>An ordered list of nodes.</returns>
+    ///<exception cref="InvalidOperationException">
+    ///The graph contains a cycle.
+    ///</exception>
+    public IReadOnlyList<ComponentGraphNode> GetActivationOrder() { return TopologicalSort(reverse: false); }
+    ///<summary>
+    ///Returns the nodes in reverse topological order suitable for deactivation (dependents before dependencies).
+    ///</summary>
+    ///<returns>An ordered list of nodes.</returns>
+    ///<exception cref="InvalidOperationException">
+    ///The graph contains a cycle.
+    ///</exception>
+    public IReadOnlyList<ComponentGraphNode> GetDeactivationOrder() { return TopologicalSort(reverse: true); }
 
-    /// <summary>
-    /// Returns the nodes in reverse topological order suitable for deactivation
-    /// (dependents before dependencies).
-    /// </summary>
-    /// <returns>An ordered list of nodes.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// The graph contains a cycle.
-    /// </exception>
-    public IReadOnlyList<ComponentGraphNode> GetDeactivationOrder()
-    {
-        return TopologicalSort(reverse: true);
-    }
-
-    /// <summary>
-    /// Returns all root nodes (nodes with no dependencies).
-    /// </summary>
-    public IReadOnlyList<ComponentGraphNode> GetRoots()
-    {
-        var roots = new List<ComponentGraphNode>();
-
-        foreach (var node in _nodes.Values)
-        {
-            if (node.Dependencies.Count == 0)
-                roots.Add(node);
-        }
-
-        return roots;
-    }
-
-    /// <summary>
-    /// Returns all leaf nodes (nodes with no dependents).
-    /// </summary>
+    ///<summary>
+    ///Returns all leaf nodes (nodes with no dependents).
+    ///</summary>
     public IReadOnlyList<ComponentGraphNode> GetLeaves()
     {
-        var leaves = new List<ComponentGraphNode>();
+        List<ComponentGraphNode> leaves = new List<ComponentGraphNode>();
 
-        foreach (var node in _nodes.Values)
+        foreach(ComponentGraphNode node in _nodes.Values)
         {
-            if (node.Dependents.Count == 0)
+            if(node.Dependents.Count == 0)
+            {
                 leaves.Add(node);
+            }
         }
 
         return leaves;
     }
 
-    /// <summary>
-    /// Adds a node to the graph. Called by <see cref="ComponentGraphBuilder"/>.
-    /// </summary>
-    internal void AddNode(ComponentGraphNode node)
+    ///<summary>
+    ///Gets the node for the specified component.
+    ///</summary>
+    ///<param name="component">The component to look up.</param>
+    ///<returns>The graph node, or <c>null</c> if the component is not in the graph.</returns>
+    public ComponentGraphNode? GetNode(IComponent component)
     {
-        ArgumentNullException.ThrowIfNull(node);
-        _nodes[node.Component] = node;
+        ArgumentNullException.ThrowIfNull(component);
+        return _nodes.GetValueOrDefault(component);
     }
 
-    private IReadOnlyList<ComponentGraphNode> TopologicalSort(bool reverse)
+    ///<summary>
+    ///Returns all root nodes (nodes with no dependencies).
+    ///</summary>
+    public IReadOnlyList<ComponentGraphNode> GetRoots()
     {
-        var sorted = new List<ComponentGraphNode>(_nodes.Count);
-        var visited = new HashSet<ComponentGraphNode>();
-        var visiting = new HashSet<ComponentGraphNode>();
+        List<ComponentGraphNode> roots = new List<ComponentGraphNode>();
 
-        foreach (var node in _nodes.Values)
+        foreach(ComponentGraphNode node in _nodes.Values)
         {
-            if (!visited.Contains(node))
-                Visit(node, visited, visiting, sorted);
+            if(node.Dependencies.Count == 0)
+            {
+                roots.Add(node);
+            }
         }
 
-        if (reverse)
-            sorted.Reverse();
-
-        return sorted;
+        return roots;
     }
+    #endregion
 
-    private static void Visit(
-        ComponentGraphNode node,
-        HashSet<ComponentGraphNode> visited,
-        HashSet<ComponentGraphNode> visiting,
-        List<ComponentGraphNode> sorted)
-    {
-        if (visiting.Contains(node))
-            throw new InvalidOperationException($"Cycle detected involving node '{node.Name}'.");
+    #region Public properties
+    ///<summary>
+    ///Gets the number of nodes in the graph.
+    ///</summary>
+    public int Count => _nodes.Count;
 
-        if (visited.Contains(node))
-            return;
-
-        visiting.Add(node);
-
-        foreach (var dependency in node.Dependencies)
-            Visit(dependency, visited, visiting, sorted);
-
-        visiting.Remove(node);
-        visited.Add(node);
-        sorted.Add(node);
-    }
+    ///<summary>
+    ///Gets all nodes in the graph.
+    ///</summary>
+    public IReadOnlyCollection<ComponentGraphNode> Nodes => _nodes.Values;
+    #endregion
 }

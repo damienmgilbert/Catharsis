@@ -1,153 +1,36 @@
-using Catharsis.ComponentModel.Lifecycle;
 using System.ComponentModel;
+using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
 [TestClass]
 public sealed class ComponentLifecycleManagerTests
 {
-    [TestMethod]
-    public void Constructor_NullGraph_ThrowsArgumentNullException()
+    #region Private methods
+    static ComponentGraph BuildGraph(params IComponent[] components)
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new ComponentLifecycleManager(null!));
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        foreach(IComponent c in components)
+        {
+            builder.AddComponent(c);
+        }
+
+        return builder.Build();
     }
+    #endregion
 
-    [TestMethod]
-    public void GetStateMachine_RegisteredComponent_ReturnsMachine()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        var machine = manager.GetStateMachine(c);
-
-        Assert.IsNotNull(machine);
-        Assert.AreEqual(ComponentState.Created, machine.CurrentState);
-    }
-
-    [TestMethod]
-    public void GetStateMachine_UnregisteredComponent_ReturnsNull()
-    {
-        var graph = BuildGraph(new StubComponent());
-        using var manager = new ComponentLifecycleManager(graph);
-
-        Assert.IsNull(manager.GetStateMachine(new StubComponent()));
-    }
-
-    [TestMethod]
-    public void Graph_ReturnsSameGraph()
-    {
-        var graph = BuildGraph(new StubComponent());
-        using var manager = new ComponentLifecycleManager(graph);
-
-        Assert.AreSame(graph, manager.Graph);
-    }
-
-    [TestMethod]
-    public void InitializeAll_SetsNodesInitialized()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        manager.InitializeAll();
-
-        var node = graph.GetNode(c);
-        Assert.IsNotNull(node);
-        Assert.AreEqual(ComponentState.Initialized, node.State);
-    }
-
-    [TestMethod]
-    public void InitializeAll_CallsISupportInitialize()
-    {
-        var c = new InitializableComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        manager.InitializeAll();
-
-        Assert.IsTrue(c.BeginInitCalled);
-        Assert.IsTrue(c.EndInitCalled);
-    }
-
-    [TestMethod]
-    public void ActivateAll_SetsNodesActive()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        manager.ActivateAll();
-
-        var node = graph.GetNode(c);
-        Assert.IsNotNull(node);
-        Assert.AreEqual(ComponentState.Active, node.State);
-    }
-
-    [TestMethod]
-    public void ActivateAll_InitializesFirst()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        manager.ActivateAll();
-
-        var machine = manager.GetStateMachine(c);
-        Assert.IsNotNull(machine);
-        Assert.AreEqual(ComponentState.Active, machine.CurrentState);
-    }
-
-    [TestMethod]
-    public void DeactivateAll_SetsNodesDeactivated()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-        manager.ActivateAll();
-
-        manager.DeactivateAll();
-
-        var node = graph.GetNode(c);
-        Assert.IsNotNull(node);
-        Assert.AreEqual(ComponentState.Deactivated, node.State);
-    }
-
-    [TestMethod]
-    public void Initialize_SingleComponent()
-    {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
-
-        manager.Initialize(c);
-
-        var node = graph.GetNode(c);
-        Assert.IsNotNull(node);
-        Assert.AreEqual(ComponentState.Initialized, node.State);
-    }
-
-    [TestMethod]
-    public void Initialize_NullComponent_ThrowsArgumentNullException()
-    {
-        var graph = BuildGraph(new StubComponent());
-        using var manager = new ComponentLifecycleManager(graph);
-
-        Assert.ThrowsExactly<ArgumentNullException>(() => manager.Initialize(null!));
-    }
-
+    #region Public methods
     [TestMethod]
     public void Activate_SingleComponent_WithSatisfiedDependencies()
     {
-        var db = new StubComponent();
-        var app = new StubComponent();
-        var graph = new ComponentGraphBuilder()
+        StubComponent db = new StubComponent();
+        StubComponent app = new StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using var manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
         manager.Activate(db);
 
         manager.Activate(app);
@@ -158,42 +41,59 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Activate_UnsatisfiedDependencies_ThrowsInvalidOperationException()
     {
-        var db = new StubComponent();
-        var app = new StubComponent();
-        var graph = new ComponentGraphBuilder()
+        StubComponent db = new StubComponent();
+        StubComponent app = new StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using var manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => manager.Activate(app));
     }
 
     [TestMethod]
-    public void Deactivate_SingleComponent()
+    public void ActivateAll_InitializesFirst()
     {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        using var manager = new ComponentLifecycleManager(graph);
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
         manager.ActivateAll();
 
-        manager.Deactivate(c);
-
-        Assert.AreEqual(ComponentState.Deactivated, graph.GetNode(c)!.State);
+        ComponentStateMachine? machine = manager.GetStateMachine(c);
+        Assert.IsNotNull(machine);
+        Assert.AreEqual(ComponentState.Active, machine.CurrentState);
     }
 
     [TestMethod]
+    public void ActivateAll_SetsNodesActive()
+    {
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        manager.ActivateAll();
+
+        ComponentGraphNode? node = graph.GetNode(c);
+        Assert.IsNotNull(node);
+        Assert.AreEqual(ComponentState.Active, node.State);
+    }
+
+    [TestMethod]
+    public void Constructor_NullGraph_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ComponentLifecycleManager(null!)); }
+    [TestMethod]
     public void Deactivate_AlsoDeactivatesDependents()
     {
-        var db = new StubComponent();
-        var app = new StubComponent();
-        var graph = new ComponentGraphBuilder()
+        StubComponent db = new StubComponent();
+        StubComponent app = new StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using var manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
         manager.ActivateAll();
 
         manager.Deactivate(db);
@@ -203,11 +103,67 @@ public sealed class ComponentLifecycleManagerTests
     }
 
     [TestMethod]
+    public void Deactivate_SingleComponent()
+    {
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        manager.ActivateAll();
+
+        manager.Deactivate(c);
+
+        Assert.AreEqual(ComponentState.Deactivated, graph.GetNode(c)!.State);
+    }
+
+    [TestMethod]
+    public void DeactivateAll_SetsNodesDeactivated()
+    {
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        manager.ActivateAll();
+
+        manager.DeactivateAll();
+
+        ComponentGraphNode? node = graph.GetNode(c);
+        Assert.IsNotNull(node);
+        Assert.AreEqual(ComponentState.Deactivated, node.State);
+    }
+
+    [TestMethod]
+    public void DependencyOrder_ActivationRespectsDependencies()
+    {
+        List<string> activationOrder = new List<string>();
+        TrackingComponent db = new TrackingComponent("DB", activationOrder);
+        TrackingComponent cache = new TrackingComponent("Cache", activationOrder);
+        TrackingComponent app = new TrackingComponent("App", activationOrder);
+
+        ComponentGraph graph = new ComponentGraphBuilder()
+            .AddComponent(db, "DB")
+            .AddComponent(cache, "Cache")
+            .AddComponent(app, "App")
+            .AddDependency(app, db)
+            .AddDependency(app, cache)
+            .AddDependency(cache, db)
+            .Build();
+
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        manager.ActivateAll();
+
+        // DB must be activated before Cache, and both before App
+        int dbIdx = activationOrder.IndexOf("DB");
+        int cacheIdx = activationOrder.IndexOf("Cache");
+        int appIdx = activationOrder.IndexOf("App");
+        Assert.IsTrue(dbIdx < cacheIdx);
+        Assert.IsTrue(cacheIdx < appIdx);
+    }
+
+    [TestMethod]
     public void Dispose_DisposesComponents()
     {
-        var c = new DisposableComponent();
-        var graph = BuildGraph(c);
-        var manager = new ComponentLifecycleManager(graph);
+        DisposableComponent c = new DisposableComponent();
+        ComponentGraph graph = BuildGraph(c);
+        ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
         manager.ActivateAll();
 
         manager.Dispose();
@@ -218,9 +174,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Dispose_SetsNodesDisposed()
     {
-        var c = new StubComponent();
-        var graph = BuildGraph(c);
-        var manager = new ComponentLifecycleManager(graph);
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
         manager.ActivateAll();
 
         manager.Dispose();
@@ -229,80 +185,160 @@ public sealed class ComponentLifecycleManagerTests
     }
 
     [TestMethod]
-    public void DependencyOrder_ActivationRespectsDependencies()
+    public void GetStateMachine_RegisteredComponent_ReturnsMachine()
     {
-        var activationOrder = new List<string>();
-        var db = new TrackingComponent("DB", activationOrder);
-        var cache = new TrackingComponent("Cache", activationOrder);
-        var app = new TrackingComponent("App", activationOrder);
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
 
-        var graph = new ComponentGraphBuilder()
-            .AddComponent(db, "DB")
-            .AddComponent(cache, "Cache")
-            .AddComponent(app, "App")
-            .AddDependency(app, db)
-            .AddDependency(app, cache)
-            .AddDependency(cache, db)
-            .Build();
+        ComponentStateMachine? machine = manager.GetStateMachine(c);
 
-        using var manager = new ComponentLifecycleManager(graph);
-        manager.ActivateAll();
-
-        // DB must be activated before Cache, and both before App
-        var dbIdx = activationOrder.IndexOf("DB");
-        var cacheIdx = activationOrder.IndexOf("Cache");
-        var appIdx = activationOrder.IndexOf("App");
-        Assert.IsTrue(dbIdx < cacheIdx);
-        Assert.IsTrue(cacheIdx < appIdx);
+        Assert.IsNotNull(machine);
+        Assert.AreEqual(ComponentState.Created, machine.CurrentState);
     }
 
-    private static ComponentGraph BuildGraph(params IComponent[] components)
+    [TestMethod]
+    public void GetStateMachine_UnregisteredComponent_ReturnsNull()
     {
-        var builder = new ComponentGraphBuilder();
-        foreach (var c in components)
-            builder.AddComponent(c);
-        return builder.Build();
+        ComponentGraph graph = BuildGraph(new StubComponent());
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        Assert.IsNull(manager.GetStateMachine(new StubComponent()));
     }
 
-    private sealed class StubComponent : IComponent
+    [TestMethod]
+    public void Graph_ReturnsSameGraph()
     {
-        public ISite? Site { get; set; }
+        ComponentGraph graph = BuildGraph(new StubComponent());
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        Assert.AreSame(graph, manager.Graph);
+    }
+
+    [TestMethod]
+    public void Initialize_NullComponent_ThrowsArgumentNullException()
+    {
+        ComponentGraph graph = BuildGraph(new StubComponent());
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => manager.Initialize(null!));
+    }
+
+    [TestMethod]
+    public void Initialize_SingleComponent()
+    {
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        manager.Initialize(c);
+
+        ComponentGraphNode? node = graph.GetNode(c);
+        Assert.IsNotNull(node);
+        Assert.AreEqual(ComponentState.Initialized, node.State);
+    }
+
+    [TestMethod]
+    public void InitializeAll_CallsISupportInitialize()
+    {
+        InitializableComponent c = new InitializableComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        manager.InitializeAll();
+
+        Assert.IsTrue(c.BeginInitCalled);
+        Assert.IsTrue(c.EndInitCalled);
+    }
+
+    [TestMethod]
+    public void InitializeAll_SetsNodesInitialized()
+    {
+        StubComponent c = new StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+
+        manager.InitializeAll();
+
+        ComponentGraphNode? node = graph.GetNode(c);
+        Assert.IsNotNull(node);
+        Assert.AreEqual(ComponentState.Initialized, node.State);
+    }
+    #endregion
+
+    sealed class StubComponent : IComponent
+    {
+        #region Events
         public event EventHandler? Disposed;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #endregion
+
+        #region Public methods
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 
-    private sealed class InitializableComponent : IComponent, ISupportInitialize
+    sealed class InitializableComponent : IComponent, ISupportInitialize
     {
-        public ISite? Site { get; set; }
+        #region Events
+        public event EventHandler? Disposed;
+        #endregion
+
+        #region Public methods
+        public void BeginInit() { BeginInitCalled = true; }
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        public void EndInit() { EndInitCalled = true; }
+        #endregion
+
+        #region Public properties
         public bool BeginInitCalled { get; private set; }
-        public bool EndInitCalled { get; private set; }
-        public event EventHandler? Disposed;
 
-        public void BeginInit() => BeginInitCalled = true;
-        public void EndInit() => EndInitCalled = true;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        public bool EndInitCalled { get; private set; }
+
+        public ISite? Site { get; set; }
+        #endregion
     }
 
-    private sealed class DisposableComponent : IComponent, IDisposable
+    sealed class DisposableComponent : IComponent, IDisposable
     {
-        public ISite? Site { get; set; }
-        public bool IsDisposed { get; private set; }
+        #region Events
         public event EventHandler? Disposed;
+        #endregion
 
+        #region Public methods
         public void Dispose()
         {
             IsDisposed = true;
             Disposed?.Invoke(this, EventArgs.Empty);
         }
+        #endregion
+
+        #region Public properties
+        public bool IsDisposed { get; private set; }
+
+        public ISite? Site { get; set; }
+        #endregion
     }
 
-    private sealed class TrackingComponent(string name, List<string> activationOrder) : IComponent, ISupportInitialize
+    sealed class TrackingComponent(string name, List<string> activationOrder) : IComponent, ISupportInitialize
     {
-        public ISite? Site { get; set; }
+        #region Events
         public event EventHandler? Disposed;
+        #endregion
 
-        public void BeginInit() { }
-        public void EndInit() => activationOrder.Add(name);
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #region Public methods
+        public void BeginInit()
+        {
+        }
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        public void EndInit() { activationOrder.Add(name); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 }

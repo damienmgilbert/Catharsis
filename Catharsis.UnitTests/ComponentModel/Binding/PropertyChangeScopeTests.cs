@@ -5,56 +5,27 @@ namespace Catharsis.UnitTests.ComponentModel.Binding;
 [TestClass]
 public sealed class PropertyChangeScopeTests
 {
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullCallback_ThrowsArgumentNullException()
-    {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new PropertyChangeScope(null!));
-    }
-
+    public void Constructor_NullCallback_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyChangeScope(null!)); }
     [TestMethod]
-    public void RecordChange_AddsPropertyName()
+    public void Dispose_CalledTwice_RaisesOnlyOnce()
     {
-        var scope = new PropertyChangeScope(_ => { });
-
+        int count = 0;
+        PropertyChangeScope scope = new PropertyChangeScope(_ => count++);
         scope.RecordChange("Name");
 
-        Assert.AreEqual(1, scope.PendingCount);
-    }
-
-    [TestMethod]
-    public void RecordChange_DuplicateProperty_NotCounted()
-    {
-        var scope = new PropertyChangeScope(_ => { });
-
-        scope.RecordChange("Name");
-        scope.RecordChange("Name");
-
-        Assert.AreEqual(1, scope.PendingCount);
-    }
-
-    [TestMethod]
-    public void RecordChange_NullPropertyName_ThrowsArgumentNullException()
-    {
-        var scope = new PropertyChangeScope(_ => { });
-
-        Assert.ThrowsExactly<ArgumentNullException>(() => scope.RecordChange(null!));
-    }
-
-    [TestMethod]
-    public void RecordChange_AfterDispose_ThrowsObjectDisposedException()
-    {
-        var scope = new PropertyChangeScope(_ => { });
+        scope.Dispose();
         scope.Dispose();
 
-        Assert.ThrowsExactly<ObjectDisposedException>(() => scope.RecordChange("Name"));
+        Assert.AreEqual(1, count);
     }
 
     [TestMethod]
     public void Dispose_RaisesNotificationsForPendingProperties()
     {
-        var raised = new List<string>();
-        var scope = new PropertyChangeScope(name => raised.Add(name));
+        List<string> raised = new List<string>();
+        PropertyChangeScope scope = new PropertyChangeScope(name => raised.Add(name));
         scope.RecordChange("Name");
         scope.RecordChange("Age");
 
@@ -66,42 +37,89 @@ public sealed class PropertyChangeScopeTests
     }
 
     [TestMethod]
-    public void Dispose_CalledTwice_RaisesOnlyOnce()
-    {
-        var count = 0;
-        var scope = new PropertyChangeScope(_ => count++);
-        scope.RecordChange("Name");
-
-        scope.Dispose();
-        scope.Dispose();
-
-        Assert.AreEqual(1, count);
-    }
-
-    [TestMethod]
-    public void IsDisposed_InitiallyFalse()
-    {
-        var scope = new PropertyChangeScope(_ => { });
-
-        Assert.IsFalse(scope.IsDisposed);
-    }
-
-    [TestMethod]
     public void IsDisposed_AfterDispose_ReturnsTrue()
     {
-        var scope = new PropertyChangeScope(_ => { });
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
         scope.Dispose();
 
         Assert.IsTrue(scope.IsDisposed);
     }
 
     [TestMethod]
+    public void IsDisposed_InitiallyFalse()
+    {
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
+
+        Assert.IsFalse(scope.IsDisposed);
+    }
+
+    [TestMethod]
     public void PendingCount_AfterDispose_ReturnsZero()
     {
-        var scope = new PropertyChangeScope(_ => { });
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
         scope.RecordChange("Name");
         scope.Dispose();
 
         Assert.AreEqual(0, scope.PendingCount);
     }
+
+    [TestMethod]
+    public void RecordChange_AddsPropertyName()
+    {
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
+
+        scope.RecordChange("Name");
+
+        Assert.AreEqual(1, scope.PendingCount);
+    }
+
+    [TestMethod]
+    public void RecordChange_AfterDispose_ThrowsObjectDisposedException()
+    {
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
+        scope.Dispose();
+
+        Assert.ThrowsExactly<ObjectDisposedException>(() => scope.RecordChange("Name"));
+    }
+
+    [TestMethod]
+    public void RecordChange_DuplicateProperty_NotCounted()
+    {
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
+
+        scope.RecordChange("Name");
+        scope.RecordChange("Name");
+
+        Assert.AreEqual(1, scope.PendingCount);
+    }
+
+    [TestMethod]
+    public void RecordChange_NullPropertyName_ThrowsArgumentNullException()
+    {
+        PropertyChangeScope scope = new PropertyChangeScope(
+                                    _ =>
+        {
+        });
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => scope.RecordChange(null!));
+    }
+    #endregion
 }

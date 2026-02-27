@@ -5,20 +5,11 @@ namespace Catharsis.UnitTests.ComponentModel.Validation;
 [TestClass]
 public sealed class ErrorInfoTests
 {
-    [TestMethod]
-    public void Constructor_Defaults_SeverityIsErrorAndPropertyNameIsNull()
-    {
-        var error = new ErrorInfo("Something failed.");
-
-        Assert.AreEqual("Something failed.", error.Message);
-        Assert.AreEqual(ValidationSeverity.Error, error.Severity);
-        Assert.IsNull(error.PropertyName);
-    }
-
+    #region Public methods
     [TestMethod]
     public void Constructor_AllParameters_SetsProperties()
     {
-        var error = new ErrorInfo("Bad value.", ValidationSeverity.Warning, "Age");
+        ErrorInfo error = new ErrorInfo("Bad value.", ValidationSeverity.Warning, "Age");
 
         Assert.AreEqual("Bad value.", error.Message);
         Assert.AreEqual(ValidationSeverity.Warning, error.Severity);
@@ -26,60 +17,47 @@ public sealed class ErrorInfoTests
     }
 
     [TestMethod]
-    public void ToString_WithPropertyName_IncludesPropertyName()
+    public void Constructor_Defaults_SeverityIsErrorAndPropertyNameIsNull()
     {
-        var error = new ErrorInfo("Required.", ValidationSeverity.Error, "Name");
+        ErrorInfo error = new ErrorInfo("Something failed.");
 
-        Assert.AreEqual("[Error] Name: Required.", error.ToString());
-    }
-
-    [TestMethod]
-    public void ToString_WithoutPropertyName_OmitsPropertyName()
-    {
-        var error = new ErrorInfo("Object invalid.", ValidationSeverity.Info);
-
-        Assert.AreEqual("[Info] Object invalid.", error.ToString());
-    }
-
-    [TestMethod]
-    public void Equality_SameValues_AreEqual()
-    {
-        var a = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
-        var b = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
-
-        Assert.AreEqual(a, b);
+        Assert.AreEqual("Something failed.", error.Message);
+        Assert.AreEqual(ValidationSeverity.Error, error.Severity);
+        Assert.IsNull(error.PropertyName);
     }
 
     [TestMethod]
     public void Equality_DifferentMessage_AreNotEqual()
     {
-        var a = new ErrorInfo("msg1");
-        var b = new ErrorInfo("msg2");
+        ErrorInfo a = new ErrorInfo("msg1");
+        ErrorInfo b = new ErrorInfo("msg2");
 
         Assert.AreNotEqual(a, b);
     }
-}
 
-[TestClass]
-public sealed class ValidationSeverityTests
-{
     [TestMethod]
-    public void EnumValues_AreDefined()
+    public void Equality_SameValues_AreEqual()
     {
-        Assert.AreEqual(0, (int)ValidationSeverity.Info);
-        Assert.AreEqual(1, (int)ValidationSeverity.Warning);
-        Assert.AreEqual(2, (int)ValidationSeverity.Error);
-    }
-}
+        ErrorInfo a = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
+        ErrorInfo b = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
 
-[TestClass]
-public sealed class ValidationScopeTests
-{
-    [TestMethod]
-    public void EnumValues_AreDefined()
-    {
-        Assert.AreEqual(0, (int)ValidationScope.Property);
-        Assert.AreEqual(1, (int)ValidationScope.Object);
-        Assert.AreEqual(2, (int)ValidationScope.CrossProperty);
+        Assert.AreEqual(a, b);
     }
+
+    [TestMethod]
+    public void ToString_WithoutPropertyName_OmitsPropertyName()
+    {
+        ErrorInfo error = new ErrorInfo("Object invalid.", ValidationSeverity.Info);
+
+        Assert.AreEqual("[Info] Object invalid.", error.ToString());
+    }
+
+    [TestMethod]
+    public void ToString_WithPropertyName_IncludesPropertyName()
+    {
+        ErrorInfo error = new ErrorInfo("Required.", ValidationSeverity.Error, "Name");
+
+        Assert.AreEqual("[Error] Name: Required.", error.ToString());
+    }
+    #endregion
 }

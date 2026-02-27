@@ -2,86 +2,79 @@ using System.ComponentModel;
 
 namespace Catharsis.ComponentModel;
 
-/// <summary>
-/// A lightweight <see cref="IContainer"/> implementation that manages
-/// <see cref="IComponent"/> instances with named site support and
-/// deterministic disposal.
-/// </summary>
+///<summary>
+///A lightweight <see cref="IContainer"/> implementation that manages <see cref="IComponent"/> instances with named site
+///support and deterministic disposal.
+///</summary>
 public sealed class ComponentContainerSlim : IContainer
 {
-    private readonly List<ISite> _sites = [];
-    private bool _disposed;
+    #region Fields
+    bool _disposed;
+    readonly List<ISite> _sites = [];
+    #endregion
 
-    /// <inheritdoc />
-    public ComponentCollection Components
-    {
-        get
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
+    #region Public methods
+    ///<summary>
+    ///Adds a component to the container without a name.
+    ///</summary>
+    ///<param name="component">The component to add.</param>
+    public void Add(IComponent? component) { Add(component, null); }
 
-            var components = _sites
-                .Select(s => s.Component)
-                .Where(c => c is not null)
-                .ToArray();
-
-            return new ComponentCollection(components!);
-        }
-    }
-
-    /// <summary>
-    /// Adds a component to the container without a name.
-    /// </summary>
-    /// <param name="component">The component to add.</param>
-    public void Add(IComponent? component) => Add(component, null);
-
-    /// <summary>
-    /// Adds a component to the container with an optional name.
-    /// </summary>
-    /// <param name="component">The component to add.</param>
-    /// <param name="name">The name to assign, or <c>null</c> for unnamed.</param>
-    /// <exception cref="ArgumentException">
-    /// A component with the specified <paramref name="name"/> already exists.
-    /// </exception>
+    ///<summary>
+    ///Adds a component to the container with an optional name.
+    ///</summary>
+    ///<param name="component">The component to add.</param>
+    ///<param name="name">The name to assign, or <c>null</c> for unnamed.</param>
+    ///<exception cref="ArgumentException">
+    ///A component with the specified <paramref name="name"/> already exists.
+    ///</exception>
     public void Add(IComponent? component, string? name)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (component is null)
+        if(component is null)
+        {
             return;
+        }
 
-        if (name is not null && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
+        if((name is not null) && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
+        {
             throw new ArgumentException($"A component named '{name}' already exists in the container.", nameof(name));
+        }
 
-        var site = new SlimSite(this, component, name);
+        SlimSite site = new SlimSite(this, component, name);
         _sites.Add(site);
         component.Site = site;
     }
 
-    /// <summary>
-    /// Removes a component from the container.
-    /// </summary>
-    /// <param name="component">The component to remove.</param>
-    public void Remove(IComponent? component)
+    ///<summary>
+    ///Disposes the container and all contained components.
+    ///</summary>
+    public void Dispose()
     {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-
-        if (component is null)
+        if(_disposed)
+        {
             return;
+        }
 
-        var site = _sites.FirstOrDefault(s => ReferenceEquals(s.Component, component));
+        _disposed = true;
 
-        if (site is null)
-            return;
+        // Dispose in reverse order (last added first)
+        for(int i = _sites.Count - 1; i >= 0; i--)
+        {
+            IComponent component = _sites[i].Component;
+            component.Site = null;
+            component.Dispose();
+        }
 
-        _sites.Remove(site);
-        component.Site = null;
+        _sites.Clear();
     }
 
-    /// <summary>
-    /// Gets a component by name.
-    /// </summary>
-    /// <param name="name">The name of the component to retrieve.</param>
-    /// <returns>The component, or <c>null</c> if not found.</returns>
+    ///<summary>
+    ///Gets a component by name.
+    ///</summary>
+    ///<param name="name">The name of the component to retrieve.</param>
+    ///<returns>The component, or <c>null</c> if not found.</returns>
     public IComponent? GetComponent(string name)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -92,48 +85,81 @@ public sealed class ComponentContainerSlim : IContainer
             .Component;
     }
 
-    /// <summary>
-    /// Gets the number of components in the container.
-    /// </summary>
-    public int Count => _sites.Count;
-
-    /// <summary>
-    /// Disposes the container and all contained components.
-    /// </summary>
-    public void Dispose()
+    ///<summary>
+    ///Removes a component from the container.
+    ///</summary>
+    ///<param name="component">The component to remove.</param>
+    public void Remove(IComponent? component)
     {
-        if (_disposed)
-            return;
+        ObjectDisposedException.ThrowIf(_disposed, this);
 
-        _disposed = true;
-
-        // Dispose in reverse order (last added first)
-        for (int i = _sites.Count - 1; i >= 0; i--)
+        if(component is null)
         {
-            var component = _sites[i].Component;
-            component.Site = null;
-            component.Dispose();
+            return;
         }
 
-        _sites.Clear();
+        ISite? site = _sites.FirstOrDefault(s => ReferenceEquals(s.Component, component));
+
+        if(site is null)
+        {
+            return;
+        }
+
+        _sites.Remove(site);
+        component.Site = null;
+    }
+    #endregion
+
+    #region Public properties
+    ///<inheritdoc/>
+    public ComponentCollection Components
+    {
+        get
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+
+            IComponent[] components = _sites
+                .Select(s => s.Component)
+                .Where(c => c is not null)
+                .ToArray();
+
+            return new ComponentCollection(components!);
+        }
     }
 
-    private sealed class SlimSite(IContainer container, IComponent component, string? name) : ISite
-    {
-        public IComponent Component { get; } = component;
-        public IContainer Container { get; } = container;
-        public bool DesignMode => false;
-        public string? Name { get; set; } = name;
+    ///<summary>
+    ///Gets the number of components in the container.
+    ///</summary>
+    public int Count => _sites.Count;
+    #endregion
 
+    sealed class SlimSite(IContainer container, IComponent component, string? name) : ISite
+    {
+        #region Public methods
         public object? GetService(Type serviceType)
         {
-            if (serviceType == typeof(ISite))
+            if(serviceType == typeof(ISite))
+            {
                 return this;
+            }
 
-            if (serviceType == typeof(IContainer))
+            if(serviceType == typeof(IContainer))
+            {
                 return Container;
+            }
 
             return null;
         }
+        #endregion
+
+        #region Public properties
+        public IComponent Component { get; } = component;
+
+        public IContainer Container { get; } = container;
+
+        public bool DesignMode => false;
+
+        public string? Name { get; set; } = name;
+        #endregion
     }
 }

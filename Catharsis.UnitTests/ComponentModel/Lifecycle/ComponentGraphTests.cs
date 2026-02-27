@@ -1,48 +1,44 @@
-using Catharsis.ComponentModel.Lifecycle;
 using System.ComponentModel;
+using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
 [TestClass]
 public sealed class ComponentGraphNodeTests
 {
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullComponent_ThrowsArgumentNullException()
+    public void AreDependenciesSatisfied_NoDependencies_ReturnsTrue()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new ComponentGraphNode(null!));
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
+
+        Assert.IsTrue(node.AreDependenciesSatisfied);
     }
 
     [TestMethod]
+    public void Constructor_CustomName_SetsName()
+    {
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent(), "MyNode");
+
+        Assert.AreEqual("MyNode", node.Name);
+    }
+
+    [TestMethod]
+    public void Constructor_NullComponent_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ComponentGraphNode(null!)); }
+    [TestMethod]
     public void Constructor_SetsComponentAndDefaultName()
     {
-        var component = new StubComponent();
-        var node = new ComponentGraphNode(component);
+        StubComponent component = new StubComponent();
+        ComponentGraphNode node = new ComponentGraphNode(component);
 
         Assert.AreSame(component, node.Component);
         Assert.AreEqual("StubComponent", node.Name);
     }
 
     [TestMethod]
-    public void Constructor_CustomName_SetsName()
-    {
-        var node = new ComponentGraphNode(new StubComponent(), "MyNode");
-
-        Assert.AreEqual("MyNode", node.Name);
-    }
-
-    [TestMethod]
-    public void State_DefaultIsCreated()
-    {
-        var node = new ComponentGraphNode(new StubComponent());
-
-        Assert.AreEqual(ComponentState.Created, node.State);
-    }
-
-    [TestMethod]
     public void Dependencies_InitiallyEmpty()
     {
-        var node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
 
         Assert.AreEqual(0, node.Dependencies.Count);
     }
@@ -50,73 +46,161 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void Dependents_InitiallyEmpty()
     {
-        var node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
 
         Assert.AreEqual(0, node.Dependents.Count);
     }
 
     [TestMethod]
-    public void AreDependenciesSatisfied_NoDependencies_ReturnsTrue()
+    public void State_DefaultIsCreated()
     {
-        var node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
 
-        Assert.IsTrue(node.AreDependenciesSatisfied);
+        Assert.AreEqual(ComponentState.Created, node.State);
     }
 
     [TestMethod]
     public void ToString_ContainsNameAndState()
     {
-        var node = new ComponentGraphNode(new StubComponent(), "DB");
+        ComponentGraphNode node = new ComponentGraphNode(new StubComponent(), "DB");
 
-        var result = node.ToString();
+        string result = node.ToString();
 
         Assert.IsTrue(result.Contains("DB"));
         Assert.IsTrue(result.Contains("Created"));
     }
+    #endregion
 
     internal sealed class StubComponent : IComponent
     {
-        public ISite? Site { get; set; }
+        #region Events
         public event EventHandler? Disposed;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #endregion
+
+        #region Public methods
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 }
 
 [TestClass]
 public sealed class ComponentGraphTests
 {
-    [TestMethod]
-    public void Empty_Graph_HasNoNodes()
+    #region Private methods
+    static ComponentGraph BuildGraph(params IComponent[] components)
     {
-        var graph = BuildGraph();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        foreach(IComponent c in components)
+        {
+            builder.AddComponent(c);
+        }
 
-        Assert.AreEqual(0, graph.Count);
+        return builder.Build();
     }
+    #endregion
 
-    [TestMethod]
-    public void Contains_RegisteredComponent_ReturnsTrue()
-    {
-        var c = new ComponentGraphNodeTests.StubComponent();
-        var graph = BuildGraph(c);
-
-        Assert.IsTrue(graph.Contains(c));
-    }
-
+    #region Public methods
     [TestMethod]
     public void Contains_NullComponent_ThrowsArgumentNullException()
     {
-        var graph = BuildGraph();
+        ComponentGraph graph = BuildGraph();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => graph.Contains(null!));
     }
 
     [TestMethod]
+    public void Contains_RegisteredComponent_ReturnsTrue()
+    {
+        ComponentGraphNodeTests.StubComponent c = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = BuildGraph(c);
+
+        Assert.IsTrue(graph.Contains(c));
+    }
+
+    [TestMethod]
+    public void Empty_Graph_HasNoNodes()
+    {
+        ComponentGraph graph = BuildGraph();
+
+        Assert.AreEqual(0, graph.Count);
+    }
+
+    [TestMethod]
+    public void GetActivationOrder_DependenciesBeforeDependents()
+    {
+        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
+            .AddComponent(db, "DB")
+            .AddComponent(app, "App")
+            .AddDependency(app, db)
+            .Build();
+
+        IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
+
+        int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
+        int appIndex = order.ToList().FindIndex(n => n.Name == "App");
+        Assert.IsTrue(dbIndex < appIndex);
+    }
+
+    [TestMethod]
+    public void GetActivationOrder_NoDependencies_ReturnsAllNodes()
+    {
+        ComponentGraphNodeTests.StubComponent c1 = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent c2 = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = BuildGraph(c1, c2);
+
+        IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
+
+        Assert.AreEqual(2, order.Count);
+    }
+
+    [TestMethod]
+    public void GetDeactivationOrder_DependentsBeforeDependencies()
+    {
+        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
+            .AddComponent(db, "DB")
+            .AddComponent(app, "App")
+            .AddDependency(app, db)
+            .Build();
+
+        IReadOnlyList<ComponentGraphNode> order = graph.GetDeactivationOrder();
+
+        int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
+        int appIndex = order.ToList().FindIndex(n => n.Name == "App");
+        Assert.IsTrue(appIndex < dbIndex);
+    }
+
+    [TestMethod]
+    public void GetLeaves_ReturnsNodesWithNoDependents()
+    {
+        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
+            .AddComponent(db, "DB")
+            .AddComponent(app, "App")
+            .AddDependency(app, db)
+            .Build();
+
+        IReadOnlyList<ComponentGraphNode> leaves = graph.GetLeaves();
+
+        Assert.AreEqual(1, leaves.Count);
+        Assert.AreEqual("App", leaves[0].Name);
+    }
+
+    [TestMethod]
     public void GetNode_RegisteredComponent_ReturnsNode()
     {
-        var c = new ComponentGraphNodeTests.StubComponent();
-        var graph = BuildGraph(c);
+        ComponentGraphNodeTests.StubComponent c = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = BuildGraph(c);
 
-        var node = graph.GetNode(c);
+        ComponentGraphNode? node = graph.GetNode(c);
 
         Assert.IsNotNull(node);
         Assert.AreSame(c, node.Component);
@@ -125,98 +209,26 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetNode_UnregisteredComponent_ReturnsNull()
     {
-        var graph = BuildGraph();
+        ComponentGraph graph = BuildGraph();
 
         Assert.IsNull(graph.GetNode(new ComponentGraphNodeTests.StubComponent()));
     }
 
     [TestMethod]
-    public void GetActivationOrder_NoDependencies_ReturnsAllNodes()
-    {
-        var c1 = new ComponentGraphNodeTests.StubComponent();
-        var c2 = new ComponentGraphNodeTests.StubComponent();
-        var graph = BuildGraph(c1, c2);
-
-        var order = graph.GetActivationOrder();
-
-        Assert.AreEqual(2, order.Count);
-    }
-
-    [TestMethod]
-    public void GetActivationOrder_DependenciesBeforeDependents()
-    {
-        var db = new ComponentGraphNodeTests.StubComponent();
-        var app = new ComponentGraphNodeTests.StubComponent();
-        var graph = new ComponentGraphBuilder()
-            .AddComponent(db, "DB")
-            .AddComponent(app, "App")
-            .AddDependency(app, db)
-            .Build();
-
-        var order = graph.GetActivationOrder();
-
-        var dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
-        var appIndex = order.ToList().FindIndex(n => n.Name == "App");
-        Assert.IsTrue(dbIndex < appIndex);
-    }
-
-    [TestMethod]
-    public void GetDeactivationOrder_DependentsBeforeDependencies()
-    {
-        var db = new ComponentGraphNodeTests.StubComponent();
-        var app = new ComponentGraphNodeTests.StubComponent();
-        var graph = new ComponentGraphBuilder()
-            .AddComponent(db, "DB")
-            .AddComponent(app, "App")
-            .AddDependency(app, db)
-            .Build();
-
-        var order = graph.GetDeactivationOrder();
-
-        var dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
-        var appIndex = order.ToList().FindIndex(n => n.Name == "App");
-        Assert.IsTrue(appIndex < dbIndex);
-    }
-
-    [TestMethod]
     public void GetRoots_ReturnsNodesWithNoDependencies()
     {
-        var db = new ComponentGraphNodeTests.StubComponent();
-        var app = new ComponentGraphNodeTests.StubComponent();
-        var graph = new ComponentGraphBuilder()
+        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
 
-        var roots = graph.GetRoots();
+        IReadOnlyList<ComponentGraphNode> roots = graph.GetRoots();
 
         Assert.AreEqual(1, roots.Count);
         Assert.AreEqual("DB", roots[0].Name);
     }
-
-    [TestMethod]
-    public void GetLeaves_ReturnsNodesWithNoDependents()
-    {
-        var db = new ComponentGraphNodeTests.StubComponent();
-        var app = new ComponentGraphNodeTests.StubComponent();
-        var graph = new ComponentGraphBuilder()
-            .AddComponent(db, "DB")
-            .AddComponent(app, "App")
-            .AddDependency(app, db)
-            .Build();
-
-        var leaves = graph.GetLeaves();
-
-        Assert.AreEqual(1, leaves.Count);
-        Assert.AreEqual("App", leaves[0].Name);
-    }
-
-    private static ComponentGraph BuildGraph(params IComponent[] components)
-    {
-        var builder = new ComponentGraphBuilder();
-        foreach (var c in components)
-            builder.AddComponent(c);
-        return builder.Build();
-    }
+    #endregion
 }

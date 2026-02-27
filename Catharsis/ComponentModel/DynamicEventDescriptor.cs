@@ -2,46 +2,59 @@ using System.ComponentModel;
 
 namespace Catharsis.ComponentModel;
 
-/// <summary>
-/// An <see cref="EventDescriptor"/> implementation that uses delegates for
-/// add and remove handler operations, supporting dynamic event definitions
-/// without requiring compile-time event accessors.
-/// </summary>
-/// <remarks>
-/// <para>
-/// The add and remove delegates receive the component instance and the handler
-/// delegate to attach or detach. Use <see cref="WithMergedAttributes"/> to
-/// produce a FileName descriptor with additional attributes.
-/// </para>
-/// </remarks>
+///<summary>
+///An <see cref="EventDescriptor"/> implementation that uses delegates for add and remove handler operations, supporting
+///dynamic event definitions without requiring compile-time event accessors.
+///</summary>
+///<remarks>
+///<para> The add and remove delegates receive the component instance and the handler delegate to attach or detach. Use
+///<see cref="WithMergedAttributes"/> to produce a FileName descriptor with additional attributes.</para>
+///</remarks>
 public sealed class DynamicEventDescriptor : EventDescriptor
 {
-    private readonly Action<object, Delegate> _addHandler;
-    private readonly Action<object, Delegate> _removeHandler;
-    private readonly Type _eventType;
-    private readonly Type _componentType;
+    #region Fields
+    readonly Action<object, Delegate> _addHandler;
+    readonly Type _componentType;
+    readonly Type _eventType;
+    readonly Action<object, Delegate> _removeHandler;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName instance of <see cref="DynamicEventDescriptor"/>.
-    /// </summary>
-    /// <param name="name">The event name.</param>
-    /// <param name="eventType">The delegate type of the event handler.</param>
-    /// <param name="componentType">The type that owns this event.</param>
-    /// <param name="addHandler">A delegate that subscribes a handler to the event.</param>
-    /// <param name="removeHandler">A delegate that unsubscribes a handler from the event.</param>
-    /// <param name="attributes">Optional attributes for the event.</param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="eventType"/>, <paramref name="componentType"/>,
-    /// <paramref name="addHandler"/>, or <paramref name="removeHandler"/> is <c>null</c>.
-    /// </exception>
-    public DynamicEventDescriptor(
-        string name,
-        Type eventType,
-        Type componentType,
-        Action<object, Delegate> addHandler,
-        Action<object, Delegate> removeHandler,
-        params Attribute[] attributes)
-        : base(name, attributes)
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName instance of <see cref="DynamicEventDescriptor"/> from <see cref="EventMetadata"/> and
+    ///delegate handlers.
+    ///</summary>
+    ///<param name="metadata">The event metadata.</param>
+    ///<param name="addHandler">A delegate that subscribes a handler.</param>
+    ///<param name="removeHandler">A delegate that unsubscribes a handler.</param>
+    ///<exception cref="ArgumentNullException">
+    ///<paramref name="metadata"/>, <paramref name="addHandler"/>, or <paramref name="removeHandler"/> is <c>null</c>.
+    ///</exception>
+    public DynamicEventDescriptor(EventMetadata metadata, Action<object, Delegate> addHandler, Action<object, Delegate> removeHandler) : base(metadata?.Name ?? throw new ArgumentNullException(nameof(metadata)), ToAttributeArray(metadata.Attributes))
+    {
+        ArgumentNullException.ThrowIfNull(addHandler);
+        ArgumentNullException.ThrowIfNull(removeHandler);
+
+        _eventType = metadata.EventType;
+        _componentType = metadata.ComponentType;
+        _addHandler = addHandler;
+        _removeHandler = removeHandler;
+    }
+
+    ///<summary>
+    ///Initializes a FileName instance of <see cref="DynamicEventDescriptor"/>.
+    ///</summary>
+    ///<param name="name">The event name.</param>
+    ///<param name="eventType">The delegate type of the event handler.</param>
+    ///<param name="componentType">The type that owns this event.</param>
+    ///<param name="addHandler">A delegate that subscribes a handler to the event.</param>
+    ///<param name="removeHandler">A delegate that unsubscribes a handler from the event.</param>
+    ///<param name="attributes">Optional attributes for the event.</param>
+    ///<exception cref="ArgumentNullException">
+    ///<paramref name="eventType"/>, <paramref name="componentType"/>, <paramref name="addHandler"/>, or <paramref
+    ///name="removeHandler"/> is <c>null</c>.
+    ///</exception>
+    public DynamicEventDescriptor(string name, Type eventType, Type componentType, Action<object, Delegate> addHandler, Action<object, Delegate> removeHandler, params Attribute[] attributes) : base(name, attributes)
     {
         ArgumentNullException.ThrowIfNull(eventType);
         ArgumentNullException.ThrowIfNull(componentType);
@@ -53,45 +66,24 @@ public sealed class DynamicEventDescriptor : EventDescriptor
         _addHandler = addHandler;
         _removeHandler = removeHandler;
     }
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName instance of <see cref="DynamicEventDescriptor"/>
-    /// from <see cref="EventMetadata"/> and delegate handlers.
-    /// </summary>
-    /// <param name="metadata">The event metadata.</param>
-    /// <param name="addHandler">A delegate that subscribes a handler.</param>
-    /// <param name="removeHandler">A delegate that unsubscribes a handler.</param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="metadata"/>, <paramref name="addHandler"/>,
-    /// or <paramref name="removeHandler"/> is <c>null</c>.
-    /// </exception>
-    public DynamicEventDescriptor(
-        EventMetadata metadata,
-        Action<object, Delegate> addHandler,
-        Action<object, Delegate> removeHandler)
-        : base(
-            metadata?.Name ?? throw new ArgumentNullException(nameof(metadata)),
-            ToAttributeArray(metadata.Attributes))
+    #region Private methods
+    static Attribute[] ToAttributeArray(AttributeCollection collection)
     {
-        ArgumentNullException.ThrowIfNull(addHandler);
-        ArgumentNullException.ThrowIfNull(removeHandler);
+        Attribute[] result = new Attribute[collection.Count];
 
-        _eventType = metadata.EventType;
-        _componentType = metadata.ComponentType;
-        _addHandler = addHandler;
-        _removeHandler = removeHandler;
+        for(int i = 0; i < collection.Count; i++)
+        {
+            result[i] = collection[i];
+        }
+
+        return result;
     }
+    #endregion
 
-    /// <inheritdoc />
-    public override Type ComponentType => _componentType;
-
-    /// <inheritdoc />
-    public override Type EventType => _eventType;
-
-    /// <inheritdoc />
-    public override bool IsMulticast => _eventType.IsSubclassOf(typeof(MulticastDelegate));
-
-    /// <inheritdoc />
+    #region Public methods
+    ///<inheritdoc/>
     public override void AddEventHandler(object component, Delegate value)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -100,7 +92,7 @@ public sealed class DynamicEventDescriptor : EventDescriptor
         _addHandler(component, value);
     }
 
-    /// <inheritdoc />
+    ///<inheritdoc/>
     public override void RemoveEventHandler(object component, Delegate value)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -109,35 +101,29 @@ public sealed class DynamicEventDescriptor : EventDescriptor
         _removeHandler(component, value);
     }
 
-    /// <summary>
-    /// Creates a FileName <see cref="DynamicEventDescriptor"/> with the specified
-    /// attributes merged onto the existing attribute set.
-    /// </summary>
-    /// <param name="additionalAttributes">The attributes to merge.</param>
-    /// <returns>A FileName descriptor with the merged attributes.</returns>
+    ///<summary>
+    ///Creates a FileName <see cref="DynamicEventDescriptor"/> with the specified attributes merged onto the existing
+    ///attribute set.
+    ///</summary>
+    ///<param name="additionalAttributes">The attributes to merge.</param>
+    ///<returns>A FileName descriptor with the merged attributes.</returns>
     public DynamicEventDescriptor WithMergedAttributes(params Attribute[] additionalAttributes)
     {
-        var builder = new AttributeCollectionBuilder(Attributes)
+        AttributeCollectionBuilder builder = new AttributeCollectionBuilder(Attributes)
             .Merge(additionalAttributes);
 
-        return new DynamicEventDescriptor(
-            Name,
-            _eventType,
-            _componentType,
-            _addHandler,
-            _removeHandler,
-            ToAttributeArray(builder.Build()));
+        return new DynamicEventDescriptor(Name, _eventType, _componentType, _addHandler, _removeHandler, ToAttributeArray(builder.Build()));
     }
+    #endregion
 
-    private static Attribute[] ToAttributeArray(AttributeCollection collection)
-    {
-        var result = new Attribute[collection.Count];
+    #region Public properties
+    ///<inheritdoc/>
+    public override Type ComponentType => _componentType;
 
-        for (int i = 0; i < collection.Count; i++)
-        {
-            result[i] = collection[i];
-        }
+    ///<inheritdoc/>
+    public override Type EventType => _eventType;
 
-        return result;
-    }
+    ///<inheritdoc/>
+    public override bool IsMulticast => _eventType.IsSubclassOf(typeof(MulticastDelegate));
+    #endregion
 }

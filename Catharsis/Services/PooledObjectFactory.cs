@@ -4,25 +4,28 @@ using Microsoft.Extensions.Logging;
 
 namespace Catharsis.Services;
 
-/// <summary>
-/// A factory that creates and pools reusable objects using a thread-safe object pool pattern,
-/// integrated with DI and logging.
-/// </summary>
-/// <typeparam name="T">The type of objects to pool. Must have a parameterless constructor.</typeparam>
+///<summary>
+///A factory that creates and pools reusable objects using a thread-safe object pool pattern, integrated with DI and
+///logging.
+///</summary>
+///<typeparam name="T">The type of objects to pool. Must have a parameterless constructor.</typeparam>
 public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
 {
-    private readonly ConcurrentBag<T> _pool = [];
-    private readonly ILogger<PooledObjectFactory<T>> _logger;
-    private readonly int _maxPoolSize;
-    private int _totalCreated;
-    private int _totalReturned;
-    private bool _disposed;
+    #region Fields
+    bool _disposed;
+    readonly ILogger<PooledObjectFactory<T>> _logger;
+    readonly int _maxPoolSize;
+    readonly ConcurrentBag<T> _pool = [];
+    int _totalCreated;
+    int _totalReturned;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
-    /// </summary>
-    /// <param name="logger">The logger for diagnostic output.</param>
-    /// <param name="maxPoolSize">The maximum number of objects to keep in the pool.</param>
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
+    ///</summary>
+    ///<param name="logger">The logger for diagnostic output.</param>
+    ///<param name="maxPoolSize">The maximum number of objects to keep in the pool.</param>
     public PooledObjectFactory(ILogger<PooledObjectFactory<T>> logger, int maxPoolSize = 64)
     {
         Guard.IsNotNull(logger);
@@ -31,25 +34,36 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
         _logger = logger;
         _maxPoolSize = maxPoolSize;
     }
+    #endregion
 
-    /// <summary>Gets the number of objects currently available in the pool.</summary>
-    public int AvailableCount => _pool.Count;
+    #region Public methods
+    ///<inheritdoc/>
+    public void Dispose()
+    {
+        if(_disposed)
+        {
+            return;
+        }
 
-    /// <summary>Gets the total number of objects created by this factory.</summary>
-    public int TotalCreated => _totalCreated;
+        _disposed = true;
 
-    /// <summary>Gets the total number of objects returned to the pool.</summary>
-    public int TotalReturned => _totalReturned;
+        while(_pool.TryTake(out T? item))
+        {
+            (item as IDisposable)?.Dispose();
+        }
 
-    /// <summary>
-    /// Rents an object from the pool, or creates a FileName one if the pool is empty.
-    /// </summary>
-    /// <returns>A pooled or newly created object.</returns>
+        _logger.LogDebug("PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.", typeof(T).Name, _totalCreated, _totalReturned);
+    }
+
+    ///<summary>
+    ///Rents an object from the pool, or creates a FileName one if the pool is empty.
+    ///</summary>
+    ///<returns>A pooled or newly created object.</returns>
     public T Rent()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_pool.TryTake(out T? item))
+        if(_pool.TryTake(out T? item))
         {
             _logger.LogTrace("Rented pooled {TypeName} instance.", typeof(T).Name);
             return item;
@@ -60,38 +74,42 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
         return new T();
     }
 
-    /// <summary>
-    /// Returns an object to the pool for reuse.
-    /// </summary>
-    /// <param name="item">The object to return.</param>
+    ///<summary>
+    ///Returns an object to the pool for reuse.
+    ///</summary>
+    ///<param name="item">The object to return.</param>
     public void Return(T item)
     {
         Guard.IsNotNull(item);
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_pool.Count < _maxPoolSize)
+        if(_pool.Count < _maxPoolSize)
         {
             _pool.Add(item);
             Interlocked.Increment(ref _totalReturned);
             _logger.LogTrace("Returned {TypeName} to pool.", typeof(T).Name);
-        }
-        else
+        } else
         {
             _logger.LogTrace("Pool full; discarding {TypeName} instance.", typeof(T).Name);
             (item as IDisposable)?.Dispose();
         }
     }
+    #endregion
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
+    #region Public properties
+    ///<summary>
+    ///Gets the number of objects currently available in the pool.
+    ///</summary>
+    public int AvailableCount => _pool.Count;
 
-        while (_pool.TryTake(out T? item))
-            (item as IDisposable)?.Dispose();
+    ///<summary>
+    ///Gets the total number of objects created by this factory.
+    ///</summary>
+    public int TotalCreated => _totalCreated;
 
-        _logger.LogDebug("PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.",
-            typeof(T).Name, _totalCreated, _totalReturned);
-    }
+    ///<summary>
+    ///Gets the total number of objects returned to the pool.
+    ///</summary>
+    public int TotalReturned => _totalReturned;
+    #endregion
 }

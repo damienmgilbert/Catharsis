@@ -1,27 +1,26 @@
-using System.Buffers;
 using Catharsis.Buffers;
 using Catharsis.Common;
 using CommunityToolkit.Diagnostics;
 
 namespace Catharsis.Patterns;
 
-/// <summary>
-/// Demonstrates a high-performance binary processing pipeline that chains
-/// multiple transformation stages using pooled buffers and span-based I/O.
-/// </summary>
+///<summary>
+///Demonstrates a high-performance binary processing pipeline that chains multiple transformation stages using pooled
+///buffers and span-based I/O.
+///</summary>
 public sealed class BinaryProcessingPipeline : IDisposable
 {
-    private readonly List<Func<ReadOnlySpan<byte>, PooledBuffer<byte>>> _stages = [];
-    private bool _disposed;
+    #region Fields
+    bool _disposed;
+    readonly List<Func<ReadOnlySpan<byte>, PooledBuffer<byte>>> _stages = [];
+    #endregion
 
-    /// <summary>Gets the number of processing stages in the pipeline.</summary>
-    public int StageCount => _stages.Count;
-
-    /// <summary>
-    /// Adds a transformation stage to the pipeline.
-    /// </summary>
-    /// <param name="stage">A function that transforms input bytes into a pooled output buffer.</param>
-    /// <returns>This pipeline for fluent chaining.</returns>
+    #region Public methods
+    ///<summary>
+    ///Adds a transformation stage to the pipeline.
+    ///</summary>
+    ///<param name="stage">A function that transforms input bytes into a pooled output buffer.</param>
+    ///<returns>This pipeline for fluent chaining.</returns>
     public BinaryProcessingPipeline AddStage(Func<ReadOnlySpan<byte>, PooledBuffer<byte>> stage)
     {
         Guard.IsNotNull(stage);
@@ -29,21 +28,74 @@ public sealed class BinaryProcessingPipeline : IDisposable
         return this;
     }
 
-    /// <summary>
-    /// Executes all stages sequentially, passing each stage's output as input to the next.
-    /// Uses <see cref="ValueStopwatch"/> to measure total pipeline execution time.
-    /// </summary>
-    /// <param name="input">The initial input data.</param>
-    /// <param name="elapsedMs">The total pipeline execution time in milliseconds.</param>
-    /// <returns>The final output as a byte array.</returns>
+    ///<summary>
+    ///Creates a sample byte reversal stage.
+    ///</summary>
+    ///<returns>A stage function.</returns>
+    public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateReverseStage()
+    {
+        return(ReadOnlySpan<byte> input) =>
+        {
+            PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length);
+            Span<byte> span = output.GetSpan(input.Length);
+            for(int i = 0; i < input.Length; i++)
+            {
+                span[i] = input[input.Length - 1 - i];
+            }
+
+            output.Advance(input.Length);
+            return output;
+        };
+    }
+
+    ///<summary>
+    ///Creates a sample XOR obfuscation stage that XORs each byte with a key.
+    ///</summary>
+    ///<param name="key">The XOR key byte.</param>
+    ///<returns>A stage function.</returns>
+    public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateXorStage(byte key)
+    {
+        return(ReadOnlySpan<byte> input) =>
+        {
+            PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length);
+            Span<byte> span = output.GetSpan(input.Length);
+            for(int i = 0; i < input.Length; i++)
+            {
+                span[i] = (byte)(input[i] ^ key);
+            }
+
+            output.Advance(input.Length);
+            return output;
+        };
+    }
+
+    ///<inheritdoc/>
+    public void Dispose()
+    {
+        if(_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        _stages.Clear();
+    }
+
+    ///<summary>
+    ///Executes all stages sequentially, passing each stage's output as input to the next. Uses <see
+    ///cref="ValueStopwatch"/> to measure total pipeline execution time.
+    ///</summary>
+    ///<param name="input">The initial input data.</param>
+    ///<param name="elapsedMs">The total pipeline execution time in milliseconds.</param>
+    ///<returns>The final output as a byte array.</returns>
     public byte[] Execute(ReadOnlySpan<byte> input, out double elapsedMs)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        var stopwatch = ValueStopwatch.StartNew();
+        ValueStopwatch stopwatch = ValueStopwatch.StartNew();
         byte[] current = input.ToArray();
 
-        foreach (Func<ReadOnlySpan<byte>, PooledBuffer<byte>> stage in _stages)
+        foreach(Func<ReadOnlySpan<byte>, PooledBuffer<byte>> stage in _stages)
         {
             using PooledBuffer<byte> output = stage(current);
             current = output.WrittenSpan.ToArray();
@@ -52,47 +104,12 @@ public sealed class BinaryProcessingPipeline : IDisposable
         elapsedMs = stopwatch.GetElapsedMilliseconds();
         return current;
     }
+    #endregion
 
-    /// <summary>
-    /// Creates a sample XOR obfuscation stage that XORs each byte with a key.
-    /// </summary>
-    /// <param name="key">The XOR key byte.</param>
-    /// <returns>A stage function.</returns>
-    public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateXorStage(byte key)
-    {
-        return (ReadOnlySpan<byte> input) =>
-        {
-            var output = new PooledBuffer<byte>(input.Length);
-            Span<byte> span = output.GetSpan(input.Length);
-            for (int i = 0; i < input.Length; i++)
-                span[i] = (byte)(input[i] ^ key);
-            output.Advance(input.Length);
-            return output;
-        };
-    }
-
-    /// <summary>
-    /// Creates a sample byte reversal stage.
-    /// </summary>
-    /// <returns>A stage function.</returns>
-    public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateReverseStage()
-    {
-        return (ReadOnlySpan<byte> input) =>
-        {
-            var output = new PooledBuffer<byte>(input.Length);
-            Span<byte> span = output.GetSpan(input.Length);
-            for (int i = 0; i < input.Length; i++)
-                span[i] = input[input.Length - 1 - i];
-            output.Advance(input.Length);
-            return output;
-        };
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        _stages.Clear();
-    }
+    #region Public properties
+    ///<summary>
+    ///Gets the number of processing stages in the pipeline.
+    ///</summary>
+    public int StageCount => _stages.Count;
+    #endregion
 }

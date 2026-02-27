@@ -2,24 +2,36 @@
 
 public class TrackingCollection<T> : ICollection<T>
 {
-    private readonly List<T> _items = [];
-    private readonly Action<T> _onAdd;
+    #region Fields
+    readonly List<T> _items = [];
+    readonly Action<T> _onAdd;
+    #endregion
 
-    public TrackingCollection(Action<T> onAdd) => _onAdd = onAdd;
+    #region Constructors
+    public TrackingCollection(Action<T> onAdd) { _onAdd = onAdd; }
+    #endregion
 
-    public int Count => _items.Count;
-    public bool IsReadOnly => false;
+    #region Explicit interface implementations
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    #endregion
 
+    #region Public methods
     public void Add(T item)
     {
         _onAdd(item);
         _items.Add(item);
     }
 
-    public void Clear() => _items.Clear();
-    public bool Contains(T item) => _items.Contains(item);
-    public void CopyTo(T[] array, int arrayIndex) => _items.CopyTo(array, arrayIndex);
-    public bool Remove(T item) => _items.Remove(item);
-    public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    public void Clear() { _items.Clear(); }
+    public bool Contains(T item) { return _items.Contains(item); }
+    public void CopyTo(T[] array, int arrayIndex) { _items.CopyTo(array, arrayIndex); }
+    public IEnumerator<T> GetEnumerator() { return _items.GetEnumerator(); }
+    public bool Remove(T item) { return _items.Remove(item); }
+    #endregion
+
+    #region Public properties
+    public int Count => _items.Count;
+
+    public bool IsReadOnly => false;
+    #endregion
 }

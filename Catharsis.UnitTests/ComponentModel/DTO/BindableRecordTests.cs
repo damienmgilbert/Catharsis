@@ -5,49 +5,62 @@ namespace Catharsis.UnitTests.ComponentModel.DTO;
 [TestClass]
 public sealed class BindableRecordTests
 {
-    private sealed record PersonRecord(string Name, int Age);
-
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException()
-    {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new BindableRecord<PersonRecord>(null!));
-    }
-
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BindableRecord<PersonRecord>(null!)); }
     [TestMethod]
     public void Constructor_SetsValue()
     {
-        var record = new PersonRecord("Alice", 30);
-        var bindable = new BindableRecord<PersonRecord>(record);
+        PersonRecord record = new PersonRecord("Alice", 30);
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(record);
 
         Assert.AreSame(record, bindable.Value);
     }
 
     [TestMethod]
-    public void Value_Set_NullValue_ThrowsArgumentNullException()
+    public void ToString_ReturnsValueToString()
     {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        PersonRecord record = new PersonRecord("Alice", 30);
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(record);
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => bindable.Value = null!);
+        Assert.AreEqual(record.ToString(), bindable.ToString());
     }
 
     [TestMethod]
-    public void Value_Set_SameReference_NoNotification()
+    public void Update_NullTransform_ThrowsArgumentNullException()
     {
-        var record = new PersonRecord("Alice", 30);
-        var bindable = new BindableRecord<PersonRecord>(record);
-        var raised = false;
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => bindable.Update(null!));
+    }
+
+    [TestMethod]
+    public void Update_RaisesPropertyChanged()
+    {
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        bool raised = false;
         bindable.PropertyChanged += (s, e) => raised = true;
 
-        bindable.Value = record;
+        bindable.Update(r => r with { Name = "Bob" });
 
-        Assert.IsFalse(raised);
+        Assert.IsTrue(raised);
+    }
+
+    [TestMethod]
+    public void Update_TransformsAndSetsValue()
+    {
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+
+        PersonRecord result = bindable.Update(r => r with { Age = 31 });
+
+        Assert.AreEqual(31, result.Age);
+        Assert.AreEqual(31, bindable.Value.Age);
     }
 
     [TestMethod]
     public void Value_Set_DifferentValue_RaisesPropertyChanged()
     {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
         string? changedProp = null;
         bindable.PropertyChanged += (s, e) => changedProp = e.PropertyName;
 
@@ -59,7 +72,7 @@ public sealed class BindableRecordTests
     [TestMethod]
     public void Value_Set_DifferentValue_RaisesPropertyChanging()
     {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
         string? changingProp = null;
         bindable.PropertyChanging += (s, e) => changingProp = e.PropertyName;
 
@@ -69,42 +82,26 @@ public sealed class BindableRecordTests
     }
 
     [TestMethod]
-    public void Update_NullTransform_ThrowsArgumentNullException()
+    public void Value_Set_NullValue_ThrowsArgumentNullException()
     {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => bindable.Update(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => bindable.Value = null!);
     }
 
     [TestMethod]
-    public void Update_TransformsAndSetsValue()
+    public void Value_Set_SameReference_NoNotification()
     {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-
-        var result = bindable.Update(r => r with { Age = 31 });
-
-        Assert.AreEqual(31, result.Age);
-        Assert.AreEqual(31, bindable.Value.Age);
-    }
-
-    [TestMethod]
-    public void Update_RaisesPropertyChanged()
-    {
-        var bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-        var raised = false;
+        PersonRecord record = new PersonRecord("Alice", 30);
+        BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(record);
+        bool raised = false;
         bindable.PropertyChanged += (s, e) => raised = true;
 
-        bindable.Update(r => r with { Name = "Bob" });
+        bindable.Value = record;
 
-        Assert.IsTrue(raised);
+        Assert.IsFalse(raised);
     }
+    #endregion
 
-    [TestMethod]
-    public void ToString_ReturnsValueToString()
-    {
-        var record = new PersonRecord("Alice", 30);
-        var bindable = new BindableRecord<PersonRecord>(record);
-
-        Assert.AreEqual(record.ToString(), bindable.ToString());
-    }
+    sealed record PersonRecord(string Name, int Age);
 }

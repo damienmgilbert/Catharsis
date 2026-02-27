@@ -3,46 +3,70 @@ using CommunityToolkit.Diagnostics;
 
 namespace Catharsis.Buffers;
 
-/// <summary>
-/// A <see cref="Stream"/> wrapper around an <see cref="IBufferWriter{T}"/> for byte data,
-/// enabling stream-based APIs to write directly into a buffer writer without intermediate copies.
-/// </summary>
+///<summary>
+///A <see cref="Stream"/> wrapper around an <see cref="IBufferWriter{T}"/> for byte data, enabling stream-based APIs to
+///write directly into a buffer writer without intermediate copies.
+///</summary>
 public sealed class BufferWriterStream : Stream
 {
-    private readonly IBufferWriter<byte> _writer;
-    private long _bytesWritten;
-    private bool _disposed;
+    #region Fields
+    long _bytesWritten;
+    bool _disposed;
+    readonly IBufferWriter<byte> _writer;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName <see cref="BufferWriterStream"/> that writes to the specified buffer writer.
-    /// </summary>
-    /// <param name="writer">The buffer writer to write to.</param>
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName <see cref="BufferWriterStream"/> that writes to the specified buffer writer.
+    ///</summary>
+    ///<param name="writer">The buffer writer to write to.</param>
     public BufferWriterStream(IBufferWriter<byte> writer)
     {
         Guard.IsNotNull(writer);
         _writer = writer;
     }
+    #endregion
 
-    /// <inheritdoc />
-    public override bool CanRead => false;
-
-    /// <inheritdoc />
-    public override bool CanSeek => false;
-
-    /// <inheritdoc />
-    public override bool CanWrite => !_disposed;
-
-    /// <inheritdoc />
-    public override long Length => _bytesWritten;
-
-    /// <inheritdoc />
-    public override long Position
+    #region Protected methods
+    ///<inheritdoc/>
+    protected override void Dispose(bool disposing)
     {
-        get => _bytesWritten;
-        set => throw new NotSupportedException("Seeking is not supported.");
+        _disposed = true;
+        base.Dispose(disposing);
+    }
+    #endregion
+
+    #region Public methods
+    ///<inheritdoc/>
+    public override void Flush()
+    {
+    }
+    ///<inheritdoc/>
+    public override Task FlushAsync(CancellationToken cancellationToken) { return Task.CompletedTask; }
+    ///<inheritdoc/>
+    public override int Read(byte[] buffer, int offset, int count) { throw new NotSupportedException("Reading is not supported."); }
+    ///<inheritdoc/>
+    public override long Seek(long offset, SeekOrigin origin) { throw new NotSupportedException("Seeking is not supported."); }
+    ///<inheritdoc/>
+    public override void SetLength(long value) { throw new NotSupportedException("Setting length is not supported."); }
+
+    ///<inheritdoc/>
+    public override void Write(ReadOnlySpan<byte> buffer)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if(buffer.IsEmpty)
+        {
+            return;
+        }
+
+        Span<byte> destination = _writer.GetSpan(buffer.Length);
+        buffer.CopyTo(destination);
+        _writer.Advance(buffer.Length);
+        _bytesWritten += buffer.Length;
     }
 
-    /// <inheritdoc />
+    ///<inheritdoc/>
     public override void Write(byte[] buffer, int offset, int count)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -53,20 +77,17 @@ public sealed class BufferWriterStream : Stream
         Write(buffer.AsSpan(offset, count));
     }
 
-    /// <inheritdoc />
-    public override void Write(ReadOnlySpan<byte> buffer)
+    ///<inheritdoc/>
+    public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
+        cancellationToken.ThrowIfCancellationRequested();
 
-        if (buffer.IsEmpty) return;
-
-        Span<byte> destination = _writer.GetSpan(buffer.Length);
-        buffer.CopyTo(destination);
-        _writer.Advance(buffer.Length);
-        _bytesWritten += buffer.Length;
+        Write(buffer.Span);
+        return ValueTask.CompletedTask;
     }
 
-    /// <inheritdoc />
+    ///<inheritdoc/>
     public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -77,17 +98,7 @@ public sealed class BufferWriterStream : Stream
         await Task.CompletedTask;
     }
 
-    /// <inheritdoc />
-    public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        cancellationToken.ThrowIfCancellationRequested();
-
-        Write(buffer.Span);
-        return ValueTask.CompletedTask;
-    }
-
-    /// <inheritdoc />
+    ///<inheritdoc/>
     public override void WriteByte(byte value)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -97,29 +108,22 @@ public sealed class BufferWriterStream : Stream
         _writer.Advance(1);
         _bytesWritten++;
     }
+    #endregion
 
-    /// <inheritdoc />
-    public override void Flush() { }
+    #region Public properties
+    ///<inheritdoc/>
+    public override bool CanRead => false;
 
-    /// <inheritdoc />
-    public override Task FlushAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    ///<inheritdoc/>
+    public override bool CanSeek => false;
 
-    /// <inheritdoc />
-    public override int Read(byte[] buffer, int offset, int count) =>
-        throw new NotSupportedException("Reading is not supported.");
+    ///<inheritdoc/>
+    public override bool CanWrite => !_disposed;
 
-    /// <inheritdoc />
-    public override long Seek(long offset, SeekOrigin origin) =>
-        throw new NotSupportedException("Seeking is not supported.");
+    ///<inheritdoc/>
+    public override long Length => _bytesWritten;
 
-    /// <inheritdoc />
-    public override void SetLength(long value) =>
-        throw new NotSupportedException("Setting length is not supported.");
-
-    /// <inheritdoc />
-    protected override void Dispose(bool disposing)
-    {
-        _disposed = true;
-        base.Dispose(disposing);
-    }
+    ///<inheritdoc/>
+    public override long Position { get => _bytesWritten; set => throw new NotSupportedException("Seeking is not supported."); }
+    #endregion
 }

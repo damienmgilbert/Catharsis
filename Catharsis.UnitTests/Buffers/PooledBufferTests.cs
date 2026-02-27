@@ -1,4 +1,6 @@
-namespace Catharsis.Buffers.UnitTests;
+using Catharsis.Buffers;
+
+namespace Catharsis.UnitTests.Buffers;
 
 /// <summary>
 /// Unit tests for the <see cref="PooledBuffer{T}"/> class.

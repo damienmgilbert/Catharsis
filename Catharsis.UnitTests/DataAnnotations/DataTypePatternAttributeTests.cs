@@ -1,96 +1,84 @@
-using Catharsis.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
 [TestClass]
 public class DataTypePatternAttributeTests
 {
-    [TestMethod]
-    public void NullValue_ReturnsSuccess()
+    #region Private methods
+    static ValidationContext CreateContext(string memberName)
     {
-        var attribute = new DataTypePatternAttribute(DataType.EmailAddress);
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult(null, context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
+        TestModel model = new TestModel();
+        return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
+    #endregion
 
-    [TestMethod]
-    public void ValidEmail_ReturnsSuccess()
-    {
-        var attribute = new DataTypePatternAttribute(DataType.EmailAddress);
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("user@example.com", context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
+    #region Public methods
     [TestMethod]
     public void InvalidEmail_ReturnsFailure()
     {
-        var attribute = new DataTypePatternAttribute(DataType.EmailAddress);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("not-an-email", context);
+        ValidationResult? result = attribute.GetValidationResult("not-an-email", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
         Assert.IsTrue(result!.ErrorMessage!.Contains("EmailAddress"));
     }
 
     [TestMethod]
-    public void ValidPhoneNumber_ReturnsSuccess()
-    {
-        var attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("+1 (555) 123-4567", context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
     public void InvalidPhoneNumber_ReturnsFailure()
     {
-        var attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("abc", context);
+        ValidationResult? result = attribute.GetValidationResult("abc", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void ValidPostalCode_ReturnsSuccess()
+    public void NonStringValue_ReturnsFailure()
     {
-        var attribute = new DataTypePatternAttribute(DataType.PostalCode);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("12345", context);
+        ValidationResult? result = attribute.GetValidationResult(42, context);
+
+        Assert.AreNotEqual(ValidationResult.Success, result);
+        Assert.IsTrue(result!.ErrorMessage!.Contains("string"));
+    }
+
+    [TestMethod]
+    public void NullValue_ReturnsSuccess()
+    {
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult(null, context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void ValidPostalCodeWithExtension_ReturnsSuccess()
+    public void PatternProperty_MatchesExpectedDataType()
     {
-        var attribute = new DataTypePatternAttribute(DataType.PostalCode);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
 
-        var result = attribute.GetValidationResult("12345-6789", context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
+        Assert.AreEqual(DataType.EmailAddress, attribute.DataType);
+        Assert.IsNotNull(attribute.Pattern);
     }
 
     [TestMethod]
-    public void ValidUrl_ReturnsSuccess()
+    public void UnsupportedDataType_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new DataTypePatternAttribute(DataType.Password)); }
+    [TestMethod]
+    public void ValidCurrency_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.Url);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Currency);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("https://example.com/path?q=1", context);
+        ValidationResult? result = attribute.GetValidationResult("$1,234.56", context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -98,21 +86,10 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDate_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.Date);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Date);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("2024-01-15", context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void ValidTime_ReturnsSuccess()
-    {
-        var attribute = new DataTypePatternAttribute(DataType.Time);
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("14:30:00", context);
+        ValidationResult? result = attribute.GetValidationResult("2024-01-15", context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -120,10 +97,10 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDateTime_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.DateTime);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.DateTime);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("2024-01-15T14:30:00", context);
+        ValidationResult? result = attribute.GetValidationResult("2024-01-15T14:30:00", context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -131,10 +108,21 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDuration_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.Duration);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Duration);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("P1DT2H30M", context);
+        ValidationResult? result = attribute.GetValidationResult("P1DT2H30M", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
+    }
+
+    [TestMethod]
+    public void ValidEmail_ReturnsSuccess()
+    {
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult("user@example.com", context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -142,61 +130,74 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidImageUrl_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.ImageUrl);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.ImageUrl);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("https://example.com/photo.jpg", context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void ValidCurrency_ReturnsSuccess()
-    {
-        var attribute = new DataTypePatternAttribute(DataType.Currency);
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("$1,234.56", context);
+        ValidationResult? result = attribute.GetValidationResult("https://example.com/photo.jpg", context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void UnsupportedDataType_ThrowsArgumentException()
+    public void ValidPhoneNumber_ReturnsSuccess()
     {
-        Assert.ThrowsExactly<ArgumentException>(() =>
-            new DataTypePatternAttribute(DataType.Password));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult("+1 (555) 123-4567", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void NonStringValue_ReturnsFailure()
+    public void ValidPostalCode_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.EmailAddress);
-        var context = CreateContext(nameof(TestModel.Value));
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PostalCode);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult(42, context);
+        ValidationResult? result = attribute.GetValidationResult("12345", context);
 
-        Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("string"));
+        Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void PatternProperty_MatchesExpectedDataType()
+    public void ValidPostalCodeWithExtension_ReturnsSuccess()
     {
-        var attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PostalCode);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        Assert.AreEqual(DataType.EmailAddress, attribute.DataType);
-        Assert.IsNotNull(attribute.Pattern);
+        ValidationResult? result = attribute.GetValidationResult("12345-6789", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
     }
 
-    private static ValidationContext CreateContext(string memberName)
+    [TestMethod]
+    public void ValidTime_ReturnsSuccess()
     {
-        var model = new TestModel();
-        return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Time);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult("14:30:00", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
     }
 
-    private sealed class TestModel
+    [TestMethod]
+    public void ValidUrl_ReturnsSuccess()
     {
+        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Url);
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult("https://example.com/path?q=1", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
+    }
+    #endregion
+
+    sealed class TestModel
+    {
+        #region Public properties
         public string? Value { get; set; }
+        #endregion
     }
 }

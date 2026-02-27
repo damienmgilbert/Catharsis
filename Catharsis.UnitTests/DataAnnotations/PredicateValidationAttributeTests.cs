@@ -1,52 +1,66 @@
-using Catharsis.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
 [TestClass]
 public class PredicateValidationAttributeTests
 {
-    [TestMethod]
-    public void PredicateReturnsTrue_ReturnsSuccess()
+    #region Private methods
+    static ValidationContext CreateContext(string memberName)
     {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
-        var context = CreateContext(nameof(TestModel.Value));
+        TestModel model = new TestModel();
+        return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
+    }
+    #endregion
 
-        var result = attribute.GetValidationResult(5, context);
+    #region Public methods
+    [TestMethod]
+    public void Constructor_NullMethodName_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PredicateValidationAttribute(typeof(TestPredicates), null!)); }
+    [TestMethod]
+    public void Constructor_NullType_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PredicateValidationAttribute(null!, "Method")); }
+    [TestMethod]
+    public void NonExistentMethod_ReturnsFailure()
+    {
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), "NonExistent");
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        Assert.AreEqual(ValidationResult.Success, result);
+        ValidationResult? result = attribute.GetValidationResult("test", context);
+
+        Assert.AreNotEqual(ValidationResult.Success, result);
+        Assert.IsTrue(result!.ErrorMessage!.Contains("not found"));
+    }
+
+    [TestMethod]
+    public void NullValuePassedToPredicate_PredicateDecides()
+    {
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsNotNull));
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
+
+        ValidationResult? result = attribute.GetValidationResult(null, context);
+
+        Assert.AreNotEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
     public void PredicateReturnsFalse_ReturnsFailure()
     {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
-        var context = CreateContext(nameof(TestModel.Value));
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult(-1, context);
+        ValidationResult? result = attribute.GetValidationResult(-1, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
         Assert.IsTrue(result!.ErrorMessage!.Contains("IsPositive"));
     }
 
     [TestMethod]
-    public void NullValuePassedToPredicate_PredicateDecides()
+    public void PredicateReturnsTrue_ReturnsSuccess()
     {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsNotNull));
-        var context = CreateContext(nameof(TestModel.Value));
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult(null, context);
-
-        Assert.AreNotEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void StringPredicate_ValidValue_ReturnsSuccess()
-    {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("HELLO", context);
+        ValidationResult? result = attribute.GetValidationResult(5, context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -54,69 +68,48 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void StringPredicate_InvalidValue_ReturnsFailure()
     {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
-        var context = CreateContext(nameof(TestModel.Value));
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-        var result = attribute.GetValidationResult("hello", context);
-
-        Assert.AreNotEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void NonExistentMethod_ReturnsFailure()
-    {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), "NonExistent");
-        var context = CreateContext(nameof(TestModel.Value));
-
-        var result = attribute.GetValidationResult("test", context);
+        ValidationResult? result = attribute.GetValidationResult("hello", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("not found"));
     }
 
     [TestMethod]
-    public void Constructor_NullType_ThrowsArgumentNullException()
+    public void StringPredicate_ValidValue_ReturnsSuccess()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() =>
-            new PredicateValidationAttribute(null!, "Method"));
-    }
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
+        ValidationContext context = CreateContext(nameof(TestModel.Value));
 
-    [TestMethod]
-    public void Constructor_NullMethodName_ThrowsArgumentNullException()
-    {
-        Assert.ThrowsExactly<ArgumentNullException>(() =>
-            new PredicateValidationAttribute(typeof(TestPredicates), null!));
+        ValidationResult? result = attribute.GetValidationResult("HELLO", context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
     public void ValidatorTypeAndMethodName_AreExposed()
     {
-        var attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
 
         Assert.AreEqual(typeof(TestPredicates), attribute.ValidatorType);
         Assert.AreEqual(nameof(TestPredicates.IsPositive), attribute.MethodName);
     }
+    #endregion
 
-    private static ValidationContext CreateContext(string memberName)
+    sealed class TestModel
     {
-        var model = new TestModel();
-        return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
-    }
-
-    private sealed class TestModel
-    {
+        #region Public properties
         public object? Value { get; set; }
+        #endregion
     }
 
     public static class TestPredicates
     {
-        public static bool IsPositive(object? value) =>
-            value is int i && i > 0;
-
-        public static bool IsNotNull(object? value) =>
-            value is not null;
-
-        public static bool IsUpperCase(object? value) =>
-            value is string s && s == s.ToUpperInvariant();
+        #region Public methods
+        public static bool IsNotNull(object? value) { return value is not null; }
+        public static bool IsPositive(object? value) { return (value is int i) && (i > 0); }
+        public static bool IsUpperCase(object? value) { return (value is string s) && (s == s.ToUpperInvariant()); }
+        #endregion
     }
 }

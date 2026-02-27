@@ -4,72 +4,74 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Catharsis.Mvvm;
 
-/// <summary>
-/// An MVVM-friendly asynchronous buffer loader that loads data from a
-/// <see cref="Stream"/> into a pooled buffer while providing progress and status notifications.
-/// </summary>
+///<summary>
+///An MVVM-friendly asynchronous buffer loader that loads data from a <see cref="Stream"/> into a pooled buffer while
+///providing progress and status notifications.
+///</summary>
 public class AsyncBufferLoader : ObservableObject, IDisposable
 {
-    private readonly ArrayPool<byte> _pool;
-    private byte[]? _buffer;
-    private bool _disposed;
-    private int _bytesLoaded;
-    private bool _isLoading;
-    private double _loadProgress;
+    #region Fields
+    byte[]? _buffer;
+    int _bytesLoaded;
+    bool _disposed;
+    bool _isLoading;
+    double _loadProgress;
+    readonly ArrayPool<byte> _pool;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName <see cref="AsyncBufferLoader"/> using the shared array pool.
-    /// </summary>
-    public AsyncBufferLoader()
-        : this(ArrayPool<byte>.Shared)
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName <see cref="AsyncBufferLoader"/> using the shared array pool.
+    ///</summary>
+    public AsyncBufferLoader() : this(ArrayPool<byte>.Shared)
     {
     }
 
-    /// <summary>
-    /// Initializes a FileName <see cref="AsyncBufferLoader"/> with a specified pool.
-    /// </summary>
-    /// <param name="pool">The array pool to rent from.</param>
+    ///<summary>
+    ///Initializes a FileName <see cref="AsyncBufferLoader"/> with a specified pool.
+    ///</summary>
+    ///<param name="pool">The array pool to rent from.</param>
     public AsyncBufferLoader(ArrayPool<byte> pool)
     {
         Guard.IsNotNull(pool);
         _pool = pool;
     }
+    #endregion
 
-    /// <summary>Gets or sets the number of bytes loaded so far.</summary>
-    public int BytesLoaded
+    #region Public methods
+    ///<summary>
+    ///Clears the loaded data and returns the buffer to the pool.
+    ///</summary>
+    public void Clear()
     {
-        get => _bytesLoaded;
-        private set => SetProperty(ref _bytesLoaded, value);
+        if(_buffer is not null)
+        {
+            _pool.Return(_buffer);
+            _buffer = null;
+        }
+        BytesLoaded = 0;
+        LoadProgress = 0;
     }
 
-    /// <summary>Gets or sets whether data is currently being loaded.</summary>
-    public bool IsLoading
+    ///<inheritdoc/>
+    public void Dispose()
     {
-        get => _isLoading;
-        private set => SetProperty(ref _isLoading, value);
+        if(_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        Clear();
     }
 
-    /// <summary>Gets or sets the loading progress (0.0 to 1.0).</summary>
-    public double LoadProgress
-    {
-        get => _loadProgress;
-        private set => SetProperty(ref _loadProgress, value);
-    }
-
-    /// <summary>
-    /// Gets a <see cref="ReadOnlyMemory{T}"/> over the loaded data.
-    /// </summary>
-    public ReadOnlyMemory<byte> Data => _buffer is not null
-        ? _buffer.AsMemory(0, BytesLoaded)
-        : ReadOnlyMemory<byte>.Empty;
-
-    /// <summary>
-    /// Asynchronously loads all data from the specified stream.
-    /// </summary>
-    /// <param name="stream">The source stream to read from.</param>
-    /// <param name="bufferSize">The read buffer size.</param>
-    /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>A task representing the async operation.</returns>
+    ///<summary>
+    ///Asynchronously loads all data from the specified stream.
+    ///</summary>
+    ///<param name="stream">The source stream to read from.</param>
+    ///<param name="bufferSize">The read buffer size.</param>
+    ///<param name="cancellationToken">A cancellation token.</param>
+    ///<returns>A task representing the async operation.</returns>
     public async Task LoadAsync(Stream stream, int bufferSize = 4096, CancellationToken cancellationToken = default)
     {
         Guard.IsNotNull(stream);
@@ -82,20 +84,22 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
 
         try
         {
-            long totalLength = stream.CanSeek ? stream.Length : -1;
+            long totalLength = stream.CanSeek ? stream.Length : (-1);
             _buffer = _pool.Rent(bufferSize);
             int totalRead = 0;
             int bytesRead;
 
-            while ((bytesRead = await stream.ReadAsync(_buffer.AsMemory(totalRead, Math.Min(bufferSize, _buffer.Length - totalRead)), cancellationToken)) > 0)
+            while((bytesRead = await stream.ReadAsync(_buffer.AsMemory(totalRead, Math.Min(bufferSize, _buffer.Length - totalRead)), cancellationToken)) > 0)
             {
                 totalRead += bytesRead;
                 BytesLoaded = totalRead;
 
-                if (totalLength > 0)
-                    LoadProgress = (double)totalRead / totalLength;
+                if(totalLength > 0)
+                {
+                    LoadProgress = ((double)totalRead) / totalLength;
+                }
 
-                if (totalRead + bufferSize > _buffer.Length)
+                if(totalRead + bufferSize > _buffer.Length)
                 {
                     byte[] newBuffer = _pool.Rent(_buffer.Length * 2);
                     _buffer.AsSpan(0, totalRead).CopyTo(newBuffer);
@@ -105,44 +109,41 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
             }
 
             LoadProgress = 1.0;
-        }
-        finally
+        } finally
         {
             IsLoading = false;
         }
     }
 
-    /// <summary>
-    /// Asynchronously loads all data from the specified stream.
-    /// </summary>
-    /// <param name="stream">The source stream to read from.</param>
-    /// <param name="bufferSize">The read buffer size.</param>
-    /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>A value task representing the async operation.</returns>
-    public ValueTask LoadValueAsync(Stream stream, int bufferSize = 4096, CancellationToken cancellationToken = default)
-    {
-        return new ValueTask(LoadAsync(stream, bufferSize, cancellationToken));
-    }
+    ///<summary>
+    ///Asynchronously loads all data from the specified stream.
+    ///</summary>
+    ///<param name="stream">The source stream to read from.</param>
+    ///<param name="bufferSize">The read buffer size.</param>
+    ///<param name="cancellationToken">A cancellation token.</param>
+    ///<returns>A value task representing the async operation.</returns>
+    public ValueTask LoadValueAsync(Stream stream, int bufferSize = 4096, CancellationToken cancellationToken = default) { return new ValueTask(LoadAsync(stream, bufferSize, cancellationToken)); }
+    #endregion
 
-    /// <summary>
-    /// Clears the loaded data and returns the buffer to the pool.
-    /// </summary>
-    public void Clear()
-    {
-        if (_buffer is not null)
-        {
-            _pool.Return(_buffer);
-            _buffer = null;
-        }
-        BytesLoaded = 0;
-        LoadProgress = 0;
-    }
+    #region Public properties
+    ///<summary>
+    ///Gets or sets the number of bytes loaded so far.
+    ///</summary>
+    public int BytesLoaded { get => _bytesLoaded; private set => SetProperty(ref _bytesLoaded, value); }
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        Clear();
-    }
+    ///<summary>
+    ///Gets a <see cref="ReadOnlyMemory{T}"/> over the loaded data.
+    ///</summary>
+    public ReadOnlyMemory<byte> Data => (_buffer is not null) ? _buffer.AsMemory(0, BytesLoaded) : ReadOnlyMemory<byte>.Empty;
+
+    ///<summary>
+    ///Gets or sets whether data is currently being loaded.
+    ///</summary>
+    public bool IsLoading { get => _isLoading; private set => SetProperty(ref _isLoading, value); }
+
+    ///<summary>
+    ///Gets or sets the loading progress (0.0 to 1.0).
+    ///</summary>
+    public double LoadProgress { get => _loadProgress; private set => SetProperty(ref _loadProgress, value); }
+    #endregion
 }

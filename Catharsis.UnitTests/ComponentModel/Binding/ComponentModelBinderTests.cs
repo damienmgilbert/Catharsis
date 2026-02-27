@@ -1,72 +1,56 @@
-using Catharsis.ComponentModel.Binding;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
 [TestClass]
 public sealed class ComponentModelBinderTests
 {
-    private sealed class NotifyModel : INotifyPropertyChanged
-    {
-        private string? _name;
-        private int _age;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string? Name
-        {
-            get => _name;
-            set { _name = value; OnPropertyChanged(); }
-        }
-
-        public int Age
-        {
-            get => _age;
-            set { _age = value; OnPropertyChanged(); }
-        }
-
-        private void OnPropertyChanged([CallerMemberName] string? prop = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-    }
-
+    #region Public methods
     [TestMethod]
-    public void Bind_NullSource_ThrowsArgumentNullException()
+    public void Bind_AfterDispose_ThrowsObjectDisposedException()
     {
-        using var binder = new ComponentModelBinder();
-        var target = new NotifyModel();
+        ComponentModelBinder binder = new ComponentModelBinder();
+        binder.Dispose();
 
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => binder.Bind(null!, "Name", target, "Name"));
-    }
-
-    [TestMethod]
-    public void Bind_NullTarget_ThrowsArgumentNullException()
-    {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => binder.Bind(source, "Name", null!, "Name"));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => binder.Bind(new NotifyModel(), "Name", new NotifyModel(), "Name"));
     }
 
     [TestMethod]
     public void Bind_InvalidProperty_ThrowsArgumentException()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel();
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel();
+        NotifyModel target = new NotifyModel();
 
-        Assert.ThrowsExactly<ArgumentException>(
-            () => binder.Bind(source, "NonExistent", target, "Name"));
+        Assert.ThrowsExactly<ArgumentException>(() => binder.Bind(source, "NonExistent", target, "Name"));
+    }
+
+    [TestMethod]
+    public void Bind_NullSource_ThrowsArgumentNullException()
+    {
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel target = new NotifyModel();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => binder.Bind(null!, "Name", target, "Name"));
+    }
+
+    [TestMethod]
+    public void Bind_NullTarget_ThrowsArgumentNullException()
+    {
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => binder.Bind(source, "Name", null!, "Name"));
     }
 
     [TestMethod]
     public void Bind_TwoWay_InitialSyncsSourceToTarget()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
 
         binder.Bind(source, "Name", target, "Name");
 
@@ -76,9 +60,9 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void Bind_TwoWay_SourceChangePropagatesToTarget()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
         binder.Bind(source, "Name", target, "Name");
 
         source.Name = "Bob";
@@ -89,9 +73,9 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void Bind_TwoWay_TargetChangePropagatesToSource()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
         binder.Bind(source, "Name", target, "Name");
 
         target.Name = "Charlie";
@@ -102,9 +86,9 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void BindOneWay_SourceChangePropagatesToTarget()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
         binder.BindOneWay(source, "Name", target, "Name");
 
         source.Name = "Bob";
@@ -115,9 +99,9 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void BindOneWay_TargetChangeDoesNotPropagateToSource()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
         binder.BindOneWay(source, "Name", target, "Name");
 
         target.Name = "Charlie";
@@ -128,9 +112,9 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void Count_ReflectsActiveBindings()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel();
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel();
+        NotifyModel target = new NotifyModel();
 
         Assert.AreEqual(0, binder.Count);
 
@@ -139,11 +123,25 @@ public sealed class ComponentModelBinderTests
     }
 
     [TestMethod]
+    public void Dispose_CleansUpBindings()
+    {
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
+        ComponentModelBinder binder = new ComponentModelBinder();
+        binder.Bind(source, "Name", target, "Name");
+
+        binder.Dispose();
+
+        source.Name = "Bob";
+        Assert.AreEqual("Alice", target.Name);
+    }
+
+    [TestMethod]
     public void Unbind_RemovesSpecificBindings()
     {
-        using var binder = new ComponentModelBinder();
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel source = new NotifyModel { Name = "Alice" };
+        NotifyModel target = new NotifyModel();
         binder.Bind(source, "Name", target, "Name");
 
         binder.Unbind(source, target);
@@ -157,11 +155,11 @@ public sealed class ComponentModelBinderTests
     [TestMethod]
     public void UnbindAll_RemovesAllBindings()
     {
-        using var binder = new ComponentModelBinder();
-        var s1 = new NotifyModel();
-        var t1 = new NotifyModel();
-        var s2 = new NotifyModel();
-        var t2 = new NotifyModel();
+        using ComponentModelBinder binder = new ComponentModelBinder();
+        NotifyModel s1 = new NotifyModel();
+        NotifyModel t1 = new NotifyModel();
+        NotifyModel s2 = new NotifyModel();
+        NotifyModel t2 = new NotifyModel();
         binder.Bind(s1, "Name", t1, "Name");
         binder.Bind(s2, "Age", t2, "Age");
 
@@ -169,28 +167,43 @@ public sealed class ComponentModelBinderTests
 
         Assert.AreEqual(0, binder.Count);
     }
+    #endregion
 
-    [TestMethod]
-    public void Dispose_CleansUpBindings()
+    sealed class NotifyModel : INotifyPropertyChanged
     {
-        var source = new NotifyModel { Name = "Alice" };
-        var target = new NotifyModel();
-        var binder = new ComponentModelBinder();
-        binder.Bind(source, "Name", target, "Name");
+        #region Fields
+        int _age;
+        string? _name;
+        #endregion
 
-        binder.Dispose();
+        #region Events
+        public event PropertyChangedEventHandler? PropertyChanged;
+        #endregion
 
-        source.Name = "Bob";
-        Assert.AreEqual("Alice", target.Name);
-    }
+        #region Private methods
+        void OnPropertyChanged([CallerMemberName] string? prop = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop)); }
+        #endregion
 
-    [TestMethod]
-    public void Bind_AfterDispose_ThrowsObjectDisposedException()
-    {
-        var binder = new ComponentModelBinder();
-        binder.Dispose();
+        #region Public properties
+        public int Age
+        {
+            get => _age;
+            set
+            {
+                _age = value;
+                OnPropertyChanged();
+            }
+        }
 
-        Assert.ThrowsExactly<ObjectDisposedException>(
-            () => binder.Bind(new NotifyModel(), "Name", new NotifyModel(), "Name"));
+        public string? Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
     }
 }

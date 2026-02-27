@@ -1,234 +1,248 @@
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Catharsis.ComponentModel;
 
-/// <summary>
-/// A <see cref="TypeDescriptionProvider"/> that builds
-/// <see cref="ICustomTypeDescriptor"/> instances from a
-/// <see cref="ComponentMetadataRegistry"/>, producing
-/// <see cref="DynamicPropertyDescriptor"/> entries for each registered
-/// <see cref="PropertyMetadata"/>.
-/// </summary>
-/// <remarks>
-/// <para>
-/// This provider chains to an optional parent <see cref="TypeDescriptionProvider"/>
-/// so that standard reflection-based descriptors are preserved for types without
-/// explicit registry entries.
-/// </para>
-/// <para>
-/// Register this provider with <see cref="TypeDescriptor.AddProvider"/> to
-/// override the default type description for specific component types.
-/// </para>
-/// </remarks>
+///<summary>
+///A <see cref="TypeDescriptionProvider"/> that builds <see cref="ICustomTypeDescriptor"/> instances from a <see
+///cref="ComponentMetadataRegistry"/>, producing <see cref="DynamicPropertyDescriptor"/> entries for each registered
+///<see cref="PropertyMetadata"/>.
+///</summary>
+///<remarks>
+///<para> This provider chains to an optional parent <see cref="TypeDescriptionProvider"/> so that standard reflection-
+///based descriptors are preserved for types without explicit registry entries.</para> <para> Register this provider
+///with <see cref="TypeDescriptor.AddProvider"/> to override the default type description for specific component
+///types.</para>
+///</remarks>
 public class ComponentDescriptorProvider : TypeDescriptionProvider
 {
-    private readonly ComponentMetadataRegistry _registry;
+    #region Fields
+    readonly ComponentMetadataRegistry _registry;
+    #endregion
 
-    /// <summary>
-    /// Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/>
-    /// with the specified metadata registry.
-    /// </summary>
-    /// <param name="registry">The registry containing property and event metadata.</param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="registry"/> is <c>null</c>.
-    /// </exception>
+    #region Constructors
+    ///<summary>
+    ///Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata
+    ///registry.
+    ///</summary>
+    ///<param name="registry">The registry containing property and event metadata.</param>
+    ///<exception cref="ArgumentNullException">
+    ///<paramref name="registry"/> is <c>null</c>.
+    ///</exception>
     public ComponentDescriptorProvider(ComponentMetadataRegistry registry)
     {
         ArgumentNullException.ThrowIfNull(registry);
         _registry = registry;
     }
 
-    /// <summary>
-    /// Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/>
-    /// with the specified metadata registry and parent provider.
-    /// </summary>
-    /// <param name="registry">The registry containing property and event metadata.</param>
-    /// <param name="parent">
-    /// The parent <see cref="TypeDescriptionProvider"/> to chain to for
-    /// unregistered types.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="registry"/> is <c>null</c>.
-    /// </exception>
-    public ComponentDescriptorProvider(
-        ComponentMetadataRegistry registry,
-        TypeDescriptionProvider parent)
-        : base(parent)
+    ///<summary>
+    ///Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry
+    ///and parent provider.
+    ///</summary>
+    ///<param name="registry">The registry containing property and event metadata.</param>
+    ///<param name="parent">
+    ///The parent <see cref="TypeDescriptionProvider"/> to chain to for unregistered types.
+    ///</param>
+    ///<exception cref="ArgumentNullException">
+    ///<paramref name="registry"/> is <c>null</c>.
+    ///</exception>
+    public ComponentDescriptorProvider(ComponentMetadataRegistry registry, TypeDescriptionProvider parent) : base(parent)
     {
         ArgumentNullException.ThrowIfNull(registry);
         _registry = registry;
     }
+    #endregion
 
-    /// <summary>
-    /// Gets the metadata registry used by this provider.
-    /// </summary>
+    #region Protected properties
+    ///<summary>
+    ///Gets the metadata registry used by this provider.
+    ///</summary>
     protected ComponentMetadataRegistry Registry => _registry;
+    #endregion
 
-    /// <inheritdoc />
+    #region Public methods
+    ///<inheritdoc/>
     public override ICustomTypeDescriptor? GetTypeDescriptor(Type objectType, object? instance)
     {
-        var parent = base.GetTypeDescriptor(objectType, instance);
+        ICustomTypeDescriptor? parent = base.GetTypeDescriptor(objectType, instance);
 
-        if (!_registry.HasMetadata(objectType))
+        if(!_registry.HasMetadata(objectType))
+        {
             return parent;
+        }
 
         return new RegistryTypeDescriptor(parent, _registry, objectType);
     }
+    #endregion
 
-    private sealed class RegistryTypeDescriptor : CustomTypeDescriptor
+    sealed class RegistryTypeDescriptor : CustomTypeDescriptor
     {
-        private readonly ComponentMetadataRegistry _registry;
-        private readonly Type _componentType;
+        #region Fields
+        readonly Type _componentType;
+        readonly ComponentMetadataRegistry _registry;
+        #endregion
 
-        public RegistryTypeDescriptor(
-            ICustomTypeDescriptor? parent,
-            ComponentMetadataRegistry registry,
-            Type componentType)
-            : base(parent)
+        #region Constructors
+        public RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : base(parent)
         {
             _registry = registry;
             _componentType = componentType;
         }
+        #endregion
 
-        public override PropertyDescriptorCollection GetProperties()
+        #region Private methods
+        static DynamicEventDescriptor CreateEventDescriptor(EventMetadata metadata)
         {
-            var baseProperties = base.GetProperties();
-            var registeredMetadata = _registry.GetProperties(_componentType);
-
-            if (registeredMetadata.Count == 0)
-                return baseProperties;
-
-            return MergeProperties(baseProperties, registeredMetadata);
+            return new DynamicEventDescriptor(
+                   metadata,
+                   addHandler: (component, handler) =>
+                   {
+                       EventInfo? evt = component.GetType().GetEvent(metadata.Name);
+                       evt?.AddEventHandler(component, handler);
+                   },
+                   removeHandler: (component, handler) =>
+                   {
+                       EventInfo? evt = component.GetType().GetEvent(metadata.Name);
+                       evt?.RemoveEventHandler(component, handler);
+                   });
         }
 
-        public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
+        static DynamicPropertyDescriptor CreatePropertyDescriptor(PropertyMetadata metadata)
         {
-            var all = GetProperties();
+            return new DynamicPropertyDescriptor(
+                   metadata,
+                   getter: component =>
+                   {
+                       PropertyInfo? prop = component.GetType().GetProperty(metadata.Name);
+                       return prop?.GetValue(component);
+                   },
+                   setter: metadata.IsReadOnly
+                           ? null
+                           : (component, value) =>
+                   {
+                       System.Reflection.PropertyInfo? prop = component.GetType().GetProperty(metadata.Name);
+                       prop?.SetValue(component, value);
+                   });
+        }
 
-            if (attributes is null || attributes.Length == 0)
-                return all;
-
-            var filtered = new List<PropertyDescriptor>();
-
-            foreach (PropertyDescriptor prop in all)
+        static bool MatchesAttributes(MemberDescriptor descriptor, Attribute[] attributes)
+        {
+            foreach(Attribute attribute in attributes)
             {
-                if (MatchesAttributes(prop, attributes))
-                    filtered.Add(prop);
+                if(!descriptor.Attributes.Contains(attribute))
+                {
+                    return false;
+                }
             }
 
-            return new PropertyDescriptorCollection([.. filtered]);
+            return true;
         }
 
+        static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
+        {
+            Dictionary<string, EventDescriptor> merged = new Dictionary<string, EventDescriptor>(StringComparer.Ordinal);
+
+            foreach(EventDescriptor evt in baseEvents)
+            {
+                merged[evt.Name] = evt;
+            }
+
+            foreach(EventMetadata metadata in registeredMetadata)
+            {
+                merged[metadata.Name] = CreateEventDescriptor(metadata);
+            }
+
+            return new EventDescriptorCollection([ .. merged.Values ]);
+        }
+
+        static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
+        {
+            Dictionary<string, PropertyDescriptor> merged = new Dictionary<string, PropertyDescriptor>(StringComparer.Ordinal);
+
+            foreach(PropertyDescriptor prop in baseProperties)
+            {
+                merged[prop.Name] = prop;
+            }
+
+            foreach(PropertyMetadata metadata in registeredMetadata)
+            {
+                merged[metadata.Name] = CreatePropertyDescriptor(metadata);
+            }
+
+            return new PropertyDescriptorCollection([ .. merged.Values ]);
+        }
+        #endregion
+
+        #region Public methods
         public override EventDescriptorCollection GetEvents()
         {
-            var baseEvents = base.GetEvents();
-            var registeredMetadata = _registry.GetEvents(_componentType);
+            EventDescriptorCollection baseEvents = base.GetEvents();
+            IReadOnlyList<EventMetadata> registeredMetadata = _registry.GetEvents(_componentType);
 
-            if (registeredMetadata.Count == 0)
+            if(registeredMetadata.Count == 0)
+            {
                 return baseEvents;
+            }
 
             return MergeEvents(baseEvents, registeredMetadata);
         }
 
         public override EventDescriptorCollection GetEvents(Attribute[]? attributes)
         {
-            var all = GetEvents();
+            EventDescriptorCollection all = GetEvents();
 
-            if (attributes is null || attributes.Length == 0)
+            if((attributes is null) || (attributes.Length == 0))
+            {
                 return all;
+            }
 
-            var filtered = new List<EventDescriptor>();
+            List<EventDescriptor> filtered = new List<EventDescriptor>();
 
-            foreach (EventDescriptor evt in all)
+            foreach(EventDescriptor evt in all)
             {
-                if (MatchesAttributes(evt, attributes))
+                if(MatchesAttributes(evt, attributes))
+                {
                     filtered.Add(evt);
+                }
             }
 
-            return new EventDescriptorCollection([.. filtered]);
+            return new EventDescriptorCollection([ .. filtered ]);
         }
 
-        private static PropertyDescriptorCollection MergeProperties(
-            PropertyDescriptorCollection baseProperties,
-            IReadOnlyList<PropertyMetadata> registeredMetadata)
+        public override PropertyDescriptorCollection GetProperties()
         {
-            var merged = new Dictionary<string, PropertyDescriptor>(StringComparer.Ordinal);
+            PropertyDescriptorCollection baseProperties = base.GetProperties();
+            IReadOnlyList<PropertyMetadata> registeredMetadata = _registry.GetProperties(_componentType);
 
-            foreach (PropertyDescriptor prop in baseProperties)
+            if(registeredMetadata.Count == 0)
             {
-                merged[prop.Name] = prop;
+                return baseProperties;
             }
 
-            foreach (var metadata in registeredMetadata)
-            {
-                merged[metadata.Name] = CreatePropertyDescriptor(metadata);
-            }
-
-            return new PropertyDescriptorCollection([.. merged.Values]);
+            return MergeProperties(baseProperties, registeredMetadata);
         }
 
-        private static EventDescriptorCollection MergeEvents(
-            EventDescriptorCollection baseEvents,
-            IReadOnlyList<EventMetadata> registeredMetadata)
+        public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
         {
-            var merged = new Dictionary<string, EventDescriptor>(StringComparer.Ordinal);
+            PropertyDescriptorCollection all = GetProperties();
 
-            foreach (EventDescriptor evt in baseEvents)
+            if((attributes is null) || (attributes.Length == 0))
             {
-                merged[evt.Name] = evt;
+                return all;
             }
 
-            foreach (var metadata in registeredMetadata)
+            List<PropertyDescriptor> filtered = new List<PropertyDescriptor>();
+
+            foreach(PropertyDescriptor prop in all)
             {
-                merged[metadata.Name] = CreateEventDescriptor(metadata);
-            }
-
-            return new EventDescriptorCollection([.. merged.Values]);
-        }
-
-        private static DynamicPropertyDescriptor CreatePropertyDescriptor(PropertyMetadata metadata)
-        {
-            return new DynamicPropertyDescriptor(
-                metadata,
-                getter: component =>
+                if(MatchesAttributes(prop, attributes))
                 {
-                    var prop = component.GetType().GetProperty(metadata.Name);
-                    return prop?.GetValue(component);
-                },
-                setter: metadata.IsReadOnly
-                    ? null
-                    : (component, value) =>
-                    {
-                        var prop = component.GetType().GetProperty(metadata.Name);
-                        prop?.SetValue(component, value);
-                    });
-        }
-
-        private static DynamicEventDescriptor CreateEventDescriptor(EventMetadata metadata)
-        {
-            return new DynamicEventDescriptor(
-                metadata,
-                addHandler: (component, handler) =>
-                {
-                    var evt = component.GetType().GetEvent(metadata.Name);
-                    evt?.AddEventHandler(component, handler);
-                },
-                removeHandler: (component, handler) =>
-                {
-                    var evt = component.GetType().GetEvent(metadata.Name);
-                    evt?.RemoveEventHandler(component, handler);
-                });
-        }
-
-        private static bool MatchesAttributes(MemberDescriptor descriptor, Attribute[] attributes)
-        {
-            foreach (var attribute in attributes)
-            {
-                if (!descriptor.Attributes.Contains(attribute))
-                    return false;
+                    filtered.Add(prop);
+                }
             }
 
-            return true;
+            return new PropertyDescriptorCollection([ .. filtered ]);
         }
+        #endregion
     }
 }

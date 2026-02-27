@@ -2,46 +2,48 @@ using System.ComponentModel;
 
 namespace Catharsis.ComponentModel.Observability;
 
-/// <summary>
-/// Defines a contract for objects that support undo/redo-friendly change
-/// tracking with named property changes and a queryable change history.
-/// </summary>
-/// <remarks>
-/// Extends <see cref="IRevertibleChangeTracking"/> with the ability to
-/// retrieve the full <see cref="ChangeSet"/> and undo/redo individual changes.
-/// </remarks>
+///<summary>
+///Defines a contract for objects that support undo/redo-friendly change tracking with named property changes and a
+///queryable change history.
+///</summary>
+///<remarks>
+///Extends <see cref="IRevertibleChangeTracking"/> with the ability to retrieve the full <see cref="ChangeSet"/> and
+///undo/redo individual changes.
+///</remarks>
 public interface IChangeTrackable : IRevertibleChangeTracking
 {
-    /// <summary>
-    /// Gets the current set of uncommitted changes.
-    /// </summary>
-    ChangeSet Changes { get; }
+    #region Public methods
+    ///<summary>
+    ///Redoes the most recently undone change.
+    ///</summary>
+    ///<returns>
+    ///The <see cref="ChangeEntry"/> that was redone, or <c>null</c> if there was nothing to redo.
+    ///</returns>
+    ChangeEntry? Redo();
 
-    /// <summary>
-    /// Gets a value indicating whether there are changes that can be undone.
-    /// </summary>
-    bool CanUndo { get; }
+    ///<summary>
+    ///Undoes the most recent change, restoring the previous property value.
+    ///</summary>
+    ///<returns>
+    ///The <see cref="ChangeEntry"/> that was undone, or <c>null</c> if there was nothing to undo.
+    ///</returns>
+    ChangeEntry? Undo();
+    #endregion
 
-    /// <summary>
-    /// Gets a value indicating whether there are changes that can be redone.
-    /// </summary>
+    #region Public properties
+    ///<summary>
+    ///Gets a value indicating whether there are changes that can be redone.
+    ///</summary>
     bool CanRedo { get; }
 
-    /// <summary>
-    /// Undoes the most recent change, restoring the previous property value.
-    /// </summary>
-    /// <returns>
-    /// The <see cref="ChangeEntry"/> that was undone, or <c>null</c> if
-    /// there was nothing to undo.
-    /// </returns>
-    ChangeEntry? Undo();
+    ///<summary>
+    ///Gets a value indicating whether there are changes that can be undone.
+    ///</summary>
+    bool CanUndo { get; }
 
-    /// <summary>
-    /// Redoes the most recently undone change.
-    /// </summary>
-    /// <returns>
-    /// The <see cref="ChangeEntry"/> that was redone, or <c>null</c> if
-    /// there was nothing to redo.
-    /// </returns>
-    ChangeEntry? Redo();
+    ///<summary>
+    ///Gets the current set of uncommitted changes.
+    ///</summary>
+    ChangeSet Changes { get; }
+    #endregion
 }

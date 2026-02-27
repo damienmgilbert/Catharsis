@@ -5,19 +5,20 @@ namespace Catharsis.UnitTests.ComponentModel;
 [TestClass]
 public class InitializableObjectTests
 {
-    private sealed class TestInitializable : InitializableObject
+    #region Public methods
+    [TestMethod]
+    public void BeginInit_CalledTwice_Throws()
     {
-        public bool BeginInitCalled { get; private set; }
-        public bool EndInitCalled { get; private set; }
+        TestInitializable obj = new TestInitializable();
+        obj.BeginInit();
 
-        protected override void OnBeginInit() => BeginInitCalled = true;
-        protected override void OnEndInit() => EndInitCalled = true;
+        Assert.ThrowsExactly<InvalidOperationException>(() => obj.BeginInit());
     }
 
     [TestMethod]
     public void BeginInit_SetsIsInitializing()
     {
-        var obj = new TestInitializable();
+        TestInitializable obj = new TestInitializable();
 
         obj.BeginInit();
 
@@ -29,8 +30,8 @@ public class InitializableObjectTests
     [TestMethod]
     public void EndInit_SetsIsInitializedAndRaisesEvent()
     {
-        var obj = new TestInitializable();
-        var eventRaised = false;
+        TestInitializable obj = new TestInitializable();
+        bool eventRaised = false;
         obj.Initialized += (_, _) => eventRaised = true;
 
         obj.BeginInit();
@@ -43,27 +44,27 @@ public class InitializableObjectTests
     }
 
     [TestMethod]
-    public void BeginInit_CalledTwice_Throws()
-    {
-        var obj = new TestInitializable();
-        obj.BeginInit();
-
-        Assert.ThrowsExactly<InvalidOperationException>(() => obj.BeginInit());
-    }
-
-    [TestMethod]
     public void EndInit_WithoutBeginInit_Throws()
     {
-        var obj = new TestInitializable();
+        TestInitializable obj = new TestInitializable();
 
         Assert.ThrowsExactly<InvalidOperationException>(() => obj.EndInit());
     }
 
     [TestMethod]
+    public void InitialState_NotInitializedOrInitializing()
+    {
+        TestInitializable obj = new TestInitializable();
+
+        Assert.IsFalse(obj.IsInitializing);
+        Assert.IsFalse(obj.IsInitialized);
+    }
+
+    [TestMethod]
     public void MultipleInitCycles_WorkCorrectly()
     {
-        var obj = new TestInitializable();
-        var initCount = 0;
+        TestInitializable obj = new TestInitializable();
+        int initCount = 0;
         obj.Initialized += (_, _) => initCount++;
 
         obj.BeginInit();
@@ -75,13 +76,19 @@ public class InitializableObjectTests
         Assert.AreEqual(2, initCount);
         Assert.IsTrue(obj.IsInitialized);
     }
+    #endregion
 
-    [TestMethod]
-    public void InitialState_NotInitializedOrInitializing()
+    sealed class TestInitializable : InitializableObject
     {
-        var obj = new TestInitializable();
+        #region Protected methods
+        protected override void OnBeginInit() { BeginInitCalled = true; }
+        protected override void OnEndInit() { EndInitCalled = true; }
+        #endregion
 
-        Assert.IsFalse(obj.IsInitializing);
-        Assert.IsFalse(obj.IsInitialized);
+        #region Public properties
+        public bool BeginInitCalled { get; private set; }
+
+        public bool EndInitCalled { get; private set; }
+        #endregion
     }
 }

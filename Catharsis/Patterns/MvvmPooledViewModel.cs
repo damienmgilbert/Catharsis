@@ -1,51 +1,45 @@
-using System.Buffers;
 using Catharsis.Mvvm;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Catharsis.Patterns;
 
-/// <summary>
-/// Demonstrates a memory-efficient MVVM ViewModel that uses pooled buffers
-/// for data display, combining <see cref="ObservablePooledBuffer{T}"/> with
-/// async command patterns.
-/// </summary>
+///<summary>
+///Demonstrates a memory-efficient MVVM ViewModel that uses pooled buffers for data display, combining <see
+///cref="ObservablePooledBuffer{T}"/> with async command patterns.
+///</summary>
 public class MvvmPooledViewModel : BufferViewModelBase
 {
-    private readonly ObservablePooledBuffer<byte> _dataBuffer = new();
-    private string _displayText = string.Empty;
+    #region Fields
+    RelayCommand? _clearAllDataCommand;
+    readonly ObservablePooledBuffer<byte> _dataBuffer = new();
+    string _displayText = string.Empty;
+    AsyncRelayCommand? _loadSampleDataCommand;
+    #endregion
 
-    /// <summary>Gets or sets the display text describing the buffer state.</summary>
-    public string DisplayText
-    {
-        get => _displayText;
-        set => SetProperty(ref _displayText, value);
-    }
-
-    /// <summary>Gets the data buffer for direct binding.</summary>
-    public ObservablePooledBuffer<byte> DataBuffer => _dataBuffer;
-
-    /// <summary>Gets the command to load sample data.</summary>
-    public IAsyncRelayCommand LoadSampleDataCommand => _loadSampleDataCommand ??= new AsyncRelayCommand(LoadSampleDataAsync);
-    private AsyncRelayCommand? _loadSampleDataCommand;
-
-    /// <summary>Gets the command to clear all data.</summary>
-    public IRelayCommand ClearAllDataCommand => _clearAllDataCommand ??= new RelayCommand(ClearAllData);
-    private RelayCommand? _clearAllDataCommand;
-
-    private async Task LoadSampleDataAsync()
-    {
-        await LoadAsync();
-    }
-
-    private void ClearAllData()
+    #region Private methods
+    void ClearAllData()
     {
         _dataBuffer.Clear();
         DisplayText = string.Empty;
         ClearData();
     }
 
-    /// <inheritdoc />
+    async Task LoadSampleDataAsync() { await LoadAsync(); }
+    #endregion
+
+    #region Protected methods
+    ///<inheritdoc/>
+    protected override void Dispose(bool disposing)
+    {
+        if(disposing)
+        {
+            _dataBuffer.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    ///<inheritdoc/>
     protected override Task LoadCoreAsync(CancellationToken cancellationToken)
     {
         // Simulate loading data into pooled buffer
@@ -58,13 +52,27 @@ public class MvvmPooledViewModel : BufferViewModelBase
 
         return Task.CompletedTask;
     }
+    #endregion
 
-    /// <inheritdoc />
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-            _dataBuffer.Dispose();
+    #region Public properties
+    ///<summary>
+    ///Gets the command to clear all data.
+    ///</summary>
+    public IRelayCommand ClearAllDataCommand => _clearAllDataCommand ??= new RelayCommand(ClearAllData);
 
-        base.Dispose(disposing);
-    }
+    ///<summary>
+    ///Gets the data buffer for direct binding.
+    ///</summary>
+    public ObservablePooledBuffer<byte> DataBuffer => _dataBuffer;
+
+    ///<summary>
+    ///Gets or sets the display text describing the buffer state.
+    ///</summary>
+    public string DisplayText { get => _displayText; set => SetProperty(ref _displayText, value); }
+
+    ///<summary>
+    ///Gets the command to load sample data.
+    ///</summary>
+    public IAsyncRelayCommand LoadSampleDataCommand => _loadSampleDataCommand ??= new AsyncRelayCommand(LoadSampleDataAsync);
+    #endregion
 }

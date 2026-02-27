@@ -1,6 +1,7 @@
+using Catharsis.Buffers;
 using System.Buffers;
 
-namespace Catharsis.Buffers.UnitTests;
+namespace Catharsis.UnitTests.Buffers;
 
 /// <summary>
 /// Unit tests for the <see cref="BufferWriterStream"/> class.

@@ -1,32 +1,31 @@
-using Catharsis.ComponentModel.Licensing;
 using System.ComponentModel;
+using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
 [TestClass]
 public sealed class ComponentActionListTests
 {
-    [TestMethod]
-    public void Constructor_NullContext_ThrowsArgumentNullException()
+    #region Private methods
+    static TestActionList CreateActionList()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new TestActionList(null!));
+        ComponentDesignContext context = new ComponentDesignContext(new StubComponent());
+        return new TestActionList(context);
     }
+    #endregion
 
-    [TestMethod]
-    public void Count_Initial_ReturnsZero()
-    {
-        var list = CreateActionList();
-
-        Assert.AreEqual(0, list.Count);
-    }
-
+    #region Public methods
     [TestMethod]
     public void AddVerb_IncreasesCount()
     {
-        var list = CreateActionList();
+        TestActionList list = CreateActionList();
 
-        list.ExposeAddVerb(new ComponentVerb("Do", () => { }));
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "Do",
+        () =>
+        {
+        }));
 
         Assert.AreEqual(1, list.Count);
     }
@@ -34,9 +33,14 @@ public sealed class ComponentActionListTests
     [TestMethod]
     public void AddVerb_TextAndAction_AddsVerb()
     {
-        var list = CreateActionList();
+        TestActionList list = CreateActionList();
 
-        list.ExposeAddVerb("Reset", () => { }, "Reset everything");
+        list.ExposeAddVerb(
+        "Reset",
+        () =>
+        {
+        },
+        "Reset everything");
 
         Assert.AreEqual(1, list.Count);
         Assert.AreEqual("Reset", list[0].Text);
@@ -44,21 +48,15 @@ public sealed class ComponentActionListTests
     }
 
     [TestMethod]
-    public void Indexer_ReturnsCorrectVerb()
-    {
-        var list = CreateActionList();
-        list.ExposeAddVerb(new ComponentVerb("First", () => { }));
-        list.ExposeAddVerb(new ComponentVerb("Second", () => { }));
-
-        Assert.AreEqual("First", list[0].Text);
-        Assert.AreEqual("Second", list[1].Text);
-    }
-
-    [TestMethod]
     public void ClearVerbs_RemovesAll()
     {
-        var list = CreateActionList();
-        list.ExposeAddVerb(new ComponentVerb("Do", () => { }));
+        TestActionList list = CreateActionList();
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "Do",
+        () =>
+        {
+        }));
 
         list.ExposeClearVerbs();
 
@@ -66,38 +64,82 @@ public sealed class ComponentActionListTests
     }
 
     [TestMethod]
+    public void Constructor_NullContext_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new TestActionList(null!)); }
+    [TestMethod]
+    public void Count_Initial_ReturnsZero()
+    {
+        TestActionList list = CreateActionList();
+
+        Assert.AreEqual(0, list.Count);
+    }
+
+    [TestMethod]
     public void Enumeration_ReturnsAllVerbs()
     {
-        var list = CreateActionList();
-        list.ExposeAddVerb(new ComponentVerb("A", () => { }));
-        list.ExposeAddVerb(new ComponentVerb("B", () => { }));
+        TestActionList list = CreateActionList();
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "A",
+        () =>
+        {
+        }));
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "B",
+        () =>
+        {
+        }));
 
-        var names = list.Select(v => v.Text).ToList();
+        List<string> names = list.Select(v => v.Text).ToList();
 
         Assert.AreEqual(2, names.Count);
         CollectionAssert.Contains(names, "A");
         CollectionAssert.Contains(names, "B");
     }
 
-    private static TestActionList CreateActionList()
+    [TestMethod]
+    public void Indexer_ReturnsCorrectVerb()
     {
-        var context = new ComponentDesignContext(new StubComponent());
-        return new TestActionList(context);
+        TestActionList list = CreateActionList();
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "First",
+        () =>
+        {
+        }));
+        list.ExposeAddVerb(
+        new ComponentVerb(
+        "Second",
+        () =>
+        {
+        }));
+
+        Assert.AreEqual("First", list[0].Text);
+        Assert.AreEqual("Second", list[1].Text);
+    }
+    #endregion
+
+    sealed class TestActionList(ComponentDesignContext context) : ComponentActionList(context)
+    {
+        #region Public methods
+        public void ExposeAddVerb(ComponentVerb verb) { AddVerb(verb); }
+        public void ExposeAddVerb(string text, Action action, string? description = null) { AddVerb(text, action, description); }
+        public void ExposeClearVerbs() { ClearVerbs(); }
+        #endregion
     }
 
-    private sealed class TestActionList(ComponentDesignContext context)
-        : ComponentActionList(context)
+    sealed class StubComponent : IComponent
     {
-        public void ExposeAddVerb(ComponentVerb verb) => AddVerb(verb);
-        public void ExposeAddVerb(string text, Action action, string? description = null) =>
-            AddVerb(text, action, description);
-        public void ExposeClearVerbs() => ClearVerbs();
-    }
-
-    private sealed class StubComponent : IComponent
-    {
-        public ISite? Site { get; set; }
+        #region Events
         public event EventHandler? Disposed;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #endregion
+
+        #region Public methods
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 }

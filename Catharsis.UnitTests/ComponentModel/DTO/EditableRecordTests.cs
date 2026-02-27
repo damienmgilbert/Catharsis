@@ -5,57 +5,48 @@ namespace Catharsis.UnitTests.ComponentModel.DTO;
 [TestClass]
 public sealed class EditableRecordTests
 {
-    private sealed record PersonRecord(string Name, int Age);
-
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException()
+    public void AcceptChanges_RaisesPropertyChanged_IsChanged()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new EditableRecord<PersonRecord>(null!));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        record.Value = new PersonRecord("Bob", 25);
+        string? changedProp = null;
+        record.PropertyChanged += (s, e) => changedProp = e.PropertyName;
+
+        record.AcceptChanges();
+
+        Assert.AreEqual("IsChanged", changedProp);
     }
 
     [TestMethod]
-    public void IsChanged_InitiallyFalse()
+    public void AcceptChanges_ResetsIsChanged()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        record.Value = new PersonRecord("Bob", 25);
+        Assert.IsTrue(record.IsChanged);
+
+        record.AcceptChanges();
 
         Assert.IsFalse(record.IsChanged);
     }
 
     [TestMethod]
-    public void IsChanged_AfterValueChange_ReturnsTrue()
+    public void BeginEdit_CalledTwice_DoesNotThrow()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
-        record.Value = new PersonRecord("Bob", 25);
-
-        Assert.IsTrue(record.IsChanged);
-    }
-
-    [TestMethod]
-    public void IsEditing_InitiallyFalse()
-    {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-
-        Assert.IsFalse(record.IsEditing);
-    }
-
-    [TestMethod]
-    public void BeginEdit_SetsIsEditingTrue()
-    {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-
+        record.BeginEdit();
         record.BeginEdit();
 
         Assert.IsTrue(record.IsEditing);
     }
 
     [TestMethod]
-    public void BeginEdit_CalledTwice_DoesNotThrow()
+    public void BeginEdit_SetsIsEditingTrue()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
-        record.BeginEdit();
         record.BeginEdit();
 
         Assert.IsTrue(record.IsEditing);
@@ -64,8 +55,8 @@ public sealed class EditableRecordTests
     [TestMethod]
     public void CancelEdit_RevertsToSnapshot()
     {
-        var original = new PersonRecord("Alice", 30);
-        var record = new EditableRecord<PersonRecord>(original);
+        PersonRecord original = new PersonRecord("Alice", 30);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(original);
         record.BeginEdit();
         record.Value = new PersonRecord("Bob", 25);
 
@@ -78,8 +69,8 @@ public sealed class EditableRecordTests
     [TestMethod]
     public void CancelEdit_WithoutBeginEdit_DoesNothing()
     {
-        var original = new PersonRecord("Alice", 30);
-        var record = new EditableRecord<PersonRecord>(original);
+        PersonRecord original = new PersonRecord("Alice", 30);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(original);
 
         record.CancelEdit();
 
@@ -88,11 +79,13 @@ public sealed class EditableRecordTests
     }
 
     [TestMethod]
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new EditableRecord<PersonRecord>(null!)); }
+    [TestMethod]
     public void EndEdit_CommitsChanges()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
         record.BeginEdit();
-        var newValue = new PersonRecord("Bob", 25);
+        PersonRecord newValue = new PersonRecord("Bob", 25);
         record.Value = newValue;
 
         record.EndEdit();
@@ -104,7 +97,7 @@ public sealed class EditableRecordTests
     [TestMethod]
     public void EndEdit_WithoutBeginEdit_DoesNothing()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
         record.EndEdit();
 
@@ -112,60 +105,24 @@ public sealed class EditableRecordTests
     }
 
     [TestMethod]
-    public void AcceptChanges_ResetsIsChanged()
+    public void FullEditCycle_BeginEditCancelEdit()
     {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        PersonRecord original = new PersonRecord("Alice", 30);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(original);
+
+        record.BeginEdit();
         record.Value = new PersonRecord("Bob", 25);
-        Assert.IsTrue(record.IsChanged);
-
-        record.AcceptChanges();
-
-        Assert.IsFalse(record.IsChanged);
-    }
-
-    [TestMethod]
-    public void RejectChanges_RevertsToAcceptedValue()
-    {
-        var original = new PersonRecord("Alice", 30);
-        var record = new EditableRecord<PersonRecord>(original);
-        record.Value = new PersonRecord("Bob", 25);
-
-        record.RejectChanges();
+        record.CancelEdit();
 
         Assert.AreSame(original, record.Value);
-    }
-
-    [TestMethod]
-    public void AcceptChanges_RaisesPropertyChanged_IsChanged()
-    {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-        record.Value = new PersonRecord("Bob", 25);
-        string? changedProp = null;
-        record.PropertyChanged += (s, e) => changedProp = e.PropertyName;
-
-        record.AcceptChanges();
-
-        Assert.AreEqual("IsChanged", changedProp);
-    }
-
-    [TestMethod]
-    public void RejectChanges_RaisesPropertyChanged_IsChanged()
-    {
-        var record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
-        record.Value = new PersonRecord("Bob", 25);
-        var changedProps = new List<string>();
-        record.PropertyChanged += (s, e) => changedProps.Add(e.PropertyName!);
-
-        record.RejectChanges();
-
-        CollectionAssert.Contains(changedProps, "IsChanged");
+        Assert.IsFalse(record.IsEditing);
     }
 
     [TestMethod]
     public void FullEditCycle_BeginEditEndEdit()
     {
-        var original = new PersonRecord("Alice", 30);
-        var record = new EditableRecord<PersonRecord>(original);
+        PersonRecord original = new PersonRecord("Alice", 30);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(original);
 
         record.BeginEdit();
         record.Value = new PersonRecord("Bob", 25);
@@ -176,16 +133,56 @@ public sealed class EditableRecordTests
     }
 
     [TestMethod]
-    public void FullEditCycle_BeginEditCancelEdit()
+    public void IsChanged_AfterValueChange_ReturnsTrue()
     {
-        var original = new PersonRecord("Alice", 30);
-        var record = new EditableRecord<PersonRecord>(original);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
-        record.BeginEdit();
         record.Value = new PersonRecord("Bob", 25);
-        record.CancelEdit();
 
-        Assert.AreSame(original, record.Value);
+        Assert.IsTrue(record.IsChanged);
+    }
+
+    [TestMethod]
+    public void IsChanged_InitiallyFalse()
+    {
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+
+        Assert.IsFalse(record.IsChanged);
+    }
+
+    [TestMethod]
+    public void IsEditing_InitiallyFalse()
+    {
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+
         Assert.IsFalse(record.IsEditing);
     }
+
+    [TestMethod]
+    public void RejectChanges_RaisesPropertyChanged_IsChanged()
+    {
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(new PersonRecord("Alice", 30));
+        record.Value = new PersonRecord("Bob", 25);
+        List<string> changedProps = new List<string>();
+        record.PropertyChanged += (s, e) => changedProps.Add(e.PropertyName!);
+
+        record.RejectChanges();
+
+        CollectionAssert.Contains(changedProps, "IsChanged");
+    }
+
+    [TestMethod]
+    public void RejectChanges_RevertsToAcceptedValue()
+    {
+        PersonRecord original = new PersonRecord("Alice", 30);
+        EditableRecord<PersonRecord> record = new EditableRecord<PersonRecord>(original);
+        record.Value = new PersonRecord("Bob", 25);
+
+        record.RejectChanges();
+
+        Assert.AreSame(original, record.Value);
+    }
+    #endregion
+
+    sealed record PersonRecord(string Name, int Age);
 }

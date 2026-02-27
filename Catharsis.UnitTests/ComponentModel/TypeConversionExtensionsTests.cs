@@ -1,46 +1,20 @@
-using Catharsis.ComponentModel;
 using System.ComponentModel;
+using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
 [TestClass]
 public class TypeConversionExtensionsTests
 {
-    [DisplayName("Test Widget")]
-    [System.ComponentModel.Description("A widget for testing")]
-    [Category("Testing")]
-    private sealed class DecoratedComponent { }
-
-    private sealed class PlainComponent { }
-
-    [TestMethod]
-    public void ConvertTo_StringToInt_Converts()
-    {
-        object value = "42";
-
-        var result = value.ConvertTo<int>();
-
-        Assert.AreEqual(42, result);
-    }
-
+    #region Public methods
     [TestMethod]
     public void ConvertTo_IntToString_Converts()
     {
         object value = 42;
 
-        var result = value.ConvertTo<string>();
+        string? result = value.ConvertTo<string>();
 
         Assert.AreEqual("42", result);
-    }
-
-    [TestMethod]
-    public void ConvertTo_SameType_ReturnsSameValue()
-    {
-        var value = "hello";
-
-        var result = value.ConvertTo<string>();
-
-        Assert.AreEqual("hello", result);
     }
 
     [TestMethod]
@@ -48,58 +22,29 @@ public class TypeConversionExtensionsTests
     {
         object? value = null;
 
-        var result = value.ConvertTo<int>();
+        int result = value.ConvertTo<int>();
 
         Assert.AreEqual(0, result);
     }
 
     [TestMethod]
-    public void TryConvertTo_ValidConversion_ReturnsTrue()
+    public void ConvertTo_SameType_ReturnsSameValue()
     {
-        object value = "123";
+        string value = "hello";
 
-        var success = value.TryConvertTo<int>(out var result);
+        string? result = value.ConvertTo<string>();
 
-        Assert.IsTrue(success);
-        Assert.AreEqual(123, result);
+        Assert.AreEqual("hello", result);
     }
 
     [TestMethod]
-    public void TryConvertTo_InvalidConversion_ReturnsFalse()
+    public void ConvertTo_StringToInt_Converts()
     {
-        object value = "not_a_number";
+        object value = "42";
 
-        var success = value.TryConvertTo<int>(out var result);
+        int result = value.ConvertTo<int>();
 
-        Assert.IsFalse(success);
-        Assert.AreEqual(default, result);
-    }
-
-    [TestMethod]
-    public void GetTypeConverter_ReturnsConverter()
-    {
-        var converter = typeof(int).GetTypeConverter();
-
-        Assert.IsNotNull(converter);
-        Assert.IsTrue(converter.CanConvertFrom(typeof(string)));
-    }
-
-    [TestMethod]
-    public void GetTypeConverter_Null_Throws()
-    {
-        Type? type = null;
-
-        Assert.ThrowsExactly<ArgumentNullException>(() => type!.GetTypeConverter());
-    }
-
-    [TestMethod]
-    public void GetBrowsableProperties_ReturnsProperties()
-    {
-        var obj = new { Name = "Test", Value = 42 };
-
-        var properties = obj.GetBrowsableProperties().ToList();
-
-        Assert.IsTrue(properties.Count > 0);
+        Assert.AreEqual(42, result);
     }
 
     [TestMethod]
@@ -111,11 +56,81 @@ public class TypeConversionExtensionsTests
     }
 
     [TestMethod]
+    public void GetBrowsableProperties_ReturnsProperties()
+    {
+        var obj = new { Name = "Test", Value = 42 };
+
+        List<PropertyDescriptor> properties = obj.GetBrowsableProperties().ToList();
+
+        Assert.IsTrue(properties.Count > 0);
+    }
+
+    [TestMethod]
+    public void GetComponentCategory_WithAttribute_ReturnsCategory()
+    {
+        DecoratedComponent component = new DecoratedComponent();
+
+        string category = component.GetComponentCategory();
+
+        Assert.AreEqual("Testing", category);
+    }
+
+    [TestMethod]
+    public void GetComponentCategory_WithoutAttribute_ReturnsEmpty()
+    {
+        PlainComponent component = new PlainComponent();
+
+        string category = component.GetComponentCategory();
+
+        Assert.AreEqual(string.Empty, category);
+    }
+
+    [TestMethod]
+    public void GetComponentDescription_WithAttribute_ReturnsDescription()
+    {
+        DecoratedComponent component = new DecoratedComponent();
+
+        string description = component.GetComponentDescription();
+
+        Assert.AreEqual("A widget for testing", description);
+    }
+
+    [TestMethod]
+    public void GetComponentDescription_WithoutAttribute_ReturnsEmpty()
+    {
+        PlainComponent component = new PlainComponent();
+
+        string description = component.GetComponentDescription();
+
+        Assert.AreEqual(string.Empty, description);
+    }
+
+    [TestMethod]
+    public void GetComponentDisplayName_WithAttribute_ReturnsDisplayName()
+    {
+        DecoratedComponent component = new DecoratedComponent();
+
+        string name = component.GetComponentDisplayName();
+
+        Assert.AreEqual("Test Widget", name);
+    }
+
+    [TestMethod]
+    public void GetComponentDisplayName_WithoutAttribute_ReturnsTypeName()
+    {
+        PlainComponent component = new PlainComponent();
+
+        string name = component.GetComponentDisplayName();
+
+        Assert.AreEqual(nameof(PlainComponent), name);
+    }
+
+    [TestMethod]
     public void GetPropertyDescriptor_ExistingProperty_ReturnsDescriptor()
     {
         var obj = new { Name = "Test" };
 
-        var descriptor = obj.GetPropertyDescriptor("Name");
+        PropertyDescriptor? descriptor = obj.GetPropertyDescriptor("Name");
 
         Assert.IsNotNull(descriptor);
         Assert.AreEqual("Name", descriptor.Name);
@@ -126,68 +141,59 @@ public class TypeConversionExtensionsTests
     {
         var obj = new { Name = "Test" };
 
-        var descriptor = obj.GetPropertyDescriptor("DoesNotExist");
+        PropertyDescriptor? descriptor = obj.GetPropertyDescriptor("DoesNotExist");
 
         Assert.IsNull(descriptor);
     }
 
     [TestMethod]
-    public void GetComponentDisplayName_WithAttribute_ReturnsDisplayName()
+    public void GetTypeConverter_Null_Throws()
     {
-        var component = new DecoratedComponent();
+        Type? type = null;
 
-        var name = component.GetComponentDisplayName();
-
-        Assert.AreEqual("Test Widget", name);
+        Assert.ThrowsExactly<ArgumentNullException>(() => type!.GetTypeConverter());
     }
 
     [TestMethod]
-    public void GetComponentDisplayName_WithoutAttribute_ReturnsTypeName()
+    public void GetTypeConverter_ReturnsConverter()
     {
-        var component = new PlainComponent();
+        System.ComponentModel.TypeConverter converter = typeof(int).GetTypeConverter();
 
-        var name = component.GetComponentDisplayName();
-
-        Assert.AreEqual(nameof(PlainComponent), name);
+        Assert.IsNotNull(converter);
+        Assert.IsTrue(converter.CanConvertFrom(typeof(string)));
     }
 
     [TestMethod]
-    public void GetComponentDescription_WithAttribute_ReturnsDescription()
+    public void TryConvertTo_InvalidConversion_ReturnsFalse()
     {
-        var component = new DecoratedComponent();
+        object value = "not_a_number";
 
-        var description = component.GetComponentDescription();
+        bool success = value.TryConvertTo<int>(out int result);
 
-        Assert.AreEqual("A widget for testing", description);
+        Assert.IsFalse(success);
+        Assert.AreEqual(default, result);
     }
 
     [TestMethod]
-    public void GetComponentDescription_WithoutAttribute_ReturnsEmpty()
+    public void TryConvertTo_ValidConversion_ReturnsTrue()
     {
-        var component = new PlainComponent();
+        object value = "123";
 
-        var description = component.GetComponentDescription();
+        bool success = value.TryConvertTo<int>(out int result);
 
-        Assert.AreEqual(string.Empty, description);
+        Assert.IsTrue(success);
+        Assert.AreEqual(123, result);
+    }
+    #endregion
+
+    [DisplayName("Test Widget")]
+    [System.ComponentModel.Description("A widget for testing")]
+    [Category("Testing")]
+    sealed class DecoratedComponent
+    {
     }
 
-    [TestMethod]
-    public void GetComponentCategory_WithAttribute_ReturnsCategory()
+    sealed class PlainComponent
     {
-        var component = new DecoratedComponent();
-
-        var category = component.GetComponentCategory();
-
-        Assert.AreEqual("Testing", category);
-    }
-
-    [TestMethod]
-    public void GetComponentCategory_WithoutAttribute_ReturnsEmpty()
-    {
-        var component = new PlainComponent();
-
-        var category = component.GetComponentCategory();
-
-        Assert.AreEqual(string.Empty, category);
     }
 }

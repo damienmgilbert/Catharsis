@@ -5,157 +5,113 @@ using System.Runtime.CompilerServices;
 
 namespace Catharsis.ComponentModel;
 
-/// <summary>
-/// An <see cref="EditableComponent"/> that additionally implements
-/// <see cref="INotifyDataErrorInfo"/>, combining snapshot-based transactional
-/// editing with per-property validation support.
-/// </summary>
-/// <remarks>
-/// <para>
-/// Use <see cref="SetPropertyAndValidate{T}"/> in property setters to set,
-/// notify, and validate in one call. Validation runs automatically using
-/// DataAnnotations; override <see cref="ValidateProperty"/> for custom logic.
-/// </para>
-/// <para>
-/// <see cref="EndEdit"/> automatically validates all properties before
-/// committing. If validation fails, the edit remains open.
-/// </para>
-/// </remarks>
+///<summary>
+///An <see cref="EditableComponent"/> that additionally implements <see cref="INotifyDataErrorInfo"/>, combining
+///snapshot-based transactional editing with per-property validation support.
+///</summary>
+///<remarks>
+///<para> Use <see cref="SetPropertyAndValidate{T}"/> in property setters to set, notify, and validate in one call.
+///Validation runs automatically using DataAnnotations; override <see cref="ValidateProperty"/> for custom logic.</para>
+///<para><see cref="EndEdit"/> automatically validates all properties before committing. If validation fails, the edit
+///remains open.</para>
+///</remarks>
 public abstract class EditableValidatingComponent : EditableComponent, INotifyDataErrorInfo
 {
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    #region Fields
+    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    #endregion
 
-    /// <inheritdoc />
-    public bool HasErrors => _errors.Count > 0;
-
-    /// <inheritdoc />
+    #region Events
+    ///<inheritdoc/>
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+    #endregion
 
-    /// <inheritdoc />
-    public IEnumerable GetErrors(string? propertyName)
+    #region Protected methods
+    ///<summary>
+    ///Adds a single validation error for the specified property.
+    ///</summary>
+    ///<param name="error">The error message.</param>
+    ///<param name="propertyName">
+    ///The name of the property. Automatically provided by the compiler.
+    ///</param>
+    protected void AddError(string error, [CallerMemberName] string? propertyName = null)
     {
-        if (string.IsNullOrEmpty(propertyName))
-            return _errors.Values.SelectMany(static e => e);
+        ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        return _errors.TryGetValue(propertyName, out var errors)
-            ? errors
-            : [];
-    }
-
-    /// <summary>
-    /// Gets the current validation errors as a read-only dictionary.
-    /// </summary>
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors =>
-        _errors.ToDictionary(
-            kvp => kvp.Key,
-            kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(),
-            StringComparer.Ordinal);
-
-    /// <summary>
-    /// Sets the backing field, raises change notifications, and validates
-    /// the property in a single operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the property.</typeparam>
-    /// <param name="field">A reference to the backing field.</param>
-    /// <param name="value">The new value.</param>
-    /// <param name="propertyName">
-    /// The name of the property. Automatically provided by the compiler.
-    /// </param>
-    /// <returns>
-    /// <c>true</c> if the value changed; <c>false</c> if the existing
-    /// value matched the new value.
-    /// </returns>
-    protected bool SetPropertyAndValidate<T>(
-        ref T field,
-        T value,
-        [CallerMemberName] string? propertyName = null)
-    {
-        if (!SetProperty(ref field, value, propertyName))
-            return false;
-
-        ValidateProperty(propertyName, value);
-        return true;
-    }
-
-    /// <summary>
-    /// Called to validate a single property value. Override to provide custom
-    /// validation logic. The default implementation runs DataAnnotations
-    /// validation against the property.
-    /// </summary>
-    /// <param name="propertyName">The name of the property to validate.</param>
-    /// <param name="value">The current value of the property.</param>
-    protected virtual void ValidateProperty(string? propertyName, object? value)
-    {
-        if (string.IsNullOrEmpty(propertyName))
-            return;
-
-        ClearErrors(propertyName);
-
-        var context = new ValidationContext(this) { MemberName = propertyName };
-        var results = new List<ValidationResult>();
-
-        Validator.TryValidateProperty(value, context, results);
-
-        var messages = results
-            .Where(r => !string.IsNullOrWhiteSpace(r.ErrorMessage))
-            .Select(r => r.ErrorMessage!)
-            .ToList();
-
-        if (messages.Count > 0)
-            SetErrors(messages, propertyName);
-    }
-
-    /// <summary>
-    /// Validates all public properties of this component using DataAnnotations.
-    /// </summary>
-    /// <returns><c>true</c> if all properties pass validation; otherwise, <c>false</c>.</returns>
-    public bool ValidateAllProperties()
-    {
-        ClearAllErrors();
-
-        var context = new ValidationContext(this);
-        var results = new List<ValidationResult>();
-
-        Validator.TryValidateObject(this, context, results, validateAllProperties: true);
-
-        foreach (var result in results)
+        if(string.IsNullOrEmpty(propertyName))
         {
-            var members = result.MemberNames.ToList();
-            var message = result.ErrorMessage ?? "Validation failed.";
-
-            if (members.Count == 0)
-            {
-                AddError(message, string.Empty);
-            }
-            else
-            {
-                foreach (var member in members)
-                    AddError(message, member);
-            }
+            return;
         }
 
-        return !HasErrors;
+        if(!_errors.TryGetValue(propertyName, out List<string> list))
+        {
+            list = [];
+            _errors[propertyName] = list;
+        }
+
+        if(!list.Contains(error))
+        {
+            list.Add(error);
+            OnErrorsChanged(propertyName);
+        }
     }
 
-    /// <summary>
-    /// Sets the validation errors for the specified property.
-    /// </summary>
-    /// <param name="errors">The error messages.</param>
-    /// <param name="propertyName">
-    /// The name of the property. Automatically provided by the compiler.
-    /// </param>
-    protected void SetErrors(
-        IEnumerable<string> errors,
-        [CallerMemberName] string? propertyName = null)
+    ///<summary>
+    ///Clears all validation errors for all properties.
+    ///</summary>
+    protected void ClearAllErrors()
+    {
+        List<string> properties = _errors.Keys.ToList();
+        _errors.Clear();
+
+        foreach(string property in properties)
+        {
+            OnErrorsChanged(property);
+        }
+    }
+
+    ///<summary>
+    ///Clears errors for the specified property.
+    ///</summary>
+    ///<param name="propertyName">The property name.</param>
+    protected void ClearErrors([CallerMemberName] string? propertyName = null)
+    {
+        if(string.IsNullOrEmpty(propertyName))
+        {
+            return;
+        }
+
+        if(_errors.Remove(propertyName))
+        {
+            OnErrorsChanged(propertyName);
+        }
+    }
+
+    ///<summary>
+    ///Raises the <see cref="ErrorsChanged"/> event.
+    ///</summary>
+    ///<param name="propertyName">The property name.</param>
+    protected virtual void OnErrorsChanged(string? propertyName) { ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName)); }
+
+    ///<summary>
+    ///Sets the validation errors for the specified property.
+    ///</summary>
+    ///<param name="errors">The error messages.</param>
+    ///<param name="propertyName">
+    ///The name of the property. Automatically provided by the compiler.
+    ///</param>
+    protected void SetErrors(IEnumerable<string> errors, [CallerMemberName] string? propertyName = null)
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        if (string.IsNullOrEmpty(propertyName))
+        if(string.IsNullOrEmpty(propertyName))
+        {
             return;
+        }
 
-        var errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+        List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
 
-        if (errorList.Count == 0)
+        if(errorList.Count == 0)
         {
             ClearErrors(propertyName);
             return;
@@ -165,64 +121,114 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
         OnErrorsChanged(propertyName);
     }
 
-    /// <summary>
-    /// Adds a single validation error for the specified property.
-    /// </summary>
-    /// <param name="error">The error message.</param>
-    /// <param name="propertyName">
-    /// The name of the property. Automatically provided by the compiler.
-    /// </param>
-    protected void AddError(
-        string error,
-        [CallerMemberName] string? propertyName = null)
+    ///<summary>
+    ///Sets the backing field, raises change notifications, and validates the property in a single operation.
+    ///</summary>
+    ///<typeparam name="T">The type of the property.</typeparam>
+    ///<param name="field">A reference to the backing field.</param>
+    ///<param name="value">The new value.</param>
+    ///<param name="propertyName">
+    ///The name of the property. Automatically provided by the compiler.
+    ///</param>
+    ///<returns>
+    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
+    ///</returns>
+    protected bool SetPropertyAndValidate<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(error);
-
-        if (string.IsNullOrEmpty(propertyName))
-            return;
-
-        if (!_errors.TryGetValue(propertyName, out var list))
+        if(!SetProperty(ref field, value, propertyName))
         {
-            list = [];
-            _errors[propertyName] = list;
+            return false;
         }
 
-        if (!list.Contains(error))
+        ValidateProperty(propertyName, value);
+        return true;
+    }
+
+    ///<summary>
+    ///Called to validate a single property value. Override to provide custom validation logic. The default
+    ///implementation runs DataAnnotations validation against the property.
+    ///</summary>
+    ///<param name="propertyName">The name of the property to validate.</param>
+    ///<param name="value">The current value of the property.</param>
+    protected virtual void ValidateProperty(string? propertyName, object? value)
+    {
+        if(string.IsNullOrEmpty(propertyName))
         {
-            list.Add(error);
-            OnErrorsChanged(propertyName);
+            return;
+        }
+
+        ClearErrors(propertyName);
+
+        ValidationContext context = new ValidationContext(this) { MemberName = propertyName };
+        List<ValidationResult> results = new List<ValidationResult>();
+
+        Validator.TryValidateProperty(value, context, results);
+
+        List<string> messages = results
+            .Where(r => !string.IsNullOrWhiteSpace(r.ErrorMessage))
+            .Select(r => r.ErrorMessage!)
+            .ToList();
+
+        if(messages.Count > 0)
+        {
+            SetErrors(messages, propertyName);
         }
     }
+    #endregion
 
-    /// <summary>
-    /// Clears errors for the specified property.
-    /// </summary>
-    /// <param name="propertyName">The property name.</param>
-    protected void ClearErrors([CallerMemberName] string? propertyName = null)
+    #region Public methods
+    ///<inheritdoc/>
+    public IEnumerable GetErrors(string? propertyName)
     {
-        if (string.IsNullOrEmpty(propertyName))
-            return;
+        if(string.IsNullOrEmpty(propertyName))
+        {
+            return _errors.Values.SelectMany(static e => e);
+        }
 
-        if (_errors.Remove(propertyName))
-            OnErrorsChanged(propertyName);
+        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
     }
 
-    /// <summary>
-    /// Clears all validation errors for all properties.
-    /// </summary>
-    protected void ClearAllErrors()
+    ///<summary>
+    ///Validates all public properties of this component using DataAnnotations.
+    ///</summary>
+    ///<returns><c>true</c> if all properties pass validation; otherwise, <c>false</c>.</returns>
+    public bool ValidateAllProperties()
     {
-        var properties = _errors.Keys.ToList();
-        _errors.Clear();
+        ClearAllErrors();
 
-        foreach (var property in properties)
-            OnErrorsChanged(property);
+        ValidationContext context = new ValidationContext(this);
+        List<ValidationResult> results = new List<ValidationResult>();
+
+        Validator.TryValidateObject(this, context, results, validateAllProperties: true);
+
+        foreach(ValidationResult result in results)
+        {
+            List<string> members = result.MemberNames.ToList();
+            string message = result.ErrorMessage ?? "Validation failed.";
+
+            if(members.Count == 0)
+            {
+                AddError(message, string.Empty);
+            } else
+            {
+                foreach(string member in members)
+                {
+                    AddError(message, member);
+                }
+            }
+        }
+
+        return !HasErrors;
     }
+    #endregion
 
-    /// <summary>
-    /// Raises the <see cref="ErrorsChanged"/> event.
-    /// </summary>
-    /// <param name="propertyName">The property name.</param>
-    protected virtual void OnErrorsChanged(string? propertyName) =>
-        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    #region Public properties
+    ///<summary>
+    ///Gets the current validation errors as a read-only dictionary.
+    ///</summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
+
+    ///<inheritdoc/>
+    public bool HasErrors => _errors.Count > 0;
+    #endregion
 }

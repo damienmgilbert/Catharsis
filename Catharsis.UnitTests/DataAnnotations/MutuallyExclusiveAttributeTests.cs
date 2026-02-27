@@ -1,73 +1,97 @@
-using Catharsis.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
 [TestClass]
 public class MutuallyExclusiveAttributeTests
 {
-    [TestMethod]
-    public void OnlyOnePopulated_ReturnsSuccess()
-    {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = null };
-        var context = new ValidationContext(model);
-
-        var result = attribute.GetValidationResult(model, context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
+    #region Public methods
     [TestMethod]
     public void BothPopulated_ReturnsFailure()
     {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        var context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new ValidationContext(model);
 
-        var result = attribute.GetValidationResult(model, context);
+        ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
         Assert.IsTrue(result!.ErrorMessage!.Contains("Only one"));
     }
 
     [TestMethod]
-    public void NonePopulated_ReturnsSuccess()
-    {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = null, Url = null };
-        var context = new ValidationContext(model);
-
-        var result = attribute.GetValidationResult(model, context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
-    }
-
+    public void Constructor_FewerThanTwoProperties_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new MutuallyExclusiveAttribute("OnlyOne")); }
     [TestMethod]
     public void EmptyStringsNotTreatedAsValues_ReturnsSuccess()
     {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = "" };
-        var context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = string.Empty };
+        ValidationContext context = new ValidationContext(model);
 
-        var result = attribute.GetValidationResult(model, context);
+        ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
-    public void WhitespaceNotTreatedAsValues_ReturnsSuccess()
+    public void FailureResult_ContainsMemberNames()
     {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = "   " };
-        var context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new ValidationContext(model);
 
-        var result = attribute.GetValidationResult(model, context);
+        ValidationResult? result = attribute.GetValidationResult(model, context);
+
+        Assert.AreNotEqual(ValidationResult.Success, result);
+        CollectionAssert.Contains(result!.MemberNames.ToList(), nameof(TestModel.FilePath));
+        CollectionAssert.Contains(result.MemberNames.ToList(), nameof(TestModel.Url));
+    }
+
+    [TestMethod]
+    public void GroupNameAppearsInErrorMessage()
+    {
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url)) { GroupName = "Data Source" };
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new ValidationContext(model);
+
+        ValidationResult? result = attribute.GetValidationResult(model, context);
+
+        Assert.AreNotEqual(ValidationResult.Success, result);
+        Assert.IsTrue(result!.ErrorMessage!.Contains("Data Source"));
+    }
+
+    [TestMethod]
+    public void NonePopulated_ReturnsSuccess()
+    {
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = null, Url = null };
+        ValidationContext context = new ValidationContext(model);
+
+        ValidationResult? result = attribute.GetValidationResult(model, context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
+    }
+
+    [TestMethod]
+    public void NullObject_ReturnsSuccess()
+    {
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        ValidationContext context = new ValidationContext(new object());
+
+        ValidationResult? result = attribute.GetValidationResult(null, context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
+    }
+
+    [TestMethod]
+    public void OnlyOnePopulated_ReturnsSuccess()
+    {
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = null };
+        ValidationContext context = new ValidationContext(model);
+
+        ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreEqual(ValidationResult.Success, result);
     }
@@ -75,88 +99,49 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void ThreeProperties_TwoPopulated_ReturnsFailure()
     {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url), nameof(TestModel.Count));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = null, Count = 5 };
-        var context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url), nameof(TestModel.Count));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = null, Count = 5 };
+        ValidationContext context = new ValidationContext(model);
 
-        var result = attribute.GetValidationResult(model, context);
-
-        Assert.AreNotEqual(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void GroupNameAppearsInErrorMessage()
-    {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url))
-        {
-            GroupName = "Data Source"
-        };
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        var context = new ValidationContext(model);
-
-        var result = attribute.GetValidationResult(model, context);
+        ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Data Source"));
-    }
-
-    [TestMethod]
-    public void NullObject_ReturnsSuccess()
-    {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var context = new ValidationContext(new object());
-
-        var result = attribute.GetValidationResult(null, context);
-
-        Assert.AreEqual(ValidationResult.Success, result);
     }
 
     [TestMethod]
     public void UnknownProperty_ReturnsFailure()
     {
-        var attribute = new MutuallyExclusiveAttribute("NonExistent", nameof(TestModel.Url));
-        var model = new TestModel { Url = "https://example.com" };
-        var context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute("NonExistent", nameof(TestModel.Url));
+        TestModel model = new TestModel { Url = "https://example.com" };
+        ValidationContext context = new ValidationContext(model);
 
-        var result = attribute.GetValidationResult(model, context);
+        ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
         Assert.IsTrue(result!.ErrorMessage!.Contains("Unknown property"));
     }
 
     [TestMethod]
-    public void Constructor_FewerThanTwoProperties_ThrowsArgumentException()
+    public void WhitespaceNotTreatedAsValues_ReturnsSuccess()
     {
-        Assert.ThrowsExactly<ArgumentException>(() =>
-            new MutuallyExclusiveAttribute("OnlyOne"));
+        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "   " };
+        ValidationContext context = new ValidationContext(model);
+
+        ValidationResult? result = attribute.GetValidationResult(model, context);
+
+        Assert.AreEqual(ValidationResult.Success, result);
     }
+    #endregion
 
-    [TestMethod]
-    public void FailureResult_ContainsMemberNames()
+    sealed class TestModel
     {
-        var attribute = new MutuallyExclusiveAttribute(
-            nameof(TestModel.FilePath), nameof(TestModel.Url));
-        var model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        var context = new ValidationContext(model);
-
-        var result = attribute.GetValidationResult(model, context);
-
-        Assert.AreNotEqual(ValidationResult.Success, result);
-        CollectionAssert.Contains(
-            result!.MemberNames.ToList(),
-            nameof(TestModel.FilePath));
-        CollectionAssert.Contains(
-            result.MemberNames.ToList(),
-            nameof(TestModel.Url));
-    }
-
-    private sealed class TestModel
-    {
-        public string? FilePath { get; set; }
-        public string? Url { get; set; }
+        #region Public properties
         public int? Count { get; set; }
+
+        public string? FilePath { get; set; }
+
+        public string? Url { get; set; }
+        #endregion
     }
 }

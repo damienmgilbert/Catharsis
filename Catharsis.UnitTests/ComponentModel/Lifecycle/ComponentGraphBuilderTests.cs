@@ -1,69 +1,66 @@
-using Catharsis.ComponentModel.Lifecycle;
 using System.ComponentModel;
+using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
 [TestClass]
 public sealed class ComponentGraphBuilderTests
 {
-    [TestMethod]
-    public void AddComponent_NullComponent_ThrowsArgumentNullException()
-    {
-        var builder = new ComponentGraphBuilder();
-
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => builder.AddComponent(null!));
-    }
-
+    #region Public methods
     [TestMethod]
     public void AddComponent_DuplicateComponent_ThrowsInvalidOperationException()
     {
-        var builder = new ComponentGraphBuilder();
-        var c = new StubComponent();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        StubComponent c = new StubComponent();
         builder.AddComponent(c);
 
-        Assert.ThrowsExactly<InvalidOperationException>(
-            () => builder.AddComponent(c));
+        Assert.ThrowsExactly<InvalidOperationException>(() => builder.AddComponent(c));
+    }
+
+    [TestMethod]
+    public void AddComponent_NullComponent_ThrowsArgumentNullException()
+    {
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddComponent(null!));
     }
 
     [TestMethod]
     public void AddComponent_ReturnsSelfForChaining()
     {
-        var builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
 
-        var result = builder.AddComponent(new StubComponent());
+        ComponentGraphBuilder result = builder.AddComponent(new StubComponent());
 
         Assert.AreSame(builder, result);
     }
 
     [TestMethod]
-    public void AddDependency_NullDependent_ThrowsArgumentNullException()
+    public void AddDependency_NullDependency_ThrowsArgumentNullException()
     {
-        var builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
 
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => builder.AddDependency(null!, new StubComponent()));
+        Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddDependency(new StubComponent(), null!));
     }
 
     [TestMethod]
-    public void AddDependency_NullDependency_ThrowsArgumentNullException()
+    public void AddDependency_NullDependent_ThrowsArgumentNullException()
     {
-        var builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
 
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => builder.AddDependency(new StubComponent(), null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddDependency(null!, new StubComponent()));
     }
 
     [TestMethod]
     public void AddDependency_ReturnsSelfForChaining()
     {
-        var builder = new ComponentGraphBuilder();
-        var c1 = new StubComponent();
-        var c2 = new StubComponent();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        StubComponent c1 = new StubComponent();
+        StubComponent c2 = new StubComponent();
         builder.AddComponent(c1);
         builder.AddComponent(c2);
 
-        var result = builder.AddDependency(c1, c2);
+        ComponentGraphBuilder result = builder.AddDependency(c1, c2);
 
         Assert.AreSame(builder, result);
     }
@@ -71,19 +68,43 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_EmptyGraph_Succeeds()
     {
-        var builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
 
-        var graph = builder.Build();
+        ComponentGraph graph = builder.Build();
 
         Assert.AreEqual(0, graph.Count);
     }
 
     [TestMethod]
+    public void Build_UnregisteredDependency_ThrowsInvalidOperationException()
+    {
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        StubComponent registered = new StubComponent();
+        StubComponent unregistered = new StubComponent();
+        builder.AddComponent(registered);
+        builder.AddDependency(registered, unregistered);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => builder.Build());
+    }
+
+    [TestMethod]
+    public void Build_UnregisteredDependent_ThrowsInvalidOperationException()
+    {
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        StubComponent registered = new StubComponent();
+        StubComponent unregistered = new StubComponent();
+        builder.AddComponent(registered);
+        builder.AddDependency(unregistered, registered);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => builder.Build());
+    }
+
+    [TestMethod]
     public void Build_WithComponents_ReturnsGraph()
     {
-        var c1 = new StubComponent();
-        var c2 = new StubComponent();
-        var graph = new ComponentGraphBuilder()
+        StubComponent c1 = new StubComponent();
+        StubComponent c2 = new StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(c1, "A")
             .AddComponent(c2, "B")
             .Build();
@@ -96,62 +117,47 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_WithDependencies_WiresNodes()
     {
-        var db = new StubComponent();
-        var app = new StubComponent();
-        var graph = new ComponentGraphBuilder()
+        StubComponent db = new StubComponent();
+        StubComponent app = new StubComponent();
+        ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
 
-        var appNode = graph.GetNode(app);
+        ComponentGraphNode? appNode = graph.GetNode(app);
         Assert.IsNotNull(appNode);
         Assert.AreEqual(1, appNode.Dependencies.Count);
         Assert.AreEqual("DB", appNode.Dependencies[0].Name);
     }
 
     [TestMethod]
-    public void Build_UnregisteredDependent_ThrowsInvalidOperationException()
-    {
-        var builder = new ComponentGraphBuilder();
-        var registered = new StubComponent();
-        var unregistered = new StubComponent();
-        builder.AddComponent(registered);
-        builder.AddDependency(unregistered, registered);
-
-        Assert.ThrowsExactly<InvalidOperationException>(() => builder.Build());
-    }
-
-    [TestMethod]
-    public void Build_UnregisteredDependency_ThrowsInvalidOperationException()
-    {
-        var builder = new ComponentGraphBuilder();
-        var registered = new StubComponent();
-        var unregistered = new StubComponent();
-        builder.AddComponent(registered);
-        builder.AddDependency(registered, unregistered);
-
-        Assert.ThrowsExactly<InvalidOperationException>(() => builder.Build());
-    }
-
-    [TestMethod]
     public void Clear_ResetsBuilder()
     {
-        var builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new ComponentGraphBuilder();
         builder.AddComponent(new StubComponent());
 
-        var result = builder.Clear();
+        ComponentGraphBuilder result = builder.Clear();
 
         Assert.AreSame(builder, result);
 
-        var graph = builder.Build();
+        ComponentGraph graph = builder.Build();
         Assert.AreEqual(0, graph.Count);
     }
+    #endregion
 
-    private sealed class StubComponent : IComponent
+    sealed class StubComponent : IComponent
     {
-        public ISite? Site { get; set; }
+        #region Events
         public event EventHandler? Disposed;
-        public void Dispose() => Disposed?.Invoke(this, EventArgs.Empty);
+        #endregion
+
+        #region Public methods
+        public void Dispose() { Disposed?.Invoke(this, EventArgs.Empty); }
+        #endregion
+
+        #region Public properties
+        public ISite? Site { get; set; }
+        #endregion
     }
 }

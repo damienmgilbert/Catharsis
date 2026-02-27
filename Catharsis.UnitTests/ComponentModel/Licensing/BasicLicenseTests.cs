@@ -5,18 +5,23 @@ namespace Catharsis.UnitTests.ComponentModel.Licensing;
 [TestClass]
 public sealed class BasicLicenseTests
 {
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullKey_ThrowsArgumentNullException()
+    public void Constructor_DefaultOptionalParameters()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new BasicLicense(null!));
+        BasicLicense license = new BasicLicense("KEY");
+
+        Assert.IsNull(license.Licensee);
+        Assert.IsNull(license.ExpiresUtc);
     }
 
     [TestMethod]
+    public void Constructor_NullKey_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BasicLicense(null!)); }
+    [TestMethod]
     public void Constructor_SetsProperties()
     {
-        var expiry = new DateTime(2030, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-        var license = new BasicLicense("KEY-123", "Alice", expiry);
+        DateTime expiry = new DateTime(2030, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+        BasicLicense license = new BasicLicense("KEY-123", "Alice", expiry);
 
         Assert.AreEqual("KEY-123", license.LicenseKey);
         Assert.AreEqual("Alice", license.Licensee);
@@ -24,26 +29,26 @@ public sealed class BasicLicenseTests
     }
 
     [TestMethod]
-    public void Constructor_DefaultOptionalParameters()
+    public void Dispose_CalledTwice_DoesNotThrow()
     {
-        var license = new BasicLicense("KEY");
+        BasicLicense license = new BasicLicense("KEY");
 
-        Assert.IsNull(license.Licensee);
-        Assert.IsNull(license.ExpiresUtc);
-    }
-
-    [TestMethod]
-    public void IsExpired_NoExpiry_ReturnsFalse()
-    {
-        var license = new BasicLicense("KEY");
-
-        Assert.IsFalse(license.IsExpired);
+        license.Dispose();
+        license.Dispose();
     }
 
     [TestMethod]
     public void IsExpired_FutureExpiry_ReturnsFalse()
     {
-        var license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddYears(1));
+        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddYears(1));
+
+        Assert.IsFalse(license.IsExpired);
+    }
+
+    [TestMethod]
+    public void IsExpired_NoExpiry_ReturnsFalse()
+    {
+        BasicLicense license = new BasicLicense("KEY");
 
         Assert.IsFalse(license.IsExpired);
     }
@@ -51,50 +56,42 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsExpired_PastExpiry_ReturnsTrue()
     {
-        var license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
+        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
 
         Assert.IsTrue(license.IsExpired);
     }
 
     [TestMethod]
-    public void IsValid_NewPerpetualLicense_ReturnsTrue()
+    public void IsValid_AfterDispose_ReturnsFalse()
     {
-        var license = new BasicLicense("KEY");
+        BasicLicense license = new BasicLicense("KEY");
+        license.Dispose();
 
-        Assert.IsTrue(license.IsValid);
+        Assert.IsFalse(license.IsValid);
     }
 
     [TestMethod]
     public void IsValid_ExpiredLicense_ReturnsFalse()
     {
-        var license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
+        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
 
         Assert.IsFalse(license.IsValid);
     }
 
     [TestMethod]
-    public void IsValid_AfterDispose_ReturnsFalse()
+    public void IsValid_NewPerpetualLicense_ReturnsTrue()
     {
-        var license = new BasicLicense("KEY");
-        license.Dispose();
+        BasicLicense license = new BasicLicense("KEY");
 
-        Assert.IsFalse(license.IsValid);
-    }
-
-    [TestMethod]
-    public void Dispose_CalledTwice_DoesNotThrow()
-    {
-        var license = new BasicLicense("KEY");
-
-        license.Dispose();
-        license.Dispose();
+        Assert.IsTrue(license.IsValid);
     }
 
     [TestMethod]
     public void LicenseKey_ReturnsConstructorValue()
     {
-        var license = new BasicLicense("MY-KEY-456");
+        BasicLicense license = new BasicLicense("MY-KEY-456");
 
         Assert.AreEqual("MY-KEY-456", license.LicenseKey);
     }
+    #endregion
 }

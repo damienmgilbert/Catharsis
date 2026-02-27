@@ -1,6 +1,7 @@
 using System.Buffers;
+using Catharsis.Buffers;
 
-namespace Catharsis.Buffers.UnitTests;
+namespace Catharsis.UnitTests.Buffers;
 
 /// <summary>
 /// Unit tests for the <see cref="MemoryPoolManager"/> class.

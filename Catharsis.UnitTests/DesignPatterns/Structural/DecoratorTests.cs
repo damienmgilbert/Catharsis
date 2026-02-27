@@ -5,30 +5,29 @@ namespace Catharsis.UnitTests.DesignPatterns.Structural;
 [TestClass]
 public class DecoratorTests
 {
-    /// <summary>
-    /// Tests that Decorate applies multiple decorators in sequence, left-to-right order.
-    /// Input: object and multiple decorators.
-    /// Expected: decorators applied in order, each receiving the result of the previous.
-    /// </summary>
+    #region Public methods
+
+    ///<summary>
+    ///Tests that Decorate allows a decorator to return null for reference types. Input: non-null object and decorator
+    ///that returns null. Expected: null returned and subsequent decorators receive null.
+    ///</summary>
     [TestMethod]
-    public void Decorate_MultipleDecorators_AppliesInOrder()
+    public void Decorate_DecoratorReturnsNull_SubsequentDecoratorsReceiveNull()
     {
         // Arrange
-        int obj = 5;
-        Func<int, int> addTen = x => x + 10; // 5 + 10 = 15
-        Func<int, int> multiplyByTwo = x => x * 2; // 15 * 2 = 30
-        Func<int, int> subtractThree = x => x - 3; // 30 - 3 = 27
+        string obj = "test";
+        Func<string?, string?> returnsNull = s => null;
+        Func<string?, string?> checksNull = s => (s == null) ? "received null" : s;
         // Act
-        int result = new Decorator().Decorate(obj, addTen, multiplyByTwo, subtractThree);
+        string? result = new Decorator().Decorate(obj, returnsNull, checksNull);
         // Assert
-        Assert.AreEqual(27, result);
+        Assert.AreEqual("received null", result);
     }
 
-    /// <summary>
-    /// Tests that Decorate verifies order matters by applying decorators in different sequence.
-    /// Input: same decorators but different order.
-    /// Expected: different results demonstrating order-dependent application.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate verifies order matters by applying decorators in different sequence. Input: same decorators
+    ///but different order. Expected: different results demonstrating order-dependent application.
+    ///</summary>
     [TestMethod]
     public void Decorate_DifferentOrder_ProducesDifferentResult()
     {
@@ -45,64 +44,26 @@ public class DecoratorTests
         Assert.AreNotEqual(result1, result2);
     }
 
-    /// <summary>
-    /// Tests that Decorate works correctly with reference types.
-    /// Input: string object and string transformation decorators.
-    /// Expected: decorators applied in sequence to string.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate handles extreme values correctly with value types. Input: int.MaxValue and decorator
+    ///operations. Expected: decorators applied respecting overflow behavior.
+    ///</summary>
     [TestMethod]
-    public void Decorate_ReferenceType_AppliesDecorators()
+    public void Decorate_ExtremeValueTypes_AppliesDecorators()
     {
         // Arrange
-        string obj = "hello";
-        Func<string, string> toUpper = s => s.ToUpper();
-        Func<string, string> addExclamation = s => s + "!";
+        int obj = int.MaxValue;
+        Func<int, int> identity = x => x;
         // Act
-        string result = new Decorator().Decorate(obj, toUpper, addExclamation);
+        int result = new Decorator().Decorate(obj, identity);
         // Assert
-        Assert.AreEqual("HELLO!", result);
+        Assert.AreEqual(int.MaxValue, result);
     }
 
-    /// <summary>
-    /// Tests that Decorate handles null object with reference types when decorators allow it.
-    /// Input: null string and decorator that handles null.
-    /// Expected: decorator processes null input correctly.
-    /// </summary>
-    [TestMethod]
-    public void Decorate_NullObjectReferenceType_AppliesDecorators()
-    {
-        // Arrange
-        string? obj = null;
-        Func<string?, string?> decorator = s => s == null ? "was null" : s.ToUpper();
-        // Act
-        string? result = new Decorator().Decorate(obj, decorator);
-        // Assert
-        Assert.AreEqual("was null", result);
-    }
-
-    /// <summary>
-    /// Tests that Decorate allows a decorator to return null for reference types.
-    /// Input: non-null object and decorator that returns null.
-    /// Expected: null returned and subsequent decorators receive null.
-    /// </summary>
-    [TestMethod]
-    public void Decorate_DecoratorReturnsNull_SubsequentDecoratorsReceiveNull()
-    {
-        // Arrange
-        string obj = "test";
-        Func<string?, string?> returnsNull = s => null;
-        Func<string?, string?> checksNull = s => s == null ? "received null" : s;
-        // Act
-        string? result = new Decorator().Decorate(obj, returnsNull, checksNull);
-        // Assert
-        Assert.AreEqual("received null", result);
-    }
-
-    /// <summary>
-    /// Tests that Decorate works with identity decorator that returns input unchanged.
-    /// Input: object and identity decorator.
-    /// Expected: original object returned unchanged.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate works with identity decorator that returns input unchanged. Input: object and identity
+    ///decorator. Expected: original object returned unchanged.
+    ///</summary>
     [TestMethod]
     public void Decorate_IdentityDecorator_ReturnsOriginalObject()
     {
@@ -115,11 +76,32 @@ public class DecoratorTests
         Assert.AreEqual(100, result);
     }
 
-    /// <summary>
-    /// Tests that Decorate correctly chains multiple identity and transformation decorators.
-    /// Input: mix of identity and transformation decorators.
-    /// Expected: only transformations affect the result, identities pass through.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate handles many decorators correctly. Input: large number of decorators. Expected: all
+    ///decorators applied in sequence.
+    ///</summary>
+    [TestMethod]
+    public void Decorate_ManyDecorators_AppliesAll()
+    {
+        // Arrange
+        int obj = 0;
+        Func<int, int> incrementor = x => x + 1;
+        Func<int, int>[] decorators = new Func<int, int>[100];
+        for(int i = 0; i < 100; i++)
+        {
+            decorators[i] = incrementor;
+        }
+
+        // Act
+        int result = new Decorator().Decorate(obj, decorators);
+        // Assert
+        Assert.AreEqual(100, result);
+    }
+
+    ///<summary>
+    ///Tests that Decorate correctly chains multiple identity and transformation decorators. Input: mix of identity and
+    ///transformation decorators. Expected: only transformations affect the result, identities pass through.
+    ///</summary>
     [TestMethod]
     public void Decorate_MixedIdentityAndTransformations_AppliesCorrectly()
     {
@@ -133,11 +115,28 @@ public class DecoratorTests
         Assert.AreEqual(20, result);
     }
 
-    /// <summary>
-    /// Tests that Decorate with no explicit decorators (params empty) returns original object.
-    /// Input: object with no decorators passed.
-    /// Expected: original object returned.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate applies multiple decorators in sequence, left-to-right order. Input: object and multiple
+    ///decorators. Expected: decorators applied in order, each receiving the result of the previous.
+    ///</summary>
+    [TestMethod]
+    public void Decorate_MultipleDecorators_AppliesInOrder()
+    {
+        // Arrange
+        int obj = 5;
+        Func<int, int> addTen = x => x + 10; // 5 + 10 = 15
+        Func<int, int> multiplyByTwo = x => x * 2; // 15 * 2 = 30
+        Func<int, int> subtractThree = x => x - 3; // 30 - 3 = 27
+        // Act
+        int result = new Decorator().Decorate(obj, addTen, multiplyByTwo, subtractThree);
+        // Assert
+        Assert.AreEqual(27, result);
+    }
+
+    ///<summary>
+    ///Tests that Decorate with no explicit decorators (params empty) returns original object. Input: object with no
+    ///decorators passed. Expected: original object returned.
+    ///</summary>
     [TestMethod]
     public void Decorate_NoDecoratorsProvided_ReturnsOriginalObject()
     {
@@ -149,43 +148,37 @@ public class DecoratorTests
         Assert.AreEqual(99, result);
     }
 
-    /// <summary>
-    /// Tests that Decorate handles extreme values correctly with value types.
-    /// Input: int.MaxValue and decorator operations.
-    /// Expected: decorators applied respecting overflow behavior.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate handles null object with reference types when decorators allow it. Input: null string and
+    ///decorator that handles null. Expected: decorator processes null input correctly.
+    ///</summary>
     [TestMethod]
-    public void Decorate_ExtremeValueTypes_AppliesDecorators()
+    public void Decorate_NullObjectReferenceType_AppliesDecorators()
     {
         // Arrange
-        int obj = int.MaxValue;
-        Func<int, int> identity = x => x;
+        string? obj = null;
+        Func<string?, string?> decorator = s => (s == null) ? "was null" : s.ToUpper();
         // Act
-        int result = new Decorator().Decorate(obj, identity);
+        string? result = new Decorator().Decorate(obj, decorator);
         // Assert
-        Assert.AreEqual(int.MaxValue, result);
+        Assert.AreEqual("was null", result);
     }
 
-    /// <summary>
-    /// Tests that Decorate handles many decorators correctly.
-    /// Input: large number of decorators.
-    /// Expected: all decorators applied in sequence.
-    /// </summary>
+    ///<summary>
+    ///Tests that Decorate works correctly with reference types. Input: string object and string transformation
+    ///decorators. Expected: decorators applied in sequence to string.
+    ///</summary>
     [TestMethod]
-    public void Decorate_ManyDecorators_AppliesAll()
+    public void Decorate_ReferenceType_AppliesDecorators()
     {
         // Arrange
-        int obj = 0;
-        Func<int, int> incrementor = x => x + 1;
-        Func<int, int>[] decorators = new Func<int, int>[100];
-        for (int i = 0; i < 100; i++)
-        {
-            decorators[i] = incrementor;
-        }
-
+        string obj = "hello";
+        Func<string, string> toUpper = s => s.ToUpper();
+        Func<string, string> addExclamation = s => $"{s}!";
         // Act
-        int result = new Decorator().Decorate(obj, decorators);
+        string result = new Decorator().Decorate(obj, toUpper, addExclamation);
         // Assert
-        Assert.AreEqual(100, result);
+        Assert.AreEqual("HELLO!", result);
     }
+    #endregion
 }

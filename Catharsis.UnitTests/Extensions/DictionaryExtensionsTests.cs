@@ -1,16 +1,11 @@
-namespace Catharsis.Extensions.UnitTests;
+using Catharsis.Extensions;
+
+namespace Catharsis.UnitTests.Extensions;
 
 [TestClass]
 public class DictionaryExtensionsTests
 {
-    [TestMethod]
-    public void AddOrUpdate_NewKey_AddsEntry()
-    {
-        IDictionary<string, int> source = new Dictionary<string, int>();
-        source.AddOrUpdate("a", 1);
-        Assert.AreEqual(1, source["a"]);
-    }
-
+    #region Public methods
     [TestMethod]
     public void AddOrUpdate_ExistingKey_UpdatesEntry()
     {
@@ -20,10 +15,18 @@ public class DictionaryExtensionsTests
     }
 
     [TestMethod]
+    public void AddOrUpdate_NewKey_AddsEntry()
+    {
+        IDictionary<string, int> source = new Dictionary<string, int>();
+        source.AddOrUpdate("a", 1);
+        Assert.AreEqual(1, source["a"]);
+    }
+
+    [TestMethod]
     public void AddOrUpdate_WithFactories_AddsNewKey()
     {
         IDictionary<string, int> source = new Dictionary<string, int>();
-        var value = source.AddOrUpdate("a", k => 10, (k, v) => v + 1);
+        int value = source.AddOrUpdate("a", k => 10, (k, v) => v + 1);
         Assert.AreEqual(10, value);
         Assert.AreEqual(10, source["a"]);
     }
@@ -32,7 +35,7 @@ public class DictionaryExtensionsTests
     public void AddOrUpdate_WithFactories_UpdatesExistingKey()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 10 } };
-        var value = source.AddOrUpdate("a", k => 0, (k, v) => v + 5);
+        int value = source.AddOrUpdate("a", k => 0, (k, v) => v + 5);
         Assert.AreEqual(15, value);
         Assert.AreEqual(15, source["a"]);
     }
@@ -53,6 +56,51 @@ public class DictionaryExtensionsTests
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 } };
         source.AddRange(new Dictionary<string, int> { { "a", 99 } });
         Assert.AreEqual(99, source["a"]);
+    }
+
+    [TestMethod]
+    public void GetOrAdd_ExistingKey_ReturnsExistingValue()
+    {
+        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 42 } };
+        int result = source.GetOrAdd("a", k => 99);
+        Assert.AreEqual(42, result);
+    }
+
+    [TestMethod]
+    public void GetOrAdd_MissingKey_AddsAndReturnsNewValue()
+    {
+        IDictionary<string, int> source = new Dictionary<string, int>();
+        int result = source.GetOrAdd("a", k => 42);
+        Assert.AreEqual(42, result);
+        Assert.AreEqual(42, source["a"]);
+    }
+
+    [TestMethod]
+    public void ModifyAll_TransformsAllValues()
+    {
+        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 } };
+        source.ModifyAll((k, v) => v * 10);
+        Assert.AreEqual(10, source["a"]);
+        Assert.AreEqual(20, source["b"]);
+    }
+
+    [TestMethod]
+    public void ModifyWhere_TransformsMatchingOnly()
+    {
+        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
+        source.ModifyWhere(kvp => kvp.Value % 2 == 0, (k, v) => v * 10);
+        Assert.AreEqual(1, source["a"]);
+        Assert.AreEqual(20, source["b"]);
+        Assert.AreEqual(3, source["c"]);
+    }
+
+    [TestMethod]
+    public void NullSource_ThrowsArgumentNullException()
+    {
+        IDictionary<string, int>? source = null;
+        Assert.ThrowsExactly<ArgumentNullException>(() => source!.AddOrUpdate("a", 1));
+        Assert.ThrowsExactly<ArgumentNullException>(() => source!.AddRange(new Dictionary<string, int>()));
+        Assert.ThrowsExactly<ArgumentNullException>(() => source!.RemoveRange(new[] { "a" }));
     }
 
     [TestMethod]
@@ -91,49 +139,5 @@ public class DictionaryExtensionsTests
         bool replaced = source.ReplaceValue("z", 99);
         Assert.IsFalse(replaced);
     }
-
-    [TestMethod]
-    public void ModifyAll_TransformsAllValues()
-    {
-        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 } };
-        source.ModifyAll((k, v) => v * 10);
-        Assert.AreEqual(10, source["a"]);
-        Assert.AreEqual(20, source["b"]);
-    }
-
-    [TestMethod]
-    public void ModifyWhere_TransformsMatchingOnly()
-    {
-        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
-        source.ModifyWhere(kvp => kvp.Value % 2 == 0, (k, v) => v * 10);
-        Assert.AreEqual(1, source["a"]);
-        Assert.AreEqual(20, source["b"]);
-        Assert.AreEqual(3, source["c"]);
-    }
-
-    [TestMethod]
-    public void GetOrAdd_ExistingKey_ReturnsExistingValue()
-    {
-        IDictionary<string, int> source = new Dictionary<string, int> { { "a", 42 } };
-        var result = source.GetOrAdd("a", k => 99);
-        Assert.AreEqual(42, result);
-    }
-
-    [TestMethod]
-    public void GetOrAdd_MissingKey_AddsAndReturnsNewValue()
-    {
-        IDictionary<string, int> source = new Dictionary<string, int>();
-        var result = source.GetOrAdd("a", k => 42);
-        Assert.AreEqual(42, result);
-        Assert.AreEqual(42, source["a"]);
-    }
-
-    [TestMethod]
-    public void NullSource_ThrowsArgumentNullException()
-    {
-        IDictionary<string, int>? source = null;
-        Assert.ThrowsExactly<ArgumentNullException>(() => source!.AddOrUpdate("a", 1));
-        Assert.ThrowsExactly<ArgumentNullException>(() => source!.AddRange(new Dictionary<string, int>()));
-        Assert.ThrowsExactly<ArgumentNullException>(() => source!.RemoveRange(new[] { "a" }));
-    }
+    #endregion
 }

@@ -1,36 +1,16 @@
-using Catharsis.ComponentModel.Validation;
 using System.ComponentModel.DataAnnotations;
+using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
 [TestClass]
 public sealed class ValidationResultAggregatorTests
 {
-    [TestMethod]
-    public void Initial_State_IsEmpty()
-    {
-        var agg = new ValidationResultAggregator();
-
-        Assert.AreEqual(0, agg.Count);
-        Assert.IsFalse(agg.HasResults);
-        Assert.IsFalse(agg.HasErrors);
-    }
-
-    [TestMethod]
-    public void Add_ValidResult_IncreasesCount()
-    {
-        var agg = new ValidationResultAggregator();
-
-        agg.Add(new ValidationResult("Bad value.", ["Name"]));
-
-        Assert.AreEqual(1, agg.Count);
-        Assert.IsTrue(agg.HasResults);
-    }
-
+    #region Public methods
     [TestMethod]
     public void Add_NullResult_IsIgnored()
     {
-        var agg = new ValidationResultAggregator();
+        ValidationResultAggregator agg = new ValidationResultAggregator();
 
         agg.Add(null);
 
@@ -40,7 +20,7 @@ public sealed class ValidationResultAggregatorTests
     [TestMethod]
     public void Add_SuccessResult_IsIgnored()
     {
-        var agg = new ValidationResultAggregator();
+        ValidationResultAggregator agg = new ValidationResultAggregator();
 
         agg.Add(ValidationResult.Success);
 
@@ -48,32 +28,21 @@ public sealed class ValidationResultAggregatorTests
     }
 
     [TestMethod]
-    public void HasErrors_OnlyWarnings_ReturnsFalse()
+    public void Add_ValidResult_IncreasesCount()
     {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("warn"), ValidationSeverity.Warning);
+        ValidationResultAggregator agg = new ValidationResultAggregator();
 
-        Assert.IsFalse(agg.HasErrors);
-    }
+        agg.Add(new ValidationResult("Bad value.", [ "Name" ]));
 
-    [TestMethod]
-    public void HasErrors_WithError_ReturnsTrue()
-    {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("error"), ValidationSeverity.Error);
-
-        Assert.IsTrue(agg.HasErrors);
+        Assert.AreEqual(1, agg.Count);
+        Assert.IsTrue(agg.HasResults);
     }
 
     [TestMethod]
     public void AddRange_AddsMultipleResults()
     {
-        var agg = new ValidationResultAggregator();
-        var results = new[]
-        {
-            new ValidationResult("err1", ["A"]),
-            new ValidationResult("err2", ["B"])
-        };
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        ValidationResult[] results = new[] { new ValidationResult("err1", [ "A" ]), new ValidationResult("err2", [ "B" ]) };
 
         agg.AddRange(results, ValidationSeverity.Warning);
 
@@ -83,67 +52,33 @@ public sealed class ValidationResultAggregatorTests
     [TestMethod]
     public void AddRange_NullResults_ThrowsArgumentNullException()
     {
-        var agg = new ValidationResultAggregator();
+        ValidationResultAggregator agg = new ValidationResultAggregator();
 
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => agg.AddRange(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => agg.AddRange(null!));
     }
 
     [TestMethod]
-    public void GetAll_ReturnsAllEntriesWithSeverity()
+    public void Clear_RemovesAllResults()
     {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("e1"), ValidationSeverity.Error);
-        agg.Add(new ValidationResult("w1"), ValidationSeverity.Warning);
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("err"));
+        agg.Add(new ValidationResult("warn"), ValidationSeverity.Warning);
 
-        var all = agg.GetAll();
+        agg.Clear();
 
-        Assert.AreEqual(2, all.Count);
-    }
-
-    [TestMethod]
-    public void GetBySeverity_FiltersCorrectly()
-    {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("e1"), ValidationSeverity.Error);
-        agg.Add(new ValidationResult("w1"), ValidationSeverity.Warning);
-        agg.Add(new ValidationResult("e2"), ValidationSeverity.Error);
-
-        var errors = agg.GetBySeverity(ValidationSeverity.Error);
-
-        Assert.AreEqual(2, errors.Count);
-    }
-
-    [TestMethod]
-    public void GetByMember_FiltersByMemberName()
-    {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("e1", ["Name"]));
-        agg.Add(new ValidationResult("e2", ["Age"]));
-        agg.Add(new ValidationResult("e3", ["Name"]));
-
-        var nameErrors = agg.GetByMember("Name");
-
-        Assert.AreEqual(2, nameErrors.Count);
-    }
-
-    [TestMethod]
-    public void GetByMember_NullMemberName_ThrowsArgumentNullException()
-    {
-        var agg = new ValidationResultAggregator();
-
-        Assert.ThrowsExactly<ArgumentNullException>(() => agg.GetByMember(null!));
+        Assert.AreEqual(0, agg.Count);
+        Assert.IsFalse(agg.HasResults);
     }
 
     [TestMethod]
     public void GetAffectedMembers_ReturnsDistinctNames()
     {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("e1", ["Name"]));
-        agg.Add(new ValidationResult("e2", ["Age"]));
-        agg.Add(new ValidationResult("e3", ["Name"]));
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("e1", [ "Name" ]));
+        agg.Add(new ValidationResult("e2", [ "Age" ]));
+        agg.Add(new ValidationResult("e3", [ "Name" ]));
 
-        var members = agg.GetAffectedMembers();
+        IReadOnlyList<string> members = agg.GetAffectedMembers();
 
         Assert.AreEqual(2, members.Count);
         CollectionAssert.Contains(members.ToList(), "Name");
@@ -151,13 +86,87 @@ public sealed class ValidationResultAggregatorTests
     }
 
     [TestMethod]
+    public void GetAll_ReturnsAllEntriesWithSeverity()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("e1"), ValidationSeverity.Error);
+        agg.Add(new ValidationResult("w1"), ValidationSeverity.Warning);
+
+        IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> all = agg.GetAll();
+
+        Assert.AreEqual(2, all.Count);
+    }
+
+    [TestMethod]
+    public void GetByMember_FiltersByMemberName()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("e1", [ "Name" ]));
+        agg.Add(new ValidationResult("e2", [ "Age" ]));
+        agg.Add(new ValidationResult("e3", [ "Name" ]));
+
+        IReadOnlyList<ValidationResult> nameErrors = agg.GetByMember("Name");
+
+        Assert.AreEqual(2, nameErrors.Count);
+    }
+
+    [TestMethod]
+    public void GetByMember_NullMemberName_ThrowsArgumentNullException()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => agg.GetByMember(null!));
+    }
+
+    [TestMethod]
+    public void GetBySeverity_FiltersCorrectly()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("e1"), ValidationSeverity.Error);
+        agg.Add(new ValidationResult("w1"), ValidationSeverity.Warning);
+        agg.Add(new ValidationResult("e2"), ValidationSeverity.Error);
+
+        IReadOnlyList<ValidationResult> errors = agg.GetBySeverity(ValidationSeverity.Error);
+
+        Assert.AreEqual(2, errors.Count);
+    }
+
+    [TestMethod]
+    public void HasErrors_OnlyWarnings_ReturnsFalse()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("warn"), ValidationSeverity.Warning);
+
+        Assert.IsFalse(agg.HasErrors);
+    }
+
+    [TestMethod]
+    public void HasErrors_WithError_ReturnsTrue()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("error"), ValidationSeverity.Error);
+
+        Assert.IsTrue(agg.HasErrors);
+    }
+
+    [TestMethod]
+    public void Initial_State_IsEmpty()
+    {
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+
+        Assert.AreEqual(0, agg.Count);
+        Assert.IsFalse(agg.HasResults);
+        Assert.IsFalse(agg.HasErrors);
+    }
+
+    [TestMethod]
     public void ToErrorInfos_ConvertsCorrectly()
     {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("err1", ["Name"]), ValidationSeverity.Error);
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("err1", [ "Name" ]), ValidationSeverity.Error);
         agg.Add(new ValidationResult("warn1"), ValidationSeverity.Warning);
 
-        var infos = agg.ToErrorInfos();
+        IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
 
         Assert.AreEqual(2, infos.Count);
         Assert.AreEqual("err1", infos[0].Message);
@@ -170,26 +179,14 @@ public sealed class ValidationResultAggregatorTests
     [TestMethod]
     public void ToErrorInfos_MultipleMembers_CreatesOnePerMember()
     {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("cross", ["A", "B"]));
+        ValidationResultAggregator agg = new ValidationResultAggregator();
+        agg.Add(new ValidationResult("cross", [ "A", "B" ]));
 
-        var infos = agg.ToErrorInfos();
+        IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
 
         Assert.AreEqual(2, infos.Count);
         Assert.AreEqual("A", infos[0].PropertyName);
         Assert.AreEqual("B", infos[1].PropertyName);
     }
-
-    [TestMethod]
-    public void Clear_RemovesAllResults()
-    {
-        var agg = new ValidationResultAggregator();
-        agg.Add(new ValidationResult("err"));
-        agg.Add(new ValidationResult("warn"), ValidationSeverity.Warning);
-
-        agg.Clear();
-
-        Assert.AreEqual(0, agg.Count);
-        Assert.IsFalse(agg.HasResults);
-    }
+    #endregion
 }

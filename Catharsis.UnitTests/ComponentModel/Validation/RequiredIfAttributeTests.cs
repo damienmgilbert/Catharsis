@@ -1,30 +1,18 @@
-using Catharsis.ComponentModel.Validation;
 using System.ComponentModel.DataAnnotations;
+using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
 [TestClass]
 public sealed class RequiredIfAttributeTests
 {
-    private sealed class TestModel
-    {
-        public bool IsActive { get; set; }
-
-        [RequiredIf(nameof(IsActive), true)]
-        public string? Name { get; set; }
-    }
-
+    #region Public methods
     [TestMethod]
-    public void Constructor_NullDependentProperty_ThrowsArgumentNullException()
-    {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new RequiredIfAttribute(null!, true));
-    }
-
+    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RequiredIfAttribute(null!, true)); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        var attr = new RequiredIfAttribute("IsActive", true);
+        RequiredIfAttribute attr = new RequiredIfAttribute("IsActive", true);
 
         Assert.AreEqual("IsActive", attr.DependentProperty);
         Assert.AreEqual(true, attr.TargetValue);
@@ -32,37 +20,38 @@ public sealed class RequiredIfAttributeTests
     }
 
     [TestMethod]
-    public void Validate_ConditionNotMet_NullValue_Passes()
+    public void FormatErrorMessage_ContainsDependentPropertyAndTargetValue()
     {
-        var model = new TestModel { IsActive = false, Name = null };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        RequiredIfAttribute attr = new RequiredIfAttribute("IsActive", true);
 
-        var result = Validator.TryValidateProperty(model.Name, context, null);
+        string msg = attr.FormatErrorMessage("Name");
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(msg.Contains("Name"));
+        Assert.IsTrue(msg.Contains("IsActive"));
+        Assert.IsTrue(msg.Contains("True"));
     }
 
     [TestMethod]
-    public void Validate_ConditionMet_NullValue_Fails()
+    public void Validate_ConditionMet_EmptyString_Fails()
     {
-        var model = new TestModel { IsActive = true, Name = null };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
-        var results = new List<ValidationResult>();
+        TestModel model = new TestModel { IsActive = true, Name = string.Empty };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        List<ValidationResult> results = new List<ValidationResult>();
 
-        var isValid = Validator.TryValidateProperty(model.Name, context, results);
+        bool isValid = Validator.TryValidateProperty(model.Name, context, results);
 
         Assert.IsFalse(isValid);
         Assert.AreEqual(1, results.Count);
     }
 
     [TestMethod]
-    public void Validate_ConditionMet_EmptyString_Fails()
+    public void Validate_ConditionMet_NullValue_Fails()
     {
-        var model = new TestModel { IsActive = true, Name = "" };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
-        var results = new List<ValidationResult>();
+        TestModel model = new TestModel { IsActive = true, Name = null };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        List<ValidationResult> results = new List<ValidationResult>();
 
-        var isValid = Validator.TryValidateProperty(model.Name, context, results);
+        bool isValid = Validator.TryValidateProperty(model.Name, context, results);
 
         Assert.IsFalse(isValid);
         Assert.AreEqual(1, results.Count);
@@ -71,10 +60,21 @@ public sealed class RequiredIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_ValidValue_Passes()
     {
-        var model = new TestModel { IsActive = true, Name = "John" };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        TestModel model = new TestModel { IsActive = true, Name = "John" };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
 
-        var result = Validator.TryValidateProperty(model.Name, context, null);
+        bool result = Validator.TryValidateProperty(model.Name, context, null);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void Validate_ConditionNotMet_NullValue_Passes()
+    {
+        TestModel model = new TestModel { IsActive = false, Name = null };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+
+        bool result = Validator.TryValidateProperty(model.Name, context, null);
 
         Assert.IsTrue(result);
     }
@@ -82,36 +82,35 @@ public sealed class RequiredIfAttributeTests
     [TestMethod]
     public void Validate_DisallowEmptyStringsFalse_EmptyStringPasses()
     {
-        var attr = new RequiredIfAttribute("IsActive", true) { DisallowEmptyStrings = false };
-        var model = new TestModel { IsActive = true, Name = "" };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        RequiredIfAttribute attr = new RequiredIfAttribute("IsActive", true) { DisallowEmptyStrings = false };
+        TestModel model = new TestModel { IsActive = true, Name = string.Empty };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
 
-        var result = attr.GetValidationResult(model.Name, context);
+        ValidationResult? result = attr.GetValidationResult(model.Name, context);
 
         Assert.AreSame(ValidationResult.Success, result);
-    }
-
-    [TestMethod]
-    public void FormatErrorMessage_ContainsDependentPropertyAndTargetValue()
-    {
-        var attr = new RequiredIfAttribute("IsActive", true);
-
-        var msg = attr.FormatErrorMessage("Name");
-
-        Assert.IsTrue(msg.Contains("Name"));
-        Assert.IsTrue(msg.Contains("IsActive"));
-        Assert.IsTrue(msg.Contains("True"));
     }
 
     [TestMethod]
     public void Validate_NonExistentDependentProperty_Passes()
     {
-        var attr = new RequiredIfAttribute("NonExistent", true);
-        var model = new TestModel { IsActive = true, Name = null };
-        var context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
+        RequiredIfAttribute attr = new RequiredIfAttribute("NonExistent", true);
+        TestModel model = new TestModel { IsActive = true, Name = null };
+        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Name) };
 
-        var result = attr.GetValidationResult(model.Name, context);
+        ValidationResult? result = attr.GetValidationResult(model.Name, context);
 
         Assert.AreSame(ValidationResult.Success, result);
+    }
+    #endregion
+
+    sealed class TestModel
+    {
+        #region Public properties
+        public bool IsActive { get; set; }
+
+        [RequiredIf(nameof(IsActive), true)]
+        public string? Name { get; set; }
+        #endregion
     }
 }
