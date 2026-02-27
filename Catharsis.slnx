@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Catharsis.UnitTests/Catharsis.UnitTests.csproj" />
+  <Project Path="Catharsis/Catharsis.csproj" />
+</Solution>
