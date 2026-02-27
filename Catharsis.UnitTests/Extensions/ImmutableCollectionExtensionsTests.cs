@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using Catharsis.Extensions;
 
 namespace Catharsis.Extensions.UnitTests;
 

@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
 using Catharsis.ComponentModel.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 

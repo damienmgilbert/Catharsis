@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;

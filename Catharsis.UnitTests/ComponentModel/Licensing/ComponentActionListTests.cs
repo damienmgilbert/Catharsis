@@ -1,6 +1,5 @@
-using System.ComponentModel;
-
 using Catharsis.ComponentModel.Licensing;
+using System.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 

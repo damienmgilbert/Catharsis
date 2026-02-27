@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Catharsis.Extensions;
 
 namespace Catharsis.Extensions.UnitTests;
 

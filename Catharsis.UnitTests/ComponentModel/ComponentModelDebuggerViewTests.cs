@@ -1,7 +1,5 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
 using Catharsis.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.UnitTests.ComponentModel;
 

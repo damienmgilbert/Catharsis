@@ -1,6 +1,3 @@
-using System.Buffers;
-using Catharsis.Buffers;
-
 namespace Catharsis.Buffers.UnitTests;
 
 /// <summary>

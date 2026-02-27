@@ -1,7 +1,6 @@
+using Catharsis.ComponentModel.Binding;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
-using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 

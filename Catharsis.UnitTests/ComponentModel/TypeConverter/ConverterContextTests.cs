@@ -1,6 +1,5 @@
-using System.Globalization;
-
 using Catharsis.ComponentModel.TypeConverter;
+using System.Globalization;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 

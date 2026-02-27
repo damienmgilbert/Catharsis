@@ -1,9 +1,4 @@
-﻿using System;
-
-using Catharsis.ComponentModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Catharsis.ComponentModel.UnitTests;
+﻿namespace Catharsis.ComponentModel.UnitTests;
 
 
 /// <summary>

@@ -1,5 +1,3 @@
-using Catharsis.Extensions;
-
 namespace Catharsis.Extensions.UnitTests;
 
 [TestClass]

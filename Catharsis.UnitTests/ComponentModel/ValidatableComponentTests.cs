@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-
-using Catharsis;
-using Catharsis.ComponentModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections;
 
 namespace Catharsis.ComponentModel.UnitTests;
 

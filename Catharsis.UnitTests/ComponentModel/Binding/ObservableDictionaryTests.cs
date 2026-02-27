@@ -1,7 +1,5 @@
-using System.Collections.Specialized;
-using System.ComponentModel;
-
 using Catharsis.ComponentModel.Binding;
+using System.Collections.Specialized;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 

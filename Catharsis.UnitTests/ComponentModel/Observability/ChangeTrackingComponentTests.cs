@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 using Catharsis.ComponentModel.Observability;
 
 namespace Catharsis.UnitTests.ComponentModel.Observability;

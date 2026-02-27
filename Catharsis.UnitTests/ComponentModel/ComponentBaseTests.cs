@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-
-using Catharsis.ComponentModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.ComponentModel;
 
 namespace Catharsis.ComponentModel.UnitTests;
 

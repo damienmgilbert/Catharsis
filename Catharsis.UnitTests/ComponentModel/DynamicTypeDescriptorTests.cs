@@ -1,5 +1,4 @@
 using Catharsis.ComponentModel;
-using System.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 

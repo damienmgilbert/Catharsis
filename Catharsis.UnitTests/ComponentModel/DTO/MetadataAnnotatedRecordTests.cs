@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
 using Catharsis.ComponentModel.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
