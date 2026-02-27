@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+
 [TestClass]
 public class ComponentContainerSlimTests
 {
@@ -188,3 +189,4 @@ public class ComponentContainerSlimTests
         Assert.AreSame(container, service);
     }
 }
+
