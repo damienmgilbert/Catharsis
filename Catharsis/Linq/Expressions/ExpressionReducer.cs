@@ -9,6 +9,7 @@ namespace Catharsis.Linq.Expressions;
 public static class ExpressionReducer
 {
     #region Public methods
+
     ///<summary>
     ///Determines whether the specified expression can be reduced.
     ///</summary>
@@ -109,11 +110,11 @@ public static class ExpressionReducer
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
         ArgumentOutOfRangeException.ThrowIfLessThan(maxPasses, 1, nameof(maxPasses));
 
-        for (int i = 0; i < maxPasses; i++)
+        for(int i = 0; i < maxPasses; i++)
         {
             Expression reduced = new DeepReducingVisitor().Visit(expression);
 
-            if (ReferenceEquals(reduced, expression))
+            if(ReferenceEquals(reduced, expression))
             {
                 break;
             }
@@ -146,7 +147,7 @@ public static class ExpressionReducer
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
-        if (!expression.CanReduce)
+        if(!expression.CanReduce)
         {
             throw new InvalidOperationException($"Expression of NodeType '{expression.NodeType}' is not reducible.");
         }
@@ -167,7 +168,7 @@ public static class ExpressionReducer
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
         ArgumentOutOfRangeException.ThrowIfLessThan(maxIterations, 1, nameof(maxIterations));
 
-        for (int i = 0; i < maxIterations && expression.CanReduce; i++)
+        for(int i = 0; i < maxIterations && expression.CanReduce; i++)
         {
             expression = expression.Reduce();
         }
@@ -232,17 +233,17 @@ public static class ExpressionReducer
     }
     #endregion
 
-    private sealed class ReducibilityVisitor : ExpressionVisitor
+    sealed class ReducibilityVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (FoundReducible || node is null)
+            if(FoundReducible || node is null)
             {
                 return node!;
             }
 
-            if (node.CanReduce)
+            if(node.CanReduce)
             {
                 FoundReducible = true;
                 return node;
@@ -257,17 +258,17 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class ReducibleCountVisitor : ExpressionVisitor
+    sealed class ReducibleCountVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (node is null)
+            if(node is null)
             {
                 return null!;
             }
 
-            if (node.CanReduce)
+            if(node.CanReduce)
             {
                 Count++;
             }
@@ -281,12 +282,12 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class DeepReducingVisitor : ExpressionVisitor
+    sealed class DeepReducingVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (node is null)
+            if(node is null)
             {
                 return null!;
             }
@@ -297,21 +298,21 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class ReducibleCollectorVisitor : ExpressionVisitor
+    sealed class ReducibleCollectorVisitor : ExpressionVisitor
     {
         #region Fields
-        private readonly List<Expression> _reducibleNodes = [];
+        readonly List<Expression> _reducibleNodes = [];
         #endregion
 
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (node is null)
+            if(node is null)
             {
                 return null!;
             }
 
-            if (node.CanReduce)
+            if(node.CanReduce)
             {
                 _reducibleNodes.Add(node);
             }
@@ -325,12 +326,12 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class NodeTypeReducingVisitor(ExpressionType targetNodeType) : ExpressionVisitor
+    sealed class NodeTypeReducingVisitor(ExpressionType targetNodeType) : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (node is null)
+            if(node is null)
             {
                 return null!;
             }
@@ -341,12 +342,12 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class NodeTypeSetReducingVisitor(IReadOnlySet<ExpressionType> targetNodeTypes) : ExpressionVisitor
+    sealed class NodeTypeSetReducingVisitor(IReadOnlySet<ExpressionType> targetNodeTypes) : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if (node is null)
+            if(node is null)
             {
                 return null!;
             }
