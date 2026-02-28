@@ -7,6 +7,7 @@ namespace Catharsis.Extensions;
 public static class DictionaryExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Adds or updates the entry for <paramref name="key"/>. If the key exists, the value is replaced; otherwise the
     ///key-value pair is added.
@@ -102,15 +103,6 @@ public static class DictionaryExtensions
 
     ///<summary>
     ///Gets the value for <paramref name="key"/> if it exists; otherwise adds and returns the value produced by
-    ///<paramref name="factory"/>.
-    ///</summary>
-    ///<typeparam name="TKey">The key type.</typeparam>
-    ///<typeparam name="TValue">The value type.</typeparam>
-    ///<param name="source">The target dictionary.</param>
-    ///<param name="key">The key to look up or add.</param>
-    ///<param name="factory">A function that produces the value when the key does not exist.</param>
-    ///<returns>The existing or newly added value.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="factory"/> is <c>null</c>.</exception>
     public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> factory)
     {
         if(source is null)

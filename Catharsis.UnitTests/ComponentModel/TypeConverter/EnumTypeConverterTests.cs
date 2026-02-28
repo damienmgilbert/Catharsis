@@ -175,7 +175,7 @@ public sealed class EnumTypeConverterTests
         System.ComponentModel.TypeConverter.StandardValuesCollection values = converter.GetStandardValues(null);
 
         Assert.IsNotNull(values);
-        Assert.AreEqual(3, values.Count);
+        Assert.HasCount(3, values);
     }
 
     [TestMethod]

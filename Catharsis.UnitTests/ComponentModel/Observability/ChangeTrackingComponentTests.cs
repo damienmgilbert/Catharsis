@@ -28,7 +28,7 @@ public sealed class ChangeTrackingComponentTests
 
         IReadOnlyList<ChangeEntry> all = c.Changes.GetAll();
 
-        Assert.AreEqual(2, all.Count);
+        Assert.HasCount(2, all);
         Assert.AreEqual("Name", all[0].PropertyName);
         Assert.AreEqual("Age", all[1].PropertyName);
     }

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
@@ -305,7 +305,7 @@ public partial class EditableComponentTests
         List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
 
         // Assert
-        Assert.AreEqual(0, properties.Count, "Should return empty enumerable when no properties match the editable criteria.");
+        Assert.IsEmpty(properties, "Should return empty enumerable when no properties match the editable criteria.");
     }
 
     ///<summary>
@@ -395,9 +395,6 @@ public partial class EditableComponentTests
     ///</summary>
     class TestEditableComponent : EditableComponent
     {
-        #region Fields
-        string? _testProperty;
-        #endregion
     }
 
     ///<summary>
@@ -446,7 +443,7 @@ public partial class EditableComponentTests
         #endregion
 
         #region Indexers
-        public string this[int index] { get => _data.TryGetValue(index, out string value) ? value : string.Empty; set => _data[index] = value; }
+        public string this[int index] { get => _data.TryGetValue(index, out string? value) ? value : string.Empty; set => _data[index] = value; }
         #endregion
 
         #region Public methods

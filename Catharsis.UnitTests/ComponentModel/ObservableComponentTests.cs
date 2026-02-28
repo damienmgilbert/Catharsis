@@ -1,4 +1,4 @@
-﻿using Catharsis.ComponentModel;
+using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
@@ -140,7 +140,7 @@ public partial class ObservableComponentTests
         component.TestSetProperty(ref field, 100, "TestProperty");
 
         // Assert
-        Assert.AreEqual(2, eventOrder.Count);
+        Assert.HasCount(2, eventOrder);
         Assert.AreEqual("Changing", eventOrder[0]);
         Assert.AreEqual("Changed", eventOrder[1]);
     }

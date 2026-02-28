@@ -39,7 +39,7 @@ public class AttributeCollectionBuilderTests
         builder.Add(new System.ComponentModel.DescriptionAttribute("hello"));
         AttributeCollection collection = builder.Build();
         Assert.IsNotNull(collection);
-        Assert.IsTrue(collection.Count > 0);
+        Assert.IsNotEmpty(collection);
     }
 
     [TestMethod]

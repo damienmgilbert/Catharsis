@@ -75,7 +75,7 @@ public class CompositePatternTests
         // Act
         new CompositePattern().Composite(root, getChildren, action);
         // Assert
-        Assert.AreEqual(7, visitedNodes.Count);
+        Assert.HasCount(7, visitedNodes);
         Assert.AreEqual("A", visitedNodes[0]);
         Assert.AreEqual("B", visitedNodes[1]);
         Assert.AreEqual("D", visitedNodes[2]);
@@ -107,7 +107,7 @@ public class CompositePatternTests
         // Act
         new CompositePattern().Composite(root, getChildren, action);
         // Assert
-        Assert.AreEqual(5, visitedNodes.Count);
+        Assert.HasCount(5, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
         Assert.AreEqual("child1", visitedNodes[1]);
         Assert.AreEqual("grandchild1", visitedNodes[2]);
@@ -132,7 +132,7 @@ public class CompositePatternTests
         // Act
         new CompositePattern().Composite(root, getChildren, action);
         // Assert
-        Assert.AreEqual(4, visitedNodes.Count);
+        Assert.HasCount(4, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
         Assert.AreEqual("child1", visitedNodes[1]);
         Assert.AreEqual("child2", visitedNodes[2]);
@@ -177,7 +177,7 @@ public class CompositePatternTests
         // Act
         new CompositePattern().Composite(root, getChildren, action);
         // Assert
-        Assert.AreEqual(4, visitedNodes.Count);
+        Assert.HasCount(4, visitedNodes);
         CollectionAssert.AreEqual(new[] { "root", "child1", "grandchild", "child2" }, visitedNodes);
     }
 
@@ -219,7 +219,7 @@ public class CompositePatternTests
         // Act
         TreeNode result = new CompositePattern().Composite(root, getChildren, action);
         // Assert
-        Assert.AreEqual(1, visitedNodes.Count);
+        Assert.HasCount(1, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
         Assert.AreSame(root, result);
     }
@@ -239,7 +239,7 @@ public class CompositePatternTests
         int result = new CompositePattern().Composite(root, getChildren, action);
         // Assert
         Assert.AreEqual(1, result);
-        Assert.AreEqual(3, visitedValues.Count);
+        Assert.HasCount(3, visitedValues);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, visitedValues);
     }
     #endregion

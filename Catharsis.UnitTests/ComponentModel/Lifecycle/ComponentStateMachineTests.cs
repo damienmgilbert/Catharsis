@@ -12,7 +12,7 @@ public sealed class ComponentStateMachineTests
 
         machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing));
 
-        Assert.AreEqual(1, machine.Transitions.Count);
+        Assert.HasCount(1, machine.Transitions);
     }
 
     [TestMethod]
@@ -44,7 +44,7 @@ public sealed class ComponentStateMachineTests
     {
         ComponentStateMachine machine = new ComponentStateMachine().ConfigureDefaults();
 
-        Assert.IsTrue(machine.Transitions.Count > 0);
+        Assert.IsNotEmpty(machine.Transitions);
         Assert.IsTrue(machine.CanTransitionTo(ComponentState.Initializing));
     }
 

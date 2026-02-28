@@ -47,7 +47,7 @@ public class ComponentContainerTests
         using ComponentContainer container = new ComponentContainer();
         container.Add(new TestComponent());
         container.Add(new TestComponent());
-        Assert.AreEqual(2, container.Components.Count);
+        Assert.HasCount(2, container.Components);
     }
 
     [TestMethod]

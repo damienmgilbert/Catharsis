@@ -7,6 +7,7 @@ namespace Catharsis.DataStructures;
 public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparable<T>
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a FileName <see cref="Interval{T}"/> with the specified bounds. If <paramref name="start"/> is
     ///greater than <paramref name="end"/>, the values are swapped so the interval is always well-formed.
@@ -35,7 +36,6 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     {
         return !left.Equals(right);
     }
-
     ///<summary>
     ///Determines whether two intervals are equal.
     ///</summary>

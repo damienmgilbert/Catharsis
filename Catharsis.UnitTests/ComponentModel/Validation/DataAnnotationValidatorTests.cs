@@ -37,7 +37,7 @@ public sealed class DataAnnotationValidatorTests
 
         validator.ValidateObject(new PersonModel { Name = null, Age = 200 });
 
-        Assert.IsTrue(changedProperties.Count > 0);
+        Assert.IsNotEmpty(changedProperties);
     }
 
     [TestMethod]
@@ -48,7 +48,7 @@ public sealed class DataAnnotationValidatorTests
 
         List<ErrorInfo> errors = validator.GetErrors("Name").Cast<ErrorInfo>().ToList();
 
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
     }
 
     [TestMethod]
@@ -101,7 +101,7 @@ public sealed class DataAnnotationValidatorTests
         validator.ValidateObject(model);
 
         IReadOnlyList<ErrorInfo> nameErrors = validator.Errors.GetErrorInfos("Name");
-        Assert.AreEqual(1, nameErrors.Count);
+        Assert.HasCount(1, nameErrors);
         Assert.AreEqual("Name is required.", nameErrors[0].Message);
     }
 

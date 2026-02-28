@@ -55,7 +55,7 @@ public class ObserverTests
         // Act
         string result = new Observer().Notify(obj, observer1, observer2, observer3);
         // Assert
-        Assert.AreEqual(3, invocationOrder.Count);
+        Assert.HasCount(3, invocationOrder);
         Assert.AreEqual(1, invocationOrder[0]);
         Assert.AreEqual(2, invocationOrder[1]);
         Assert.AreEqual(3, invocationOrder[2]);

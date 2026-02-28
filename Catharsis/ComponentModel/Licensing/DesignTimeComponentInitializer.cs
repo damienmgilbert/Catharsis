@@ -13,8 +13,8 @@ namespace Catharsis.ComponentModel.Licensing;
 public sealed class DesignTimeComponentInitializer
 {
     #region Fields
-    readonly Dictionary<Type, Dictionary<string, object?>> _defaults = [];
-    readonly Dictionary<Type, Action<IComponent>> _initializers = [];
+    private readonly Dictionary<Type, Dictionary<string, object?>> _defaults = [];
+    private readonly Dictionary<Type, Action<IComponent>> _initializers = [];
     #endregion
 
     #region Public methods
@@ -31,29 +31,27 @@ public sealed class DesignTimeComponentInitializer
     ///</summary>
     ///<param name="component">The component to initialize.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="component"/> is <c>null</c>.
-    ///</exception>
     public void Initialize(IComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         Type type = component.GetType();
 
-        if(_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
+        if (_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
 
             foreach (var (name, value) in props)
             {
                 PropertyDescriptor? prop = properties[name];
-                if((prop is not null) && !prop.IsReadOnly)
+                if ((prop is not null) && !prop.IsReadOnly)
                 {
                     prop.SetValue(component, value);
                 }
             }
         }
 
-        if(_initializers.TryGetValue(type, out Action<IComponent>? initializer))
+        if (_initializers.TryGetValue(type, out Action<IComponent>? initializer))
         {
             initializer(component);
         }
@@ -67,15 +65,13 @@ public sealed class DesignTimeComponentInitializer
     ///<param name="value">The default value.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="propertyName"/> is <c>null</c>.
-    ///</exception>
     public DesignTimeComponentInitializer RegisterDefault<T>(string propertyName, object? value) where T : IComponent
     {
         ArgumentNullException.ThrowIfNull(propertyName);
 
         Type type = typeof(T);
 
-        if(!_defaults.TryGetValue(type, out Dictionary<string, object?> props))
+        if (!_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
         {
             props = new Dictionary<string, object?>(StringComparer.Ordinal);
             _defaults[type] = props;
@@ -92,8 +88,6 @@ public sealed class DesignTimeComponentInitializer
     ///<param name="initializer">The callback to invoke during initialization.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="initializer"/> is <c>null</c>.
-    ///</exception>
     public DesignTimeComponentInitializer RegisterInitializer<T>(Action<T> initializer) where T : IComponent
     {
         ArgumentNullException.ThrowIfNull(initializer);

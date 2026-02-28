@@ -43,9 +43,9 @@ public class GraphTests
         g.AddEdge(2, 4);
         List<int> result = g.BreadthFirst(1).ToList();
         Assert.AreEqual(1, result[0]);
-        Assert.IsTrue(result.Contains(2));
-        Assert.IsTrue(result.Contains(3));
-        Assert.IsTrue(result.Contains(4));
+        Assert.Contains(2, result);
+        Assert.Contains(3, result);
+        Assert.Contains(4, result);
     }
 
     [TestMethod]
@@ -67,9 +67,9 @@ public class GraphTests
         g.AddEdge(1, 3);
         g.AddEdge(2, 4);
         List<int> result = g.DepthFirst(1).ToList();
-        Assert.IsTrue(result.Contains(1));
-        Assert.IsTrue(result.Contains(2));
-        Assert.IsTrue(result.Contains(4));
+        Assert.Contains(1, result);
+        Assert.Contains(2, result);
+        Assert.Contains(4, result);
     }
 
     [TestMethod]
@@ -81,9 +81,9 @@ public class GraphTests
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         List<int> neighbors = g.Neighbors(1).ToList();
-        Assert.AreEqual(2, neighbors.Count);
-        Assert.IsTrue(neighbors.Contains(2));
-        Assert.IsTrue(neighbors.Contains(3));
+        Assert.HasCount(2, neighbors);
+        Assert.Contains(2, neighbors);
+        Assert.Contains(3, neighbors);
     }
 
     [TestMethod]

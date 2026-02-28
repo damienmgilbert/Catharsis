@@ -12,7 +12,7 @@ public class ImmutableBufferTests
     {
         ImmutableArray<int> arr = ImmutableArray.Create(10, 20);
         ImmutableBuffer<int> buf = new ImmutableBuffer<int>(arr);
-        Assert.AreEqual(2, buf.Count);
+        Assert.HasCount(2, buf);
     }
 
     [TestMethod]
@@ -20,7 +20,7 @@ public class ImmutableBufferTests
     {
         ReadOnlySpan<int> data = [1, 2, 3];
         ImmutableBuffer<int> buf = new ImmutableBuffer<int>(data);
-        Assert.AreEqual(3, buf.Count);
+        Assert.HasCount(3, buf);
         Assert.AreEqual(1, buf[0]);
         Assert.AreEqual(3, buf[2]);
     }
@@ -29,7 +29,7 @@ public class ImmutableBufferTests
     public void Empty_ReturnsEmptyBuffer()
     {
         ImmutableBuffer<int> buf = ImmutableBuffer<int>.Empty;
-        Assert.AreEqual(0, buf.Count);
+        Assert.IsEmpty(buf);
         Assert.IsTrue(buf.IsEmpty);
     }
 
@@ -71,7 +71,7 @@ public class ImmutableBufferTests
     {
         ImmutableBuffer<int> buf = ImmutableBuffer<int>.Create([10, 20, 30, 40, 50]);
         ImmutableBuffer<int> sliced = buf.Slice(1, 3);
-        Assert.AreEqual(3, sliced.Count);
+        Assert.HasCount(3, sliced);
         Assert.AreEqual(20, sliced[0]);
         Assert.AreEqual(40, sliced[2]);
     }

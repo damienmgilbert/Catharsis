@@ -15,7 +15,7 @@ public class PooledListTests
             list.Add(i);
         }
 
-        Assert.AreEqual(100, list.Count);
+        Assert.HasCount(100, list);
     }
 
     [TestMethod]
@@ -24,7 +24,7 @@ public class PooledListTests
         using PooledList<int> list = new PooledList<int>();
         list.Add(1);
         list.Add(2);
-        Assert.AreEqual(2, list.Count);
+        Assert.HasCount(2, list);
         Assert.AreEqual(1, list[0]);
         Assert.AreEqual(2, list[1]);
     }
@@ -34,7 +34,7 @@ public class PooledListTests
     {
         using PooledList<int> list = new PooledList<int>();
         list.AddRange([1, 2, 3]);
-        Assert.AreEqual(3, list.Count);
+        Assert.HasCount(3, list);
     }
 
     [TestMethod]
@@ -44,15 +44,15 @@ public class PooledListTests
         list.Add(1);
         list.Add(2);
         list.Clear();
-        Assert.AreEqual(0, list.Count);
+        Assert.IsEmpty(list);
     }
 
     [TestMethod]
     public void Constructor_Default_CreatesEmptyList()
     {
         using PooledList<int> list = new PooledList<int>();
-        Assert.AreEqual(0, list.Count);
-        Assert.IsTrue(list.Capacity >= 16);
+        Assert.IsEmpty(list);
+        Assert.IsGreaterThanOrEqualTo(16, list.Capacity);
     }
 
     [TestMethod]
@@ -108,7 +108,7 @@ public class PooledListTests
         list.Add(1);
         list.Add(3);
         list.Insert(1, 2);
-        Assert.AreEqual(3, list.Count);
+        Assert.HasCount(3, list);
         Assert.AreEqual(2, list[1]);
     }
 
@@ -119,7 +119,7 @@ public class PooledListTests
         list.Add(1);
         list.Add(2);
         Assert.IsTrue(list.Remove(1));
-        Assert.AreEqual(1, list.Count);
+        Assert.HasCount(1, list);
     }
 
     [TestMethod]
@@ -130,7 +130,7 @@ public class PooledListTests
         list.Add(20);
         list.Add(30);
         list.RemoveAt(1);
-        Assert.AreEqual(2, list.Count);
+        Assert.HasCount(2, list);
         Assert.AreEqual(30, list[1]);
     }
     #endregion

@@ -9,15 +9,10 @@ namespace Catharsis.ComponentModel;
 ///validation support with user-friendly error messages.
 ///</summary>
 ///<remarks>
-///<para> Derived classes call <see cref="SetErrors"/> or <see cref="ClearErrors"/> to manage validation errors. The
-///<see cref="ValidateProperty"/> method can be overridden to implement custom validation logic that runs automatically
-///when properties change via <see cref="ObservableComponent.SetProperty{T}"/>.</para> <para> Use <see
-///cref="SetPropertyAndValidate{T}"/> to combine property setting with automatic validation in a single call.</para>
-///</remarks>
 public abstract class ValidatableComponent : ObservableComponent, INotifyDataErrorInfo
 {
     #region Fields
-    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
     #endregion
 
     #region Events
@@ -37,18 +32,18 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(!_errors.TryGetValue(propertyName, out List<string> errors))
+        if (!_errors.TryGetValue(propertyName, out List<string>? errors))
         {
             errors = [];
             _errors[propertyName] = errors;
         }
 
-        if(!errors.Contains(error, StringComparer.Ordinal))
+        if (!errors.Contains(error, StringComparer.Ordinal))
         {
             errors.Add(error);
             OnErrorsChanged(propertyName);
@@ -63,7 +58,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
         List<string> propertyNames = _errors.Keys.ToList();
         _errors.Clear();
 
-        foreach(string name in propertyNames)
+        foreach (string name in propertyNames)
         {
             OnErrorsChanged(name);
         }
@@ -77,12 +72,12 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///</param>
     protected void ClearErrors([CallerMemberName] string? propertyName = null)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(_errors.Remove(propertyName))
+        if (_errors.Remove(propertyName))
         {
             OnErrorsChanged(propertyName);
         }
@@ -91,7 +86,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             _errors.Clear();
             ErrorsChanged = null;
@@ -121,14 +116,14 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
         List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
 
-        if(errorList.Count == 0)
+        if (errorList.Count == 0)
         {
             ClearErrors(propertyName);
             return;
@@ -148,11 +143,9 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the FileName value.
-    ///</returns>
     protected bool SetPropertyAndValidate<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(!SetProperty(ref field, value, propertyName))
+        if (!SetProperty(ref field, value, propertyName))
         {
             return false;
         }
@@ -176,12 +169,12 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(e => e);
         }
 
-        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
+        return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
     }
     #endregion
 

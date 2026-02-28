@@ -7,6 +7,7 @@ namespace Catharsis.Extensions;
 public static class QueueStackExtensions
 {
     #region Public methods
+
     // ── SortedList<TKey, TValue> ────────────────────────────────────────
     ///<summary>
     ///Adds all key-value pairs from <paramref name="items"/> to the sorted list.

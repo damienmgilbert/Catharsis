@@ -24,7 +24,7 @@ public class UniqueElementsAttributeTests
         ValidationResult? result = attribute.GetValidationResult(new[] { "a", "b", "a" }, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("duplicate"));
+        Assert.Contains("duplicate", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -36,7 +36,7 @@ public class UniqueElementsAttributeTests
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3, 2 }, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("index 3"));
+        Assert.Contains("index 3", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class UniqueElementsAttributeTests
         ValidationResult? result = attribute.GetValidationResult(42, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("collection"));
+        Assert.Contains("collection", result!.ErrorMessage!);
     }
 
     [TestMethod]

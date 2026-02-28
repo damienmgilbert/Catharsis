@@ -54,7 +54,7 @@ public sealed class ValidatingObservableComponentTests
 
         IReadOnlyDictionary<string, IReadOnlyList<string>> dict = c.CurrentErrors;
 
-        Assert.IsTrue(dict.Count > 0);
+        Assert.IsNotEmpty(dict);
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public sealed class ValidatingObservableComponentTests
 
         List<string> all = c.GetErrors(null).Cast<string>().ToList();
 
-        Assert.IsTrue(all.Count > 0);
+        Assert.IsNotEmpty(all);
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public sealed class ValidatingObservableComponentTests
 
         List<string> errors = c.GetErrors("Unknown").Cast<string>().ToList();
 
-        Assert.AreEqual(0, errors.Count);
+        Assert.IsEmpty(errors);
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public sealed class ValidatingObservableComponentTests
 
         Assert.IsTrue(c.HasErrors);
         List<string> errors = c.GetErrors("Name").Cast<string>().ToList();
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
         Assert.AreEqual("Name is required.", errors[0]);
     }
 

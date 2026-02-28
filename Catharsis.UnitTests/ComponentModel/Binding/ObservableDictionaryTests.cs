@@ -53,7 +53,7 @@ public sealed class ObservableDictionaryTests
         dict.Clear();
 
         Assert.AreEqual(NotifyCollectionChangedAction.Reset, action);
-        Assert.AreEqual(0, dict.Count);
+        Assert.IsEmpty(dict);
     }
 
     [TestMethod]
@@ -61,7 +61,7 @@ public sealed class ObservableDictionaryTests
     {
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
 
-        Assert.AreEqual(0, dict.Count);
+        Assert.IsEmpty(dict);
     }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public sealed class ObservableDictionaryTests
         Dictionary<string, int> source = new Dictionary<string, int> { ["a"] = 1, ["b"] = 2 };
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>(source);
 
-        Assert.AreEqual(2, dict.Count);
+        Assert.HasCount(2, dict);
         Assert.AreEqual(1, dict["a"]);
     }
 
@@ -101,7 +101,7 @@ public sealed class ObservableDictionaryTests
 
         List<KeyValuePair<string, int>> pairs = dict.ToList();
 
-        Assert.AreEqual(2, pairs.Count);
+        Assert.HasCount(2, pairs);
     }
 
     [TestMethod]
@@ -145,7 +145,7 @@ public sealed class ObservableDictionaryTests
     {
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
 
-        Assert.AreEqual(2, dict.Keys.Count);
+        Assert.HasCount(2, dict.Keys);
     }
 
     [TestMethod]
@@ -236,7 +236,7 @@ public sealed class ObservableDictionaryTests
     {
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
 
-        Assert.AreEqual(2, dict.Values.Count);
+        Assert.HasCount(2, dict.Values);
     }
     #endregion
 }

@@ -20,7 +20,7 @@ public class ObservablePooledBufferTests
     {
         using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
         Assert.AreEqual(0, buf.Count);
-        Assert.IsTrue(buf.Capacity >= 256);
+        Assert.IsGreaterThanOrEqualTo(256, buf.Capacity);
     }
 
     [TestMethod]
@@ -40,7 +40,7 @@ public class ObservablePooledBufferTests
 
         buf.Write([ 42 ]);
 
-        Assert.IsTrue(changedProps.Contains("Count"));
+        Assert.Contains("Count", changedProps);
     }
 
     [TestMethod]

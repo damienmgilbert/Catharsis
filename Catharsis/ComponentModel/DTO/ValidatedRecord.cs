@@ -10,14 +10,10 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap and validate.</typeparam>
 ///<remarks>
-///<para> Validation is performed automatically when <see cref="BindableRecord{T}.Value"/> is set. The <see
-///cref="HasErrors"/> property and <see cref="ErrorsChanged"/> event integrate with standard data-binding error
-///display.</para>
-///</remarks>
 public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where T : class
 {
     #region Fields
-    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
     #endregion
 
     #region Constructors
@@ -26,8 +22,6 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     ///</summary>
     ///<param name="value">The initial record value.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="value"/> is <c>null</c>.
-    ///</exception>
     public ValidatedRecord(T value) : base(value)
     {
     }
@@ -39,9 +33,9 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     #endregion
 
     #region Private methods
-    void AddError(string propertyName, string error)
+    private void AddError(string propertyName, string error)
     {
-        if(!_errors.TryGetValue(propertyName, out List<string> list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
@@ -51,12 +45,12 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
 
-    void ClearAllErrors()
+    private void ClearAllErrors()
     {
         string[] keys = _errors.Keys.ToArray();
         _errors.Clear();
 
-        foreach(string key in keys)
+        foreach (string key in keys)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(key));
         }
@@ -69,7 +63,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     {
         base.OnPropertyChanged(propertyName);
 
-        if(string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
+        if (string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
         {
             Validate();
         }
@@ -80,12 +74,12 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(e => e);
         }
 
-        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
+        return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
     }
 
     ///<summary>
@@ -101,16 +95,17 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
 
         Validator.TryValidateObject(Value, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             List<string> members = result.MemberNames.ToList();
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(string.Empty, result.ErrorMessage ?? "Validation failed.");
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(member, result.ErrorMessage ?? "Validation failed.");
                 }

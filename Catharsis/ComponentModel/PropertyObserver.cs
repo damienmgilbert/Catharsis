@@ -40,7 +40,7 @@ public sealed class PropertyObserver : IDisposable
                     handler();
                 }
             }
-        } else if(_handlers.TryGetValue(e.PropertyName, out List<Action> list))
+        } else if(_handlers.TryGetValue(e.PropertyName, out List<Action>? list))
         {
             foreach(Action handler in list)
             {
@@ -82,7 +82,7 @@ public sealed class PropertyObserver : IDisposable
 
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(!_handlers.TryGetValue(propertyName, out List<Action> list))
+        if(!_handlers.TryGetValue(propertyName, out List<Action>? list))
         {
             list = [];
             _handlers[propertyName] = list;

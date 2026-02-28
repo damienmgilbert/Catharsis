@@ -2,51 +2,69 @@ using Catharsis.Buffers;
 
 namespace Catharsis.UnitTests.Buffers;
 
-/// <summary>
-/// Unit tests for the <see cref="PooledStringBuilder"/> class.
-/// </summary>
+///<summary>
+///Unit tests for the <see cref="PooledStringBuilder"/> class.
+///</summary>
 [TestClass]
 public class PooledStringBuilderTests
 {
-    /// <summary>
-    /// Tests that the default constructor creates a valid instance.
-    /// </summary>
+    #region Public methods
+    ///<summary>
+    ///Tests that Advance throws after disposal.
+    ///</summary>
     [TestMethod]
-    public void Constructor_Default_CreatesInstance()
+    public void Advance_AfterDispose_ThrowsObjectDisposedException()
     {
-        using var sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new PooledStringBuilder();
+        sb.Dispose();
 
-        Assert.AreEqual(0, sb.Length);
-        Assert.IsTrue(sb.Capacity >= 256);
+        Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Advance(1));
     }
 
-    /// <summary>
-    /// Tests that the constructor throws when pool is null.
-    /// </summary>
+    ///<summary>
+    ///Tests IBufferWriter Advance method.
+    ///</summary>
     [TestMethod]
-    public void Constructor_NullPool_ThrowsArgumentNullException()
+    public void Advance_IncreasesLength()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(
-            () => new PooledStringBuilder(null!, 256));
+        using PooledStringBuilder sb = new PooledStringBuilder();
+        sb.GetSpan(5);
+
+        sb.Advance(3);
+
+        Assert.AreEqual(3, sb.Length);
     }
 
-    /// <summary>
-    /// Tests that the constructor throws when capacity is zero.
-    /// </summary>
+    ///<summary>
+    ///Tests that Advance throws for negative count.
+    ///</summary>
     [TestMethod]
-    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException()
+    public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(
-            () => new PooledStringBuilder(0));
+        using PooledStringBuilder sb = new PooledStringBuilder();
+
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => sb.Advance(-1));
     }
 
-    /// <summary>
-    /// Tests that Append(char) appends a single character.
-    /// </summary>
+    ///<summary>
+    ///Tests that Append(char) throws when disposed.
+    ///</summary>
+    [TestMethod]
+    public void Append_Char_AfterDispose_ThrowsObjectDisposedException()
+    {
+        PooledStringBuilder sb = new PooledStringBuilder();
+        sb.Dispose();
+
+        Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Append('A'));
+    }
+
+    ///<summary>
+    ///Tests that Append(char) appends a single character.
+    ///</summary>
     [TestMethod]
     public void Append_Char_AppendsSingleCharacter()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
         sb.Append('A');
 
@@ -54,25 +72,83 @@ public class PooledStringBuilderTests
         Assert.AreEqual("A", sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that Append(char) throws when disposed.
-    /// </summary>
+    ///<summary>
+    ///Tests that Append with empty span does nothing.
+    ///</summary>
     [TestMethod]
-    public void Append_Char_AfterDispose_ThrowsObjectDisposedException()
+    public void Append_EmptySpan_DoesNotChangeLength()
     {
-        var sb = new PooledStringBuilder();
-        sb.Dispose();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
-        Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Append('A'));
+        sb.Append(ReadOnlySpan<char>.Empty);
+
+        Assert.AreEqual(0, sb.Length);
     }
 
-    /// <summary>
-    /// Tests that Append(ReadOnlySpan&lt;char&gt;) appends characters.
-    /// </summary>
+    ///<summary>
+    ///Tests that the buffer grows when capacity is exceeded.
+    ///</summary>
+    [TestMethod]
+    public void Append_ExceedsCapacity_GrowsBuffer()
+    {
+        using PooledStringBuilder sb = new PooledStringBuilder(16);
+        string longText = new('X', 100);
+
+        sb.Append(longText);
+
+        Assert.AreEqual(longText, sb.ToString());
+        Assert.IsGreaterThanOrEqualTo(100, sb.Capacity);
+    }
+
+    ///<summary>
+    ///Tests that Append&lt;T&gt; formats an integer.
+    ///</summary>
+    [TestMethod]
+    public void Append_ISpanFormattable_FormatsValue()
+    {
+        using PooledStringBuilder sb = new PooledStringBuilder();
+
+        sb.Append(42);
+
+        Assert.AreEqual("42", sb.ToString());
+    }
+
+    ///<summary>
+    ///Tests multiple append types in sequence.
+    ///</summary>
+    [TestMethod]
+    public void Append_MixedTypes_ProducesCorrectString()
+    {
+        using PooledStringBuilder sb = new PooledStringBuilder();
+
+        sb.Append("Count: ");
+        sb.Append(42);
+        sb.Append(' ');
+        sb.AppendLine("done");
+
+        Assert.AreEqual($"Count: 42 done{Environment.NewLine}", sb.ToString());
+    }
+
+    ///<summary>
+    ///Tests that Append(null string) does nothing.
+    ///</summary>
+    [TestMethod]
+    public void Append_NullString_DoesNothing()
+    {
+        using PooledStringBuilder sb = new PooledStringBuilder();
+
+        sb.Append((string?)null);
+
+        Assert.AreEqual(0, sb.Length);
+    }
+
+    ///<summary>
+    ///Tests that Append(ReadOnlySpan&lt;char&gt;) appends characters.
+    ///</summary>
     [TestMethod]
     public void Append_Span_AppendsCharacters()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
         ReadOnlySpan<char> text = "Hello".AsSpan();
 
         sb.Append(text);
@@ -80,105 +156,52 @@ public class PooledStringBuilderTests
         Assert.AreEqual("Hello", sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that Append with empty span does nothing.
-    /// </summary>
-    [TestMethod]
-    public void Append_EmptySpan_DoesNotChangeLength()
-    {
-        using var sb = new PooledStringBuilder();
-
-        sb.Append(ReadOnlySpan<char>.Empty);
-
-        Assert.AreEqual(0, sb.Length);
-    }
-
-    /// <summary>
-    /// Tests that Append(string) appends the string.
-    /// </summary>
+    ///<summary>
+    ///Tests that Append(string) appends the string.
+    ///</summary>
     [TestMethod]
     public void Append_String_AppendsString()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
         sb.Append("World");
 
         Assert.AreEqual("World", sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that Append(null string) does nothing.
-    /// </summary>
-    [TestMethod]
-    public void Append_NullString_DoesNothing()
-    {
-        using var sb = new PooledStringBuilder();
-
-        sb.Append((string?)null);
-
-        Assert.AreEqual(0, sb.Length);
-    }
-
-    /// <summary>
-    /// Tests that Append&lt;T&gt; formats an integer.
-    /// </summary>
-    [TestMethod]
-    public void Append_ISpanFormattable_FormatsValue()
-    {
-        using var sb = new PooledStringBuilder();
-
-        sb.Append(42);
-
-        Assert.AreEqual("42", sb.ToString());
-    }
-
-    /// <summary>
-    /// Tests that AppendLine appends a line break.
-    /// </summary>
+    ///<summary>
+    ///Tests that AppendLine appends a line break.
+    ///</summary>
     [TestMethod]
     public void AppendLine_AppendsNewLine()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
         sb.AppendLine();
 
         Assert.AreEqual(Environment.NewLine, sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that AppendLine(string) appends string followed by line break.
-    /// </summary>
+    ///<summary>
+    ///Tests that AppendLine(string) appends string followed by line break.
+    ///</summary>
     [TestMethod]
     public void AppendLine_String_AppendsStringAndNewLine()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
         sb.AppendLine("Hello");
 
-        Assert.AreEqual("Hello" + Environment.NewLine, sb.ToString());
+        Assert.AreEqual($"Hello{Environment.NewLine}", sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that Clear resets the length.
-    /// </summary>
-    [TestMethod]
-    public void Clear_ResetsLength()
-    {
-        using var sb = new PooledStringBuilder();
-        sb.Append("Hello");
-
-        sb.Clear();
-
-        Assert.AreEqual(0, sb.Length);
-    }
-
-    /// <summary>
-    /// Tests that Clear allows reuse.
-    /// </summary>
+    ///<summary>
+    ///Tests that Clear allows reuse.
+    ///</summary>
     [TestMethod]
     public void Clear_AllowsReuse()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
         sb.Append("Old");
         sb.Clear();
 
@@ -187,117 +210,111 @@ public class PooledStringBuilderTests
         Assert.AreEqual("New", sb.ToString());
     }
 
-    /// <summary>
-    /// Tests that WrittenSpan returns the correct span.
-    /// </summary>
+    ///<summary>
+    ///Tests that Clear resets the length.
+    ///</summary>
     [TestMethod]
-    public void WrittenSpan_ReturnsWrittenCharacters()
+    public void Clear_ResetsLength()
     {
-        using var sb = new PooledStringBuilder();
-        sb.Append("ABC");
+        using PooledStringBuilder sb = new PooledStringBuilder();
+        sb.Append("Hello");
 
-        ReadOnlySpan<char> span = sb.WrittenSpan;
+        sb.Clear();
 
-        Assert.AreEqual(3, span.Length);
-        Assert.AreEqual('A', span[0]);
-        Assert.AreEqual('B', span[1]);
-        Assert.AreEqual('C', span[2]);
+        Assert.AreEqual(0, sb.Length);
     }
 
-    /// <summary>
-    /// Tests IBufferWriter Advance method.
-    /// </summary>
+    ///<summary>
+    ///Tests that the default constructor creates a valid instance.
+    ///</summary>
     [TestMethod]
-    public void Advance_IncreasesLength()
+    public void Constructor_Default_CreatesInstance()
     {
-        using var sb = new PooledStringBuilder();
-        sb.GetSpan(5);
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
-        sb.Advance(3);
-
-        Assert.AreEqual(3, sb.Length);
+        Assert.AreEqual(0, sb.Length);
+        Assert.IsGreaterThanOrEqualTo(256, sb.Capacity);
     }
 
-    /// <summary>
-    /// Tests that Advance throws for negative count.
-    /// </summary>
+    ///<summary>
+    ///Tests that the constructor throws when pool is null.
+    ///</summary>
     [TestMethod]
-    public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
-    {
-        using var sb = new PooledStringBuilder();
-
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => sb.Advance(-1));
-    }
-
-    /// <summary>
-    /// Tests that Advance throws after disposal.
-    /// </summary>
+    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PooledStringBuilder(null!, 256)); }
+    ///<summary>
+    ///Tests that the constructor throws when capacity is zero.
+    ///</summary>
     [TestMethod]
-    public void Advance_AfterDispose_ThrowsObjectDisposedException()
+    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new PooledStringBuilder(0)); }
+    ///<summary>
+    ///Tests that Dispose is idempotent.
+    ///</summary>
+    [TestMethod]
+    public void Dispose_CalledMultipleTimes_DoesNotThrow()
     {
-        var sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new PooledStringBuilder();
+
         sb.Dispose();
-
-        Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Advance(1));
+        sb.Dispose();
     }
 
-    /// <summary>
-    /// Tests that GetMemory returns writable memory.
-    /// </summary>
-    [TestMethod]
-    public void GetMemory_ReturnsWritableMemory()
-    {
-        using var sb = new PooledStringBuilder();
-
-        Memory<char> mem = sb.GetMemory(10);
-
-        Assert.IsTrue(mem.Length >= 10);
-    }
-
-    /// <summary>
-    /// Tests that GetMemory throws after disposal.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetMemory throws after disposal.
+    ///</summary>
     [TestMethod]
     public void GetMemory_AfterDispose_ThrowsObjectDisposedException()
     {
-        var sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new PooledStringBuilder();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.GetMemory(1));
     }
 
-    /// <summary>
-    /// Tests that GetSpan returns writable span.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetMemory returns writable memory.
+    ///</summary>
     [TestMethod]
-    public void GetSpan_ReturnsWritableSpan()
+    public void GetMemory_ReturnsWritableMemory()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
 
-        Span<char> span = sb.GetSpan(10);
+        Memory<char> mem = sb.GetMemory(10);
 
-        Assert.IsTrue(span.Length >= 10);
+        Assert.IsGreaterThanOrEqualTo(10, mem.Length);
     }
 
-    /// <summary>
-    /// Tests that GetSpan throws after disposal.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetSpan throws after disposal.
+    ///</summary>
     [TestMethod]
     public void GetSpan_AfterDispose_ThrowsObjectDisposedException()
     {
-        var sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new PooledStringBuilder();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.GetSpan(1));
     }
 
-    /// <summary>
-    /// Tests that ToString returns the accumulated string.
-    /// </summary>
+    ///<summary>
+    ///Tests that GetSpan returns writable span.
+    ///</summary>
+    [TestMethod]
+    public void GetSpan_ReturnsWritableSpan()
+    {
+        using PooledStringBuilder sb = new PooledStringBuilder();
+
+        Span<char> span = sb.GetSpan(10);
+
+        Assert.IsGreaterThanOrEqualTo(10, span.Length);
+    }
+
+    ///<summary>
+    ///Tests that ToString returns the accumulated string.
+    ///</summary>
     [TestMethod]
     public void ToString_ReturnsAccumulatedString()
     {
-        using var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
         sb.Append("Hello, ");
         sb.Append("World!");
 
@@ -306,13 +323,13 @@ public class PooledStringBuilderTests
         Assert.AreEqual("Hello, World!", result);
     }
 
-    /// <summary>
-    /// Tests that ToStringAndDispose returns string and disposes.
-    /// </summary>
+    ///<summary>
+    ///Tests that ToStringAndDispose returns string and disposes.
+    ///</summary>
     [TestMethod]
     public void ToStringAndDispose_ReturnsStringAndDisposes()
     {
-        var sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new PooledStringBuilder();
         sb.Append("Test");
 
         string result = sb.ToStringAndDispose();
@@ -322,46 +339,21 @@ public class PooledStringBuilderTests
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Append('X'));
     }
 
-    /// <summary>
-    /// Tests that Dispose is idempotent.
-    /// </summary>
+    ///<summary>
+    ///Tests that WrittenSpan returns the correct span.
+    ///</summary>
     [TestMethod]
-    public void Dispose_CalledMultipleTimes_DoesNotThrow()
+    public void WrittenSpan_ReturnsWrittenCharacters()
     {
-        var sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new PooledStringBuilder();
+        sb.Append("ABC");
 
-        sb.Dispose();
-        sb.Dispose();
+        ReadOnlySpan<char> span = sb.WrittenSpan;
+
+        Assert.AreEqual(3, span.Length);
+        Assert.AreEqual('A', span[0]);
+        Assert.AreEqual('B', span[1]);
+        Assert.AreEqual('C', span[2]);
     }
-
-    /// <summary>
-    /// Tests that the buffer grows when capacity is exceeded.
-    /// </summary>
-    [TestMethod]
-    public void Append_ExceedsCapacity_GrowsBuffer()
-    {
-        using var sb = new PooledStringBuilder(16);
-        string longText = new('X', 100);
-
-        sb.Append(longText);
-
-        Assert.AreEqual(longText, sb.ToString());
-        Assert.IsTrue(sb.Capacity >= 100);
-    }
-
-    /// <summary>
-    /// Tests multiple append types in sequence.
-    /// </summary>
-    [TestMethod]
-    public void Append_MixedTypes_ProducesCorrectString()
-    {
-        using var sb = new PooledStringBuilder();
-
-        sb.Append("Count: ");
-        sb.Append(42);
-        sb.Append(' ');
-        sb.AppendLine("done");
-
-        Assert.AreEqual("Count: 42 done" + Environment.NewLine, sb.ToString());
-    }
+    #endregion
 }

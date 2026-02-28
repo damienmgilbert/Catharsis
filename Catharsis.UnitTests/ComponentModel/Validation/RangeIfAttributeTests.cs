@@ -22,7 +22,7 @@ public sealed class RangeIfAttributeTests
         RangeIfAttribute attr = new RangeIfAttribute("Prop", true, 1, 100);
 
         Assert.AreEqual("Prop", attr.DependentProperty);
-        Assert.AreEqual(true, attr.TargetValue);
+        Assert.IsTrue((bool?)attr.TargetValue);
         Assert.AreEqual(1, attr.Minimum);
         Assert.AreEqual(100, attr.Maximum);
     }
@@ -36,10 +36,10 @@ public sealed class RangeIfAttributeTests
 
         string msg = attr.FormatErrorMessage("Score");
 
-        Assert.IsTrue(msg.Contains("Score"));
-        Assert.IsTrue(msg.Contains("1"));
-        Assert.IsTrue(msg.Contains("100"));
-        Assert.IsTrue(msg.Contains("Flag"));
+        Assert.Contains("Score", msg);
+        Assert.Contains("1", msg);
+        Assert.Contains("100", msg);
+        Assert.Contains("Flag", msg);
     }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public sealed class RangeIfAttributeTests
         bool isValid = Validator.TryValidateProperty(model.Score, context, results);
 
         Assert.IsFalse(isValid);
-        Assert.AreEqual(1, results.Count);
+        Assert.HasCount(1, results);
     }
 
     [TestMethod]
@@ -112,7 +112,7 @@ public sealed class RangeIfAttributeTests
         List<ValidationResult> results = new List<ValidationResult>();
 
         Assert.IsFalse(Validator.TryValidateProperty(model.Rate, context, results));
-        Assert.AreEqual(1, results.Count);
+        Assert.HasCount(1, results);
     }
 
     [TestMethod]

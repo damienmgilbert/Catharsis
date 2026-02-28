@@ -27,7 +27,7 @@ public sealed class ComponentActionListTests
         {
         }));
 
-        Assert.AreEqual(1, list.Count);
+        Assert.HasCount(1, list);
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public sealed class ComponentActionListTests
         },
         "Reset everything");
 
-        Assert.AreEqual(1, list.Count);
+        Assert.HasCount(1, list);
         Assert.AreEqual("Reset", list[0].Text);
         Assert.AreEqual("Reset everything", list[0].Description);
     }
@@ -60,7 +60,7 @@ public sealed class ComponentActionListTests
 
         list.ExposeClearVerbs();
 
-        Assert.AreEqual(0, list.Count);
+        Assert.IsEmpty(list);
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public sealed class ComponentActionListTests
     {
         TestActionList list = CreateActionList();
 
-        Assert.AreEqual(0, list.Count);
+        Assert.IsEmpty(list);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public sealed class ComponentActionListTests
 
         List<string> names = list.Select(v => v.Text).ToList();
 
-        Assert.AreEqual(2, names.Count);
+        Assert.HasCount(2, names);
         CollectionAssert.Contains(names, "A");
         CollectionAssert.Contains(names, "B");
     }

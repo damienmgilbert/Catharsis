@@ -17,14 +17,14 @@ public class ValueStopwatchTests
     public void GetElapsedMicroseconds_ReturnsNonNegative()
     {
         ValueStopwatch sw = ValueStopwatch.StartNew();
-        Assert.IsTrue(sw.GetElapsedMicroseconds() >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, sw.GetElapsedMicroseconds());
     }
 
     [TestMethod]
     public void GetElapsedMilliseconds_ReturnsNonNegative()
     {
         ValueStopwatch sw = ValueStopwatch.StartNew();
-        Assert.IsTrue(sw.GetElapsedMilliseconds() >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, sw.GetElapsedMilliseconds());
     }
 
     [TestMethod]
@@ -40,7 +40,7 @@ public class ValueStopwatchTests
         ValueStopwatch sw = ValueStopwatch.StartNew();
         Thread.Sleep(10);
         TimeSpan elapsed = sw.GetElapsedTime();
-        Assert.IsTrue(elapsed.TotalMilliseconds >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, elapsed.TotalMilliseconds);
     }
 
     [TestMethod]

@@ -22,8 +22,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        bool invoked = false;
-        ComponentVerb verb = new ComponentVerb("Reset", () => invoked = true, "Resets state", Enabled: true);
+        ComponentVerb verb = new ComponentVerb("Reset", () => { }, "Resets state", Enabled: true);
 
         Assert.AreEqual("Reset", verb.Text);
         Assert.AreEqual("Resets state", verb.Description);

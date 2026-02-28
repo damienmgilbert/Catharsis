@@ -7,15 +7,11 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///dependencies between them.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="AddComponent"/> to register components, <see cref="AddDependency"/> to declare edges, and <see
-///cref="Build"/> to produce the final graph. The builder validates the graph for cycles during <see
-///cref="Build"/>.</para>
-///</remarks>
 public sealed class ComponentGraphBuilder
 {
     #region Fields
-    readonly List<(IComponent Dependent, IComponent Dependency)> _edges = [];
-    readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
+    private readonly List<(IComponent Dependent, IComponent Dependency)> _edges = [];
+    private readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
     #endregion
 
     #region Public methods
@@ -26,16 +22,11 @@ public sealed class ComponentGraphBuilder
     ///<param name="name">An optional display name for the node.</param>
     ///<returns>This builder, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="component"/> is <c>null</c>.
-    ///</exception>
-    ///<exception cref="InvalidOperationException">
-    ///The component has already been registered.
-    ///</exception>
     public ComponentGraphBuilder AddComponent(IComponent component, string? name = null)
     {
         ArgumentNullException.ThrowIfNull(component);
 
-        if(_nodes.ContainsKey(component))
+        if (_nodes.ContainsKey(component))
         {
             throw new InvalidOperationException($"Component '{name ?? component.GetType().Name}' is already registered.");
         }
@@ -74,19 +65,19 @@ public sealed class ComponentGraphBuilder
     {
         ComponentGraph graph = new ComponentGraph();
 
-        foreach(ComponentGraphNode node in _nodes.Values)
+        foreach (ComponentGraphNode node in _nodes.Values)
         {
             graph.AddNode(node);
         }
 
         foreach (var (dependent, dependency) in _edges)
         {
-            if(!_nodes.TryGetValue(dependent, out ComponentGraphNode dependentNode))
+            if (!_nodes.TryGetValue(dependent, out ComponentGraphNode? dependentNode))
             {
                 throw new InvalidOperationException($"Dependent component '{dependent.GetType().Name}' is not registered in the graph.");
             }
 
-            if(!_nodes.TryGetValue(dependency, out ComponentGraphNode dependencyNode))
+            if (!_nodes.TryGetValue(dependency, out ComponentGraphNode? dependencyNode))
             {
                 throw new InvalidOperationException($"Dependency component '{dependency.GetType().Name}' is not registered in the graph.");
             }

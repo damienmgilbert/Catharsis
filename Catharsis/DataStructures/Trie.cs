@@ -16,7 +16,7 @@ public class Trie
 
         foreach(char c in prefix)
         {
-            if(!current.Children.TryGetValue(c, out TrieNode child))
+            if(!current.Children.TryGetValue(c, out TrieNode? child))
             {
                 return null;
             }
@@ -42,7 +42,7 @@ public class Trie
 
         char c = word[index];
 
-        if(!node.Children.TryGetValue(c, out TrieNode child))
+        if(!node.Children.TryGetValue(c, out TrieNode? child))
         {
             return false;
         }
@@ -124,7 +124,7 @@ public class Trie
 
         foreach(char c in word)
         {
-            if(!current.Children.TryGetValue(c, out TrieNode child))
+            if(!current.Children.TryGetValue(c, out TrieNode? child))
             {
                 child = new TrieNode();
                 current.Children[c] = child;

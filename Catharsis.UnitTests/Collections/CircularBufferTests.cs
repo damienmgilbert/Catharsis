@@ -10,7 +10,7 @@ public class CircularBufferTests
     {
         CircularBuffer<int> buffer = new CircularBuffer<int>(5);
         Assert.AreEqual(5, buffer.Capacity);
-        Assert.AreEqual(0, buffer.Count);
+        Assert.IsEmpty(buffer);
         Assert.IsFalse(buffer.IsFull);
     }
 
@@ -26,7 +26,7 @@ public class CircularBufferTests
         CircularBuffer<int> buffer = new CircularBuffer<int>(3);
         buffer.Add(1);
         buffer.Add(2);
-        Assert.AreEqual(2, buffer.Count);
+        Assert.HasCount(2, buffer);
         Assert.IsFalse(buffer.IsFull);
     }
 
@@ -37,7 +37,7 @@ public class CircularBufferTests
         buffer.Add(1); buffer.Add(2); buffer.Add(3);
         Assert.IsTrue(buffer.IsFull);
         buffer.Add(4);
-        Assert.AreEqual(3, buffer.Count);
+        Assert.HasCount(3, buffer);
         Assert.AreEqual(2, buffer.Peek());
     }
 
@@ -62,7 +62,7 @@ public class CircularBufferTests
         CircularBuffer<int> buffer = new CircularBuffer<int>(3);
         buffer.Add(1); buffer.Add(2); buffer.Add(3);
         Assert.AreEqual(1, buffer.Remove());
-        Assert.AreEqual(2, buffer.Count);
+        Assert.HasCount(2, buffer);
         Assert.AreEqual(2, buffer.Peek());
     }
 
@@ -79,7 +79,7 @@ public class CircularBufferTests
         CircularBuffer<int> buffer = new CircularBuffer<int>(3);
         buffer.Add(1); buffer.Add(2);
         buffer.Clear();
-        Assert.AreEqual(0, buffer.Count);
+        Assert.IsEmpty(buffer);
         Assert.IsFalse(buffer.IsFull);
     }
 

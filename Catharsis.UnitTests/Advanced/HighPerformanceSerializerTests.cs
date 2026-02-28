@@ -1,5 +1,4 @@
 using System.Buffers;
-using Catharsis;
 using Catharsis.Advanced;
 using Catharsis.Buffers;
 using CommunityToolkit.HighPerformance.Buffers;
@@ -9,31 +8,20 @@ namespace Catharsis.UnitTests.Advanced;
 [TestClass]
 public class HighPerformanceSerializerTests
 {
-    sealed class TestSerializable : ISequenceSerializable
+    #region Public methods
+    [TestMethod]
+    public void Dispose_IsIdempotent()
     {
-        readonly byte[] _data;
-        public TestSerializable(byte[] data)
-        {
-            _data = data;
-        }
-
-        public int GetSerializedSize()
-        {
-            return _data.Length;
-        }
-        public void Serialize(IBufferWriter<byte> writer)
-        {
-            Span<byte> span = writer.GetSpan(_data.Length);
-            _data.CopyTo(span);
-            writer.Advance(_data.Length);
-        }
+        HighPerformanceSerializer serializer = new HighPerformanceSerializer();
+        serializer.Dispose();
+        serializer.Dispose();
     }
 
     [TestMethod]
     public void Serialize_ReturnsPooledArray()
     {
         using HighPerformanceSerializer serializer = new HighPerformanceSerializer();
-        TestSerializable obj = new TestSerializable([1, 2, 3]);
+        TestSerializable obj = new TestSerializable([ 1, 2, 3 ]);
 
         byte[] result = serializer.Serialize(obj, out int bytesWritten);
 
@@ -47,19 +35,34 @@ public class HighPerformanceSerializerTests
     public void SerializeToMemoryOwner_ReturnsOwner()
     {
         using HighPerformanceSerializer serializer = new HighPerformanceSerializer();
-        TestSerializable obj = new TestSerializable([10, 20]);
+        TestSerializable obj = new TestSerializable([ 10, 20 ]);
 
         using MemoryOwner<byte> owner = serializer.SerializeToMemoryOwner(obj);
 
         Assert.AreEqual(2, owner.Length);
         Assert.AreEqual(10, owner.Span[0]);
     }
+    #endregion
 
-    [TestMethod]
-    public void Dispose_IsIdempotent()
+    sealed class TestSerializable : ISequenceSerializable
     {
-        HighPerformanceSerializer serializer = new HighPerformanceSerializer();
-        serializer.Dispose();
-        serializer.Dispose();
+        #region Fields
+        readonly byte[] _data;
+        #endregion
+
+        #region Constructors
+        public TestSerializable(byte[] data) { _data = data; }
+        #endregion
+
+        #region Public methods
+        public int GetSerializedSize() { return _data.Length; }
+
+        public void Serialize(IBufferWriter<byte> writer)
+        {
+            Span<byte> span = writer.GetSpan(_data.Length);
+            _data.CopyTo(span);
+            writer.Advance(_data.Length);
+        }
+        #endregion
     }
 }

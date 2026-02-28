@@ -39,7 +39,7 @@ public class CollectionCountAttributeTests
         ValidationResult? result = attribute.GetValidationResult(new[] { 1 }, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("between"));
+        Assert.Contains("between", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -106,7 +106,7 @@ public class CollectionCountAttributeTests
         ValidationResult? result = attribute.GetValidationResult(42, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("collection"));
+        Assert.Contains("collection", result!.ErrorMessage!);
     }
 
     [TestMethod]

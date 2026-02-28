@@ -17,7 +17,7 @@ public sealed class PropertyChangeBatcherTests
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
 
-        Assert.AreEqual(0, raised.Count);
+        Assert.IsEmpty(raised);
         Assert.IsTrue(batcher.IsBatching);
         Assert.AreEqual(1, batcher.PendingCount);
 
@@ -48,12 +48,12 @@ public sealed class PropertyChangeBatcherTests
         source.RaisePropertyChanged("Name");
         batcher.Dispose();
 
-        Assert.AreEqual(1, raised.Count);
+        Assert.HasCount(1, raised);
 
         // After dispose, source events are no longer forwarded
         raised.Clear();
         source.RaisePropertyChanged("Age");
-        Assert.AreEqual(0, raised.Count);
+        Assert.IsEmpty(raised);
     }
 
     [TestMethod]
@@ -69,7 +69,7 @@ public sealed class PropertyChangeBatcherTests
         source.RaisePropertyChanged("Name");
         batcher.EndBatch();
 
-        Assert.AreEqual(1, raised.Count);
+        Assert.HasCount(1, raised);
     }
 
     [TestMethod]
@@ -84,7 +84,7 @@ public sealed class PropertyChangeBatcherTests
         source.RaisePropertyChanged("Age");
         batcher.EndBatch();
 
-        Assert.AreEqual(2, raised.Count);
+        Assert.HasCount(2, raised);
         CollectionAssert.Contains(raised, "Name");
         CollectionAssert.Contains(raised, "Age");
     }
@@ -113,7 +113,7 @@ public sealed class PropertyChangeBatcherTests
         source.RaisePropertyChanged("Name");
         batcher.Flush();
 
-        Assert.AreEqual(1, raised.Count);
+        Assert.HasCount(1, raised);
         Assert.AreEqual(0, batcher.PendingCount);
 
         batcher.EndBatch();
@@ -128,7 +128,7 @@ public sealed class PropertyChangeBatcherTests
 
         batcher.Flush();
 
-        Assert.AreEqual(0, raised.Count);
+        Assert.IsEmpty(raised);
     }
 
     [TestMethod]
@@ -155,10 +155,10 @@ public sealed class PropertyChangeBatcherTests
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
         batcher.EndBatch(); // inner end
-        Assert.AreEqual(0, raised.Count);
+        Assert.IsEmpty(raised);
 
         batcher.EndBatch(); // outer end
-        Assert.AreEqual(1, raised.Count);
+        Assert.HasCount(1, raised);
     }
 
     [TestMethod]
@@ -170,7 +170,7 @@ public sealed class PropertyChangeBatcherTests
 
         source.RaisePropertyChanged("Name");
 
-        Assert.AreEqual(1, raised.Count);
+        Assert.HasCount(1, raised);
         Assert.AreEqual("Name", raised[0]);
     }
 

@@ -80,7 +80,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<string> members = agg.GetAffectedMembers();
 
-        Assert.AreEqual(2, members.Count);
+        Assert.HasCount(2, members);
         CollectionAssert.Contains(members.ToList(), "Name");
         CollectionAssert.Contains(members.ToList(), "Age");
     }
@@ -94,7 +94,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> all = agg.GetAll();
 
-        Assert.AreEqual(2, all.Count);
+        Assert.HasCount(2, all);
     }
 
     [TestMethod]
@@ -107,7 +107,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<ValidationResult> nameErrors = agg.GetByMember("Name");
 
-        Assert.AreEqual(2, nameErrors.Count);
+        Assert.HasCount(2, nameErrors);
     }
 
     [TestMethod]
@@ -128,7 +128,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<ValidationResult> errors = agg.GetBySeverity(ValidationSeverity.Error);
 
-        Assert.AreEqual(2, errors.Count);
+        Assert.HasCount(2, errors);
     }
 
     [TestMethod]
@@ -168,7 +168,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
 
-        Assert.AreEqual(2, infos.Count);
+        Assert.HasCount(2, infos);
         Assert.AreEqual("err1", infos[0].Message);
         Assert.AreEqual(ValidationSeverity.Error, infos[0].Severity);
         Assert.AreEqual("Name", infos[0].PropertyName);
@@ -184,7 +184,7 @@ public sealed class ValidationResultAggregatorTests
 
         IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
 
-        Assert.AreEqual(2, infos.Count);
+        Assert.HasCount(2, infos);
         Assert.AreEqual("A", infos[0].PropertyName);
         Assert.AreEqual("B", infos[1].PropertyName);
     }

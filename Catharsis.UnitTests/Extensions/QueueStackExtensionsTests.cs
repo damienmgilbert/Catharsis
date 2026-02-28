@@ -14,7 +14,7 @@ public class QueueStackExtensionsTests
         source.Enqueue("a", 1);
         source.Enqueue("b", 2);
         List<string> result = source.DequeueRange(2);
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual("a", result[0]);
         Assert.AreEqual("b", result[1]);
         Assert.AreEqual(1, source.Count);
@@ -36,7 +36,7 @@ public class QueueStackExtensionsTests
         Queue<int> source = new Queue<int>(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.DequeueRange(3);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result);
-        Assert.AreEqual(2, source.Count);
+        Assert.HasCount(2, source);
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ public class QueueStackExtensionsTests
         Queue<int> source = new Queue<int>(new[] { 1, 2 });
         List<int> result = source.DequeueRange(10);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result);
-        Assert.AreEqual(0, source.Count);
+        Assert.IsEmpty(source);
     }
 
     [TestMethod]
@@ -53,8 +53,8 @@ public class QueueStackExtensionsTests
     {
         Queue<int> source = new Queue<int>(new[] { 1, 2, 3 });
         List<int> result = source.DequeueRange(0);
-        Assert.AreEqual(0, result.Count);
-        Assert.AreEqual(3, source.Count);
+        Assert.IsEmpty(result);
+        Assert.HasCount(3, source);
     }
 
     // ── Queue<T> ────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ public class QueueStackExtensionsTests
     {
         Queue<int> source = new Queue<int>();
         source.EnqueueRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
         Assert.AreEqual(1, source.Dequeue());
         Assert.AreEqual(2, source.Dequeue());
         Assert.AreEqual(3, source.Dequeue());
@@ -84,7 +84,7 @@ public class QueueStackExtensionsTests
     {
         SortedDictionary<string, int> source = new SortedDictionary<string, int> { { "a", 1 } };
         source.AddRange(new Dictionary<string, int> { { "b", 2 }, { "c", 3 } });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]
@@ -102,7 +102,7 @@ public class QueueStackExtensionsTests
         SortedDictionary<string, int> source = new SortedDictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveRange(new[] { "a", "c" });
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     [TestMethod]
@@ -111,7 +111,7 @@ public class QueueStackExtensionsTests
         SortedDictionary<string, int> source = new SortedDictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveWhere(kvp => kvp.Value <= 2);
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     // ── SortedList<TKey, TValue> ────────────────────────────────────
@@ -120,7 +120,7 @@ public class QueueStackExtensionsTests
     {
         SortedList<string, int> source = new SortedList<string, int> { { "a", 1 } };
         source.AddRange(new Dictionary<string, int> { { "b", 2 }, { "c", 3 } });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
         Assert.AreEqual(2, source["b"]);
     }
 
@@ -139,7 +139,7 @@ public class QueueStackExtensionsTests
         SortedList<string, int> source = new SortedList<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveRange(new[] { "a", "c", "z" });
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     [TestMethod]
@@ -148,7 +148,7 @@ public class QueueStackExtensionsTests
         SortedList<string, int> source = new SortedList<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveWhere(kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     [TestMethod]
@@ -164,8 +164,8 @@ public class QueueStackExtensionsTests
     {
         Stack<int> source = new Stack<int>(new[] { 2, 1 });
         List<int> result = source.PopRange(10);
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual(0, source.Count);
+        Assert.HasCount(2, result);
+        Assert.IsEmpty(source);
     }
 
     [TestMethod]
@@ -173,8 +173,8 @@ public class QueueStackExtensionsTests
     {
         Stack<int> source = new Stack<int>(new[] { 5, 4, 3, 2, 1 });
         List<int> result = source.PopRange(3);
-        Assert.AreEqual(3, result.Count);
-        Assert.AreEqual(2, source.Count);
+        Assert.HasCount(3, result);
+        Assert.HasCount(2, source);
     }
 
     // ── Stack<T> ────────────────────────────────────────────────────
@@ -183,7 +183,7 @@ public class QueueStackExtensionsTests
     {
         Stack<int> source = new Stack<int>();
         source.PushRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
         Assert.AreEqual(3, source.Pop());
         Assert.AreEqual(2, source.Pop());
         Assert.AreEqual(1, source.Pop());

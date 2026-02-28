@@ -1,4 +1,4 @@
-﻿using Catharsis.Extensions;
+using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
@@ -2545,7 +2545,7 @@ public class ControlFlowTests
         await obj.IfElseAsync(condition, ifAction, elseAction);
 
         // Assert
-        Assert.AreEqual(2, executionOrder.Count);
+        Assert.HasCount(2, executionOrder);
         Assert.AreEqual("condition", executionOrder[0]);
         Assert.AreEqual("elseAction", executionOrder[1]);
     }
@@ -2582,7 +2582,7 @@ public class ControlFlowTests
         await obj.IfElseAsync(condition, ifAction, elseAction);
 
         // Assert
-        Assert.AreEqual(2, executionOrder.Count);
+        Assert.HasCount(2, executionOrder);
         Assert.AreEqual("condition", executionOrder[0]);
         Assert.AreEqual("ifAction", executionOrder[1]);
     }
@@ -4101,8 +4101,8 @@ public class ControlFlowTests
     {
         // Arrange
         string input = "hello";
-        Func<string, bool> condition = s => s == "hello";
-        Func<string, string?> action = s => null;
+        Func<string?, bool> condition = s => s == "hello";
+        Func<string?, string?> action = s => null;
 
         // Act
         string? result = input.ReturnIf(condition, action);
@@ -4960,7 +4960,7 @@ public class ControlFlowTests
         // Arrange
         string? obj = null;
         Func<string?, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<string?, CancellationToken, ValueTask<string?>> action = (o, ct) => ValueTask.FromResult("not null");
+        Func<string?, CancellationToken, ValueTask<string?>> action = (o, ct) => ValueTask.FromResult<string?>("not null");
 
         // Act
         string? result = await obj.ReturnIfAsync(condition, action, CancellationToken.None);
@@ -5263,9 +5263,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, bool> condition = s => s.Length > 0;
-        Func<string, string> ifAction = s => s;
-        Func<string, string?> elseAction = s => null;
+        Func<string?, bool> condition = s => s is { Length: > 0 };
+        Func<string?, string?> ifAction = s => s;
+        Func<string?, string?> elseAction = s => null;
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5303,9 +5303,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, bool> condition = s => s.Length > 0;
-        Func<string, string?> ifAction = s => null;
-        Func<string, string> elseAction = s => s;
+        Func<string?, bool> condition = s => s is { Length: > 0 };
+        Func<string?, string?> ifAction = s => null;
+        Func<string?, string?> elseAction = s => s;
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -7083,7 +7083,7 @@ public class ControlFlowTests
         Func<int[]> action = () => replacement;
 
         // Act
-        int[] result = obj.ReturnIfNull(action);
+        int[]? result = obj.ReturnIfNull(action);
 
         // Assert
         Assert.AreSame(replacement, result);
@@ -7106,7 +7106,7 @@ public class ControlFlowTests
         };
 
         // Act
-        string result = obj.ReturnIfNull(action);
+        string? result = obj.ReturnIfNull(action);
 
         // Assert
         Assert.AreEqual("replacement", result);
@@ -7124,7 +7124,7 @@ public class ControlFlowTests
         Func<string> action = () => "replacement";
 
         // Act
-        string result = obj.ReturnIfNull(action);
+        string? result = obj.ReturnIfNull(action);
 
         // Assert
         Assert.AreEqual("replacement", result);
@@ -7200,7 +7200,7 @@ public class ControlFlowTests
         string? testObject = null;
         string expectedResult = "async result";
         bool actionExecuted = false;
-        Func<CancellationToken, Task<string>> action = async ct =>
+        Func<CancellationToken, Task<string?>> action = async ct =>
         {
             await Task.Delay(10, ct);
             actionExecuted = true;
@@ -7225,7 +7225,7 @@ public class ControlFlowTests
         // Arrange
         string? obj = null;
         bool actionExecuted = false;
-        Func<CancellationToken, ValueTask<string>> action = async ct =>
+        Func<CancellationToken, ValueTask<string?>> action = async ct =>
         {
             await Task.Delay(10, ct);
             actionExecuted = true;
@@ -7250,10 +7250,10 @@ public class ControlFlowTests
         // Arrange
         string? testObject = null;
         CancellationToken? receivedToken = null;
-        Func<CancellationToken, Task<string>> action = ct =>
+        Func<CancellationToken, Task<string?>> action = ct =>
         {
             receivedToken = ct;
-            return Task.FromResult("result");
+            return Task.FromResult<string?>("result");
         };
 
         // Act
@@ -7274,10 +7274,10 @@ public class ControlFlowTests
         // Arrange
         string? obj = null;
         CancellationToken? receivedToken = null;
-        Func<CancellationToken, ValueTask<string>> action = ct =>
+        Func<CancellationToken, ValueTask<string?>> action = ct =>
         {
             receivedToken = ct;
-            return ValueTask.FromResult("result");
+            return ValueTask.FromResult<string?>("result");
         };
 
         // Act
@@ -7323,7 +7323,7 @@ public class ControlFlowTests
         // Arrange
         string? testObject = null;
         string expectedResult = "replacement value";
-        Func<CancellationToken, Task<string>> action = ct => Task.FromResult(expectedResult);
+        Func<CancellationToken, Task<string?>> action = ct => Task.FromResult<string?>(expectedResult);
 
         // Act
         string? result = await testObject.ReturnIfNullAsync(action, CancellationToken.None);
@@ -7344,10 +7344,10 @@ public class ControlFlowTests
         string? testObject = null;
         CancellationTokenSource cts = new CancellationTokenSource();
         CancellationToken? receivedToken = null;
-        Func<CancellationToken, Task<string>> action = ct =>
+        Func<CancellationToken, Task<string?>> action = ct =>
         {
             receivedToken = ct;
-            return Task.FromResult("result");
+            return Task.FromResult<string?>("result");
         };
 
         // Act
@@ -7368,7 +7368,7 @@ public class ControlFlowTests
         // Arrange
         object? obj = null;
         object replacement = new object();
-        Func<CancellationToken, ValueTask<object>> action = ct => ValueTask.FromResult(replacement);
+        Func<CancellationToken, ValueTask<object?>> action = ct => ValueTask.FromResult<object?>(replacement);
 
         // Act
         object? result = await obj.ReturnIfNullAsync(action);
@@ -7413,10 +7413,10 @@ public class ControlFlowTests
         string? obj = null;
         CancellationTokenSource cts = new CancellationTokenSource();
         CancellationToken? receivedToken = null;
-        Func<CancellationToken, ValueTask<string>> action = ct =>
+        Func<CancellationToken, ValueTask<string?>> action = ct =>
         {
             receivedToken = ct;
-            return ValueTask.FromResult("result");
+            return ValueTask.FromResult<string?>("result");
         };
 
         // Act
@@ -7462,10 +7462,10 @@ public class ControlFlowTests
         // Arrange
         string? obj = null;
         bool actionCalled = false;
-        Func<CancellationToken, ValueTask<string>> action = ct =>
+        Func<CancellationToken, ValueTask<string?>> action = ct =>
         {
             actionCalled = true;
-            return ValueTask.FromResult("replacement");
+            return ValueTask.FromResult<string?>("replacement");
         };
         CancellationToken cancellation = default;
 
@@ -7487,7 +7487,7 @@ public class ControlFlowTests
     public async Task ReturnIfNullAsync_VariousScenarios_WorksCorrectly(string? input, string actionResult, string expected)
     {
         // Arrange
-        Func<CancellationToken, ValueTask<string>> action = ct => ValueTask.FromResult(actionResult);
+        Func<CancellationToken, ValueTask<string?>> action = ct => ValueTask.FromResult<string?>(actionResult);
 
         // Act
         string? result = await input.ReturnIfNullAsync(action);

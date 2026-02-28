@@ -33,7 +33,7 @@ public class LruCacheTests
         LruCache<string, int> cache = new LruCache<string, int>(3);
         cache.AddOrUpdate("a", 1);
         cache.Clear();
-        Assert.AreEqual(0, cache.Count);
+        Assert.IsEmpty(cache);
     }
 
     [TestMethod]
@@ -61,7 +61,7 @@ public class LruCacheTests
         LruCache<string, int> cache = new LruCache<string, int>(3);
         cache.AddOrUpdate("a", 1);
         Assert.IsTrue(cache.Remove("a"));
-        Assert.AreEqual(0, cache.Count);
+        Assert.IsEmpty(cache);
     }
 
     [TestMethod]

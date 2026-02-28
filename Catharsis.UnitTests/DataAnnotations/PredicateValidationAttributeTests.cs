@@ -28,7 +28,7 @@ public class PredicateValidationAttributeTests
         ValidationResult? result = attribute.GetValidationResult("test", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("not found"));
+        Assert.Contains("not found", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class PredicateValidationAttributeTests
         ValidationResult? result = attribute.GetValidationResult(-1, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("IsPositive"));
+        Assert.Contains("IsPositive", result!.ErrorMessage!);
     }
 
     [TestMethod]

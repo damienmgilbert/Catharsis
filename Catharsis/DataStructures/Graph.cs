@@ -166,7 +166,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
     ///<param name="from">The source vertex.</param>
     ///<param name="to">The destination vertex.</param>
     ///<returns><c>true</c> if the edge exists; otherwise <c>false</c>.</returns>
-    public bool HasEdge(T from, T to) { return _adjacency.TryGetValue(from, out HashSet<T> edges) && edges.Contains(to); }
+    public bool HasEdge(T from, T to) { return _adjacency.TryGetValue(from, out HashSet<T>? edges) && edges.Contains(to); }
 
     ///<summary>
     ///Returns the direct neighbors (successors) of the specified vertex.
@@ -176,7 +176,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
     ///<exception cref="KeyNotFoundException">Thrown when <paramref name="vertex"/> is not in the graph.</exception>
     public IEnumerable<T> Neighbors(T vertex)
     {
-        if(!_adjacency.TryGetValue(vertex, out HashSet<T> edges))
+        if(!_adjacency.TryGetValue(vertex, out HashSet<T>? edges))
         {
             throw new KeyNotFoundException($"Vertex '{vertex}' is not in the graph.");
         }
@@ -192,7 +192,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
     ///<returns><c>true</c> if the edge was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveEdge(T from, T to)
     {
-        if(!_adjacency.TryGetValue(from, out HashSet<T> edges))
+        if(!_adjacency.TryGetValue(from, out HashSet<T>? edges))
         {
             return false;
         }

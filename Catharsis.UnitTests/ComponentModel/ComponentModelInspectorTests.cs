@@ -45,7 +45,7 @@ public sealed class ComponentModelInspectorTests
 
         IReadOnlyList<ComponentModelInspector.EventReport> report = inspector.GetEventReport(component);
 
-        Assert.IsTrue(report.Count > 0);
+        Assert.IsNotEmpty(report);
     }
 
     [TestMethod]
@@ -57,7 +57,7 @@ public sealed class ComponentModelInspectorTests
         IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
         ComponentModelInspector.PropertyReport nameReport = report.First(r => r.Name == "Name");
 
-        Assert.IsTrue(nameReport.ValidationAttributes.Count >= 1);
+        Assert.IsGreaterThanOrEqualTo(1, nameReport.ValidationAttributes.Count);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public sealed class ComponentModelInspectorTests
 
         IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
 
-        Assert.IsTrue(report.Count >= 3);
+        Assert.IsGreaterThanOrEqualTo(3, report.Count);
         Assert.IsTrue(report.Any(r => r.Name == "Name"));
         Assert.IsTrue(report.Any(r => r.Name == "Age"));
     }

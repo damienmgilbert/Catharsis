@@ -81,7 +81,7 @@ public class ComponentContainerSlimTests
 
         ComponentCollection components = container.Components;
 
-        Assert.AreEqual(2, components.Count);
+        Assert.HasCount(2, components);
     }
 
     [TestMethod]

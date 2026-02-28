@@ -124,7 +124,7 @@ public sealed class CompositeTypeConverterTests
         System.ComponentModel.TypeConverter.StandardValuesCollection? values = composite.GetStandardValues(null);
 
         Assert.IsNotNull(values);
-        Assert.AreEqual(7, values.Count);
+        Assert.HasCount(7, values);
     }
 
     [TestMethod]

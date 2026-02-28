@@ -40,7 +40,7 @@ public class IteratorTests
         Dictionary<string, int> result = new Iterator().Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
-        Assert.AreEqual(3, capturedKeys.Count);
+        Assert.HasCount(3, capturedKeys);
         CollectionAssert.Contains(capturedKeys, "one");
         CollectionAssert.Contains(capturedKeys, "two");
         CollectionAssert.Contains(capturedKeys, "three");
@@ -102,7 +102,7 @@ public class IteratorTests
         List<int> result = new Iterator().Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
-        Assert.AreEqual(5, capturedElements.Count);
+        Assert.HasCount(5, capturedElements);
         CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5 }, capturedElements);
     }
 
@@ -157,7 +157,7 @@ public class IteratorTests
         string result = new Iterator().Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
-        Assert.AreEqual(1, capturedElements.Count);
+        Assert.HasCount(1, capturedElements);
         Assert.AreEqual('A', capturedElements[0]);
     }
 
@@ -176,7 +176,7 @@ public class IteratorTests
         int result = new Iterator().Iterate(obj, getElements, action);
         // Assert
         Assert.AreEqual(obj, result);
-        Assert.AreEqual(2, capturedElements.Count);
+        Assert.HasCount(2, capturedElements);
         CollectionAssert.AreEqual(new[] { '4', '2' }, capturedElements);
     }
     #endregion

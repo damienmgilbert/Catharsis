@@ -77,7 +77,7 @@ public sealed class BindableValidatedRecordTests
 
         List<string> all = record.GetErrors(null).Cast<string>().ToList();
 
-        Assert.IsTrue(all.Count >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, all.Count);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public sealed class BindableValidatedRecordTests
 
         List<string> errors = record.GetErrors("Name").Cast<string>().ToList();
 
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
     }
 
     [TestMethod]

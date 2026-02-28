@@ -40,7 +40,7 @@ public sealed class ValidatedRecordTests
 
         List<string> allErrors = record.GetErrors(null).Cast<string>().ToList();
 
-        Assert.IsTrue(allErrors.Count >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, allErrors.Count);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public sealed class ValidatedRecordTests
 
         List<string> errors = record.GetErrors("Unknown").Cast<string>().ToList();
 
-        Assert.AreEqual(0, errors.Count);
+        Assert.IsEmpty(errors);
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public sealed class ValidatedRecordTests
         record.Validate();
 
         List<string> errors = record.GetErrors("Name").Cast<string>().ToList();
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
         Assert.AreEqual("Name is required.", errors[0]);
     }
 

@@ -66,7 +66,7 @@ public sealed class EditableValidatingComponentTests
 
         List<string> all = c.GetErrors(null).Cast<string>().ToList();
 
-        Assert.IsTrue(all.Count > 0);
+        Assert.IsNotEmpty(all);
     }
 
     [TestMethod]
@@ -78,7 +78,7 @@ public sealed class EditableValidatingComponentTests
 
         List<string> errors = c.GetErrors("Name").Cast<string>().ToList();
 
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
     }
 
     [TestMethod]

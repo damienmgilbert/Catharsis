@@ -37,7 +37,7 @@ public class MvvmPooledViewModelTests
         await vm.LoadAsync();
         Assert.IsTrue(vm.HasData);
         Assert.AreEqual(1024, vm.DataSize);
-        Assert.IsTrue(vm.DisplayText.Contains("1024"));
+        Assert.Contains("1024", vm.DisplayText);
     }
     #endregion
 }

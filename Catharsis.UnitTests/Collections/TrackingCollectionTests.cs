@@ -15,7 +15,7 @@ public class TrackingCollectionTests
         c.Add(42);
 
         Assert.AreEqual(42, tracked);
-        Assert.AreEqual(1, c.Count);
+        Assert.HasCount(1, c);
     }
 
     [TestMethod]
@@ -25,7 +25,7 @@ public class TrackingCollectionTests
         c.Add(1); c.Add(2);
 
         Assert.IsTrue(c.Remove(1));
-        Assert.AreEqual(1, c.Count);
+        Assert.HasCount(1, c);
     }
 
     [TestMethod]
@@ -43,6 +43,6 @@ public class TrackingCollectionTests
         TrackingCollection<int> c = new TrackingCollection<int>(_ => { });
         c.Add(1); c.Add(2);
         c.Clear();
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
     }
 }

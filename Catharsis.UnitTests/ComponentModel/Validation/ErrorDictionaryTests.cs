@@ -55,8 +55,8 @@ public sealed class ErrorDictionaryTests
 
         dict.ClearErrors("Name");
 
-        Assert.AreEqual(0, dict.GetErrorInfos("Name").Count);
-        Assert.AreEqual(1, dict.GetErrorInfos("Age").Count);
+        Assert.IsEmpty(dict.GetErrorInfos("Name"));
+        Assert.HasCount(1, dict.GetErrorInfos("Age"));
     }
 
     [TestMethod]
@@ -83,7 +83,7 @@ public sealed class ErrorDictionaryTests
 
         dict.ClearAll();
 
-        Assert.AreEqual(2, changedProperties.Count);
+        Assert.HasCount(2, changedProperties);
         CollectionAssert.Contains(changedProperties, "Name");
         CollectionAssert.Contains(changedProperties, "Age");
     }
@@ -122,7 +122,7 @@ public sealed class ErrorDictionaryTests
 
         IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
 
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
         Assert.AreEqual("Required.", errors[0].Message);
     }
 
@@ -135,7 +135,7 @@ public sealed class ErrorDictionaryTests
 
         List<ErrorInfo> errors = dict.GetErrors("Name").Cast<ErrorInfo>().ToList();
 
-        Assert.AreEqual(1, errors.Count);
+        Assert.HasCount(1, errors);
         Assert.AreEqual("Required.", errors[0].Message);
     }
 
@@ -148,7 +148,7 @@ public sealed class ErrorDictionaryTests
 
         List<ErrorInfo> errors = dict.GetErrors(null).Cast<ErrorInfo>().ToList();
 
-        Assert.AreEqual(2, errors.Count);
+        Assert.HasCount(2, errors);
     }
 
     [TestMethod]
@@ -158,7 +158,7 @@ public sealed class ErrorDictionaryTests
 
         List<ErrorInfo> errors = dict.GetErrors("Unknown").Cast<ErrorInfo>().ToList();
 
-        Assert.AreEqual(0, errors.Count);
+        Assert.IsEmpty(errors);
     }
 
     [TestMethod]
@@ -208,7 +208,7 @@ public sealed class ErrorDictionaryTests
         dict.SetErrors("Name", [ new ErrorInfo("new1"), new ErrorInfo("new2") ]);
 
         IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
-        Assert.AreEqual(2, errors.Count);
+        Assert.HasCount(2, errors);
         Assert.AreEqual("new1", errors[0].Message);
     }
 

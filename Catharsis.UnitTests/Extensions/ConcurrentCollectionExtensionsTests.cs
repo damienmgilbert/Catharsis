@@ -12,7 +12,7 @@ public class ConcurrentCollectionExtensionsTests
     {
         BlockingCollection<int> source = new BlockingCollection<int>();
         source.AddRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]
@@ -21,8 +21,8 @@ public class ConcurrentCollectionExtensionsTests
         BlockingCollection<int> source = new BlockingCollection<int>();
         source.AddRange(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.TakeRange(3);
-        Assert.AreEqual(3, result.Count);
-        Assert.AreEqual(2, source.Count);
+        Assert.HasCount(3, result);
+        Assert.HasCount(2, source);
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ public class ConcurrentCollectionExtensionsTests
     {
         ConcurrentBag<int> source = new ConcurrentBag<int>();
         source.AddRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]
@@ -63,7 +63,7 @@ public class ConcurrentCollectionExtensionsTests
         source.TryAdd("c", 3);
         int removed = source.RemoveRange(new[] { "a", "c", "z" });
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public class ConcurrentCollectionExtensionsTests
         source.TryAdd("c", 3);
         int removed = source.RemoveWhere(kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
     }
 
     [TestMethod]
@@ -85,7 +85,7 @@ public class ConcurrentCollectionExtensionsTests
         source.EnqueueRange(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.DequeueRange(3);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result);
-        Assert.AreEqual(2, source.Count);
+        Assert.HasCount(2, source);
     }
 
     [TestMethod]
@@ -95,7 +95,7 @@ public class ConcurrentCollectionExtensionsTests
         source.EnqueueRange(new[] { 1, 2 });
         List<int> result = source.DequeueRange(10);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result);
-        Assert.AreEqual(0, source.Count);
+        Assert.IsEmpty(source);
     }
 
     [TestMethod]
@@ -103,7 +103,7 @@ public class ConcurrentCollectionExtensionsTests
     {
         ConcurrentQueue<int> source = new ConcurrentQueue<int>();
         source.EnqueueRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
         source.TryDequeue(out int first);
         Assert.AreEqual(1, first);
     }
@@ -114,8 +114,8 @@ public class ConcurrentCollectionExtensionsTests
         ConcurrentStack<int> source = new ConcurrentStack<int>();
         source.PushRange(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.PopRange(3);
-        Assert.AreEqual(3, result.Count);
-        Assert.AreEqual(2, source.Count);
+        Assert.HasCount(3, result);
+        Assert.HasCount(2, source);
     }
 
     [TestMethod]
@@ -123,7 +123,7 @@ public class ConcurrentCollectionExtensionsTests
     {
         ConcurrentStack<int> source = new ConcurrentStack<int>();
         source.PushRange(new[] { 1, 2, 3 });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
     #endregion
 }

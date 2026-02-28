@@ -115,7 +115,7 @@ public class TemplateMethodTests
         int result = new TemplateMethod().Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(1, result);
-        Assert.AreEqual(0, obj.Count); // Teardown was called and cleared the list
+        Assert.IsEmpty(obj); // Teardown was called and cleared the list
     }
 
     ///<summary>

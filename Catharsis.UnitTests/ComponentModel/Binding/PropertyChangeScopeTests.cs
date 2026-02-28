@@ -31,7 +31,7 @@ public sealed class PropertyChangeScopeTests
 
         scope.Dispose();
 
-        Assert.AreEqual(2, raised.Count);
+        Assert.HasCount(2, raised);
         CollectionAssert.Contains(raised, "Name");
         CollectionAssert.Contains(raised, "Age");
     }

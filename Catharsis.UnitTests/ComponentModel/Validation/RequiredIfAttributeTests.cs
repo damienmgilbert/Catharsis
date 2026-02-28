@@ -15,7 +15,7 @@ public sealed class RequiredIfAttributeTests
         RequiredIfAttribute attr = new RequiredIfAttribute("IsActive", true);
 
         Assert.AreEqual("IsActive", attr.DependentProperty);
-        Assert.AreEqual(true, attr.TargetValue);
+        Assert.IsTrue((bool?)attr.TargetValue);
         Assert.IsTrue(attr.DisallowEmptyStrings);
     }
 
@@ -26,9 +26,9 @@ public sealed class RequiredIfAttributeTests
 
         string msg = attr.FormatErrorMessage("Name");
 
-        Assert.IsTrue(msg.Contains("Name"));
-        Assert.IsTrue(msg.Contains("IsActive"));
-        Assert.IsTrue(msg.Contains("True"));
+        Assert.Contains("Name", msg);
+        Assert.Contains("IsActive", msg);
+        Assert.Contains("True", msg);
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public sealed class RequiredIfAttributeTests
         bool isValid = Validator.TryValidateProperty(model.Name, context, results);
 
         Assert.IsFalse(isValid);
-        Assert.AreEqual(1, results.Count);
+        Assert.HasCount(1, results);
     }
 
     [TestMethod]
@@ -54,7 +54,7 @@ public sealed class RequiredIfAttributeTests
         bool isValid = Validator.TryValidateProperty(model.Name, context, results);
 
         Assert.IsFalse(isValid);
-        Assert.AreEqual(1, results.Count);
+        Assert.HasCount(1, results);
     }
 
     [TestMethod]

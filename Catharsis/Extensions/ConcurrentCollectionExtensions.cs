@@ -9,6 +9,7 @@ namespace Catharsis.Extensions;
 public static class ConcurrentCollectionExtensions
 {
     #region Public methods
+
     // ── ConcurrentBag<T> ────────────────────────────────────────────────
     ///<summary>
     ///Adds all elements from <paramref name="items"/> to the <see cref="ConcurrentBag{T}"/>.

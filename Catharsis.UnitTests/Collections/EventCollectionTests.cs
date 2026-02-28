@@ -16,7 +16,7 @@ public class EventCollectionTests
         c.Add(42);
 
         Assert.AreEqual(42, raised);
-        Assert.AreEqual(1, c.Count);
+        Assert.HasCount(1, c);
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class EventCollectionTests
         c.Clear();
 
         Assert.IsTrue(cleared);
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
     }
 
     [TestMethod]

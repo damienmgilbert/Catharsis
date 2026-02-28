@@ -7,6 +7,7 @@ namespace Catharsis.Extensions;
 public static class CollectionExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Adds all elements from <paramref name="items"/> to the <paramref name="source"/> collection.
     ///</summary>

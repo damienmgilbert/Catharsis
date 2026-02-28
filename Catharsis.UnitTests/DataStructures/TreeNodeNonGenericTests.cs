@@ -12,7 +12,7 @@ public class TreeNodeNonGenericTests
         TreeNode parent = new TreeNode("parent");
         TreeNode child = new TreeNode("child");
         parent.AddChild(child);
-        Assert.AreEqual(1, parent.Children.Count);
+        Assert.HasCount(1, parent.Children);
         Assert.AreSame(child, parent.Children[0]);
     }
 
@@ -21,7 +21,7 @@ public class TreeNodeNonGenericTests
     {
         TreeNode node = new TreeNode("root");
         Assert.AreEqual("root", node.Name);
-        Assert.AreEqual(0, node.Children.Count);
+        Assert.IsEmpty(node.Children);
     }
     #endregion
 }

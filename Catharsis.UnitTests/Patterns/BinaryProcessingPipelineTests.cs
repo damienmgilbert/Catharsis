@@ -64,7 +64,7 @@ public class BinaryProcessingPipelineTests
         Assert.AreEqual(0xFF, result[0]);
         Assert.AreEqual(0xFE, result[1]);
         Assert.AreEqual(0xFD, result[2]);
-        Assert.IsTrue(elapsed >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, elapsed);
     }
     #endregion
 }

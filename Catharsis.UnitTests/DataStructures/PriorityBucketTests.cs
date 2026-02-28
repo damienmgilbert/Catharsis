@@ -12,7 +12,7 @@ public class PriorityBucketTests
         PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
         pq.Enqueue("a", 1);
         pq.Clear();
-        Assert.AreEqual(0, pq.Count);
+        Assert.IsEmpty(pq);
         Assert.IsTrue(pq.IsEmpty);
     }
 
@@ -45,7 +45,7 @@ public class PriorityBucketTests
         pq.Enqueue("a", 2);
         pq.Enqueue("b", 1);
         Assert.AreEqual("b", pq.Peek());
-        Assert.AreEqual(2, pq.Count);
+        Assert.HasCount(2, pq);
     }
 
     [TestMethod]

@@ -12,16 +12,11 @@ namespace Catharsis.ComponentModel;
 ///transactional editing in a single base class.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="SetPropertyValidated{T}"/> in property setters to set, notify, and validate in one call.
-///Override <see cref="ValidateProperty"/> or <see cref="ValidateAllProperties"/> for custom validation logic.</para>
-///<para> Call <see cref="BeginEdit"/> to snapshot current state, <see cref="CancelEdit"/> to revert, or <see
-///cref="EndEdit"/> to commit. Validation errors are exposed via <see cref="INotifyDataErrorInfo"/>.</para>
-///</remarks>
 public abstract class ValidatingObservableComponent : ObservableComponent, INotifyDataErrorInfo, IEditableObject
 {
     #region Fields
-    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
-    Dictionary<string, object?>? _snapshot;
+    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private Dictionary<string, object?>? _snapshot;
     #endregion
 
     #region Events
@@ -30,11 +25,11 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     #endregion
 
     #region Private methods
-    Dictionary<string, object?> CaptureSnapshot()
+    private Dictionary<string, object?> CaptureSnapshot()
     {
         Dictionary<string, object?> snapshot = new Dictionary<string, object?>(StringComparer.Ordinal);
 
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
             snapshot[property.Name] = property.GetValue(this);
         }
@@ -42,11 +37,11 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
         return snapshot;
     }
 
-    void RestoreSnapshot(Dictionary<string, object?> snapshot)
+    private void RestoreSnapshot(Dictionary<string, object?> snapshot)
     {
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
-            if(snapshot.TryGetValue(property.Name, out object? value))
+            if (snapshot.TryGetValue(property.Name, out object? value))
             {
                 property.SetValue(this, value);
             }
@@ -66,18 +61,18 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(!_errors.TryGetValue(propertyName, out List<string> list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
         }
 
-        if(!list.Contains(error))
+        if (!list.Contains(error))
         {
             list.Add(error);
             OnErrorsChanged(propertyName);
@@ -92,7 +87,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
         List<string> properties = _errors.Keys.ToList();
         _errors.Clear();
 
-        foreach(string property in properties)
+        foreach (string property in properties)
         {
             OnErrorsChanged(property);
         }
@@ -104,12 +99,12 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     ///<param name="propertyName">The property name.</param>
     protected void ClearErrors([CallerMemberName] string? propertyName = null)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(_errors.Remove(propertyName))
+        if (_errors.Remove(propertyName))
         {
             OnErrorsChanged(propertyName);
         }
@@ -136,14 +131,14 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
         List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
 
-        if(errorList.Count == 0)
+        if (errorList.Count == 0)
         {
             ClearErrors(propertyName);
             return;
@@ -163,11 +158,9 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
-    ///</returns>
     protected bool SetPropertyValidated<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(!SetProperty(ref field, value, propertyName))
+        if (!SetProperty(ref field, value, propertyName))
         {
             return false;
         }
@@ -184,7 +177,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     ///<param name="value">The current value of the property.</param>
     protected virtual void ValidateProperty(string? propertyName, object? value)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
@@ -201,7 +194,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
             .Select(r => r.ErrorMessage!)
             .ToList();
 
-        if(messages.Count > 0)
+        if (messages.Count > 0)
         {
             SetErrors(messages, propertyName);
         }
@@ -214,7 +207,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ThrowIfDisposed();
 
-        if(IsEditing)
+        if (IsEditing)
         {
             return;
         }
@@ -228,12 +221,12 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ThrowIfDisposed();
 
-        if(!IsEditing)
+        if (!IsEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             RestoreSnapshot(_snapshot);
             _snapshot = null;
@@ -247,7 +240,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ThrowIfDisposed();
 
-        if(!IsEditing)
+        if (!IsEditing)
         {
             return;
         }
@@ -259,12 +252,12 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }
 
-        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
+        return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
     }
 
     ///<summary>
@@ -280,17 +273,18 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
 
         Validator.TryValidateObject(this, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             List<string> members = result.MemberNames.ToList();
             string message = result.ErrorMessage ?? "Validation failed.";
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(message, string.Empty);
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(message, member);
                 }

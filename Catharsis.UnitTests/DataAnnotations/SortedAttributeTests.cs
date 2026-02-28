@@ -87,7 +87,7 @@ public class SortedAttributeTests
         ValidationResult? result = attribute.GetValidationResult(42, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("collection"));
+        Assert.Contains("collection", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -132,7 +132,7 @@ public class SortedAttributeTests
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 3, 2, 4 }, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("ascending"));
+        Assert.Contains("ascending", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -144,7 +144,7 @@ public class SortedAttributeTests
         ValidationResult? result = attribute.GetValidationResult(new[] { 5, 3, 4, 1 }, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("descending"));
+        Assert.Contains("descending", result!.ErrorMessage!);
     }
     #endregion
 

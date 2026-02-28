@@ -29,10 +29,10 @@ public sealed class RegexIfAttributeTests
 
         string msg = attr.FormatErrorMessage("Contact");
 
-        Assert.IsTrue(msg.Contains("Contact"));
-        Assert.IsTrue(msg.Contains(@"^\d+$"));
-        Assert.IsTrue(msg.Contains("Format"));
-        Assert.IsTrue(msg.Contains("email"));
+        Assert.Contains("Contact", msg);
+        Assert.Contains(@"^\d+$", msg);
+        Assert.Contains("Format", msg);
+        Assert.Contains("email", msg);
     }
 
     [TestMethod]
@@ -52,7 +52,7 @@ public sealed class RegexIfAttributeTests
         List<ValidationResult> results = new List<ValidationResult>();
 
         Assert.IsFalse(Validator.TryValidateProperty(model.Contact, context, results));
-        Assert.AreEqual(1, results.Count);
+        Assert.HasCount(1, results);
     }
 
     [TestMethod]

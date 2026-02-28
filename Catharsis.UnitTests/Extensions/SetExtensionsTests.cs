@@ -12,7 +12,7 @@ public class SetExtensionsTests
         ISet<int> source = new HashSet<int> { 1, 2, 3 };
         int added = source.AddRange(new[] { 3, 4, 5 });
         Assert.AreEqual(2, added);
-        Assert.AreEqual(5, source.Count);
+        Assert.HasCount(5, source);
     }
 
     [TestMethod]
@@ -29,7 +29,7 @@ public class SetExtensionsTests
         HashSet<int> source = new HashSet<int> { 1, 2, 3, 4, 5, 6 };
         int removed = source.RemoveWhere(x => x % 2 == 0);
         Assert.AreEqual(3, removed);
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]
@@ -48,7 +48,7 @@ public class SetExtensionsTests
         ISet<int> source = new HashSet<int> { 1, 2, 3, 4, 5 };
         int removed = source.RemoveRange(new[] { 2, 4, 99 });
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class SetExtensionsTests
     {
         ISet<int> source = new HashSet<int> { 1, 2, 3 };
         source.ReplaceWith(Array.Empty<int>());
-        Assert.AreEqual(0, source.Count);
+        Assert.IsEmpty(source);
     }
 
     [TestMethod]
@@ -64,10 +64,10 @@ public class SetExtensionsTests
     {
         ISet<int> source = new HashSet<int> { 1, 2, 3 };
         source.ReplaceWith(new[] { 10, 20 });
-        Assert.AreEqual(2, source.Count);
-        Assert.IsTrue(source.Contains(10));
-        Assert.IsTrue(source.Contains(20));
-        Assert.IsFalse(source.Contains(1));
+        Assert.HasCount(2, source);
+        Assert.Contains(10, source);
+        Assert.Contains(20, source);
+        Assert.DoesNotContain(1, source);
     }
 
     [TestMethod]
@@ -76,7 +76,7 @@ public class SetExtensionsTests
         SortedSet<int> source = new SortedSet<int> { 1, 2, 3, 4, 5, 6 };
         int removed = source.RemoveWhere(x => x > 4);
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(4, source.Count);
+        Assert.HasCount(4, source);
     }
 
     [TestMethod]
@@ -85,7 +85,7 @@ public class SetExtensionsTests
         ISet<int> source = new HashSet<int> { 1, 2, 3 };
         bool wasAdded = source.Toggle(4);
         Assert.IsTrue(wasAdded);
-        Assert.IsTrue(source.Contains(4));
+        Assert.Contains(4, source);
     }
 
     [TestMethod]
@@ -94,7 +94,7 @@ public class SetExtensionsTests
         ISet<int> source = new HashSet<int> { 1, 2, 3 };
         bool wasAdded = source.Toggle(2);
         Assert.IsFalse(wasAdded);
-        Assert.IsFalse(source.Contains(2));
+        Assert.DoesNotContain(2, source);
     }
     #endregion
 }

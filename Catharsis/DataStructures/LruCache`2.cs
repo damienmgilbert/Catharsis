@@ -88,7 +88,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     ///<param name="value">The value to cache.</param>
     public void AddOrUpdate(TKey key, TValue value)
     {
-        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry> existingNode))
+        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry>? existingNode))
         {
             _order.Remove(existingNode);
             _map.Remove(key);
@@ -142,7 +142,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
     public bool Remove(TKey key)
     {
-        if(!_map.TryGetValue(key, out LinkedListNode<CacheEntry> node))
+        if(!_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
         {
             return false;
         }
@@ -161,7 +161,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     ///<returns><c>true</c> if the key was found; otherwise <c>false</c>.</returns>
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry> node))
+        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
         {
             _order.Remove(node);
             _order.AddFirst(node);

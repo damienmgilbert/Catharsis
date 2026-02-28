@@ -28,7 +28,7 @@ public class CommandPatternTests
         string result = new CommandPattern().Command(obj, execute, undo, undoHistory);
         // Assert
         Assert.AreEqual(1, executeCallCount);
-        Assert.AreEqual(1, undoHistory.Count);
+        Assert.HasCount(1, undoHistory);
         Assert.AreSame(undo, undoHistory[0]);
         Assert.AreEqual(obj, result);
     }
@@ -50,7 +50,7 @@ public class CommandPatternTests
         result = cmd.Command(result, x => x[0] = x[0] + 10, x => x[0] = x[0] - 10, undoHistory);
         // Assert
         Assert.AreEqual(12, obj[0]); // ((0 + 1) * 2) + 10 = 12
-        Assert.AreEqual(3, undoHistory.Count);
+        Assert.HasCount(3, undoHistory);
         Assert.AreSame(obj, result);
     }
 
@@ -87,7 +87,7 @@ public class CommandPatternTests
         int result = new CommandPattern().Command(obj, execute, null, undoHistory);
         // Assert
         Assert.AreEqual(1, executeCallCount);
-        Assert.AreEqual(0, undoHistory.Count);
+        Assert.IsEmpty(undoHistory);
         Assert.AreEqual(obj, result);
     }
 
@@ -134,7 +134,7 @@ public class CommandPatternTests
         undo3,
         undoHistory);
         // Assert
-        Assert.AreEqual(3, undoHistory.Count);
+        Assert.HasCount(3, undoHistory);
         Assert.AreSame(undo1, undoHistory[0]);
         Assert.AreSame(undo2, undoHistory[1]);
         Assert.AreSame(undo3, undoHistory[2]);
@@ -167,7 +167,7 @@ public class CommandPatternTests
         // Assert
         if(provideHistory)
         {
-            Assert.AreEqual(expectedHistoryCount, undoHistory!.Count);
+            Assert.HasCount(expectedHistoryCount, undoHistory!);
         }
     }
 
@@ -225,7 +225,7 @@ public class CommandPatternTests
         Dictionary<string, int> result = new CommandPattern().Command(obj, execute);
         // Assert
         Assert.AreSame(obj, result);
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual(2, result["b"]);
     }
 
@@ -248,7 +248,7 @@ public class CommandPatternTests
         // Act
         new CommandPattern().Command(obj, execute, undo, undoHistory);
         // Assert
-        Assert.AreEqual(1, undoHistory.Count);
+        Assert.HasCount(1, undoHistory);
         Assert.AreSame(undo, undoHistory[0]);
     }
 
@@ -314,7 +314,7 @@ public class CommandPatternTests
         List<int> result = new CommandPattern().Command(obj, execute);
         // Assert
         Assert.AreSame(obj, result);
-        Assert.AreEqual(4, result.Count);
+        Assert.HasCount(4, result);
     }
 
     ///<summary>

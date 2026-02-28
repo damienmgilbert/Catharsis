@@ -12,7 +12,7 @@ public class OrderedSetTests
         OrderedSet<int> set = new OrderedSet<int>();
         Assert.IsTrue(set.TryAdd(1));
         Assert.IsTrue(set.TryAdd(2));
-        Assert.AreEqual(2, set.Count);
+        Assert.HasCount(2, set);
     }
 
     [TestMethod]
@@ -21,7 +21,7 @@ public class OrderedSetTests
         OrderedSet<int> set = new OrderedSet<int>();
         set.TryAdd(1);
         Assert.IsFalse(set.TryAdd(1));
-        Assert.AreEqual(1, set.Count);
+        Assert.HasCount(1, set);
     }
 
     [TestMethod]
@@ -40,7 +40,7 @@ public class OrderedSetTests
         OrderedSet<int> set = new OrderedSet<int>();
         set.TryAdd(1); set.TryAdd(2);
         Assert.IsTrue(set.Remove(1));
-        Assert.AreEqual(1, set.Count);
+        Assert.HasCount(1, set);
         Assert.IsFalse(set.Contains(1));
     }
 
@@ -59,7 +59,7 @@ public class OrderedSetTests
         OrderedSet<int> set = new OrderedSet<int>();
         set.TryAdd(1); set.TryAdd(2);
         set.Clear();
-        Assert.AreEqual(0, set.Count);
+        Assert.IsEmpty(set);
     }
 
     [TestMethod]

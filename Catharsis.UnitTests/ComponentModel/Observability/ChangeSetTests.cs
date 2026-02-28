@@ -42,7 +42,7 @@ public sealed class ChangeSetTests
 
         IReadOnlyList<ChangeEntry> all = set.GetAll();
 
-        Assert.AreEqual(2, all.Count);
+        Assert.HasCount(2, all);
         Assert.AreEqual("A", all[0].PropertyName);
         Assert.AreEqual("B", all[1].PropertyName);
     }
@@ -57,7 +57,7 @@ public sealed class ChangeSetTests
 
         IReadOnlyList<ChangeEntry> aChanges = set.GetByProperty("A");
 
-        Assert.AreEqual(2, aChanges.Count);
+        Assert.HasCount(2, aChanges);
     }
 
     [TestMethod]

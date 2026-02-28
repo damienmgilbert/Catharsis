@@ -12,7 +12,7 @@ public class PooledDictionaryTests
         using PooledDictionary<string, int> dict = new PooledDictionary<string, int>();
         dict.Add("key", 42);
         Assert.AreEqual(42, dict["key"]);
-        Assert.AreEqual(1, dict.Count);
+        Assert.HasCount(1, dict);
     }
 
     [TestMethod]
@@ -21,7 +21,7 @@ public class PooledDictionaryTests
         using PooledDictionary<string, int> dict = new PooledDictionary<string, int>();
         dict.Add("a", 1);
         dict.Clear();
-        Assert.AreEqual(0, dict.Count);
+        Assert.IsEmpty(dict);
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public class PooledDictionaryTests
         using PooledDictionary<string, int> dict = new PooledDictionary<string, int>();
         dict.Add("key", 1);
         Assert.IsTrue(dict.Remove("key"));
-        Assert.AreEqual(0, dict.Count);
+        Assert.IsEmpty(dict);
     }
 
     [TestMethod]

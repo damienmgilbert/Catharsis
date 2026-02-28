@@ -40,7 +40,7 @@ public sealed class ComponentGraphNodeTests
     {
         ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
 
-        Assert.AreEqual(0, node.Dependencies.Count);
+        Assert.IsEmpty(node.Dependencies);
     }
 
     [TestMethod]
@@ -48,7 +48,7 @@ public sealed class ComponentGraphNodeTests
     {
         ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
 
-        Assert.AreEqual(0, node.Dependents.Count);
+        Assert.IsEmpty(node.Dependents);
     }
 
     [TestMethod]
@@ -66,8 +66,8 @@ public sealed class ComponentGraphNodeTests
 
         string result = node.ToString();
 
-        Assert.IsTrue(result.Contains("DB"));
-        Assert.IsTrue(result.Contains("Created"));
+        Assert.Contains("DB", result);
+        Assert.Contains("Created", result);
     }
     #endregion
 
@@ -144,7 +144,7 @@ public sealed class ComponentGraphTests
 
         int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
         int appIndex = order.ToList().FindIndex(n => n.Name == "App");
-        Assert.IsTrue(dbIndex < appIndex);
+        Assert.IsLessThan(appIndex, dbIndex);
     }
 
     [TestMethod]
@@ -156,7 +156,7 @@ public sealed class ComponentGraphTests
 
         IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
 
-        Assert.AreEqual(2, order.Count);
+        Assert.HasCount(2, order);
     }
 
     [TestMethod]
@@ -174,7 +174,7 @@ public sealed class ComponentGraphTests
 
         int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
         int appIndex = order.ToList().FindIndex(n => n.Name == "App");
-        Assert.IsTrue(appIndex < dbIndex);
+        Assert.IsLessThan(dbIndex, appIndex);
     }
 
     [TestMethod]
@@ -190,7 +190,7 @@ public sealed class ComponentGraphTests
 
         IReadOnlyList<ComponentGraphNode> leaves = graph.GetLeaves();
 
-        Assert.AreEqual(1, leaves.Count);
+        Assert.HasCount(1, leaves);
         Assert.AreEqual("App", leaves[0].Name);
     }
 
@@ -227,7 +227,7 @@ public sealed class ComponentGraphTests
 
         IReadOnlyList<ComponentGraphNode> roots = graph.GetRoots();
 
-        Assert.AreEqual(1, roots.Count);
+        Assert.HasCount(1, roots);
         Assert.AreEqual("DB", roots[0].Name);
     }
     #endregion

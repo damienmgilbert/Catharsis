@@ -12,15 +12,15 @@ public class ImmutableSequenceTests
     {
         ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 1, 2 ]);
         ImmutableSequence<int> seq2 = seq.Add(3);
-        Assert.AreEqual(3, seq2.Count);
-        Assert.AreEqual(2, seq.Count); // original unchanged
+        Assert.HasCount(3, seq2);
+        Assert.HasCount(2, seq); // original unchanged
     }
 
     [TestMethod]
     public void Create_FromSpan_StoresData()
     {
         ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 1, 2, 3 ]);
-        Assert.AreEqual(3, seq.Count);
+        Assert.HasCount(3, seq);
         Assert.AreEqual(2, seq[1]);
     }
 
@@ -29,7 +29,7 @@ public class ImmutableSequenceTests
     {
         ReadOnlySequence<byte> data = new ReadOnlySequence<byte>(new byte[] { 10, 20, 30 });
         ImmutableSequence<byte> seq = ImmutableSequence<byte>.CreateFrom(in data);
-        Assert.AreEqual(3, seq.Count);
+        Assert.HasCount(3, seq);
         Assert.AreEqual(10, seq[0]);
     }
 
@@ -37,7 +37,7 @@ public class ImmutableSequenceTests
     public void Empty_ReturnsEmptySequence()
     {
         ImmutableSequence<int> seq = ImmutableSequence<int>.Empty;
-        Assert.AreEqual(0, seq.Count);
+        Assert.IsEmpty(seq);
         Assert.IsTrue(seq.IsEmpty);
     }
 
@@ -63,7 +63,7 @@ public class ImmutableSequenceTests
     {
         ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 10, 20, 30, 40 ]);
         ImmutableSequence<int> sliced = seq.Slice(1, 2);
-        Assert.AreEqual(2, sliced.Count);
+        Assert.HasCount(2, sliced);
         Assert.AreEqual(20, sliced[0]);
     }
     #endregion

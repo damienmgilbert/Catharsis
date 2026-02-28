@@ -31,7 +31,7 @@ public sealed class BufferWeakReferenceCache<T> where T : class
         Guard.IsNotNullOrEmpty(key);
         Guard.IsNotNull(factory);
 
-        if(TryGet(key, out T? existing))
+        if(TryGet(key, out T? existing) && existing is not null)
         {
             return existing;
         }

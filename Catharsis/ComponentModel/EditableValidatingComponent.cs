@@ -10,15 +10,10 @@ namespace Catharsis.ComponentModel;
 ///snapshot-based transactional editing with per-property validation support.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="SetPropertyAndValidate{T}"/> in property setters to set, notify, and validate in one call.
-///Validation runs automatically using DataAnnotations; override <see cref="ValidateProperty"/> for custom logic.</para>
-///<para><see cref="EndEdit"/> automatically validates all properties before committing. If validation fails, the edit
-///remains open.</para>
-///</remarks>
 public abstract class EditableValidatingComponent : EditableComponent, INotifyDataErrorInfo
 {
     #region Fields
-    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
     #endregion
 
     #region Events
@@ -38,18 +33,18 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(!_errors.TryGetValue(propertyName, out List<string> list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
         }
 
-        if(!list.Contains(error))
+        if (!list.Contains(error))
         {
             list.Add(error);
             OnErrorsChanged(propertyName);
@@ -64,7 +59,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
         List<string> properties = _errors.Keys.ToList();
         _errors.Clear();
 
-        foreach(string property in properties)
+        foreach (string property in properties)
         {
             OnErrorsChanged(property);
         }
@@ -76,12 +71,12 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///<param name="propertyName">The property name.</param>
     protected void ClearErrors([CallerMemberName] string? propertyName = null)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(_errors.Remove(propertyName))
+        if (_errors.Remove(propertyName))
         {
             OnErrorsChanged(propertyName);
         }
@@ -104,14 +99,14 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
         List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
 
-        if(errorList.Count == 0)
+        if (errorList.Count == 0)
         {
             ClearErrors(propertyName);
             return;
@@ -131,11 +126,9 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
-    ///</returns>
     protected bool SetPropertyAndValidate<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(!SetProperty(ref field, value, propertyName))
+        if (!SetProperty(ref field, value, propertyName))
         {
             return false;
         }
@@ -152,7 +145,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///<param name="value">The current value of the property.</param>
     protected virtual void ValidateProperty(string? propertyName, object? value)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
@@ -169,7 +162,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
             .Select(r => r.ErrorMessage!)
             .ToList();
 
-        if(messages.Count > 0)
+        if (messages.Count > 0)
         {
             SetErrors(messages, propertyName);
         }
@@ -180,12 +173,12 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }
 
-        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
+        return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
     }
 
     ///<summary>
@@ -201,17 +194,18 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
 
         Validator.TryValidateObject(this, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             List<string> members = result.MemberNames.ToList();
             string message = result.ErrorMessage ?? "Validation failed.";
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(message, string.Empty);
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(message, member);
                 }

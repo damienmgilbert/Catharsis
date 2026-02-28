@@ -64,7 +64,7 @@ public sealed class ComponentModelDebuggerViewTests
 
         ComponentModelDebuggerView.PropertyEntry[] props = view.Properties;
 
-        Assert.IsTrue(props.Length >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, props.Length);
         Assert.IsTrue(props.Any(p => (p.Name == "Name") && ((string?)p.Value == "Alice")));
         Assert.IsTrue(props.Any(p => (p.Name == "Age") && ((int)p.Value! == 30)));
     }
@@ -83,7 +83,7 @@ public sealed class ComponentModelDebuggerViewTests
         ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
 
         Assert.IsNotNull(view.TypeName);
-        Assert.IsTrue(view.TypeName.Contains("SimpleDto"));
+        Assert.Contains("SimpleDto", view.TypeName);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public sealed class ComponentModelDebuggerViewTests
         using TestValidatingComponent component = new TestValidatingComponent { Name = "Alice" };
         ComponentModelDebuggerView view = new ComponentModelDebuggerView(component);
 
-        Assert.AreEqual(0, view.ValidationErrors.Length);
+        Assert.IsEmpty(view.ValidationErrors);
     }
 
     [TestMethod]
@@ -105,7 +105,7 @@ public sealed class ComponentModelDebuggerViewTests
 
         ComponentModelDebuggerView.ValidationErrorEntry[] errors = view.ValidationErrors;
 
-        Assert.IsTrue(errors.Length > 0);
+        Assert.IsNotEmpty(errors);
         Assert.IsTrue(errors.Any(e => e.PropertyName == "Name"));
     }
     #endregion

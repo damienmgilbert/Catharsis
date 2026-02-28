@@ -416,7 +416,7 @@ public class VisitorTests
         // Act
         List<int> result = new Visitor().Accept(obj, visitor, visit);
         // Assert
-        Assert.AreEqual(1, obj.Count);
+        Assert.HasCount(1, obj);
         Assert.AreEqual(42, obj[0]);
         Assert.AreSame(obj, result);
     }

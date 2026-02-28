@@ -19,15 +19,15 @@ public class BufferComparerTests
     {
         int[] a = [ 1, 2 ];
         int[] b = [ 1, 3 ];
-        Assert.IsTrue(BufferComparer<int>.Default.Compare(a, b) < 0);
+        Assert.IsLessThan(0, BufferComparer<int>.Default.Compare(a, b));
     }
 
     [TestMethod]
     public void Compare_NullHandling()
     {
         Assert.AreEqual(0, BufferComparer<int>.Default.Compare(null, null));
-        Assert.IsTrue(BufferComparer<int>.Default.Compare(null, [ 1 ]) < 0);
-        Assert.IsTrue(BufferComparer<int>.Default.Compare([ 1 ], null) > 0);
+        Assert.IsLessThan(0, BufferComparer<int>.Default.Compare(null, [1]));
+        Assert.IsGreaterThan(0, BufferComparer<int>.Default.Compare([1], null));
     }
 
     [TestMethod]
@@ -35,7 +35,7 @@ public class BufferComparerTests
     {
         int[] a = [ 1, 2 ];
         int[] b = [ 1, 2, 3 ];
-        Assert.IsTrue(BufferComparer<int>.Default.Compare(a, b) < 0);
+        Assert.IsLessThan(0, BufferComparer<int>.Default.Compare(a, b));
     }
 
     [TestMethod]

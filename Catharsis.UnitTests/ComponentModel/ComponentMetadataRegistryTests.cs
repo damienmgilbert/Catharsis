@@ -11,7 +11,7 @@ public class ComponentMetadataRegistryTests
     {
         ComponentMetadataRegistry registry = new ComponentMetadataRegistry();
         IReadOnlyList<PropertyMetadata> props = registry.GetProperties(typeof(string));
-        Assert.AreEqual(0, props.Count);
+        Assert.IsEmpty(props);
     }
 
     [TestMethod]
@@ -22,7 +22,7 @@ public class ComponentMetadataRegistryTests
         registry.RegisterEvent(typeof(object), meta);
 
         IReadOnlyList<EventMetadata> events = registry.GetEvents(typeof(object));
-        Assert.AreEqual(1, events.Count);
+        Assert.HasCount(1, events);
         Assert.AreEqual("Click", events[0].Name);
     }
 
@@ -34,7 +34,7 @@ public class ComponentMetadataRegistryTests
         registry.RegisterProperty(typeof(object), meta);
 
         IReadOnlyList<PropertyMetadata> props = registry.GetProperties(typeof(object));
-        Assert.AreEqual(1, props.Count);
+        Assert.HasCount(1, props);
         Assert.AreEqual("Name", props[0].Name);
     }
 

@@ -11,7 +11,7 @@ public class HistoryStackTests
     {
         HistoryStack<int> s = new HistoryStack<int>();
         s.Push(1);
-        Assert.AreEqual(1, s.Count);
+        Assert.HasCount(1, s);
         Assert.AreEqual(1, s.Peek());
     }
 
@@ -30,7 +30,7 @@ public class HistoryStackTests
         int undone = s.Undo();
 
         Assert.AreEqual(2, undone);
-        Assert.AreEqual(1, s.Count);
+        Assert.HasCount(1, s);
         Assert.IsTrue(s.CanRedo);
     }
 
@@ -50,7 +50,7 @@ public class HistoryStackTests
         int redone = s.Redo();
 
         Assert.AreEqual(2, redone);
-        Assert.AreEqual(2, s.Count);
+        Assert.HasCount(2, s);
         Assert.IsFalse(s.CanRedo);
     }
 
@@ -82,7 +82,7 @@ public class HistoryStackTests
         s.Push(1); s.Push(2);
         s.Undo();
         s.Clear();
-        Assert.AreEqual(0, s.Count);
+        Assert.IsEmpty(s);
         Assert.IsFalse(s.CanUndo);
         Assert.IsFalse(s.CanRedo);
     }

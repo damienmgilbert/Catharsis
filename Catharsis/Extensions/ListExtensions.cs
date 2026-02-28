@@ -7,6 +7,7 @@ namespace Catharsis.Extensions;
 public static class ListExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Adds all elements from <paramref name="items"/> to the end of the linked list.
     ///</summary>

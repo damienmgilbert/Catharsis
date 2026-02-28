@@ -61,7 +61,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     ///<param name="value">The value to add.</param>
     public void Add(TKey key, TValue value)
     {
-        if(!_map.TryGetValue(key, out List<TValue> list))
+        if(!_map.TryGetValue(key, out List<TValue>? list))
         {
             list = [];
             _map[key] = list;
@@ -83,7 +83,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
             throw new ArgumentNullException(nameof(values), "Values must not be null.");
         }
 
-        if(!_map.TryGetValue(key, out List<TValue> list))
+        if(!_map.TryGetValue(key, out List<TValue>? list))
         {
             list = [];
             _map[key] = list;
@@ -102,7 +102,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     ///<param name="key">The key.</param>
     ///<param name="value">The value to look for.</param>
     ///<returns><c>true</c> if the key/value pair exists; otherwise <c>false</c>.</returns>
-    public bool Contains(TKey key, TValue value) { return _map.TryGetValue(key, out List<TValue> list) && list.Contains(value); }
+    public bool Contains(TKey key, TValue value) { return _map.TryGetValue(key, out List<TValue>? list) && list.Contains(value); }
     ///<summary>
     ///Determines whether the multimap contains the specified key.
     ///</summary>
@@ -131,7 +131,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     ///<returns><c>true</c> if the value was found and removed; otherwise <c>false</c>.</returns>
     public bool Remove(TKey key, TValue value)
     {
-        if(!_map.TryGetValue(key, out List<TValue> list))
+        if(!_map.TryGetValue(key, out List<TValue>? list))
         {
             return false;
         }
@@ -164,7 +164,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
     ///<returns><c>true</c> if the key exists; otherwise <c>false</c>.</returns>
     public bool TryGetValues(TKey key, [MaybeNullWhen(false)] out IReadOnlyCollection<TValue> values)
     {
-        if(_map.TryGetValue(key, out List<TValue> list))
+        if(_map.TryGetValue(key, out List<TValue>? list))
         {
             values = list;
             return true;

@@ -127,7 +127,7 @@ public sealed class ComponentGraphBuilderTests
 
         ComponentGraphNode? appNode = graph.GetNode(app);
         Assert.IsNotNull(appNode);
-        Assert.AreEqual(1, appNode.Dependencies.Count);
+        Assert.HasCount(1, appNode.Dependencies);
         Assert.AreEqual("DB", appNode.Dependencies[0].Name);
     }
 

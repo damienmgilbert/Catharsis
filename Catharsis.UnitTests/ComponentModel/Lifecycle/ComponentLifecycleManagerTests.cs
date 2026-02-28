@@ -154,8 +154,8 @@ public sealed class ComponentLifecycleManagerTests
         int dbIdx = activationOrder.IndexOf("DB");
         int cacheIdx = activationOrder.IndexOf("Cache");
         int appIdx = activationOrder.IndexOf("App");
-        Assert.IsTrue(dbIdx < cacheIdx);
-        Assert.IsTrue(cacheIdx < appIdx);
+        Assert.IsLessThan(cacheIdx, dbIdx);
+        Assert.IsLessThan(appIdx, cacheIdx);
     }
 
     [TestMethod]

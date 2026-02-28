@@ -12,7 +12,7 @@ public class ArrayExtensionsTests
         int[] source = new[] { 1, 2, 3 };
         int[] result = source.Add(4);
         CollectionAssert.AreEqual(new[] { 1, 2, 3, 4 }, result);
-        Assert.AreEqual(3, source.Length);
+        Assert.HasCount(3, source);
     }
 
     [TestMethod]

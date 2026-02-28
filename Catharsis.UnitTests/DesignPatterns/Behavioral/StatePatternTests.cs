@@ -23,7 +23,7 @@ public class StatePatternTests
             }
         });
 
-        Assert.AreEqual(1, list.Count);
+        Assert.HasCount(1, list);
         Assert.AreEqual(42, list[0]);
     }
 

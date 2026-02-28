@@ -12,7 +12,7 @@ public sealed class MetadataAnnotatedRecordTests
     {
         MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
 
-        Assert.IsTrue(record.AllPropertyMetadata.Count >= 3);
+        Assert.IsGreaterThanOrEqualTo(3, record.AllPropertyMetadata.Count);
     }
 
     [TestMethod]

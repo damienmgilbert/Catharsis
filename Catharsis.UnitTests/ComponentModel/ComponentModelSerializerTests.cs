@@ -79,7 +79,7 @@ public sealed class ComponentModelSerializerTests
 
         Assert.AreEqual("Alice", result["Name"]);
         Assert.AreEqual(30, result["Age"]);
-        Assert.AreEqual(true, result["IsActive"]);
+        Assert.IsTrue((bool?)result["IsActive"]);
     }
     #endregion
 

@@ -10,7 +10,7 @@ public class DequeTests
     public void Constructor_Default_CreatesEmptyDeque()
     {
         Deque<int> d = new Deque<int>();
-        Assert.AreEqual(0, d.Count);
+        Assert.IsEmpty(d);
         Assert.IsTrue(d.IsEmpty);
     }
 
@@ -44,7 +44,7 @@ public class DequeTests
         Deque<int> d = new Deque<int>();
         d.AddLast(1); d.AddLast(2); d.AddLast(3);
         Assert.AreEqual(1, d.RemoveFirst());
-        Assert.AreEqual(2, d.Count);
+        Assert.HasCount(2, d);
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class DequeTests
         Deque<int> d = new Deque<int>();
         d.AddLast(1); d.AddLast(2); d.AddLast(3);
         Assert.AreEqual(3, d.RemoveLast());
-        Assert.AreEqual(2, d.Count);
+        Assert.HasCount(2, d);
     }
 
     [TestMethod]
@@ -95,7 +95,7 @@ public class DequeTests
         Deque<int> d = new Deque<int>();
         d.AddLast(1); d.AddLast(2);
         d.Clear();
-        Assert.AreEqual(0, d.Count);
+        Assert.IsEmpty(d);
         Assert.IsTrue(d.IsEmpty);
     }
 
@@ -104,7 +104,7 @@ public class DequeTests
     {
         Deque<int> d = new Deque<int>(1);
         d.AddFirst(1); d.AddFirst(2); d.AddFirst(3);
-        Assert.AreEqual(3, d.Count);
+        Assert.HasCount(3, d);
         Assert.AreEqual(3, d.PeekFirst());
     }
 

@@ -41,7 +41,7 @@ public class RequiredIfAttributeTests
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("required"));
+        Assert.Contains("required", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public class RequiredIfAttributeTests
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Unknown property"));
+        Assert.Contains("Unknown property", result!.ErrorMessage!);
     }
     #endregion
 

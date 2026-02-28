@@ -24,9 +24,9 @@ public class TrieTests
         trie.Insert("car");
         trie.Insert("dog");
         List<string> result = trie.GetWordsWithPrefix("ca").OrderBy(x => x).ToList();
-        Assert.AreEqual(2, result.Count);
-        Assert.IsTrue(result.Contains("cat"));
-        Assert.IsTrue(result.Contains("car"));
+        Assert.HasCount(2, result);
+        Assert.Contains("cat", result);
+        Assert.Contains("car", result);
     }
 
     [TestMethod]

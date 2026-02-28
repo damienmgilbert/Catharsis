@@ -7,6 +7,7 @@
 public static class ControlFlow
 {
     #region Public methods
+
     ///<summary>
     ///Repeatedly executes <paramref name="action"/> until <paramref name="condition"/> evaluates to <c>true</c>, then
     ///returns the original object.
@@ -436,8 +437,6 @@ public static class ControlFlow
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
-    ///<c>true</c>; otherwise returns the original object.
-    ///</summary>
     public static async Task<T> ReturnIfAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task<T>> action, CancellationToken cancellation = default)
     {
         if(condition is null)
@@ -456,8 +455,6 @@ public static class ControlFlow
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
-    ///<c>true</c>; otherwise returns the original object (ValueTask overload).
-    ///</summary>
     public static ValueTask<T> ReturnIfAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default)
     {
         if(condition is null)
@@ -569,8 +566,6 @@ public static class ControlFlow
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
-    ///<c>false</c>; otherwise returns the original object.
-    ///</summary>
     public static async Task<T> ReturnIfNotAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task<T>> action, CancellationToken cancellation = default)
     {
         if(condition is null)
@@ -589,8 +584,6 @@ public static class ControlFlow
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
-    ///<c>false</c>; otherwise returns the original object (ValueTask overload).
-    ///</summary>
     public static ValueTask<T> ReturnIfNotAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default)
     {
         if(condition is null)
@@ -628,13 +621,13 @@ public static class ControlFlow
     ///<remarks>
     ///This method is constrained to reference types by <c>where T : class</c>.
     ///</remarks>
-    public static T ReturnIfNull<T>(this T obj, Func<T> action) where T : class { return obj ?? action(); }
+    public static T ReturnIfNull<T>(this T obj, Func<T> action) where T : class? { return obj ?? action(); }
 
     ///<summary>
     ///Asynchronously returns the original object if it is not <c>null</c>; otherwise returns the result of <paramref
     ///name="action"/>.
     ///</summary>
-    public static Task<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, Task<T>> action, CancellationToken cancellation = default) where T : class
+    public static Task<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, Task<T>> action, CancellationToken cancellation = default) where T : class?
     {
         if(action is null)
         {
@@ -654,7 +647,7 @@ public static class ControlFlow
     ///Asynchronously returns the original object if it is not <c>null</c>; otherwise returns the result of <paramref
     ///name="action"/> (ValueTask overload).
     ///</summary>
-    public static ValueTask<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default) where T : class
+    public static ValueTask<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default) where T : class?
     {
         if(action is null)
         {

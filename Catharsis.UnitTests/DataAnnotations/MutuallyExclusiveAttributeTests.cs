@@ -17,7 +17,7 @@ public class MutuallyExclusiveAttributeTests
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Only one"));
+        Assert.Contains("Only one", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class MutuallyExclusiveAttributeTests
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Data Source"));
+        Assert.Contains("Data Source", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -118,7 +118,7 @@ public class MutuallyExclusiveAttributeTests
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Unknown property"));
+        Assert.Contains("Unknown property", result!.ErrorMessage!);
     }
 
     [TestMethod]

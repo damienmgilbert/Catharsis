@@ -10,17 +10,10 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///centralized converter lookup, registration, and integration with <see cref="TypeDescriptor"/>.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="Register{T}"/> or <see cref="Register(Type, System.ComponentModel.TypeConverter)"/> to register
-///converters. Use <see cref="GetConverter{T}"/> or<see cref="GetConverter(Type)"/> to retrieve them.</para> <para> When
-///a type does not have an explicitly registered converter, the registry falls back to <see
-///cref="TypeDescriptor.GetConverter(Type)"/>.</para> <para> The <see cref="ConvertTo{T}"/> and <see
-///cref="ConvertFrom{T}"/> convenience methods simplify common conversion tasks by combining lookup and conversion in a
-///single call.</para>
-///</remarks>
 public sealed class ConverterRegistry
 {
     #region Fields
-    readonly ConcurrentDictionary<Type, System.ComponentModel.TypeConverter> _converters = new();
+    private readonly ConcurrentDictionary<Type, System.ComponentModel.TypeConverter> _converters = new();
     #endregion
 
     #region Public methods
@@ -63,7 +56,7 @@ public sealed class ConverterRegistry
     {
         System.ComponentModel.TypeConverter converter = GetConverter<T>();
 
-        if(converter.CanConvertFrom(value.GetType()))
+        if (converter.CanConvertFrom(value.GetType()))
         {
             return (T?)converter.ConvertFrom(null, culture ?? CultureInfo.CurrentCulture, value);
         }
@@ -86,13 +79,11 @@ public sealed class ConverterRegistry
     ///<param name="type">The type to get a converter for.</param>
     ///<returns>The converter for the type.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="type"/> is <c>null</c>.
-    ///</exception>
     public System.ComponentModel.TypeConverter GetConverter(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        if(_converters.TryGetValue(type, out System.ComponentModel.TypeConverter converter))
+        if (_converters.TryGetValue(type, out System.ComponentModel.TypeConverter? converter))
         {
             return converter;
         }
@@ -126,8 +117,6 @@ public sealed class ConverterRegistry
     ///<param name="converter">The converter to register.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="converter"/> is <c>null</c>.
-    ///</exception>
     public ConverterRegistry Register<T>(System.ComponentModel.TypeConverter converter)
     {
         ArgumentNullException.ThrowIfNull(converter);
@@ -143,8 +132,6 @@ public sealed class ConverterRegistry
     ///<param name="converter">The converter to register.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="type"/> or <paramref name="converter"/> is <c>null</c>.
-    ///</exception>
     public ConverterRegistry Register(Type type, System.ComponentModel.TypeConverter converter)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -194,8 +181,6 @@ public sealed class ConverterRegistry
     ///<param name="context">Optional converter context.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="tryParse"/> is <c>null</c>.
-    ///</exception>
     public ConverterRegistry RegisterSpanBased<T>(SpanParseDelegate<T> tryParse, SpanFormatDelegate<T>? tryFormat = null, ConverterContext? context = null)
     {
         ArgumentNullException.ThrowIfNull(tryParse);
@@ -211,19 +196,14 @@ public sealed class ConverterRegistry
     ///<param name="value">The value to convert.</param>
     ///<param name="result">
     ///When this method returns, contains the converted value if successful; otherwise, the default value of
-    ///<typeparamref name="T"/>.
-    ///</param>
-    ///<param name="culture">
-    ///The culture to use, or <c>null</c> for the current culture.
-    ///</param>
-    ///<returns><c>true</c> if conversion succeeded; otherwise, <c>false</c>.</returns>
     public bool TryConvertTo<T>(object value, [MaybeNullWhen(false)] out T result, CultureInfo? culture = null)
     {
         try
         {
             result = ConvertTo<T>(value, culture)!;
             return result is not null;
-        } catch
+        }
+        catch
         {
             result = default;
             return false;
@@ -249,8 +229,6 @@ public sealed class ConverterRegistry
     ///</summary>
     ///<typeparam name="T">The type to unregister.</typeparam>
     ///<returns>
-    ///<c>true</c> if a converter was removed; otherwise, <c>false</c>.
-    ///</returns>
     public bool Unregister<T>() { return _converters.TryRemove(typeof(T), out _); }
 
     ///<summary>
@@ -258,8 +236,6 @@ public sealed class ConverterRegistry
     ///</summary>
     ///<param name="type">The type to unregister.</param>
     ///<returns>
-    ///<c>true</c> if a converter was removed; otherwise, <c>false</c>.
-    ///</returns>
     public bool Unregister(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);

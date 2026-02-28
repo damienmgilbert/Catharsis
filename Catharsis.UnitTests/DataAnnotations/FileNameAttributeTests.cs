@@ -46,7 +46,7 @@ public class FileNameAttributeTests
         ValidationResult? result = attribute.GetValidationResult("image.png", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains(".txt"));
+        Assert.Contains(".txt", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -69,7 +69,7 @@ public class FileNameAttributeTests
         ValidationResult? result = attribute.GetValidationResult("verylongfilename.txt", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("at most 10"));
+        Assert.Contains("at most 10", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public class FileNameAttributeTests
         ValidationResult? result = attribute.GetValidationResult("file<name>.txt", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("invalid character"));
+        Assert.Contains("invalid character", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public class FileNameAttributeTests
         ValidationResult? result = attribute.GetValidationResult(42, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("string"));
+        Assert.Contains("string", result!.ErrorMessage!);
     }
 
     [TestMethod]

@@ -20,8 +20,8 @@ public class DataErrorInfoAdapterTests
 
         string error = adapter.Error;
 
-        Assert.IsTrue(error.Contains("Name is required."));
-        Assert.IsTrue(error.Contains("Age must be positive."));
+        Assert.Contains("Name is required.", error);
+        Assert.Contains("Age must be positive.", error);
     }
 
     [TestMethod]
@@ -43,8 +43,8 @@ public class DataErrorInfoAdapterTests
 
         string result = adapter["Name"];
 
-        Assert.IsTrue(result.Contains("Too short."));
-        Assert.IsTrue(result.Contains("Contains invalid characters."));
+        Assert.Contains("Too short.", result);
+        Assert.Contains("Contains invalid characters.", result);
     }
 
     [TestMethod]
@@ -80,7 +80,7 @@ public class DataErrorInfoAdapterTests
         #region Public methods
         public void AddError(string propertyName, string error)
         {
-            if(!_errors.TryGetValue(propertyName, out List<string> list))
+            if(!_errors.TryGetValue(propertyName, out List<string>? list))
             {
                 list = [];
                 _errors[propertyName] = list;
@@ -99,7 +99,7 @@ public class DataErrorInfoAdapterTests
                 return _errors.SelectMany(kvp => kvp.Value);
             }
 
-            return _errors.TryGetValue(propertyName, out List<string> list) ? list : [];
+            return _errors.TryGetValue(propertyName, out List<string>? list) ? list : [];
         }
         #endregion
 

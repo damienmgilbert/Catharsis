@@ -25,7 +25,7 @@ public class SingletonPatternTests
         // Assert
         Assert.AreEqual(obj1, result1);
         Assert.AreEqual(obj2, result2);
-        Assert.AreEqual(2, cache.Count);
+        Assert.HasCount(2, cache);
         Assert.AreEqual(obj1, cache[key1]);
         Assert.AreEqual(obj2, cache[key2]);
     }
@@ -134,7 +134,7 @@ public class SingletonPatternTests
         // Assert
         Assert.AreEqual(existingValue, result);
         Assert.AreNotEqual(newValue, result);
-        Assert.AreEqual(1, cache.Count);
+        Assert.HasCount(1, cache);
     }
 
     ///<summary>
@@ -173,7 +173,7 @@ public class SingletonPatternTests
         Assert.AreEqual(firstObj, firstResult);
         Assert.AreEqual(firstObj, secondResult);
         Assert.AreNotEqual(secondObj, secondResult);
-        Assert.AreEqual(1, cache.Count);
+        Assert.HasCount(1, cache);
     }
 
     ///<summary>
@@ -196,7 +196,7 @@ public class SingletonPatternTests
         // Assert
         Assert.AreEqual(value, firstResult);
         Assert.AreEqual(value, secondResult);
-        Assert.AreEqual(1, cache.Count);
+        Assert.HasCount(1, cache);
     }
 
     ///<summary>

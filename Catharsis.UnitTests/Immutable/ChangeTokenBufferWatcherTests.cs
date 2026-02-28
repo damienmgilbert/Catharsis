@@ -19,8 +19,8 @@ public class ChangeTokenBufferWatcherTests
 
         // Give the change token a moment to propagate
         Thread.Sleep(50);
-        Assert.IsTrue(watcher.ChangeCount >= 1);
-        Assert.IsTrue(callbackCount >= 1);
+        Assert.IsGreaterThanOrEqualTo(1, watcher.ChangeCount);
+        Assert.IsGreaterThanOrEqualTo(1, callbackCount);
     }
 
     [TestMethod]

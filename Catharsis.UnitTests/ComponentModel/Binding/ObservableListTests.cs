@@ -26,7 +26,7 @@ public sealed class ObservableListTests
 
         list.AddRange([ 1, 2, 3, 4, 5 ]);
 
-        Assert.AreEqual(5, list.Count);
+        Assert.HasCount(5, list);
     }
 
     [TestMethod]
@@ -54,7 +54,7 @@ public sealed class ObservableListTests
     {
         ObservableList<int> list = new ObservableList<int>();
 
-        Assert.AreEqual(0, list.Count);
+        Assert.IsEmpty(list);
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public sealed class ObservableListTests
     {
         ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
 
-        Assert.AreEqual(3, list.Count);
+        Assert.HasCount(3, list);
     }
 
     [TestMethod]
@@ -116,7 +116,7 @@ public sealed class ObservableListTests
         int removed = list.RemoveAll(x => x > 3);
 
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(3, list.Count);
+        Assert.HasCount(3, list);
     }
 
     [TestMethod]
@@ -134,7 +134,7 @@ public sealed class ObservableListTests
 
         list.ReplaceAll([ 10, 20 ]);
 
-        Assert.AreEqual(2, list.Count);
+        Assert.HasCount(2, list);
         Assert.AreEqual(10, list[0]);
         Assert.AreEqual(20, list[1]);
     }

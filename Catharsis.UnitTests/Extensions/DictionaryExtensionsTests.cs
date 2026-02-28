@@ -45,7 +45,7 @@ public class DictionaryExtensionsTests
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 } };
         source.AddRange(new Dictionary<string, int> { { "b", 2 }, { "c", 3 } });
-        Assert.AreEqual(3, source.Count);
+        Assert.HasCount(3, source);
         Assert.AreEqual(2, source["b"]);
         Assert.AreEqual(3, source["c"]);
     }
@@ -109,7 +109,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveRange(new[] { "a", "c", "z" });
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
         Assert.IsTrue(source.ContainsKey("b"));
     }
 
@@ -119,7 +119,7 @@ public class DictionaryExtensionsTests
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
         int removed = source.RemoveWhere(kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
-        Assert.AreEqual(1, source.Count);
+        Assert.HasCount(1, source);
         Assert.AreEqual(1, source["a"]);
     }
 

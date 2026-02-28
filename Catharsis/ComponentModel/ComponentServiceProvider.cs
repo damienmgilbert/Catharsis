@@ -5,19 +5,12 @@ namespace Catharsis.ComponentModel;
 ///explicit registrations with an optional parent provider fallback.
 ///</summary>
 ///<remarks>
-///<para> Services are resolved in the following order:<list type="number"><item><description>Explicit registrations
-///added via <see cref="Register{TService}(TService)"/>.</description></item><item><description>Factory registrations
-///added via <see cref="Register{TService}(Func{TService})"/>.</description></item><item><description>The parent <see
-///cref="IServiceProvider"/>, if provided.</description></item></list></para> <para> This type is intentionally
-///lightweight and does not manage service lifetimes. For full dependency injection,
-///use<c>Microsoft.Extensions.DependencyInjection</c>.</para>
-///</remarks>
 public sealed class ComponentServiceProvider : IServiceProvider
 {
     #region Fields
-    readonly Dictionary<Type, Func<object>> _factories = [];
-    readonly Dictionary<Type, object> _instances = [];
-    readonly IServiceProvider? _parent;
+    private readonly Dictionary<Type, Func<object>> _factories = [];
+    private readonly Dictionary<Type, object> _instances = [];
+    private readonly IServiceProvider? _parent;
     #endregion
 
     #region Constructors
@@ -37,17 +30,17 @@ public sealed class ComponentServiceProvider : IServiceProvider
     {
         ArgumentNullException.ThrowIfNull(serviceType);
 
-        if(serviceType == typeof(IServiceProvider))
+        if (serviceType == typeof(IServiceProvider))
         {
             return this;
         }
 
-        if(_instances.TryGetValue(serviceType, out object instance))
+        if (_instances.TryGetValue(serviceType, out object? instance))
         {
             return instance;
         }
 
-        if(_factories.TryGetValue(serviceType, out Func<object> factory))
+        if (_factories.TryGetValue(serviceType, out Func<object>? factory))
         {
             return factory();
         }
@@ -61,8 +54,6 @@ public sealed class ComponentServiceProvider : IServiceProvider
     ///</summary>
     ///<typeparam name="TService">The service type to check.</typeparam>
     ///<returns>
-    ///<c>true</c> if a registration exists; otherwise, <c>false</c>.
-    ///</returns>
     public bool IsRegistered<TService>() where TService : class { return _instances.ContainsKey(typeof(TService)) || _factories.ContainsKey(typeof(TService)); }
 
     ///<summary>
@@ -72,8 +63,6 @@ public sealed class ComponentServiceProvider : IServiceProvider
     ///<param name="instance">The service instance to register.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="instance"/> is <c>null</c>.
-    ///</exception>
     public ComponentServiceProvider Register<TService>(TService instance) where TService : class
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -91,8 +80,6 @@ public sealed class ComponentServiceProvider : IServiceProvider
     ///<param name="factory">The factory function that creates the service.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="factory"/> is <c>null</c>.
-    ///</exception>
     public ComponentServiceProvider Register<TService>(Func<TService> factory) where TService : class
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -107,8 +94,6 @@ public sealed class ComponentServiceProvider : IServiceProvider
     ///</summary>
     ///<typeparam name="TService">The service type to unregister.</typeparam>
     ///<returns>
-    ///<c>true</c> if a registration was removed; <c>false</c> if no registration existed for the type.
-    ///</returns>
     public bool Unregister<TService>() where TService : class
     {
         bool removed = _instances.Remove(typeof(TService));

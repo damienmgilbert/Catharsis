@@ -8,16 +8,11 @@ namespace Catharsis.ComponentModel;
 ///cref="EventMetadata"/> collections.
 ///</summary>
 ///<remarks>
-///<para> Register metadata for a type using <see cref="RegisterProperty"/> and<see cref="RegisterEvent"/>. Retrieve it
-///with <see cref="GetProperties"/> and <see cref="GetEvents"/>.</para> <para> The registry is intended to be populated
-///at application startup and queried by <see cref="MetadataProvider"/> and descriptor providers during type
-///description.</para>
-///</remarks>
 public sealed class ComponentMetadataRegistry
 {
     #region Fields
-    readonly ConcurrentDictionary<Type, List<EventMetadata>> _events = new();
-    readonly ConcurrentDictionary<Type, List<PropertyMetadata>> _properties = new();
+    private readonly ConcurrentDictionary<Type, List<EventMetadata>> _events = new();
+    private readonly ConcurrentDictionary<Type, List<PropertyMetadata>> _properties = new();
     #endregion
 
     #region Public methods
@@ -41,9 +36,9 @@ public sealed class ComponentMetadataRegistry
     {
         ArgumentNullException.ThrowIfNull(componentType);
 
-        if(_events.TryGetValue(componentType, out List<EventMetadata> list))
+        if (_events.TryGetValue(componentType, out List<EventMetadata>? list))
         {
-            lock(list)
+            lock (list)
             {
                 return list.ToArray();
             }
@@ -63,9 +58,9 @@ public sealed class ComponentMetadataRegistry
     {
         ArgumentNullException.ThrowIfNull(componentType);
 
-        if(_properties.TryGetValue(componentType, out List<PropertyMetadata> list))
+        if (_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
         {
-            lock(list)
+            lock (list)
             {
                 return list.ToArray();
             }
@@ -79,8 +74,6 @@ public sealed class ComponentMetadataRegistry
     ///</summary>
     ///<param name="componentType">The component type to check.</param>
     ///<returns>
-    ///<c>true</c> if property or event metadata exists; otherwise, <c>false</c>.
-    ///</returns>
     public bool HasMetadata(Type componentType)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -94,11 +87,6 @@ public sealed class ComponentMetadataRegistry
     ///<param name="metadata">The event metadata to register.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="componentType"/> or <paramref name="metadata"/> is <c>null</c>.
-    ///</exception>
-    ///<exception cref="ArgumentException">
-    ///An event with the same name is already registered for the type.
-    ///</exception>
     public ComponentMetadataRegistry RegisterEvent(Type componentType, EventMetadata metadata)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -106,9 +94,9 @@ public sealed class ComponentMetadataRegistry
 
         List<EventMetadata> list = _events.GetOrAdd(componentType, _ => []);
 
-        lock(list)
+        lock (list)
         {
-            if(list.Any(e => string.Equals(e.Name, metadata.Name, StringComparison.Ordinal)))
+            if (list.Any(e => string.Equals(e.Name, metadata.Name, StringComparison.Ordinal)))
             {
                 throw new ArgumentException($"An event named '{metadata.Name}' is already registered for type '{componentType.Name}'.", nameof(metadata));
             }
@@ -126,11 +114,6 @@ public sealed class ComponentMetadataRegistry
     ///<param name="metadata">The property metadata to register.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="componentType"/> or <paramref name="metadata"/> is <c>null</c>.
-    ///</exception>
-    ///<exception cref="ArgumentException">
-    ///A property with the same name is already registered for the type.
-    ///</exception>
     public ComponentMetadataRegistry RegisterProperty(Type componentType, PropertyMetadata metadata)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -138,9 +121,9 @@ public sealed class ComponentMetadataRegistry
 
         List<PropertyMetadata> list = _properties.GetOrAdd(componentType, _ => []);
 
-        lock(list)
+        lock (list)
         {
-            if(list.Any(p => string.Equals(p.Name, metadata.Name, StringComparison.Ordinal)))
+            if (list.Any(p => string.Equals(p.Name, metadata.Name, StringComparison.Ordinal)))
             {
                 throw new ArgumentException($"A property named '{metadata.Name}' is already registered for type '{componentType.Name}'.", nameof(metadata));
             }
@@ -166,12 +149,12 @@ public sealed class ComponentMetadataRegistry
 
         metadata = null;
 
-        if(!_events.TryGetValue(componentType, out List<EventMetadata> list))
+        if (!_events.TryGetValue(componentType, out List<EventMetadata>? list))
         {
             return false;
         }
 
-        lock(list)
+        lock (list)
         {
             metadata = list.FirstOrDefault(e => string.Equals(e.Name, eventName, StringComparison.Ordinal));
         }
@@ -194,12 +177,12 @@ public sealed class ComponentMetadataRegistry
 
         metadata = null;
 
-        if(!_properties.TryGetValue(componentType, out List<PropertyMetadata> list))
+        if (!_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
         {
             return false;
         }
 
-        lock(list)
+        lock (list)
         {
             metadata = list.FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal));
         }
@@ -212,8 +195,6 @@ public sealed class ComponentMetadataRegistry
     ///</summary>
     ///<param name="componentType">The component type to unregister.</param>
     ///<returns>
-    ///<c>true</c> if any metadata was removed; otherwise, <c>false</c>.
-    ///</returns>
     public bool Unregister(Type componentType)
     {
         ArgumentNullException.ThrowIfNull(componentType);

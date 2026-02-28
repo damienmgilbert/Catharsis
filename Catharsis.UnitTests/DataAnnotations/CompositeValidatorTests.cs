@@ -37,7 +37,7 @@ public class CompositeValidatorTests
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
         Assert.IsFalse(result.IsValid);
-        Assert.IsTrue(result.Results.Count > 0);
+        Assert.IsNotEmpty(result.Results);
     }
 
     [TestMethod]
@@ -139,7 +139,7 @@ public class CompositeValidatorTests
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
         Assert.IsTrue(result.IsValid);
-        Assert.AreEqual(0, result.Results.Count);
+        Assert.IsEmpty(result.Results);
     }
     #endregion
 

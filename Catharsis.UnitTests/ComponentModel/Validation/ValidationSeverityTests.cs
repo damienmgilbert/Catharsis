@@ -9,9 +9,11 @@ public sealed class ValidationSeverityTests
     [TestMethod]
     public void EnumValues_AreDefined()
     {
+#pragma warning disable MSTEST0032 // Enum value guardrail assertions are intentionally constant
         Assert.AreEqual(0, (int)ValidationSeverity.Info);
         Assert.AreEqual(1, (int)ValidationSeverity.Warning);
         Assert.AreEqual(2, (int)ValidationSeverity.Error);
+#pragma warning restore MSTEST0032
     }
     #endregion
 }

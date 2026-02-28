@@ -47,7 +47,7 @@ public class DynamicTypeDescriptorTests
 
         PropertyDescriptorCollection properties = descriptor.GetProperties();
 
-        Assert.AreEqual(2, properties.Count);
+        Assert.HasCount(2, properties);
         Assert.IsNotNull(properties["Name"]);
         Assert.IsNotNull(properties["Age"]);
     }

@@ -595,7 +595,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new ComponentServiceProvider();
-        Func<ITestService?> factory = () => null;
+        Func<ITestService> factory = () => null!;
         provider.Register(factory);
 
         // Act

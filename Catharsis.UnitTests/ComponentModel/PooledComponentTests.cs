@@ -267,7 +267,7 @@ public partial class PooledComponentTests
 
         // Assert
         Assert.AreEqual(2, result);
-        Assert.IsTrue(result > 0);
+        Assert.IsGreaterThan(0, result);
     }
 
     ///<summary>

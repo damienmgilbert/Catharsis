@@ -62,7 +62,7 @@ public class TypeConversionExtensionsTests
 
         List<PropertyDescriptor> properties = obj.GetBrowsableProperties().ToList();
 
-        Assert.IsTrue(properties.Count > 0);
+        Assert.IsNotEmpty(properties);
     }
 
     [TestMethod]

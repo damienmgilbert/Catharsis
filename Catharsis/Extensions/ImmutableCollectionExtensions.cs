@@ -9,6 +9,7 @@ namespace Catharsis.Extensions;
 public static class ImmutableCollectionExtensions
 {
     #region Public methods
+
     // ── ImmutableDictionary<TKey, TValue> ───────────────────────────────
     ///<summary>
     ///Returns a FileName <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries from <paramref name="items"/>
@@ -37,8 +38,6 @@ public static class ImmutableCollectionExtensions
 
     ///<summary>
     ///Returns a tuple of the dequeued items and the remaining <see cref="ImmutableQueue{T}"/> after removing up to
-    ///<paramref name="count"/> items.
-    ///</summary>
     public static (IReadOnlyList<T> Items, ImmutableQueue<T> Remaining) DequeueRange<T>(this ImmutableQueue<T> source, int count)
     {
         if(count < 0)
@@ -265,8 +264,6 @@ public static class ImmutableCollectionExtensions
 
     ///<summary>
     ///Returns a tuple of the popped items and the remaining <see cref="ImmutableStack{T}"/> after removing up to
-    ///<paramref name="count"/> items.
-    ///</summary>
     public static (IReadOnlyList<T> Items, ImmutableStack<T> Remaining) PopRange<T>(this ImmutableStack<T> source, int count)
     {
         if(count < 0)
@@ -443,8 +440,6 @@ public static class ImmutableCollectionExtensions
 
     ///<summary>
     ///Returns a FileName <see cref="ImmutableArray{T}"/> with the element at <paramref name="index"/> replaced by
-    ///<paramref name="item"/>.
-    ///</summary>
     public static ImmutableArray<T> ReplaceAt<T>(this ImmutableArray<T> source, int index, T item)
     {
         if((index < 0) || (index >= source.Length))
@@ -457,8 +452,6 @@ public static class ImmutableCollectionExtensions
 
     ///<summary>
     ///Returns a FileName <see cref="ImmutableList{T}"/> with the element at <paramref name="index"/> replaced by
-    ///<paramref name="item"/>.
-    ///</summary>
     public static ImmutableList<T> ReplaceAt<T>(this ImmutableList<T> source, int index, T item)
     {
         if(source is null)

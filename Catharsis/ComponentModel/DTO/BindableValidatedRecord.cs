@@ -12,17 +12,13 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap, validate, and edit.</typeparam>
 ///<remarks>
-///<para> Setting <see cref="BindableRecord{T}.Value"/> automatically triggers DataAnnotations validation. Call <see
-///cref="BeginEdit"/> to snapshot the current value, <see cref="CancelEdit"/> to revert, or <see cref="EndEdit"/> to
-///commit. Override <see cref="ValidateValue"/> for custom validation logic.</para>
-///</remarks>
 public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo, IEditableObject, IRevertibleChangeTracking where T : class
 {
     #region Fields
-    T? _acceptedValue;
-    readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
-    bool _isEditing;
-    T? _snapshot;
+    private T? _acceptedValue;
+    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private bool _isEditing;
+    private T? _snapshot;
     #endregion
 
     #region Constructors
@@ -31,8 +27,6 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///</summary>
     ///<param name="value">The initial record value.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="value"/> is <c>null</c>.
-    ///</exception>
     public BindableValidatedRecord(T value) : base(value) { _acceptedValue = value; }
     #endregion
 
@@ -42,27 +36,27 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     #endregion
 
     #region Private methods
-    void AddError(string propertyName, string message)
+    private void AddError(string propertyName, string message)
     {
-        if(!_errors.TryGetValue(propertyName, out List<string> list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
         }
 
-        if(!list.Contains(message))
+        if (!list.Contains(message))
         {
             list.Add(message);
             OnErrorsChanged(propertyName);
         }
     }
 
-    void ClearAllErrors()
+    private void ClearAllErrors()
     {
         List<string> properties = _errors.Keys.ToList();
         _errors.Clear();
 
-        foreach(string property in properties)
+        foreach (string property in properties)
         {
             OnErrorsChanged(property);
         }
@@ -81,7 +75,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     {
         base.OnPropertyChanged(propertyName);
 
-        if(string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
+        if (string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
         {
             Validate();
         }
@@ -99,17 +93,18 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 
         Validator.TryValidateObject(value, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             List<string> members = result.MemberNames.ToList();
             string message = result.ErrorMessage ?? "Validation failed.";
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(string.Empty, message);
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(member, message);
                 }
@@ -131,7 +126,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///</summary>
     public void BeginEdit()
     {
-        if(_isEditing)
+        if (_isEditing)
         {
             return;
         }
@@ -145,12 +140,12 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///</summary>
     public void CancelEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             Value = _snapshot;
         }
@@ -164,7 +159,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///</summary>
     public void EndEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
@@ -176,18 +171,18 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }
 
-        return _errors.TryGetValue(propertyName, out List<string> errors) ? errors : [];
+        return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
     }
 
     ///<inheritdoc/>
     public void RejectChanges()
     {
-        if(_acceptedValue is not null)
+        if (_acceptedValue is not null)
         {
             Value = _acceptedValue;
         }

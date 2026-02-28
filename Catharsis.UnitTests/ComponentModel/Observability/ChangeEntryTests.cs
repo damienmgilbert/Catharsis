@@ -52,8 +52,8 @@ public sealed class ChangeEntryTests
         ChangeEntry entry = new ChangeEntry("Name", "old", "new");
         string result = entry.ToString();
 
-        Assert.IsTrue(result.Contains("Name"));
-        Assert.IsTrue(result.Contains("old"));
-        Assert.IsTrue(result.Contains("new"));
+        Assert.Contains("Name", result);
+        Assert.Contains("old", result);
+        Assert.Contains("new", result);
     }
 }

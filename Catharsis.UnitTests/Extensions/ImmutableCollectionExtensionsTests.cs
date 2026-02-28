@@ -13,7 +13,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableArray<int> source = ImmutableArray.Create(1, 2, 4);
         ImmutableArray<int> result = source.InsertAt(2, 3);
-        Assert.AreEqual(4, result.Length);
+        Assert.HasCount(4, result);
         Assert.AreEqual(3, result[2]);
     }
 
@@ -55,7 +55,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableDictionary<string, int> source = ImmutableDictionary<string, int>.Empty.Add("a", 1);
         ImmutableDictionary<string, int> result = source.AddRange(new Dictionary<string, int> { { "b", 2 }, { "c", 3 } });
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
     }
 
     [TestMethod]
@@ -72,7 +72,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableDictionary<string, int> source = ImmutableDictionary<string, int>.Empty.Add("a", 1).Add("b", 2).Add("c", 3);
         ImmutableDictionary<string, int> result = source.RemoveWhere(kvp => kvp.Value > 1);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual(1, result["a"]);
     }
 
@@ -81,10 +81,10 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableHashSet<int> source = ImmutableHashSet.Create(1, 2, 3);
         ImmutableHashSet<int> result = source.ModifyAll(x => x * 10);
-        Assert.AreEqual(3, result.Count);
-        Assert.IsTrue(result.Contains(10));
-        Assert.IsTrue(result.Contains(20));
-        Assert.IsTrue(result.Contains(30));
+        Assert.HasCount(3, result);
+        Assert.Contains(10, result);
+        Assert.Contains(20, result);
+        Assert.Contains(30, result);
     }
 
     // ── ImmutableHashSet<T> ─────────────────────────────────────────
@@ -93,9 +93,9 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableHashSet<int> source = ImmutableHashSet.Create(1, 2, 3, 4, 5);
         ImmutableHashSet<int> result = source.RemoveWhere(x => x % 2 == 0);
-        Assert.AreEqual(3, result.Count);
-        Assert.IsTrue(result.Contains(1));
-        Assert.IsFalse(result.Contains(2));
+        Assert.HasCount(3, result);
+        Assert.Contains(1, result);
+        Assert.DoesNotContain(2, result);
     }
 
     [TestMethod]
@@ -136,7 +136,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableQueue<int> source = ImmutableQueue<int>.Empty.Enqueue(1).Enqueue(2).Enqueue(3);
         var (items, remaining) = source.DequeueRange(2);
-        Assert.AreEqual(2, items.Count);
+        Assert.HasCount(2, items);
         Assert.AreEqual(1, items[0]);
         Assert.AreEqual(2, items[1]);
         Assert.IsFalse(remaining.IsEmpty);
@@ -168,7 +168,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableSortedDictionary<string, int> source = ImmutableSortedDictionary<string, int>.Empty.Add("a", 1).Add("b", 2).Add("c", 3);
         ImmutableSortedDictionary<string, int> result = source.RemoveWhere(kvp => kvp.Value <= 2);
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual(3, result["c"]);
     }
 
@@ -178,9 +178,9 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableSortedSet<int> source = ImmutableSortedSet.Create(1, 2, 3, 4, 5);
         ImmutableSortedSet<int> result = source.RemoveWhere(x => x > 3);
-        Assert.AreEqual(3, result.Count);
-        Assert.IsTrue(result.Contains(1));
-        Assert.IsFalse(result.Contains(4));
+        Assert.HasCount(3, result);
+        Assert.Contains(1, result);
+        Assert.DoesNotContain(4, result);
     }
 
     [TestMethod]
@@ -188,7 +188,7 @@ public class ImmutableCollectionExtensionsTests
     {
         ImmutableStack<int> source = ImmutableStack<int>.Empty.Push(1).Push(2).Push(3);
         var (items, remaining) = source.PopRange(2);
-        Assert.AreEqual(2, items.Count);
+        Assert.HasCount(2, items);
         Assert.AreEqual(3, items[0]);
         Assert.AreEqual(2, items[1]);
         Assert.IsFalse(remaining.IsEmpty);

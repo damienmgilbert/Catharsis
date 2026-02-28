@@ -7,6 +7,7 @@ namespace Catharsis.Extensions;
 public static class ArrayExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Returns a FileName array with <paramref name="item"/> appended to the end.
     ///</summary>

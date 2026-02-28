@@ -24,7 +24,7 @@ public class DataTypePatternAttributeTests
         ValidationResult? result = attribute.GetValidationResult("not-an-email", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("EmailAddress"));
+        Assert.Contains("EmailAddress", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public class DataTypePatternAttributeTests
         ValidationResult? result = attribute.GetValidationResult(42, context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("string"));
+        Assert.Contains("string", result!.ErrorMessage!);
     }
 
     [TestMethod]

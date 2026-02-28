@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json;
-using Catharsis;
 using Catharsis.Advanced;
 
 namespace Catharsis.UnitTests.Advanced;
@@ -8,12 +7,13 @@ namespace Catharsis.UnitTests.Advanced;
 [TestClass]
 public class PooledJsonDocumentTests
 {
+    #region Public methods
     [TestMethod]
-    public void Parse_String_ReturnsDocument()
+    public void Dispose_IsIdempotent()
     {
-        using PooledJsonDocument doc = PooledJsonDocument.Parse("""{"key":"value"}""");
-        Assert.AreEqual(JsonValueKind.Object, doc.RootElement.ValueKind);
-        Assert.AreEqual("value", doc.RootElement.GetProperty("key").GetString());
+        PooledJsonDocument doc = PooledJsonDocument.Parse("""{"x":1}""");
+        doc.Dispose();
+        doc.Dispose();
     }
 
     [TestMethod]
@@ -25,18 +25,19 @@ public class PooledJsonDocumentTests
     }
 
     [TestMethod]
+    public void Parse_String_ReturnsDocument()
+    {
+        using PooledJsonDocument doc = PooledJsonDocument.Parse("""{"key":"value"}""");
+        Assert.AreEqual(JsonValueKind.Object, doc.RootElement.ValueKind);
+        Assert.AreEqual("value", doc.RootElement.GetProperty("key").GetString());
+    }
+
+    [TestMethod]
     public async Task ParseAsync_Stream_ReturnsDocument()
     {
         using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes("""{"a":1}"""));
         using PooledJsonDocument doc = await PooledJsonDocument.ParseAsync(stream);
         Assert.AreEqual(1, doc.RootElement.GetProperty("a").GetInt32());
     }
-
-    [TestMethod]
-    public void Dispose_IsIdempotent()
-    {
-        PooledJsonDocument doc = PooledJsonDocument.Parse("""{"x":1}""");
-        doc.Dispose();
-        doc.Dispose();
-    }
+    #endregion
 }

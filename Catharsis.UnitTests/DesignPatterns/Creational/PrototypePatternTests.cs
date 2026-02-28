@@ -15,9 +15,9 @@ public class PrototypePatternTests
     {
         // Arrange
         string obj = "test";
-        Func<string, string?> clone = _ => null;
+        Func<string?, string?> clone = _ => null;
         // Act
-        string? result = new PrototypePattern().Prototype(obj, clone);
+        string? result = new PrototypePattern().Prototype<string?>(obj, clone);
         // Assert
         Assert.IsNull(result);
     }

@@ -23,7 +23,7 @@ public class TreeNodeGenericTests
 
         root2.AddChild(child);
 
-        Assert.AreEqual(0, root1.Children.Count);
+        Assert.IsEmpty(root1.Children);
         Assert.AreSame(root2, child.Parent);
     }
 
@@ -41,7 +41,7 @@ public class TreeNodeGenericTests
         TreeNode<string> child = root.AddChild("child");
         Assert.AreEqual("child", child.Value);
         Assert.AreSame(root, child.Parent);
-        Assert.AreEqual(1, root.Children.Count);
+        Assert.HasCount(1, root.Children);
         Assert.IsFalse(root.IsLeaf);
         Assert.IsFalse(child.IsRoot);
     }
@@ -109,7 +109,7 @@ public class TreeNodeGenericTests
         TreeNode<int> root = new TreeNode<int>(1);
         TreeNode<int> child = root.AddChild(2);
         Assert.IsTrue(root.RemoveChild(child));
-        Assert.AreEqual(0, root.Children.Count);
+        Assert.IsEmpty(root.Children);
         Assert.IsNull(child.Parent);
     }
 

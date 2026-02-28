@@ -11,7 +11,7 @@ public class BoundedCollectionTests
     {
         BoundedCollection<int> c = new BoundedCollection<int>(5);
         Assert.AreEqual(5, c.MaxCapacity);
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
     }
 
     [TestMethod]
@@ -25,7 +25,7 @@ public class BoundedCollectionTests
     {
         BoundedCollection<int> c = new BoundedCollection<int>(2);
         c.Add(1);
-        Assert.AreEqual(1, c.Count);
+        Assert.HasCount(1, c);
         Assert.IsFalse(c.IsFull);
     }
 
@@ -50,7 +50,7 @@ public class BoundedCollectionTests
     {
         BoundedCollection<int> c = new BoundedCollection<int>(2);
         Assert.IsTrue(c.TryAdd(1));
-        Assert.AreEqual(1, c.Count);
+        Assert.HasCount(1, c);
     }
 
     [TestMethod]
@@ -59,7 +59,7 @@ public class BoundedCollectionTests
         BoundedCollection<int> c = new BoundedCollection<int>(3);
         c.Add(1);
         Assert.IsTrue(c.Remove(1));
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
     }
 
     [TestMethod]
@@ -77,7 +77,7 @@ public class BoundedCollectionTests
         BoundedCollection<int> c = new BoundedCollection<int>(3);
         c.Add(1); c.Add(2);
         c.Clear();
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
         Assert.IsFalse(c.IsFull);
     }
 }

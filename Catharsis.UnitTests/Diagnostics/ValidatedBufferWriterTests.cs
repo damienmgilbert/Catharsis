@@ -41,7 +41,7 @@ public class ValidatedBufferWriterTests
         ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
 
         Memory<byte> mem = writer.GetMemory(10);
-        Assert.IsTrue(mem.Length >= 10);
+        Assert.IsGreaterThanOrEqualTo(10, mem.Length);
     }
 
     [TestMethod]

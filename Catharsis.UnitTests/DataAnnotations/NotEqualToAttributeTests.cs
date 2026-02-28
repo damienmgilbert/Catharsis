@@ -31,7 +31,7 @@ public class NotEqualToAttributeTests
         ValidationResult? result = attribute.GetValidationResult("X", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Comparison Field"));
+        Assert.Contains("Comparison Field", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class NotEqualToAttributeTests
         ValidationResult? result = attribute.GetValidationResult("same", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("must not equal"));
+        Assert.Contains("must not equal", result!.ErrorMessage!);
     }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public class NotEqualToAttributeTests
         ValidationResult? result = attribute.GetValidationResult("A", context);
 
         Assert.AreNotEqual(ValidationResult.Success, result);
-        Assert.IsTrue(result!.ErrorMessage!.Contains("Unknown property"));
+        Assert.Contains("Unknown property", result!.ErrorMessage!);
     }
     #endregion
 

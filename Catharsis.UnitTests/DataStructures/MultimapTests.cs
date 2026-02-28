@@ -58,7 +58,7 @@ public class MultimapTests
         mm.Add("x", 1);
         mm.Add("x", 2);
         IReadOnlyCollection<int> vals = mm["x"];
-        Assert.AreEqual(2, vals.Count);
+        Assert.HasCount(2, vals);
     }
 
     [TestMethod]
@@ -95,8 +95,8 @@ public class MultimapTests
     {
         Multimap<string, int> mm = new Multimap<string, int>();
         mm.Add("k", 42);
-        Assert.IsTrue(mm.TryGetValues("k", out IReadOnlyCollection<int> vals));
-        Assert.AreEqual(1, vals!.Count);
+        Assert.IsTrue(mm.TryGetValues("k", out IReadOnlyCollection<int>? vals));
+        Assert.HasCount(1, vals);
         Assert.IsFalse(mm.TryGetValues("missing", out _));
     }
     #endregion
