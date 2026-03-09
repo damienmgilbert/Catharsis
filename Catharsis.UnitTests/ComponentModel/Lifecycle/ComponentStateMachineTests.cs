@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentStateMachine"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentStateMachineTests
 {
@@ -137,7 +140,7 @@ public sealed class ComponentStateMachineTests
     public void TryTransitionTo_GuardBlocksTransition()
     {
         ComponentStateMachine machine = new ComponentStateMachine();
-        machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = () => false });
+        machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => false });
 
         Assert.IsFalse(machine.TryTransitionTo(ComponentState.Initializing));
         Assert.AreEqual(ComponentState.Created, machine.CurrentState);

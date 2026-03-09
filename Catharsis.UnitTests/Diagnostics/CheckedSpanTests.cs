@@ -2,6 +2,9 @@ using Catharsis.Diagnostics;
 
 namespace Catharsis.UnitTests.Diagnostics;
 
+///<summary>
+///Unit tests for the <see cref="CheckedSpan"/> class.
+///</summary>
 [TestClass]
 public class CheckedSpanTests
 {

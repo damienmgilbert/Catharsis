@@ -71,7 +71,7 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
 
         foreach(ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
 
             if(members.Count == 0)
             {

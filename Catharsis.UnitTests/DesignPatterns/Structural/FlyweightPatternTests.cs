@@ -3,6 +3,9 @@ using Catharsis.DesignPatterns.Structural;
 
 namespace Catharsis.UnitTests.DesignPatterns.Structural;
 
+///<summary>
+///Unit tests for the <see cref="FlyweightPattern"/> class.
+///</summary>
 [TestClass]
 public class FlyweightPatternTests
 {
@@ -27,8 +30,8 @@ public class FlyweightPatternTests
         FlyweightPattern fw = new FlyweightPattern();
         ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
 
-        string r1 = fw.Flyweight("key", cache, k => $"value_{k}");
-        string r2 = fw.Flyweight("key", cache, k => $"new_value_{k}");
+        string r1 = fw.Flyweight("key", cache, static k => $"value_{k}");
+        string r2 = fw.Flyweight("key", cache, static k => $"new_value_{k}");
 
         Assert.AreEqual("value_key", r1);
         Assert.AreSame(r1, r2);

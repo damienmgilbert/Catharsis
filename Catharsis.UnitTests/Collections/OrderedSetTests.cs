@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="OrderedSet"/> class.
+///</summary>
 [TestClass]
 public class OrderedSetTests
 {
@@ -65,6 +68,6 @@ public class OrderedSetTests
     [TestMethod]
     public void Constructor_NullComparer_Throws()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => new OrderedSet<int>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(static () => new OrderedSet<int>(null!));
     }
 }

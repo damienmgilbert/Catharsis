@@ -46,12 +46,12 @@ public class MemoryPoolManagerTests
     ///Tests that the constructor throws when arrayPool is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullArrayPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new MemoryPoolManager(null!, MemoryPool<byte>.Shared)); }
+    public void Constructor_NullArrayPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new MemoryPoolManager(null!, MemoryPool<byte>.Shared)); }
     ///<summary>
     ///Tests that the constructor throws when memoryPool is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullMemoryPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new MemoryPoolManager(ArrayPool<byte>.Shared, null!)); }
+    public void Constructor_NullMemoryPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new MemoryPoolManager(ArrayPool<byte>.Shared, null!)); }
     ///<summary>
     ///Tests that Dispose is idempotent.
     ///</summary>

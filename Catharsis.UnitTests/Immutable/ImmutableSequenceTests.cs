@@ -3,6 +3,9 @@ using Catharsis.Immutable;
 
 namespace Catharsis.UnitTests.Immutable;
 
+///<summary>
+///Unit tests for the <see cref="ImmutableSequence"/> class.
+///</summary>
 [TestClass]
 public class ImmutableSequenceTests
 {

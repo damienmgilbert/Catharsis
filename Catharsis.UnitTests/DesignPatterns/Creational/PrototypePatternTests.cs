@@ -15,7 +15,7 @@ public class PrototypePatternTests
     {
         // Arrange
         string obj = "test";
-        Func<string?, string?> clone = _ => null;
+        Func<string?, string?> clone = static _ => null;
         // Act
         string? result = new PrototypePattern().Prototype<string?>(obj, clone);
         // Assert
@@ -31,7 +31,7 @@ public class PrototypePatternTests
     {
         // Arrange
         double value = double.NaN;
-        Func<double, double> clone = x => double.IsNaN(x) ? 0.0 : x;
+        Func<double, double> clone = static x => double.IsNaN(x) ? 0.0 : x;
         // Act
         double result = new PrototypePattern().Prototype(value, clone);
         // Assert
@@ -47,7 +47,7 @@ public class PrototypePatternTests
     {
         // Arrange
         double value = double.NegativeInfinity;
-        Func<double, double> clone = x => x;
+        Func<double, double> clone = static x => x;
         // Act
         double result = new PrototypePattern().Prototype(value, clone);
         // Assert
@@ -63,7 +63,7 @@ public class PrototypePatternTests
     {
         // Arrange
         double value = double.PositiveInfinity;
-        Func<double, double> clone = x => x;
+        Func<double, double> clone = static x => x;
         // Act
         double result = new PrototypePattern().Prototype(value, clone);
         // Assert
@@ -84,7 +84,7 @@ public class PrototypePatternTests
     {
         // Arrange
         int expected = value * 2;
-        Func<int, int> clone = x => x * 2;
+        Func<int, int> clone = static x => x * 2;
         // Act
         int result = new PrototypePattern().Prototype(value, clone);
         // Assert

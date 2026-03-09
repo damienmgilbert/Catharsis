@@ -3,6 +3,9 @@ using System.Buffers;
 
 namespace Catharsis.UnitTests.Diagnostics;
 
+///<summary>
+///Unit tests for the <see cref="ValidatedBufferWriter"/> class.
+///</summary>
 [TestClass]
 public class ValidatedBufferWriterTests
 {

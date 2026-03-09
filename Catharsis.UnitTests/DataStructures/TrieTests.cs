@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="Trie"/> class.
+///</summary>
 [TestClass]
 public class TrieTests
 {
@@ -23,7 +26,7 @@ public class TrieTests
         trie.Insert("cat");
         trie.Insert("car");
         trie.Insert("dog");
-        List<string> result = trie.GetWordsWithPrefix("ca").OrderBy(x => x).ToList();
+        List<string> result = [.. trie.GetWordsWithPrefix("ca").OrderBy(static x => x)];
         Assert.HasCount(2, result);
         Assert.Contains("cat", result);
         Assert.Contains("car", result);
@@ -49,7 +52,7 @@ public class TrieTests
     }
 
     [TestMethod]
-    public void Insert_Null_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new Trie().Insert(null!)); }
+    public void Insert_Null_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new Trie().Insert(null!)); }
     [TestMethod]
     public void Remove_ExistingWord_ReturnsTrue()
     {
@@ -68,7 +71,7 @@ public class TrieTests
     }
 
     [TestMethod]
-    public void Search_Null_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new Trie().Search(null!)); }
+    public void Search_Null_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new Trie().Search(null!)); }
     [TestMethod]
     public void StartsWith_ReturnsCorrectResult()
     {

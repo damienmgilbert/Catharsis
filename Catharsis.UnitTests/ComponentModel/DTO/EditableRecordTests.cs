@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="EditableRecord"/> class.
+///</summary>
 [TestClass]
 public sealed class EditableRecordTests
 {
@@ -79,7 +82,7 @@ public sealed class EditableRecordTests
     }
 
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new EditableRecord<PersonRecord>(null!)); }
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new EditableRecord<PersonRecord>(null!)); }
     [TestMethod]
     public void EndEdit_CommitsChanges()
     {

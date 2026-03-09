@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="MetadataAnnotatedRecord"/> class.
+///</summary>
 [TestClass]
 public sealed class MetadataAnnotatedRecordTests
 {
@@ -16,7 +19,7 @@ public sealed class MetadataAnnotatedRecordTests
     }
 
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new MetadataAnnotatedRecord<AnnotatedDto>(null!)); }
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new MetadataAnnotatedRecord<AnnotatedDto>(null!)); }
     [TestMethod]
     public void GetPropertyMetadata_Attributes_ContainsAppliedAttributes()
     {
@@ -25,7 +28,7 @@ public sealed class MetadataAnnotatedRecordTests
         PropertyMetadataEntry? nameMeta = record.GetPropertyMetadata("Name");
 
         Assert.IsNotNull(nameMeta);
-        Assert.IsTrue(nameMeta.Attributes.Any(a => a is RequiredAttribute));
+        Assert.IsTrue(nameMeta.Attributes.Any(static a => a is RequiredAttribute));
     }
 
     [TestMethod]

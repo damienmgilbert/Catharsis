@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="BindableValidatedRecord"/> class.
+///</summary>
 [TestClass]
 public sealed class BindableValidatedRecordTests
 {
@@ -47,7 +50,7 @@ public sealed class BindableValidatedRecordTests
     }
 
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BindableValidatedRecord<PersonDto>(null!)); }
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new BindableValidatedRecord<PersonDto>(null!)); }
     [TestMethod]
     public void CurrentErrors_ReturnsReadOnlyDictionary()
     {
@@ -75,7 +78,7 @@ public sealed class BindableValidatedRecordTests
         BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
         record.Validate();
 
-        List<string> all = record.GetErrors(null).Cast<string>().ToList();
+        List<string> all = [.. record.GetErrors(null).Cast<string>()];
 
         Assert.IsGreaterThanOrEqualTo(2, all.Count);
     }
@@ -86,7 +89,7 @@ public sealed class BindableValidatedRecordTests
         BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
         record.Validate();
 
-        List<string> errors = record.GetErrors("Name").Cast<string>().ToList();
+        List<string> errors = [.. record.GetErrors("Name").Cast<string>()];
 
         Assert.HasCount(1, errors);
     }

@@ -4,6 +4,9 @@ using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelBinder"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentModelBinderTests
 {

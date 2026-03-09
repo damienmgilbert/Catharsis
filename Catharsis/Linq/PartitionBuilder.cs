@@ -91,7 +91,7 @@ public sealed class PartitionBuilder<T>
     public ILookup<string, T> Apply(IEnumerable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return Classify(source).ToLookup(p => p.Partition, p => p.Element);
+        return Classify(source).ToLookup(static p => p.Partition, static p => p.Element);
     }
 
     ///<summary>
@@ -104,7 +104,7 @@ public sealed class PartitionBuilder<T>
     public IEnumerable<IGrouping<string, T>> ApplyAsGroupings(IEnumerable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return Classify(source).GroupBy(p => p.Partition).Select(g => SequenceFactory.Grouping(g.Key, g.Select(p => p.Element)));
+        return Classify(source).GroupBy(static p => p.Partition).Select(static g => SequenceFactory.Grouping(g.Key, g.Select(static p => p.Element)));
     }
 
     ///<summary>

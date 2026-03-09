@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="SetExtensions"/> class.
+///</summary>
 [TestClass]
 public class SetExtensionsTests
 {
@@ -27,7 +30,7 @@ public class SetExtensionsTests
     public void HashSet_RemoveWhere_RemovesMatchingElements()
     {
         HashSet<int> source = new HashSet<int> { 1, 2, 3, 4, 5, 6 };
-        int removed = source.RemoveWhere(x => x % 2 == 0);
+        int removed = source.RemoveWhere(static x => x % 2 == 0);
         Assert.AreEqual(3, removed);
         Assert.HasCount(3, source);
     }
@@ -74,7 +77,7 @@ public class SetExtensionsTests
     public void SortedSet_RemoveWhere_RemovesMatchingElements()
     {
         SortedSet<int> source = new SortedSet<int> { 1, 2, 3, 4, 5, 6 };
-        int removed = source.RemoveWhere(x => x > 4);
+        int removed = source.RemoveWhere(static x => x > 4);
         Assert.AreEqual(2, removed);
         Assert.HasCount(4, source);
     }

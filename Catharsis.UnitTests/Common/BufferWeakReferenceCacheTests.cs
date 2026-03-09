@@ -2,6 +2,9 @@ using Catharsis.Common;
 
 namespace Catharsis.UnitTests.Common;
 
+///<summary>
+///Unit tests for the <see cref="BufferWeakReferenceCache"/> class.
+///</summary>
 [TestClass]
 public class BufferWeakReferenceCacheTests
 {
@@ -29,7 +32,7 @@ public class BufferWeakReferenceCacheTests
     public void GetOrCreate_CreatesOnMiss()
     {
         BufferWeakReferenceCache<string> cache = new BufferWeakReferenceCache<string>();
-        string val = cache.GetOrCreate("k", () => "created");
+        string val = cache.GetOrCreate("k", static () => "created");
         Assert.AreEqual("created", val);
     }
 
@@ -38,7 +41,7 @@ public class BufferWeakReferenceCacheTests
     {
         BufferWeakReferenceCache<string> cache = new BufferWeakReferenceCache<string>();
         cache.Set("k", "original");
-        string val = cache.GetOrCreate("k", () => "new");
+        string val = cache.GetOrCreate("k", static () => "new");
         Assert.AreEqual("original", val);
     }
 

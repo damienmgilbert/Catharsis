@@ -240,12 +240,12 @@ public class PooledStringBuilderTests
     ///Tests that the constructor throws when pool is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PooledStringBuilder(null!, 256)); }
+    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PooledStringBuilder(null!, 256)); }
     ///<summary>
     ///Tests that the constructor throws when capacity is zero.
     ///</summary>
     [TestMethod]
-    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new PooledStringBuilder(0)); }
+    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new PooledStringBuilder(0)); }
     ///<summary>
     ///Tests that Dispose is idempotent.
     ///</summary>

@@ -44,7 +44,7 @@ public abstract class EditableObject : IEditableObject
     ///Returns the bindable properties of this object used for snapshotting. Override to customise which properties
     ///participate in edit transactions.
     ///</summary>
-    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0)); }
+    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0)); }
     #endregion
 
     #region Public methods

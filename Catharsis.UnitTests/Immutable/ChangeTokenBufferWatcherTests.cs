@@ -3,6 +3,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catharsis.UnitTests.Immutable;
 
+///<summary>
+///Unit tests for the <see cref="ChangeTokenBufferWatcher"/> class.
+///</summary>
 [TestClass]
 public class ChangeTokenBufferWatcherTests
 {
@@ -29,7 +32,7 @@ public class ChangeTokenBufferWatcherTests
         TestNotifier notifier = new TestNotifier();
         ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
                                            notifier,
-                                           () =>
+                                           static () =>
         {
         });
         watcher.Dispose();
@@ -42,7 +45,7 @@ public class ChangeTokenBufferWatcherTests
         TestNotifier notifier = new TestNotifier();
         using ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
                                                  notifier,
-                                                 () =>
+                                                 static () =>
         {
         });
         watcher.Start();
@@ -55,7 +58,7 @@ public class ChangeTokenBufferWatcherTests
         TestNotifier notifier = new TestNotifier();
         using ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
                                                  notifier,
-                                                 () =>
+                                                 static () =>
         {
         });
         watcher.Start();

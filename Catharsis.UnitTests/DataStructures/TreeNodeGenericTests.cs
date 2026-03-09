@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="TreeNodeGeneric"/> class.
+///</summary>
 [TestClass]
 public class TreeNodeGenericTests
 {
@@ -54,7 +57,7 @@ public class TreeNodeGenericTests
         TreeNode<int> c2 = root.AddChild(3);
         c1.AddChild(4);
 
-        List<int> result = root.BreadthFirst().Select(n => n.Value).ToList();
+        List<int> result = [.. root.BreadthFirst().Select(static n => n.Value)];
 
         CollectionAssert.AreEqual(new[] { 1, 2, 3, 4 }, result);
     }
@@ -88,7 +91,7 @@ public class TreeNodeGenericTests
         TreeNode<int> c2 = root.AddChild(3);
         c1.AddChild(4);
 
-        List<int> result = root.DepthFirst().Select(n => n.Value).ToList();
+        List<int> result = [.. root.DepthFirst().Select(static n => n.Value)];
 
         CollectionAssert.AreEqual(new[] { 1, 2, 4, 3 }, result);
     }

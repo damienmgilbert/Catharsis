@@ -55,7 +55,7 @@ public sealed class ValidationResultAggregator
     public IReadOnlyList<string> GetAffectedMembers()
     {
         return _entries
-                    .SelectMany(e => e.Result.MemberNames)
+                    .SelectMany(static e => e.Result.MemberNames)
             .Distinct(StringComparer.Ordinal)
             .ToList();
     }
@@ -96,7 +96,7 @@ public sealed class ValidationResultAggregator
         return _entries.SelectMany(
                e =>
                {
-                   List<string> members = e.Result.MemberNames.ToList();
+                   List<string> members = [.. e.Result.MemberNames];
 
                    if(members.Count == 0)
                    {
@@ -118,7 +118,7 @@ public sealed class ValidationResultAggregator
     ///<summary>
     ///Gets a value indicating whether any error-level results have been collected.
     ///</summary>
-    public bool HasErrors => _entries.Exists(e => e.Severity == ValidationSeverity.Error);
+    public bool HasErrors => _entries.Exists(static e => e.Severity == ValidationSeverity.Error);
 
     ///<summary>
     ///Gets a value indicating whether any results have been collected.

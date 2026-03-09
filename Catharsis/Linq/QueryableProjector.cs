@@ -112,9 +112,7 @@ public static class QueryableProjector
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(projections, nameof(projections));
 
-        List<KeyValuePair<string, Func<T, object?>>> compiled = projections
-            .Select(kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile()))
-            .ToList();
+        List<KeyValuePair<string, Func<T, object?>>> compiled = [.. projections.Select(static kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile()))];
 
         foreach (T item in source)
         {
@@ -139,7 +137,7 @@ public static class QueryableProjector
     public static IQueryable<(int Index, T Element)> ProjectWithIndex<T>(this IQueryable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.Select((item, index) => new ValueTuple<int, T>(index, item));
+        return source.Select(static (item, index) => new ValueTuple<int, T>(index, item));
     }
     #endregion
 }

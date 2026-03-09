@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
+///<summary>
+///Unit tests for the <see cref="BasicLicense"/> class.
+///</summary>
 [TestClass]
 public sealed class BasicLicenseTests
 {
@@ -16,7 +19,7 @@ public sealed class BasicLicenseTests
     }
 
     [TestMethod]
-    public void Constructor_NullKey_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BasicLicense(null!)); }
+    public void Constructor_NullKey_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new BasicLicense(null!)); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {

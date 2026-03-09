@@ -85,7 +85,7 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
     {
         PropertyDescriptorCollection baseProperties = base.GetProperties(attributes);
-        PropertyDescriptor[] filtered = _properties.Where(p => MatchesAttributes(p, attributes)).ToArray();
+        PropertyDescriptor[] filtered = [.. _properties.Where(p => MatchesAttributes(p, attributes))];
         PropertyDescriptor[] merged = new PropertyDescriptor[baseProperties.Count + filtered.Length];
 
         baseProperties.CopyTo(merged, 0);

@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="Graph"/> class.
+///</summary>
 [TestClass]
 public class GraphTests
 {
@@ -41,7 +44,7 @@ public class GraphTests
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         g.AddEdge(2, 4);
-        List<int> result = g.BreadthFirst(1).ToList();
+        List<int> result = [.. g.BreadthFirst(1)];
         Assert.AreEqual(1, result[0]);
         Assert.Contains(2, result);
         Assert.Contains(3, result);
@@ -58,7 +61,7 @@ public class GraphTests
     }
 
     [TestMethod]
-    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new Graph<int>(null!)); }
+    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new Graph<int>(null!)); }
     [TestMethod]
     public void DepthFirst_TraversesCorrectly()
     {
@@ -66,21 +69,21 @@ public class GraphTests
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         g.AddEdge(2, 4);
-        List<int> result = g.DepthFirst(1).ToList();
+        List<int> result = [.. g.DepthFirst(1)];
         Assert.Contains(1, result);
         Assert.Contains(2, result);
         Assert.Contains(4, result);
     }
 
     [TestMethod]
-    public void Neighbors_NonexistentVertex_Throws() { Assert.ThrowsExactly<KeyNotFoundException>(() => new Graph<int>().Neighbors(99).ToList()); }
+    public void Neighbors_NonexistentVertex_Throws() { Assert.ThrowsExactly<KeyNotFoundException>(static () => new Graph<int>().Neighbors(99).ToList()); }
     [TestMethod]
     public void Neighbors_ReturnsAdjacentVertices()
     {
         Graph<int> g = new Graph<int>();
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
-        List<int> neighbors = g.Neighbors(1).ToList();
+        List<int> neighbors = [.. g.Neighbors(1)];
         Assert.HasCount(2, neighbors);
         Assert.Contains(2, neighbors);
         Assert.Contains(3, neighbors);

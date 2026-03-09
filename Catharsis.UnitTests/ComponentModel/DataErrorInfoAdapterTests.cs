@@ -4,12 +4,15 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="DataErrorInfoAdapter"/> class.
+///</summary>
 [TestClass]
 public class DataErrorInfoAdapterTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullSource_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new DataErrorInfoAdapter(null!)); }
+    public void Constructor_NullSource_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new DataErrorInfoAdapter(null!)); }
     [TestMethod]
     public void Error_AggregatesAllErrors()
     {
@@ -96,7 +99,7 @@ public class DataErrorInfoAdapterTests
         {
             if(string.IsNullOrEmpty(propertyName))
             {
-                return _errors.SelectMany(kvp => kvp.Value);
+                return _errors.SelectMany(static kvp => kvp.Value);
             }
 
             return _errors.TryGetValue(propertyName, out List<string>? list) ? list : [];

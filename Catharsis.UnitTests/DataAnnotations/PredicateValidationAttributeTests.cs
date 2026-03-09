@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="PredicateValidationAttribute"/> class.
+///</summary>
 [TestClass]
 public class PredicateValidationAttributeTests
 {
@@ -16,9 +19,9 @@ public class PredicateValidationAttributeTests
 
     #region Public methods
     [TestMethod]
-    public void Constructor_NullMethodName_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PredicateValidationAttribute(typeof(TestPredicates), null!)); }
+    public void Constructor_NullMethodName_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PredicateValidationAttribute(typeof(TestPredicates), null!)); }
     [TestMethod]
-    public void Constructor_NullType_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PredicateValidationAttribute(null!, "Method")); }
+    public void Constructor_NullType_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PredicateValidationAttribute(null!, "Method")); }
     [TestMethod]
     public void NonExistentMethod_ReturnsFailure()
     {

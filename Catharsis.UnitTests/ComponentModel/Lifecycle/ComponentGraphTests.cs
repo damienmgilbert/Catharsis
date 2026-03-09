@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentGraphNode"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentGraphNodeTests
 {
@@ -24,7 +27,7 @@ public sealed class ComponentGraphNodeTests
     }
 
     [TestMethod]
-    public void Constructor_NullComponent_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ComponentGraphNode(null!)); }
+    public void Constructor_NullComponent_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ComponentGraphNode(null!)); }
     [TestMethod]
     public void Constructor_SetsComponentAndDefaultName()
     {
@@ -87,6 +90,9 @@ public sealed class ComponentGraphNodeTests
     }
 }
 
+///<summary>
+///Unit tests for the <see cref="ComponentGraphNode"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentGraphTests
 {
@@ -142,8 +148,8 @@ public sealed class ComponentGraphTests
 
         IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
 
-        int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
-        int appIndex = order.ToList().FindIndex(n => n.Name == "App");
+        int dbIndex = order.ToList().FindIndex(static n => n.Name == "DB");
+        int appIndex = order.ToList().FindIndex(static n => n.Name == "App");
         Assert.IsLessThan(appIndex, dbIndex);
     }
 
@@ -172,8 +178,8 @@ public sealed class ComponentGraphTests
 
         IReadOnlyList<ComponentGraphNode> order = graph.GetDeactivationOrder();
 
-        int dbIndex = order.ToList().FindIndex(n => n.Name == "DB");
-        int appIndex = order.ToList().FindIndex(n => n.Name == "App");
+        int dbIndex = order.ToList().FindIndex(static n => n.Name == "DB");
+        int appIndex = order.ToList().FindIndex(static n => n.Name == "App");
         Assert.IsLessThan(dbIndex, appIndex);
     }
 

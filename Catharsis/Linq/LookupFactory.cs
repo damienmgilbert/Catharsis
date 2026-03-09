@@ -69,7 +69,7 @@ public static class LookupFactory
     public static ILookup<TKey, TValue> FromDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> dictionary, IEqualityComparer<TKey>? comparer = null)
     {
         ArgumentNullException.ThrowIfNull(dictionary, nameof(dictionary));
-        return dictionary.ToLookup(kvp => kvp.Key, kvp => kvp.Value, comparer);
+        return dictionary.ToLookup(static kvp => kvp.Key, static kvp => kvp.Value, comparer);
     }
 
     ///<summary>
@@ -121,7 +121,7 @@ public static class LookupFactory
     public static ILookup<TKey, TElement> FromPairs<TKey, TElement>(IEnumerable<(TKey Key, TElement Element)> pairs, IEqualityComparer<TKey>? comparer = null)
     {
         ArgumentNullException.ThrowIfNull(pairs, nameof(pairs));
-        return pairs.ToLookup(p => p.Key, p => p.Element, comparer);
+        return pairs.ToLookup(static p => p.Key, static p => p.Element, comparer);
     }
 
     ///<summary>

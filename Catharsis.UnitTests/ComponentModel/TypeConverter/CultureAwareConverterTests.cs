@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="CultureAwareConverter"/> class.
+///</summary>
 [TestClass]
 public sealed class CultureAwareConverterTests
 {

@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="EnumTypeConverter"/> class.
+///</summary>
 [TestClass]
 public sealed class EnumTypeConverterTests
 {
@@ -239,7 +242,7 @@ public sealed class EnumTypeConverterTests
     }
 
     [TestMethod]
-    public void ParseSpan_InvalidSpan_ThrowsFormatException() { Assert.ThrowsExactly<FormatException>(() => EnumTypeConverter<Color>.ParseSpan("Invalid".AsSpan())); }
+    public void ParseSpan_InvalidSpan_ThrowsFormatException() { Assert.ThrowsExactly<FormatException>(static () => EnumTypeConverter<Color>.ParseSpan("Invalid".AsSpan())); }
     [TestMethod]
     public void ParseSpan_ValidSpan_ReturnsValue()
     {

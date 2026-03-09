@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="QueueStackExtensions"/> class.
+///</summary>
 [TestClass]
 public class QueueStackExtensionsTests
 {
@@ -91,7 +94,7 @@ public class QueueStackExtensionsTests
     public void SortedDictionary_ModifyAll_TransformsAllValues()
     {
         SortedDictionary<string, int> source = new SortedDictionary<string, int> { { "a", 1 }, { "b", 2 } };
-        source.ModifyAll((k, v) => v + 100);
+        source.ModifyAll(static (k, v) => v + 100);
         Assert.AreEqual(101, source["a"]);
         Assert.AreEqual(102, source["b"]);
     }
@@ -109,7 +112,7 @@ public class QueueStackExtensionsTests
     public void SortedDictionary_RemoveWhere_RemovesMatchingEntries()
     {
         SortedDictionary<string, int> source = new SortedDictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
-        int removed = source.RemoveWhere(kvp => kvp.Value <= 2);
+        int removed = source.RemoveWhere(static kvp => kvp.Value <= 2);
         Assert.AreEqual(2, removed);
         Assert.HasCount(1, source);
     }
@@ -128,7 +131,7 @@ public class QueueStackExtensionsTests
     public void SortedList_ModifyAll_TransformsAllValues()
     {
         SortedList<string, int> source = new SortedList<string, int> { { "a", 1 }, { "b", 2 } };
-        source.ModifyAll((k, v) => v * 10);
+        source.ModifyAll(static (k, v) => v * 10);
         Assert.AreEqual(10, source["a"]);
         Assert.AreEqual(20, source["b"]);
     }
@@ -146,7 +149,7 @@ public class QueueStackExtensionsTests
     public void SortedList_RemoveWhere_RemovesMatchingEntries()
     {
         SortedList<string, int> source = new SortedList<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
-        int removed = source.RemoveWhere(kvp => kvp.Value > 1);
+        int removed = source.RemoveWhere(static kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
         Assert.HasCount(1, source);
     }

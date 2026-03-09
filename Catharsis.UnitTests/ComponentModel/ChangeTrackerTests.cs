@@ -3,6 +3,9 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ChangeTracker"/> class.
+///</summary>
 [TestClass]
 public class ChangeTrackerTests
 {

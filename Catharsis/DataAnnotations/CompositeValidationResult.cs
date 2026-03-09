@@ -39,7 +39,7 @@ public sealed class CompositeValidationResult
     ///<summary>
     ///Gets all distinct error messages.
     ///</summary>
-    public IEnumerable<string> ErrorMessages => _results.Select(r => r.ErrorMessage).Where(m => m is not null)!;
+    public IEnumerable<string> ErrorMessages => _results.Select(static r => r.ErrorMessage).Where(static m => m is not null)!;
 
     ///<summary>
     ///Gets a value indicating whether validation passed with no errors.
@@ -49,7 +49,7 @@ public sealed class CompositeValidationResult
     ///<summary>
     ///Gets all distinct member names that had validation failures.
     ///</summary>
-    public IEnumerable<string> MemberNames => _results.SelectMany(r => r.MemberNames).Distinct();
+    public IEnumerable<string> MemberNames => _results.SelectMany(static r => r.MemberNames).Distinct();
 
     ///<summary>
     ///Gets all <see cref="ValidationResult"/> instances produced by validation.

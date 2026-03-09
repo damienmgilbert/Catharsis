@@ -371,7 +371,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        IEnumerable<TKey> keysToRemove = source.Where(predicate).Select(kvp => kvp.Key);
+        IEnumerable<TKey> keysToRemove = source.Where(predicate).Select(static kvp => kvp.Key);
         return source.RemoveRange(keysToRemove);
     }
 
@@ -413,7 +413,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<T> toRemove = source.Where(predicate).ToList();
+        List<T> toRemove = [.. source.Where(predicate)];
         return source.Except(toRemove);
     }
 
@@ -434,7 +434,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        IEnumerable<TKey> keysToRemove = source.Where(predicate).Select(kvp => kvp.Key);
+        IEnumerable<TKey> keysToRemove = source.Where(predicate).Select(static kvp => kvp.Key);
         return source.RemoveRange(keysToRemove);
     }
 

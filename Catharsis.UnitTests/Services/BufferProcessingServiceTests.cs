@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Catharsis.UnitTests.Services;
 
+///<summary>
+///Unit tests for the <see cref="BufferProcessingService"/> class.
+///</summary>
 [TestClass]
 public class BufferProcessingServiceTests
 {

@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="CollectionExtensions"/> class.
+///</summary>
 [TestClass]
 public class CollectionExtensionsTests
 {
@@ -34,7 +37,7 @@ public class CollectionExtensionsTests
     public void ModifyAll_TransformsAllElements()
     {
         IList<int> source = new List<int> { 1, 2, 3 };
-        source.ModifyAll(x => x * 10);
+        source.ModifyAll(static x => x * 10);
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, source.ToList());
     }
 
@@ -42,7 +45,7 @@ public class CollectionExtensionsTests
     public void ModifyWhere_TransformsMatchingOnly()
     {
         IList<int> source = new List<int> { 1, 2, 3, 4, 5 };
-        source.ModifyWhere(x => x % 2 == 0, x => x * 10);
+        source.ModifyWhere(static x => x % 2 == 0, static x => x * 10);
         CollectionAssert.AreEqual(new[] { 1, 20, 3, 40, 5 }, source.ToList());
     }
 
@@ -83,7 +86,7 @@ public class CollectionExtensionsTests
     public void RemoveWhere_NoMatch_ReturnsZero()
     {
         ICollection<int> source = new List<int> { 1, 3, 5 };
-        int removed = source.RemoveWhere(x => x % 2 == 0);
+        int removed = source.RemoveWhere(static x => x % 2 == 0);
         Assert.AreEqual(0, removed);
     }
 
@@ -91,7 +94,7 @@ public class CollectionExtensionsTests
     public void RemoveWhere_RemovesMatchingItems_ReturnsCount()
     {
         ICollection<int> source = new List<int> { 1, 2, 3, 4, 5, 6 };
-        int removed = source.RemoveWhere(x => x % 2 == 0);
+        int removed = source.RemoveWhere(static x => x % 2 == 0);
         Assert.AreEqual(3, removed);
         CollectionAssert.AreEqual(new[] { 1, 3, 5 }, source.ToList());
     }

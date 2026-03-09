@@ -2,6 +2,9 @@ using Catharsis.DesignPatterns.Behavioral;
 
 namespace Catharsis.UnitTests.DesignPatterns.Behavioral;
 
+///<summary>
+///Unit tests for the <see cref="ChainOfResponsibility"/> class.
+///</summary>
 [TestClass]
 public class ChainOfResponsibilityTests
 {
@@ -61,7 +64,7 @@ public class ChainOfResponsibilityTests
     public void Chain_ReturnsOriginalObject()
     {
         ChainOfResponsibility cor = new ChainOfResponsibility();
-        int result = cor.Chain(42, x => false);
+        int result = cor.Chain(42, static x => false);
         Assert.AreEqual(42, result);
     }
     #endregion

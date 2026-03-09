@@ -128,7 +128,7 @@ public static class GroupingAdapter
     public static Dictionary<TKey, List<TElement>> ToDictionary<TKey, TElement>(this ILookup<TKey, TElement> lookup) where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(lookup, nameof(lookup));
-        return lookup.ToDictionary(g => g.Key, g => g.ToList());
+        return lookup.ToDictionary(static g => g.Key, static g => g.ToList());
     }
 
     ///<summary>
@@ -155,7 +155,7 @@ public static class GroupingAdapter
             }
             else
             {
-                result[group.Key] = group.ToList();
+                result[group.Key] = [.. group];
             }
         }
 

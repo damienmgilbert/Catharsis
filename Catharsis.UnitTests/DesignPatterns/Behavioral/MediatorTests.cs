@@ -16,7 +16,7 @@ public class MediatorTests
         // Arrange
         string obj = "test";
         string mediator = "mediator";
-        Func<string, string, string> route = (m, o) => $"{m}{o}";
+        Func<string, string, string> route = static (m, o) => $"{m}{o}";
         // Act
         string result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -32,7 +32,7 @@ public class MediatorTests
         // Arrange
         CustomRequest obj = new CustomRequest { Id = 123, Name = "Test" };
         CustomMediator mediator = new CustomMediator { ProcessingId = 999 };
-        Func<CustomMediator, CustomRequest, CustomResponse> route = (m, o) => new CustomResponse { RequestId = o.Id, ProcessedBy = m.ProcessingId };
+        Func<CustomMediator, CustomRequest, CustomResponse> route = static (m, o) => new CustomResponse { RequestId = o.Id, ProcessedBy = m.ProcessingId };
         // Act
         CustomResponse result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -49,7 +49,7 @@ public class MediatorTests
         // Arrange
         int obj = 10;
         int mediator = 20;
-        Func<int, int, int> route = (m, o) => m + o;
+        Func<int, int, int> route = static (m, o) => m + o;
         // Act
         int result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -65,7 +65,7 @@ public class MediatorTests
         // Arrange
         string? obj = null;
         TestMediator mediator = new TestMediator();
-        Func<TestMediator, string?, bool> route = (m, o) => o == null;
+        Func<TestMediator, string?, bool> route = static (m, o) => o == null;
         // Act
         bool result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -85,7 +85,7 @@ public class MediatorTests
     {
         // Arrange
         TestMediator mediator = new TestMediator();
-        Func<TestMediator, int, long> route = (m, o) => ((long)o) * 2;
+        Func<TestMediator, int, long> route = static (m, o) => ((long)o) * 2;
         long expectedResult = ((long)value) * 2;
         // Act
         long result = new Mediator().Mediate(value, mediator, route);
@@ -138,7 +138,7 @@ public class MediatorTests
         string obj = "Hello";
         TestMediator mediator = new TestMediator();
         int expectedResult = 5;
-        Func<TestMediator, string, int> route = (m, o) => o.Length;
+        Func<TestMediator, string, int> route = static (m, o) => o.Length;
         // Act
         int result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -155,7 +155,7 @@ public class MediatorTests
         int obj = 42;
         TestMediator mediator = new TestMediator();
         string expectedResult = "42";
-        Func<TestMediator, int, string> route = (m, o) => o.ToString();
+        Func<TestMediator, int, string> route = static (m, o) => o.ToString();
         // Act
         string result = new Mediator().Mediate(obj, mediator, route);
         // Assert
@@ -175,7 +175,7 @@ public class MediatorTests
     {
         // Arrange
         TestMediator mediator = new TestMediator();
-        Func<TestMediator, string, int> route = (m, o) => o.Length;
+        Func<TestMediator, string, int> route = static (m, o) => o.Length;
         int expectedResult = value.Length;
         // Act
         int result = new Mediator().Mediate(value, mediator, route);
@@ -279,7 +279,7 @@ public class MediatorTests
         // Arrange
         string obj = "test-object";
         string mediator = "mediator";
-        Action<string, string> route = (m, o) =>
+        Action<string, string> route = static (m, o) =>
         {
         };
         // Act

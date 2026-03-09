@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentTransition"/> class.
+///</summary>
 [TestClass]
 public class ComponentTransitionTests
 {
@@ -9,7 +12,7 @@ public class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_GuardReturnsFalse_ReturnsFalse()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initialized) { Guard = () => false };
+        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initialized) { Guard = static () => false };
         Assert.IsFalse(t.CanExecute());
     }
 

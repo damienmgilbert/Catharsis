@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="CollectionCountAttribute"/> class.
+///</summary>
 [TestClass]
 public class CollectionCountAttributeTests
 {
@@ -16,9 +19,9 @@ public class CollectionCountAttributeTests
 
     #region Public methods
     [TestMethod]
-    public void Constructor_MaximumLessThanMinimum_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new CollectionCountAttribute(5, 2)); }
+    public void Constructor_MaximumLessThanMinimum_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new CollectionCountAttribute(5, 2)); }
     [TestMethod]
-    public void Constructor_NegativeMinimum_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new CollectionCountAttribute(-1, 5)); }
+    public void Constructor_NegativeMinimum_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new CollectionCountAttribute(-1, 5)); }
     [TestMethod]
     public void CountAboveMaximum_ReturnsFailure()
     {

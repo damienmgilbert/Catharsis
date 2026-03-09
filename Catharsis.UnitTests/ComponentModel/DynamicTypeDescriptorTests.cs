@@ -3,6 +3,9 @@ using System.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="DynamicTypeDescriptor"/> class.
+///</summary>
 [TestClass]
 public class DynamicTypeDescriptorTests
 {

@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="DataTypePatternAttribute"/> class.
+///</summary>
 [TestClass]
 public class DataTypePatternAttributeTests
 {
@@ -71,7 +74,7 @@ public class DataTypePatternAttributeTests
     }
 
     [TestMethod]
-    public void UnsupportedDataType_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new DataTypePatternAttribute(DataType.Password)); }
+    public void UnsupportedDataType_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(static () => new DataTypePatternAttribute(DataType.Password)); }
     [TestMethod]
     public void ValidCurrency_ReturnsSuccess()
     {

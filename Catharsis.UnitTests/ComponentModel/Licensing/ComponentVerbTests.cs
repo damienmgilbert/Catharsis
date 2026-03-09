@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
+///<summary>
+///Unit tests for the <see cref="ComponentVerb"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentVerbTests
 {
@@ -11,7 +14,7 @@ public sealed class ComponentVerbTests
     {
         ComponentVerb verb = new ComponentVerb(
                              "Do",
-                             () =>
+                             static () =>
         {
         });
 
@@ -22,7 +25,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        ComponentVerb verb = new ComponentVerb("Reset", () => { }, "Resets state", Enabled: true);
+        ComponentVerb verb = new ComponentVerb("Reset", static () => { }, "Resets state", Enabled: true);
 
         Assert.AreEqual("Reset", verb.Text);
         Assert.AreEqual("Resets state", verb.Description);
@@ -32,7 +35,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Equality_SameValues_AreEqual()
     {
-        Action action = () =>
+        Action action = static () =>
         {
         };
         ComponentVerb a = new ComponentVerb("Do", action, "desc", true);

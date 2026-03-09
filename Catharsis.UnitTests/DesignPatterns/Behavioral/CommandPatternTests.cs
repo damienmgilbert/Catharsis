@@ -45,9 +45,9 @@ public class CommandPatternTests
         List<Action<List<int>>> undoHistory = new List<Action<List<int>>>();
         // Act
         CommandPattern cmd = new CommandPattern();
-        List<int> result = cmd.Command(obj, x => x[0] = x[0] + 1, x => x[0] = x[0] - 1, undoHistory);
-        result = cmd.Command(result, x => x[0] = x[0] * 2, x => x[0] = x[0] / 2, undoHistory);
-        result = cmd.Command(result, x => x[0] = x[0] + 10, x => x[0] = x[0] - 10, undoHistory);
+        List<int> result = cmd.Command(obj, static x => x[0] = x[0] + 1, static x => x[0] = x[0] - 1, undoHistory);
+        result = cmd.Command(result, static x => x[0] = x[0] * 2, static x => x[0] = x[0] / 2, undoHistory);
+        result = cmd.Command(result, static x => x[0] = x[0] + 10, static x => x[0] = x[0] - 10, undoHistory);
         // Assert
         Assert.AreEqual(12, obj[0]); // ((0 + 1) * 2) + 10 = 12
         Assert.HasCount(3, undoHistory);
@@ -102,33 +102,33 @@ public class CommandPatternTests
         // Arrange
         int obj = 0;
         List<Action<int>> undoHistory = new List<Action<int>>();
-        Action<int> undo1 = x =>
+        Action<int> undo1 = static x =>
         {
         };
-        Action<int> undo2 = x =>
+        Action<int> undo2 = static x =>
         {
         };
-        Action<int> undo3 = x =>
+        Action<int> undo3 = static x =>
         {
         };
         // Act
         new CommandPattern().Command(
         obj,
-        x =>
+        static x =>
         {
         },
         undo1,
         undoHistory);
         new CommandPattern().Command(
         obj,
-        x =>
+        static x =>
         {
         },
         undo2,
         undoHistory);
         new CommandPattern().Command(
         obj,
-        x =>
+        static x =>
         {
         },
         undo3,
@@ -153,11 +153,11 @@ public class CommandPatternTests
     {
         // Arrange
         int obj = 10;
-        Action<int> execute = x =>
+        Action<int> execute = static x =>
         {
         };
         Action<int>? undo = provideUndo
-                            ? (x =>
+                            ? (static x =>
         {
         })
                             : null;
@@ -220,7 +220,7 @@ public class CommandPatternTests
     {
         // Arrange
         Dictionary<string, int> obj = new Dictionary<string, int> { { "a", 1 } };
-        Action<Dictionary<string, int>> execute = x => x["b"] = 2;
+        Action<Dictionary<string, int>> execute = static x => x["b"] = 2;
         // Act
         Dictionary<string, int> result = new CommandPattern().Command(obj, execute);
         // Assert
@@ -238,10 +238,10 @@ public class CommandPatternTests
     {
         // Arrange
         int obj = 42;
-        Action<int> execute = x =>
+        Action<int> execute = static x =>
         {
         };
-        Action<int> undo = x =>
+        Action<int> undo = static x =>
         {
         };
         List<Action<int>> undoHistory = new List<Action<int>>();
@@ -309,7 +309,7 @@ public class CommandPatternTests
     {
         // Arrange
         List<int> obj = new List<int> { 1, 2, 3 };
-        Action<List<int>> execute = x => x.Add(4);
+        Action<List<int>> execute = static x => x.Add(4);
         // Act
         List<int> result = new CommandPattern().Command(obj, execute);
         // Assert

@@ -31,7 +31,7 @@ public static class ExpressionComposer
             result = result is null ? predicate : AndAlso(result, predicate);
         }
 
-        return result ?? (_ => true);
+        return result ?? (static _ => true);
     }
 
     ///<summary>
@@ -153,7 +153,7 @@ public static class ExpressionComposer
             result = result is null ? predicate : OrElse(result, predicate);
         }
 
-        return result ?? ((T _) => false);
+        return result ?? (static (T _) => false);
     }
 
     ///<summary>
@@ -191,7 +191,7 @@ public static class ExpressionComposer
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
 
-        ParameterExpression[] newParameters = lambda.Parameters.Select(p => parameterMap.TryGetValue(p, out ParameterExpression? replacement) ? replacement : p).ToArray();
+        ParameterExpression[] newParameters = [.. lambda.Parameters.Select(p => parameterMap.TryGetValue(p, out ParameterExpression? replacement) ? replacement : p)];
 
         return Expression.Lambda(lambda.Type, body, newParameters);
     }

@@ -2,12 +2,15 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="BindableRecord"/> class.
+///</summary>
 [TestClass]
 public sealed class BindableRecordTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BindableRecord<PersonRecord>(null!)); }
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new BindableRecord<PersonRecord>(null!)); }
     [TestMethod]
     public void Constructor_SetsValue()
     {
@@ -51,7 +54,7 @@ public sealed class BindableRecordTests
     {
         BindableRecord<PersonRecord> bindable = new BindableRecord<PersonRecord>(new PersonRecord("Alice", 30));
 
-        PersonRecord result = bindable.Update(r => r with { Age = 31 });
+        PersonRecord result = bindable.Update(static r => r with { Age = 31 });
 
         Assert.AreEqual(31, result.Age);
         Assert.AreEqual(31, bindable.Value.Age);

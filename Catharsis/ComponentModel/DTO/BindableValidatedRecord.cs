@@ -53,7 +53,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 
     private void ClearAllErrors()
     {
-        List<string> properties = _errors.Keys.ToList();
+        List<string> properties = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string property in properties)
@@ -95,7 +95,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
             string message = result.ErrorMessage ?? "Validation failed.";
 
             if (members.Count == 0)
@@ -206,7 +206,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///<summary>
     ///Gets the current validation errors as a read-only dictionary.
     ///</summary>
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(static kvp => kvp.Key, static kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
 
     ///<inheritdoc/>
     public bool HasErrors => _errors.Count > 0;

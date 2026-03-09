@@ -69,7 +69,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     ///<returns>
     ///An enumerable of <see cref="PropertyInfo"/> instances representing the properties to include in snapshots.
     ///</returns>
-    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0) && (p.Name != nameof(Site)) && (p.Name != nameof(IsEditing))); }
+    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0) && (p.Name != nameof(Site)) && (p.Name != nameof(IsEditing))); }
     #endregion
 
     #region Public methods

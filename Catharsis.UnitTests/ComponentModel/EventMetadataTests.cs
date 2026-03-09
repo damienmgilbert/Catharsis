@@ -2,14 +2,17 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="EventMetadata"/> class.
+///</summary>
 [TestClass]
 public class EventMetadataTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullEventType_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new EventMetadata("E", null!, typeof(object))); }
+    public void Constructor_NullEventType_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new EventMetadata("E", null!, typeof(object))); }
     [TestMethod]
-    public void Constructor_NullName_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new EventMetadata(null!, typeof(EventHandler), typeof(object))); }
+    public void Constructor_NullName_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new EventMetadata(null!, typeof(EventHandler), typeof(object))); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {

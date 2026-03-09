@@ -3,6 +3,9 @@ using Catharsis.Advanced;
 
 namespace Catharsis.UnitTests.Advanced;
 
+///<summary>
+///Unit tests for the <see cref="PooledUtf8String"/> class.
+///</summary>
 [TestClass]
 public class PooledUtf8StringTests
 {

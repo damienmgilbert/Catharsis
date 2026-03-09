@@ -5,6 +5,9 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 namespace Catharsis.UnitTests.Advanced;
 
+///<summary>
+///Unit tests for the <see cref="HighPerformanceSerializer"/> class.
+///</summary>
 [TestClass]
 public class HighPerformanceSerializerTests
 {

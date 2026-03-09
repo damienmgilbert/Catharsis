@@ -3,6 +3,9 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="TypeConversionExtensions"/> class.
+///</summary>
 [TestClass]
 public class TypeConversionExtensionsTests
 {
@@ -60,7 +63,7 @@ public class TypeConversionExtensionsTests
     {
         var obj = new { Name = "Test", Value = 42 };
 
-        List<PropertyDescriptor> properties = obj.GetBrowsableProperties().ToList();
+        List<PropertyDescriptor> properties = [.. obj.GetBrowsableProperties()];
 
         Assert.IsNotEmpty(properties);
     }

@@ -199,8 +199,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, bool> condition = x => true;
-        Action<string> action = x =>
+        Func<string, bool> condition = static x => true;
+        Action<string> action = static x =>
         {
         };
 
@@ -219,8 +219,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, bool> condition = x => true;
-        Action<int> action = x =>
+        Func<int, bool> condition = static x => true;
+        Action<int> action = static x =>
         {
         };
 
@@ -649,8 +649,8 @@ public class ControlFlowTests
     {
         // Arrange
         TestStruct obj = new TestStruct { Value = 100 };
-        Func<TestStruct, CancellationToken, ValueTask<bool>> condition = (x, ct) => ValueTask.FromResult(true);
-        Func<TestStruct, CancellationToken, ValueTask> action = (x, ct) => ValueTask.CompletedTask;
+        Func<TestStruct, CancellationToken, ValueTask<bool>> condition = static (x, ct) => ValueTask.FromResult(true);
+        Func<TestStruct, CancellationToken, ValueTask> action = static (x, ct) => ValueTask.CompletedTask;
 
         // Act
         TestStruct result = await obj.DoUntilAsync(condition, action);
@@ -691,8 +691,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, ValueTask<bool>> condition = (x, ct) => ValueTask.FromResult(true);
-        Func<string?, CancellationToken, ValueTask> action = (x, ct) => ValueTask.CompletedTask;
+        Func<string?, CancellationToken, ValueTask<bool>> condition = static (x, ct) => ValueTask.FromResult(true);
+        Func<string?, CancellationToken, ValueTask> action = static (x, ct) => ValueTask.CompletedTask;
 
         // Act
         string? result = await obj.DoUntilAsync(condition, action);
@@ -712,8 +712,8 @@ public class ControlFlowTests
     public async Task DoUntilAsync_WithStringTypes_ReturnsOriginalValue(string value)
     {
         // Arrange
-        Func<string, CancellationToken, ValueTask<bool>> condition = (x, ct) => ValueTask.FromResult(true);
-        Func<string, CancellationToken, ValueTask> action = (x, ct) => ValueTask.CompletedTask;
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (x, ct) => ValueTask.FromResult(true);
+        Func<string, CancellationToken, ValueTask> action = static (x, ct) => ValueTask.CompletedTask;
 
         // Act
         string result = await value.DoUntilAsync(condition, action);
@@ -734,8 +734,8 @@ public class ControlFlowTests
     public async Task DoUntilAsync_WithValueTypes_ReturnsOriginalValue(int value)
     {
         // Arrange
-        Func<int, CancellationToken, ValueTask<bool>> condition = (x, ct) => ValueTask.FromResult(true);
-        Func<int, CancellationToken, ValueTask> action = (x, ct) => ValueTask.CompletedTask;
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (x, ct) => ValueTask.FromResult(true);
+        Func<int, CancellationToken, ValueTask> action = static (x, ct) => ValueTask.CompletedTask;
 
         // Act
         int result = await value.DoUntilAsync(condition, action);
@@ -1257,8 +1257,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<string?, CancellationToken, ValueTask> action = (o, ct) => ValueTask.CompletedTask;
+        Func<string?, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(false);
+        Func<string?, CancellationToken, ValueTask> action = static (o, ct) => ValueTask.CompletedTask;
 
         // Act
         string? result = await obj.DoWhileAsync(condition, action);
@@ -1299,8 +1299,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<string, CancellationToken, Task> action = (o, ct) => Task.CompletedTask;
+        Func<string, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<string, CancellationToken, Task> action = static (o, ct) => Task.CompletedTask;
 
         // Act
         string result = await obj.DoWhileAsync(condition, action);
@@ -1398,7 +1398,7 @@ public class ControlFlowTests
     {
         // Arrange
         int testValue = 5;
-        Func<int, bool> condition = x => false;
+        Func<int, bool> condition = static x => false;
         Action<int>? action = null;
 
         // Act & Assert - Should not throw
@@ -1662,8 +1662,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<int, CancellationToken, ValueTask> action = (o, ct) => ValueTask.CompletedTask;
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(false);
+        Func<int, CancellationToken, ValueTask> action = static (o, ct) => ValueTask.CompletedTask;
 
         // Act
         ValueTask result = obj.IfAsync(condition, action);
@@ -3468,7 +3468,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 5;
-        Func<int, bool> condition = x => true;
+        Func<int, bool> condition = static x => true;
         Action<int> action = null!;
 
         // Act & Assert (should not throw)
@@ -4101,8 +4101,8 @@ public class ControlFlowTests
     {
         // Arrange
         string input = "hello";
-        Func<string?, bool> condition = s => s == "hello";
-        Func<string?, string?> action = s => null;
+        Func<string?, bool> condition = static s => s == "hello";
+        Func<string?, string?> action = static s => null;
 
         // Act
         string? result = input.ReturnIf(condition, action);
@@ -4175,8 +4175,8 @@ public class ControlFlowTests
     {
         // Arrange
         int input = -5;
-        Func<int, bool> condition = x => x > 0;
-        Func<int, int> action = x => x * 2;
+        Func<int, bool> condition = static x => x > 0;
+        Func<int, int> action = static x => x * 2;
 
         // Act
         int result = input.ReturnIf(condition, action);
@@ -4193,8 +4193,8 @@ public class ControlFlowTests
     {
         // Arrange
         string input = "hello";
-        Func<string, bool> condition = s => s.Length > 10;
-        Func<string, string> action = s => s.ToUpper();
+        Func<string, bool> condition = static s => s.Length > 10;
+        Func<string, string> action = static s => s.ToUpper();
 
         // Act
         string result = input.ReturnIf(condition, action);
@@ -4247,8 +4247,8 @@ public class ControlFlowTests
     {
         // Arrange
         int input = 5;
-        Func<int, bool> condition = x => x > 0;
-        Func<int, int> action = x => x * 2;
+        Func<int, bool> condition = static x => x > 0;
+        Func<int, int> action = static x => x * 2;
 
         // Act
         int result = input.ReturnIf(condition, action);
@@ -4265,8 +4265,8 @@ public class ControlFlowTests
     {
         // Arrange
         string input = "hello";
-        Func<string, bool> condition = s => s.Length > 0;
-        Func<string, string> action = s => s.ToUpper();
+        Func<string, bool> condition = static s => s.Length > 0;
+        Func<string, string> action = static s => s.ToUpper();
 
         // Act
         string result = input.ReturnIf(condition, action);
@@ -4289,8 +4289,8 @@ public class ControlFlowTests
     public void ReturnIf_FloatingPointSpecialValues_ReturnsExpectedResult(double input, bool conditionResult)
     {
         // Arrange
-        Func<double, bool> condition = d => double.IsInfinity(d);
-        Func<double, double> action = d => 0.0;
+        Func<double, bool> condition = static d => double.IsInfinity(d);
+        Func<double, double> action = static d => 0.0;
 
         // Act
         double result = input.ReturnIf(condition, action);
@@ -4318,7 +4318,7 @@ public class ControlFlowTests
     {
         // Arrange
         int input = 5;
-        Func<int, bool> condition = x => false;
+        Func<int, bool> condition = static x => false;
         Func<int, int> action = null!;
 
         // Act
@@ -4336,8 +4336,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? input = null;
-        Func<string?, bool> condition = s => (s != null) && (s.Length > 0);
-        Func<string?, string?> action = s => s?.ToUpper();
+        Func<string?, bool> condition = static s => (s != null) && (s.Length > 0);
+        Func<string?, string?> action = static s => s?.ToUpper();
 
         // Act
         string? result = input.ReturnIf(condition, action);
@@ -4360,8 +4360,8 @@ public class ControlFlowTests
     public void ReturnIf_StringEdgeCases_ReturnsExpectedResult(string input, bool shouldTransform)
     {
         // Arrange
-        Func<string, bool> condition = s => string.IsNullOrWhiteSpace(s);
-        Func<string, string> action = s => "EMPTY";
+        Func<string, bool> condition = static s => string.IsNullOrWhiteSpace(s);
+        Func<string, string> action = static s => "EMPTY";
 
         // Act
         string result = input.ReturnIf(condition, action);
@@ -4386,8 +4386,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(true);
-        Func<int, CancellationToken, Task<int>> action = async (x, ct) =>
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(true);
+        Func<int, CancellationToken, Task<int>> action = static async (x, ct) =>
         {
             await Task.Delay(10, ct);
             return x * 2;
@@ -4409,12 +4409,12 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = async (x, ct) =>
+        Func<int, CancellationToken, Task<bool>> condition = static async (x, ct) =>
         {
             await Task.Delay(10, ct);
             return x > 0;
         };
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(x * 2);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(x * 2);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4456,8 +4456,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x < 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(x * 2);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x < 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(x * 2);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4523,8 +4523,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x > 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(x * 2);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x > 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(x * 2);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4542,8 +4542,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(true);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(x * 2);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(true);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(x * 2);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4561,8 +4561,8 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.NaN;
-        Func<double, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(double.IsNaN(x));
-        Func<double, CancellationToken, Task<double>> action = (x, ct) => Task.FromResult(0.0);
+        Func<double, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(double.IsNaN(x));
+        Func<double, CancellationToken, Task<double>> action = static (x, ct) => Task.FromResult(0.0);
 
         // Act
         double result = await obj.ReturnIfAsync(condition, action);
@@ -4580,8 +4580,8 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.NegativeInfinity;
-        Func<double, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(double.IsNegativeInfinity(x));
-        Func<double, CancellationToken, Task<double>> action = (x, ct) => Task.FromResult(double.MinValue);
+        Func<double, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(double.IsNegativeInfinity(x));
+        Func<double, CancellationToken, Task<double>> action = static (x, ct) => Task.FromResult(double.MinValue);
 
         // Act
         double result = await obj.ReturnIfAsync(condition, action);
@@ -4599,8 +4599,8 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.PositiveInfinity;
-        Func<double, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(double.IsInfinity(x));
-        Func<double, CancellationToken, Task<double>> action = (x, ct) => Task.FromResult(double.MaxValue);
+        Func<double, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(double.IsInfinity(x));
+        Func<double, CancellationToken, Task<double>> action = static (x, ct) => Task.FromResult(double.MaxValue);
 
         // Act
         double result = await obj.ReturnIfAsync(condition, action);
@@ -4618,8 +4618,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(string.IsNullOrEmpty(x));
-        Func<string, CancellationToken, Task<string>> action = (x, ct) => Task.FromResult("default");
+        Func<string, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(string.IsNullOrEmpty(x));
+        Func<string, CancellationToken, Task<string>> action = static (x, ct) => Task.FromResult("default");
 
         // Act
         string result = await obj.ReturnIfAsync(condition, action);
@@ -4637,8 +4637,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x > 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(0);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x > 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(0);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4656,8 +4656,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MinValue;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x < 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(0);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x < 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(0);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4675,8 +4675,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = -42;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x < 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(Math.Abs(x));
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x < 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(Math.Abs(x));
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4694,8 +4694,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x.Length > 3);
-        Func<string, CancellationToken, Task<string>> action = (x, ct) => Task.FromResult(x.ToUpper());
+        Func<string, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x.Length > 3);
+        Func<string, CancellationToken, Task<string>> action = static (x, ct) => Task.FromResult(x.ToUpper());
 
         // Act
         string result = await obj.ReturnIfAsync(condition, action);
@@ -4713,8 +4713,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x == null);
-        Func<string?, CancellationToken, Task<string?>> action = (x, ct) => Task.FromResult<string?>("replacement");
+        Func<string?, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x == null);
+        Func<string?, CancellationToken, Task<string?>> action = static (x, ct) => Task.FromResult<string?>("replacement");
 
         // Act
         string? result = await obj.ReturnIfAsync(condition, action);
@@ -4903,8 +4903,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(true);
-        Func<int, CancellationToken, ValueTask<int>> action = (o, ct) => ValueTask.FromResult(o * 2);
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(true);
+        Func<int, CancellationToken, ValueTask<int>> action = static (o, ct) => ValueTask.FromResult(o * 2);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -4941,8 +4941,8 @@ public class ControlFlowTests
     {
         // Arrange
         int? obj = 42;
-        Func<int?, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(o.HasValue);
-        Func<int?, CancellationToken, ValueTask<int?>> action = (o, ct) => ValueTask.FromResult(o * 2);
+        Func<int?, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(o.HasValue);
+        Func<int?, CancellationToken, ValueTask<int?>> action = static (o, ct) => ValueTask.FromResult(o * 2);
 
         // Act
         int? result = await obj.ReturnIfAsync(condition, action, CancellationToken.None);
@@ -4959,8 +4959,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<string?, CancellationToken, ValueTask<string?>> action = (o, ct) => ValueTask.FromResult<string?>("not null");
+        Func<string?, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(false);
+        Func<string?, CancellationToken, ValueTask<string?>> action = static (o, ct) => ValueTask.FromResult<string?>("not null");
 
         // Act
         string? result = await obj.ReturnIfAsync(condition, action, CancellationToken.None);
@@ -5036,8 +5036,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "hello";
-        Func<string, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(o.Length > 3);
-        Func<string, CancellationToken, ValueTask<string>> action = (o, ct) => ValueTask.FromResult(o.ToUpper());
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(o.Length > 3);
+        Func<string, CancellationToken, ValueTask<string>> action = static (o, ct) => ValueTask.FromResult(o.ToUpper());
 
         // Act
         string result = await obj.ReturnIfAsync(condition, action, CancellationToken.None);
@@ -5056,8 +5056,8 @@ public class ControlFlowTests
     public async Task ReturnIfAsync_ValueTask_StringEdgeCases_WorksCorrectly(string value)
     {
         // Arrange
-        Func<string, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(!string.IsNullOrWhiteSpace(o));
-        Func<string, CancellationToken, ValueTask<string>> action = (o, ct) => ValueTask.FromResult(o.ToUpper());
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(!string.IsNullOrWhiteSpace(o));
+        Func<string, CancellationToken, ValueTask<string>> action = static (o, ct) => ValueTask.FromResult(o.ToUpper());
 
         // Act
         string result = await value.ReturnIfAsync(condition, action, CancellationToken.None);
@@ -5082,8 +5082,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 0;
-        Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(x == 0);
-        Func<int, CancellationToken, Task<int>> action = (x, ct) => Task.FromResult(1);
+        Func<int, CancellationToken, Task<bool>> condition = static (x, ct) => Task.FromResult(x == 0);
+        Func<int, CancellationToken, Task<int>> action = static (x, ct) => Task.FromResult(1);
 
         // Act
         int result = await obj.ReturnIfAsync(condition, action);
@@ -5132,9 +5132,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 3;
-        Func<int, bool> condition = x => x > 5;
-        Func<int, int> ifAction = x => x * 2;
-        Func<int, int> elseAction = x => x / 2;
+        Func<int, bool> condition = static x => x > 5;
+        Func<int, int> ifAction = static x => x * 2;
+        Func<int, int> elseAction = static x => x / 2;
 
         // Act
         int result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5183,9 +5183,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 10;
-        Func<int, bool> condition = x => x > 5;
-        Func<int, int> ifAction = x => x * 2;
-        Func<int, int> elseAction = x => x / 2;
+        Func<int, bool> condition = static x => x > 5;
+        Func<int, int> ifAction = static x => x * 2;
+        Func<int, int> elseAction = static x => x / 2;
 
         // Act
         int result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5203,9 +5203,9 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.NaN;
-        Func<double, bool> condition = d => double.IsNaN(d);
-        Func<double, double> ifAction = d => 0.0;
-        Func<double, double> elseAction = d => d;
+        Func<double, bool> condition = static d => double.IsNaN(d);
+        Func<double, double> ifAction = static d => 0.0;
+        Func<double, double> elseAction = static d => d;
 
         // Act
         double result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5223,9 +5223,9 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.NegativeInfinity;
-        Func<double, bool> condition = d => double.IsNegativeInfinity(d);
-        Func<double, double> ifAction = d => double.MinValue;
-        Func<double, double> elseAction = d => d;
+        Func<double, bool> condition = static d => double.IsNegativeInfinity(d);
+        Func<double, double> ifAction = static d => double.MinValue;
+        Func<double, double> elseAction = static d => d;
 
         // Act
         double result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5243,9 +5243,9 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = double.PositiveInfinity;
-        Func<double, bool> condition = d => double.IsInfinity(d);
-        Func<double, double> ifAction = d => double.MaxValue;
-        Func<double, double> elseAction = d => d;
+        Func<double, bool> condition = static d => double.IsInfinity(d);
+        Func<double, double> ifAction = static d => double.MaxValue;
+        Func<double, double> elseAction = static d => d;
 
         // Act
         double result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5263,9 +5263,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string?, bool> condition = s => s is { Length: > 0 };
-        Func<string?, string?> ifAction = s => s;
-        Func<string?, string?> elseAction = s => null;
+        Func<string?, bool> condition = static s => s is { Length: > 0 };
+        Func<string?, string?> ifAction = static s => s;
+        Func<string?, string?> elseAction = static s => null;
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5283,9 +5283,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, bool> condition = s => s.Length == 0;
-        Func<string, string> ifAction = s => "empty";
-        Func<string, string> elseAction = s => s;
+        Func<string, bool> condition = static s => s.Length == 0;
+        Func<string, string> ifAction = static s => "empty";
+        Func<string, string> elseAction = static s => s;
 
         // Act
         string result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5303,9 +5303,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string?, bool> condition = s => s is { Length: > 0 };
-        Func<string?, string?> ifAction = s => null;
-        Func<string?, string?> elseAction = s => s;
+        Func<string?, bool> condition = static s => s is { Length: > 0 };
+        Func<string?, string?> ifAction = static s => null;
+        Func<string?, string?> elseAction = static s => s;
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5323,9 +5323,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, bool> condition = x => x > 0;
-        Func<int, int> ifAction = x => 1;
-        Func<int, int> elseAction = x => x;
+        Func<int, bool> condition = static x => x > 0;
+        Func<int, int> ifAction = static x => 1;
+        Func<int, int> elseAction = static x => x;
 
         // Act
         int result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5343,9 +5343,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MinValue;
-        Func<int, bool> condition = x => x < 0;
-        Func<int, int> ifAction = x => 0;
-        Func<int, int> elseAction = x => x;
+        Func<int, bool> condition = static x => x < 0;
+        Func<int, int> ifAction = static x => 0;
+        Func<int, int> elseAction = static x => x;
 
         // Act
         int result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5364,9 +5364,9 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, bool> condition = s => s != null;
-        Func<string?, string?> ifAction = s => s;
-        Func<string?, string?> elseAction = s => "was null";
+        Func<string?, bool> condition = static s => s != null;
+        Func<string?, string?> ifAction = static s => s;
+        Func<string?, string?> elseAction = static s => "was null";
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5385,9 +5385,9 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, bool> condition = s => s == null;
-        Func<string?, string?> ifAction = s => "null value";
-        Func<string?, string?> elseAction = s => s;
+        Func<string?, bool> condition = static s => s == null;
+        Func<string?, string?> ifAction = static s => "null value";
+        Func<string?, string?> elseAction = static s => s;
 
         // Act
         string? result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5405,9 +5405,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "hi";
-        Func<string, bool> condition = s => s.Length > 3;
-        Func<string, string> ifAction = s => s.ToUpper();
-        Func<string, string> elseAction = s => s.ToLower();
+        Func<string, bool> condition = static s => s.Length > 3;
+        Func<string, string> ifAction = static s => s.ToUpper();
+        Func<string, string> elseAction = static s => s.ToLower();
 
         // Act
         string result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5425,9 +5425,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "hello";
-        Func<string, bool> condition = s => s.Length > 3;
-        Func<string, string> ifAction = s => s.ToUpper();
-        Func<string, string> elseAction = s => s.ToLower();
+        Func<string, bool> condition = static s => s.Length > 3;
+        Func<string, string> ifAction = static s => s.ToUpper();
+        Func<string, string> elseAction = static s => s.ToLower();
 
         // Act
         string result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5445,9 +5445,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "   ";
-        Func<string, bool> condition = s => string.IsNullOrWhiteSpace(s);
-        Func<string, string> ifAction = s => "whitespace";
-        Func<string, string> elseAction = s => s.Trim();
+        Func<string, bool> condition = static s => string.IsNullOrWhiteSpace(s);
+        Func<string, string> ifAction = static s => "whitespace";
+        Func<string, string> elseAction = static s => s.Trim();
 
         // Act
         string result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5465,9 +5465,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 0;
-        Func<int, bool> condition = x => x > 0;
-        Func<int, int> ifAction = x => 1;
-        Func<int, int> elseAction = x => -1;
+        Func<int, bool> condition = static x => x > 0;
+        Func<int, int> ifAction = static x => 1;
+        Func<int, int> elseAction = static x => -1;
 
         // Act
         int result = obj.ReturnIfElse(condition, ifAction, elseAction);
@@ -5517,9 +5517,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<int, CancellationToken, Task<int>> ifAction = (o, ct) => Task.FromResult(o + 10);
-        Func<int, CancellationToken, Task<int>> elseAction = (o, ct) => Task.FromResult(o - 10);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<int, CancellationToken, Task<int>> ifAction = static (o, ct) => Task.FromResult(o + 10);
+        Func<int, CancellationToken, Task<int>> elseAction = static (o, ct) => Task.FromResult(o - 10);
 
         // Act
         int result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -5646,9 +5646,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(true);
-        Func<int, CancellationToken, Task<int>> ifAction = (o, ct) => Task.FromResult(o + 10);
-        Func<int, CancellationToken, Task<int>> elseAction = (o, ct) => Task.FromResult(o - 10);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(true);
+        Func<int, CancellationToken, Task<int>> ifAction = static (o, ct) => Task.FromResult(o + 10);
+        Func<int, CancellationToken, Task<int>> elseAction = static (o, ct) => Task.FromResult(o - 10);
 
         // Act
         int result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -5742,9 +5742,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 25;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(o > 20);
-        Func<int, CancellationToken, Task<int>> ifAction = (o, ct) => Task.FromResult(o * 2);
-        Func<int, CancellationToken, Task<int>> elseAction = (o, ct) => Task.FromResult(o / 2);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(o > 20);
+        Func<int, CancellationToken, Task<int>> ifAction = static (o, ct) => Task.FromResult(o * 2);
+        Func<int, CancellationToken, Task<int>> elseAction = static (o, ct) => Task.FromResult(o / 2);
 
         // Act
         int result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -5805,9 +5805,9 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, Task<bool>> condition = (s, ct) => Task.FromResult(s is null);
-        Func<string?, CancellationToken, Task<string?>> ifAction = (s, ct) => Task.FromResult<string?>("was null");
-        Func<string?, CancellationToken, Task<string?>> elseAction = (s, ct) => Task.FromResult(s);
+        Func<string?, CancellationToken, Task<bool>> condition = static (s, ct) => Task.FromResult(s is null);
+        Func<string?, CancellationToken, Task<string?>> ifAction = static (s, ct) => Task.FromResult<string?>("was null");
+        Func<string?, CancellationToken, Task<string?>> elseAction = static (s, ct) => Task.FromResult(s);
 
         // Act
         string? result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -5959,9 +5959,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, CancellationToken, Task<bool>> condition = (s, ct) => Task.FromResult(s.Length > 5);
-        Func<string, CancellationToken, Task<string>> ifAction = (s, ct) => Task.FromResult(s.ToUpper());
-        Func<string, CancellationToken, Task<string>> elseAction = (s, ct) => Task.FromResult(s.ToLower());
+        Func<string, CancellationToken, Task<bool>> condition = static (s, ct) => Task.FromResult(s.Length > 5);
+        Func<string, CancellationToken, Task<string>> ifAction = static (s, ct) => Task.FromResult(s.ToUpper());
+        Func<string, CancellationToken, Task<string>> elseAction = static (s, ct) => Task.FromResult(s.ToLower());
 
         // Act
         string result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -5978,17 +5978,17 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 50;
-        Func<int, CancellationToken, ValueTask<bool>> condition = async (x, ct) =>
+        Func<int, CancellationToken, ValueTask<bool>> condition = static async (x, ct) =>
         {
             await Task.Delay(1, ct);
             return x >= 50;
         };
-        Func<int, CancellationToken, ValueTask<int>> ifAction = async (x, ct) =>
+        Func<int, CancellationToken, ValueTask<int>> ifAction = static async (x, ct) =>
         {
             await Task.Delay(1, ct);
             return x + 10;
         };
-        Func<int, CancellationToken, ValueTask<int>> elseAction = async (x, ct) =>
+        Func<int, CancellationToken, ValueTask<int>> elseAction = static async (x, ct) =>
         {
             await Task.Delay(1, ct);
             return x - 10;
@@ -6009,9 +6009,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 100;
-        Func<int, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(false);
-        Func<int, CancellationToken, ValueTask<int>> ifAction = (x, ct) => new ValueTask<int>(x / 2);
-        Func<int, CancellationToken, ValueTask<int>> elseAction = async (x, ct) =>
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(false);
+        Func<int, CancellationToken, ValueTask<int>> ifAction = static (x, ct) => new ValueTask<int>(x / 2);
+        Func<int, CancellationToken, ValueTask<int>> elseAction = static async (x, ct) =>
         {
             await Task.Delay(1, ct);
             return x * 2;
@@ -6032,13 +6032,13 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 100;
-        Func<int, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(true);
-        Func<int, CancellationToken, ValueTask<int>> ifAction = async (x, ct) =>
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(true);
+        Func<int, CancellationToken, ValueTask<int>> ifAction = static async (x, ct) =>
         {
             await Task.Delay(1, ct);
             return x / 2;
         };
-        Func<int, CancellationToken, ValueTask<int>> elseAction = (x, ct) => new ValueTask<int>(x * 2);
+        Func<int, CancellationToken, ValueTask<int>> elseAction = static (x, ct) => new ValueTask<int>(x * 2);
 
         // Act
         int result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6055,9 +6055,9 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 7;
-        Func<int, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(x > 5);
-        Func<int, CancellationToken, ValueTask<int>> ifAction = (x, ct) => new ValueTask<int>(x * 10);
-        Func<int, CancellationToken, ValueTask<int>> elseAction = (x, ct) => new ValueTask<int>(x * 5);
+        Func<int, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(x > 5);
+        Func<int, CancellationToken, ValueTask<int>> ifAction = static (x, ct) => new ValueTask<int>(x * 10);
+        Func<int, CancellationToken, ValueTask<int>> elseAction = static (x, ct) => new ValueTask<int>(x * 5);
 
         // Act
         int result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6074,9 +6074,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(string.IsNullOrEmpty(x));
-        Func<string, CancellationToken, ValueTask<string>> ifAction = (x, ct) => new ValueTask<string>("empty");
-        Func<string, CancellationToken, ValueTask<string>> elseAction = (x, ct) => new ValueTask<string>(x);
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(string.IsNullOrEmpty(x));
+        Func<string, CancellationToken, ValueTask<string>> ifAction = static (x, ct) => new ValueTask<string>("empty");
+        Func<string, CancellationToken, ValueTask<string>> elseAction = static (x, ct) => new ValueTask<string>(x);
 
         // Act
         string result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6093,9 +6093,9 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(x == null);
-        Func<string?, CancellationToken, ValueTask<string?>> ifAction = (x, ct) => new ValueTask<string?>("was null");
-        Func<string?, CancellationToken, ValueTask<string?>> elseAction = (x, ct) => new ValueTask<string?>(x);
+        Func<string?, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(x == null);
+        Func<string?, CancellationToken, ValueTask<string?>> ifAction = static (x, ct) => new ValueTask<string?>("was null");
+        Func<string?, CancellationToken, ValueTask<string?>> elseAction = static (x, ct) => new ValueTask<string?>(x);
 
         // Act
         string? result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6112,9 +6112,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "hello";
-        Func<string, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(x.StartsWith("h"));
-        Func<string, CancellationToken, ValueTask<string>> ifAction = (x, ct) => new ValueTask<string>($"{x} world");
-        Func<string, CancellationToken, ValueTask<string>> elseAction = (x, ct) => new ValueTask<string>($"{x} there");
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(x.StartsWith("h"));
+        Func<string, CancellationToken, ValueTask<string>> ifAction = static (x, ct) => new ValueTask<string>($"{x} world");
+        Func<string, CancellationToken, ValueTask<string>> elseAction = static (x, ct) => new ValueTask<string>($"{x} there");
 
         // Act
         string result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6153,9 +6153,9 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "   ";
-        Func<string, CancellationToken, ValueTask<bool>> condition = (x, ct) => new ValueTask<bool>(string.IsNullOrWhiteSpace(x));
-        Func<string, CancellationToken, ValueTask<string>> ifAction = (x, ct) => new ValueTask<string>("trimmed");
-        Func<string, CancellationToken, ValueTask<string>> elseAction = (x, ct) => new ValueTask<string>(x.Trim());
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (x, ct) => new ValueTask<bool>(string.IsNullOrWhiteSpace(x));
+        Func<string, CancellationToken, ValueTask<string>> ifAction = static (x, ct) => new ValueTask<string>("trimmed");
+        Func<string, CancellationToken, ValueTask<string>> elseAction = static (x, ct) => new ValueTask<string>(x.Trim());
 
         // Act
         string result = await obj.ReturnIfElseAsync(condition, ifAction, elseAction);
@@ -6174,7 +6174,7 @@ public class ControlFlowTests
         bool input = false;
 
         // Act
-        bool result = input.ReturnIfNot(x => !x, x => true);
+        bool result = input.ReturnIfNot(static x => !x, static x => true);
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6232,7 +6232,7 @@ public class ControlFlowTests
         int expected = 20;
 
         // Act
-        int result = input.ReturnIfNot(x => x > 100, x => x * 2);
+        int result = input.ReturnIfNot(static x => x > 100, static x => x * 2);
 
         // Assert
         Assert.AreEqual(expected, result);
@@ -6272,7 +6272,7 @@ public class ControlFlowTests
         int input = 150;
 
         // Act
-        int result = input.ReturnIfNot(x => x > 100, x => x * 2);
+        int result = input.ReturnIfNot(static x => x > 100, static x => x * 2);
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6324,7 +6324,7 @@ public class ControlFlowTests
         double input = double.PositiveInfinity;
 
         // Act
-        double result = input.ReturnIfNot(x => double.IsInfinity(x), x => 0.0);
+        double result = input.ReturnIfNot(static x => double.IsInfinity(x), static x => 0.0);
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6359,7 +6359,7 @@ public class ControlFlowTests
         int input = int.MaxValue;
 
         // Act
-        int result = input.ReturnIfNot(x => x > 0, x => -1);
+        int result = input.ReturnIfNot(static x => x > 0, static x => -1);
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6394,7 +6394,7 @@ public class ControlFlowTests
         int expected = 42;
 
         // Act
-        int result = input.ReturnIfNot(x => x > 0, x => Math.Abs(x));
+        int result = input.ReturnIfNot(static x => x > 0, static x => Math.Abs(x));
 
         // Assert
         Assert.AreEqual(expected, result);
@@ -6411,7 +6411,7 @@ public class ControlFlowTests
         Func<int, int>? action = null;
 
         // Act
-        int result = input.ReturnIfNot(x => x > 100, action!);
+        int result = input.ReturnIfNot(static x => x > 100, action!);
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6444,7 +6444,7 @@ public class ControlFlowTests
         string? input = null;
 
         // Act
-        string? result = input.ReturnIfNot(x => x == null, x => "default");
+        string? result = input.ReturnIfNot(static x => x == null, static x => "default");
 
         // Assert
         Assert.IsNull(result);
@@ -6479,7 +6479,7 @@ public class ControlFlowTests
         object input = new object();
 
         // Act
-        object result = input.ReturnIfNot(x => x != null, x => new object());
+        object result = input.ReturnIfNot(static x => x != null, static x => new object());
 
         // Assert
         Assert.AreSame(input, result);
@@ -6496,7 +6496,7 @@ public class ControlFlowTests
         string input = "   ";
 
         // Act
-        string result = input.ReturnIfNot(x => string.IsNullOrWhiteSpace(x), x => "replaced");
+        string result = input.ReturnIfNot(static x => string.IsNullOrWhiteSpace(x), static x => "replaced");
 
         // Assert
         Assert.AreEqual(input, result);
@@ -6643,8 +6643,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<int, CancellationToken, Task<int>> action = (o, ct) => Task.FromResult(o * 2);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<int, CancellationToken, Task<int>> action = static (o, ct) => Task.FromResult(o * 2);
 
         // Act
         int result = await obj.ReturnIfNotAsync(condition, action);
@@ -6666,8 +6666,8 @@ public class ControlFlowTests
     public async Task ReturnIfNotAsync_EmptyOrWhitespaceString_WorksCorrectly(string value)
     {
         // Arrange
-        Func<string, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(string.IsNullOrWhiteSpace(o));
-        Func<string, CancellationToken, ValueTask<string>> action = (o, ct) => ValueTask.FromResult("default");
+        Func<string, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(string.IsNullOrWhiteSpace(o));
+        Func<string, CancellationToken, ValueTask<string>> action = static (o, ct) => ValueTask.FromResult("default");
 
         // Act
         string result = await value.ReturnIfNotAsync(condition, action);
@@ -6685,8 +6685,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<string, CancellationToken, Task<string>> action = (o, ct) => Task.FromResult("non-empty");
+        Func<string, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<string, CancellationToken, Task<string>> action = static (o, ct) => Task.FromResult("non-empty");
 
         // Act
         string result = await obj.ReturnIfNotAsync(condition, action);
@@ -6704,8 +6704,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(true);
-        Func<int, CancellationToken, Task<int>> action = (o, ct) => Task.FromResult(0);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(true);
+        Func<int, CancellationToken, Task<int>> action = static (o, ct) => Task.FromResult(0);
 
         // Act
         int result = await obj.ReturnIfNotAsync(condition, action);
@@ -6723,8 +6723,8 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = int.MinValue;
-        Func<int, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(true);
-        Func<int, CancellationToken, Task<int>> action = (o, ct) => Task.FromResult(0);
+        Func<int, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(true);
+        Func<int, CancellationToken, Task<int>> action = static (o, ct) => Task.FromResult(0);
 
         // Act
         int result = await obj.ReturnIfNotAsync(condition, action);
@@ -6742,8 +6742,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<string?, CancellationToken, Task<string?>> action = (o, ct) => Task.FromResult<string?>("replacement");
+        Func<string?, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<string?, CancellationToken, Task<string?>> action = static (o, ct) => Task.FromResult<string?>("replacement");
 
         // Act
         string? result = await obj.ReturnIfNotAsync(condition, action);
@@ -6760,8 +6760,8 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<string?, CancellationToken, ValueTask<string?>> action = (o, ct) => ValueTask.FromResult<string?>("replacement");
+        Func<string?, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(false);
+        Func<string?, CancellationToken, ValueTask<string?>> action = static (o, ct) => ValueTask.FromResult<string?>("replacement");
 
         // Act
         string? result = await obj.ReturnIfNotAsync(condition, action);
@@ -6866,8 +6866,8 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test";
-        Func<string, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<string, CancellationToken, Task<string>> action = (o, ct) => Task.FromResult(o.ToUpper());
+        Func<string, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<string, CancellationToken, Task<string>> action = static (o, ct) => Task.FromResult(o.ToUpper());
 
         // Act
         string result = await obj.ReturnIfNotAsync(condition, action);
@@ -6887,8 +6887,8 @@ public class ControlFlowTests
     public async Task ReturnIfNotAsync_SpecialDoubleValues_HandlesCorrectly(double value)
     {
         // Arrange
-        Func<double, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
-        Func<double, CancellationToken, ValueTask<double>> action = (o, ct) => ValueTask.FromResult(0.0);
+        Func<double, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(false);
+        Func<double, CancellationToken, ValueTask<double>> action = static (o, ct) => ValueTask.FromResult(0.0);
 
         // Act
         double result = await value.ReturnIfNotAsync(condition, action);
@@ -6978,8 +6978,8 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = 3.14;
-        Func<double, CancellationToken, Task<bool>> condition = (o, ct) => Task.FromResult(false);
-        Func<double, CancellationToken, Task<double>> action = (o, ct) => Task.FromResult(o * 2);
+        Func<double, CancellationToken, Task<bool>> condition = static (o, ct) => Task.FromResult(false);
+        Func<double, CancellationToken, Task<double>> action = static (o, ct) => Task.FromResult(o * 2);
 
         // Act
         double result = await obj.ReturnIfNotAsync(condition, action);
@@ -6996,8 +6996,8 @@ public class ControlFlowTests
     {
         // Arrange
         double obj = 3.14159;
-        Func<double, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(o < 0);
-        Func<double, CancellationToken, ValueTask<double>> action = (o, ct) => ValueTask.FromResult(Math.Abs(o));
+        Func<double, CancellationToken, ValueTask<bool>> condition = static (o, ct) => ValueTask.FromResult(o < 0);
+        Func<double, CancellationToken, ValueTask<double>> action = static (o, ct) => ValueTask.FromResult(Math.Abs(o));
 
         // Act
         double result = await obj.ReturnIfNotAsync(condition, action);
@@ -7038,7 +7038,7 @@ public class ControlFlowTests
     {
         // Arrange
         int[] obj = new[] { 1, 2, 3 };
-        Func<int[]> action = () => new[] { 4, 5, 6 };
+        Func<int[]> action = static () => new[] { 4, 5, 6 };
 
         // Act
         int[] result = obj.ReturnIfNull(action);
@@ -7121,7 +7121,7 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string> action = () => "replacement";
+        Func<string> action = static () => "replacement";
 
         // Act
         string? result = obj.ReturnIfNull(action);
@@ -7138,7 +7138,7 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        Func<string?> action = () => null;
+        Func<string?> action = static () => null;
 
         // Act
         string? result = obj.ReturnIfNull(action);
@@ -7180,7 +7180,7 @@ public class ControlFlowTests
     {
         // Arrange
         string? testObject = null;
-        Func<CancellationToken, Task<string?>> action = ct => Task.FromResult<string?>(null);
+        Func<CancellationToken, Task<string?>> action = static ct => Task.FromResult<string?>(null);
 
         // Act
         string? result = await testObject.ReturnIfNullAsync(action, CancellationToken.None);

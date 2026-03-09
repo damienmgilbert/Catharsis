@@ -88,7 +88,7 @@ public class PooledBufferTests
     ///Tests that the constructor throws when pool is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PooledBuffer<byte>(null!, 256)); }
+    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PooledBuffer<byte>(null!, 256)); }
     ///<summary>
     ///Tests that the constructor sets the growth strategy.
     ///</summary>
@@ -108,7 +108,7 @@ public class PooledBufferTests
     ///Tests that the constructor throws when initial capacity is zero.
     ///</summary>
     [TestMethod]
-    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new PooledBuffer<byte>(0)); }
+    public void Constructor_ZeroCapacity_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new PooledBuffer<byte>(0)); }
     ///<summary>
     ///Tests that Dispose is idempotent.
     ///</summary>

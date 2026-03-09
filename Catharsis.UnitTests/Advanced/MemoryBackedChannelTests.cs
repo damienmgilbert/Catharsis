@@ -2,6 +2,9 @@ using Catharsis.Advanced;
 
 namespace Catharsis.UnitTests.Advanced;
 
+///<summary>
+///Unit tests for the <see cref="MemoryBackedChannel"/> class.
+///</summary>
 [TestClass]
 public class MemoryBackedChannelTests
 {

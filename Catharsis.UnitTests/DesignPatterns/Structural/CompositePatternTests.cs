@@ -20,8 +20,8 @@ public class CompositePatternTests
         TreeNode child2 = new TreeNode("child2");
         root.AddChild(child1);
         root.AddChild(child2);
-        Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
-        Action<TreeNode> action = n => n.Name = n.Name.ToUpper();
+        Func<TreeNode, IEnumerable<TreeNode>> getChildren = static n => n.Children;
+        Action<TreeNode> action = static n => n.Name = n.Name.ToUpper();
         // Act
         new CompositePattern().Composite(root, getChildren, action);
         // Assert
@@ -39,8 +39,8 @@ public class CompositePatternTests
         // Arrange
         TreeNode root = new TreeNode("root");
         root.AddChild(new TreeNode("child1"));
-        Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
-        Action<TreeNode> action = n =>
+        Func<TreeNode, IEnumerable<TreeNode>> getChildren = static n => n.Children;
+        Action<TreeNode> action = static n =>
         {
         };
         // Act

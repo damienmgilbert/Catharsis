@@ -4,6 +4,9 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 namespace Catharsis.UnitTests.HighPerformance;
 
+///<summary>
+///Unit tests for the <see cref="MemoryOwnerExtensions"/> class.
+///</summary>
 [TestClass]
 public class MemoryOwnerExtensionsTests
 {

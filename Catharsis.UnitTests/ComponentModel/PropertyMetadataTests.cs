@@ -2,14 +2,17 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="PropertyMetadata"/> class.
+///</summary>
 [TestClass]
 public class PropertyMetadataTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullName_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyMetadata(null!, typeof(string), typeof(object))); }
+    public void Constructor_NullName_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PropertyMetadata(null!, typeof(string), typeof(object))); }
     [TestMethod]
-    public void Constructor_NullType_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyMetadata("X", null!, typeof(object))); }
+    public void Constructor_NullType_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PropertyMetadata("X", null!, typeof(object))); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {

@@ -16,10 +16,10 @@ public class BuilderTests
     {
         // Arrange
         Dictionary<string, int> obj = new Dictionary<string, int>();
-        Func<Dictionary<string, int>, int> finalizer = dict => dict.Values.Sum();
-        Action<Dictionary<string, int>> step1 = dict => dict["a"] = 10;
-        Action<Dictionary<string, int>> step2 = dict => dict["b"] = 20;
-        Action<Dictionary<string, int>> step3 = dict => dict["a"] = dict["a"] * 2;
+        Func<Dictionary<string, int>, int> finalizer = static dict => dict.Values.Sum();
+        Action<Dictionary<string, int>> step1 = static dict => dict["a"] = 10;
+        Action<Dictionary<string, int>> step2 = static dict => dict["b"] = 20;
+        Action<Dictionary<string, int>> step3 = static dict => dict["a"] = dict["a"] * 2;
         // Act
         int result = new Builder().Build(obj, finalizer, step1, step2, step3);
         // Assert
@@ -34,10 +34,10 @@ public class BuilderTests
     {
         // Arrange
         List<int> obj = new List<int>();
-        Func<List<int>, int> finalizer = list => list.Sum();
-        Action<List<int>> step1 = list => list.Add(10);
-        Action<List<int>> step2 = list => list.Add(20);
-        Action<List<int>> step3 = list => list.Add(30);
+        Func<List<int>, int> finalizer = static list => list.Sum();
+        Action<List<int>> step1 = static list => list.Add(10);
+        Action<List<int>> step2 = static list => list.Add(20);
+        Action<List<int>> step3 = static list => list.Add(30);
         // Act
         int result = new Builder().Build(obj, finalizer, step1, step2, step3);
         // Assert
@@ -53,7 +53,7 @@ public class BuilderTests
     {
         // Arrange
         StringBuilder obj = new StringBuilder("initial");
-        Func<StringBuilder, string> finalizer = sb => sb.ToString();
+        Func<StringBuilder, string> finalizer = static sb => sb.ToString();
         Action<StringBuilder>[] steps = Array.Empty<Action<StringBuilder>>();
         // Act
         string result = new Builder().Build(obj, finalizer, steps);
@@ -69,10 +69,10 @@ public class BuilderTests
     {
         // Arrange
         StringBuilder obj = new StringBuilder();
-        Func<StringBuilder, string> finalizer = sb => sb.ToString();
-        Action<StringBuilder> step1 = sb => sb.Append("first");
-        Action<StringBuilder> step2 = sb => sb.Append(" second");
-        Action<StringBuilder> step3 = sb => sb.Append(" third");
+        Func<StringBuilder, string> finalizer = static sb => sb.ToString();
+        Action<StringBuilder> step1 = static sb => sb.Append("first");
+        Action<StringBuilder> step2 = static sb => sb.Append(" second");
+        Action<StringBuilder> step3 = static sb => sb.Append(" third");
         // Act
         string result = new Builder().Build(obj, finalizer, step1, step2, step3);
         // Assert
@@ -88,7 +88,7 @@ public class BuilderTests
     {
         // Arrange
         StringBuilder obj = new StringBuilder("initial");
-        Func<StringBuilder, string> finalizer = sb => sb.ToString();
+        Func<StringBuilder, string> finalizer = static sb => sb.ToString();
         // Act
         string result = new Builder().Build(obj, finalizer);
         // Assert
@@ -154,8 +154,8 @@ public class BuilderTests
     {
         // Arrange
         StringBuilder obj = new StringBuilder("start");
-        Func<StringBuilder, StringBuilder> finalizer = sb => sb;
-        Action<StringBuilder> step = sb => sb.Append(" end");
+        Func<StringBuilder, StringBuilder> finalizer = static sb => sb;
+        Action<StringBuilder> step = static sb => sb.Append(" end");
         // Act
         StringBuilder result = new Builder().Build(obj, finalizer, step);
         // Assert
@@ -197,8 +197,8 @@ public class BuilderTests
     {
         // Arrange
         StringBuilder obj = new StringBuilder("initial");
-        Func<StringBuilder, string> finalizer = sb => sb.ToString();
-        Action<StringBuilder> step = sb => sb.Append(" modified");
+        Func<StringBuilder, string> finalizer = static sb => sb.ToString();
+        Action<StringBuilder> step = static sb => sb.Append(" modified");
         // Act
         string result = new Builder().Build(obj, finalizer, step);
         // Assert
@@ -213,11 +213,11 @@ public class BuilderTests
     {
         // Arrange
         List<int> obj = new List<int>();
-        Func<List<int>, int> finalizer = list => list.Count;
-        Action<List<int>> step1 = list => list.Add(1);
-        Action<List<int>> step2 = list => list.Add(2);
-        Action<List<int>> step3 = list => list.Clear();
-        Action<List<int>> step4 = list => list.Add(100);
+        Func<List<int>, int> finalizer = static list => list.Count;
+        Action<List<int>> step1 = static list => list.Add(1);
+        Action<List<int>> step2 = static list => list.Add(2);
+        Action<List<int>> step3 = static list => list.Clear();
+        Action<List<int>> step4 = static list => list.Add(100);
         // Act
         int result = new Builder().Build(obj, finalizer, step1, step2, step3, step4);
         // Assert
@@ -260,7 +260,7 @@ public class BuilderTests
         // but Build should still execute and return the value
         int result = new Builder().Build(
                      value,
-                     v =>
+                     static v =>
                      { /* no-op on value type */
                      });
         // Assert
@@ -275,7 +275,7 @@ public class BuilderTests
     {
         // Arrange
         int obj = 10;
-        Func<int, string> finalizer = i => i.ToString();
+        Func<int, string> finalizer = static i => i.ToString();
         // Note: Value type cannot be modified by steps, but steps can still be called
         // Act
         string result = new Builder().Build(obj, finalizer);

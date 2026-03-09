@@ -132,8 +132,8 @@ public class IteratorTests
     {
         // Arrange
         List<string> obj = new List<string> { "a", "b", "c" };
-        Func<List<string>, IEnumerable<string>> getElements = list => list;
-        Action<string> action = s =>
+        Func<List<string>, IEnumerable<string>> getElements = static list => list;
+        Action<string> action = static s =>
         {
         };
         // Act

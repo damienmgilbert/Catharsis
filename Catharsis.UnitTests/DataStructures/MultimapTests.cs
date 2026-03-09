@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="Multimap"/> class.
+///</summary>
 [TestClass]
 public class MultimapTests
 {
@@ -41,7 +44,7 @@ public class MultimapTests
     }
 
     [TestMethod]
-    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new Multimap<string, int>(null!)); }
+    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new Multimap<string, int>(null!)); }
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {

@@ -3,6 +3,9 @@ using Catharsis.Patterns;
 
 namespace Catharsis.UnitTests.Patterns;
 
+///<summary>
+///Unit tests for the <see cref="SpanSerializerPattern"/> class.
+///</summary>
 [TestClass]
 public class SpanSerializerPatternTests
 {

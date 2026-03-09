@@ -104,7 +104,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                return _errors.Values.SelectMany(e => e).ToList();
+                return _errors.Values.SelectMany(static e => e).ToList();
             }
 
             return _errors.TryGetValue(propertyName, out List<ErrorInfo>? errors) ? errors.ToList() : [];
@@ -118,7 +118,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                return _errors.Values.SelectMany(e => e).ToList();
+                return _errors.Values.SelectMany(static e => e).ToList();
             }
 
             return _errors.TryGetValue(propertyName, out List<ErrorInfo>? errors) ? errors.ToList() : [];
@@ -198,7 +198,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
         {
             lock (_lock)
             {
-                return _errors.Values.Sum(e => e.Count);
+                return _errors.Values.Sum(static e => e.Count);
             }
         }
     }

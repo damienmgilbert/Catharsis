@@ -16,7 +16,7 @@ public class StrategyPatternTests
     {
         // Arrange
         int obj = 10;
-        Func<int, int> strategy = x => (x * x) + (x * 2) + 5;
+        Func<int, int> strategy = static x => (x * x) + (x * 2) + 5;
         // Act
         int result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -32,7 +32,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, int> strategy = s => s.Length;
+        Func<string, int> strategy = static s => s.Length;
         // Act
         int result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -48,7 +48,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string obj = "test";
-        Func<string, string> strategy = s => s;
+        Func<string, string> strategy = static s => s;
         // Act
         string result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -64,7 +64,7 @@ public class StrategyPatternTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, long> strategy = i => ((long)i) * 2;
+        Func<int, long> strategy = static i => ((long)i) * 2;
         // Act
         long result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -80,7 +80,7 @@ public class StrategyPatternTests
     {
         // Arrange
         int obj = int.MinValue;
-        Func<int, long> strategy = i => ((long)i) * 2;
+        Func<int, long> strategy = static i => ((long)i) * 2;
         // Act
         long result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -96,7 +96,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, string> strategy = s => (s == null) ? "was null" : "was not null";
+        Func<string?, string> strategy = static s => (s == null) ? "was null" : "was not null";
         // Act
         string result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -112,7 +112,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string obj = "42";
-        Func<string, int> strategy = s => int.Parse(s);
+        Func<string, int> strategy = static s => int.Parse(s);
         // Act
         int result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -128,7 +128,7 @@ public class StrategyPatternTests
     {
         // Arrange
         int obj = 42;
-        Func<int, string?> strategy = _ => null;
+        Func<int, string?> strategy = static _ => null;
         // Act
         string? result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -144,7 +144,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string obj = "hello";
-        Func<string, string> strategy = s => s.ToUpper();
+        Func<string, string> strategy = static s => s.ToUpper();
         // Act
         string result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -160,7 +160,7 @@ public class StrategyPatternTests
     {
         // Arrange
         int obj = 123;
-        Func<int, string> strategy = i => $"Number: {i}";
+        Func<int, string> strategy = static i => $"Number: {i}";
         // Act
         string result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -176,7 +176,7 @@ public class StrategyPatternTests
     {
         // Arrange
         double obj = 42.7;
-        Func<double, int> strategy = d => (int)d;
+        Func<double, int> strategy = static d => (int)d;
         // Act
         int result = new StrategyPattern().Strategy(obj, strategy);
         // Assert
@@ -192,7 +192,7 @@ public class StrategyPatternTests
     {
         // Arrange
         string obj = "   ";
-        Func<string, int> strategy = s => s.Trim().Length;
+        Func<string, int> strategy = static s => s.Trim().Length;
         // Act
         int result = new StrategyPattern().Strategy(obj, strategy);
         // Assert

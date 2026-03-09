@@ -4,6 +4,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Catharsis.UnitTests.Patterns;
 
+///<summary>
+///Unit tests for the <see cref="HighThroughputLoggingPipeline"/> class.
+///</summary>
 [TestClass]
 public class HighThroughputLoggingPipelineTests
 {

@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelDtoMapper"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentModelDtoMapperTests
 {

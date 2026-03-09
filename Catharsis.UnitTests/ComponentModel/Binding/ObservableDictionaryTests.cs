@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
+///<summary>
+///Unit tests for the <see cref="ObservableDictionary"/> class.
+///</summary>
 [TestClass]
 public sealed class ObservableDictionaryTests
 {
@@ -65,7 +68,7 @@ public sealed class ObservableDictionaryTests
     }
 
     [TestMethod]
-    public void Constructor_NullDictionary_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ObservableDictionary<string, int>((IDictionary<string, int>)null!)); }
+    public void Constructor_NullDictionary_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ObservableDictionary<string, int>((IDictionary<string, int>)null!)); }
     [TestMethod]
     public void Constructor_WithComparer_UsesComparer()
     {
@@ -99,7 +102,7 @@ public sealed class ObservableDictionaryTests
     {
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
 
-        List<KeyValuePair<string, int>> pairs = dict.ToList();
+        List<KeyValuePair<string, int>> pairs = [.. dict];
 
         Assert.HasCount(2, pairs);
     }

@@ -60,7 +60,7 @@ public static class TypeConversionExtensions
         return TypeDescriptor
             .GetProperties(component)
             .Cast<PropertyDescriptor>()
-            .Where(p => p.IsBrowsable);
+            .Where(static p => p.IsBrowsable);
     }
 
     ///<summary>

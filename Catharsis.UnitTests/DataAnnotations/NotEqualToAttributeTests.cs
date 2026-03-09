@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="NotEqualToAttribute"/> class.
+///</summary>
 [TestClass]
 public class NotEqualToAttributeTests
 {
@@ -20,7 +23,7 @@ public class NotEqualToAttributeTests
     }
 
     [TestMethod]
-    public void Constructor_NullPropertyName_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new NotEqualToAttribute(null!)); }
+    public void Constructor_NullPropertyName_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new NotEqualToAttribute(null!)); }
     [TestMethod]
     public void CustomDisplayName_AppearsInErrorMessage()
     {

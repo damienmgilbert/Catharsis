@@ -4,14 +4,17 @@ using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
+///<summary>
+///Unit tests for the <see cref="RegexIfAttribute"/> class.
+///</summary>
 [TestClass]
 public sealed class RegexIfAttributeTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RegexIfAttribute(null!, true, @"\d+")); }
+    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new RegexIfAttribute(null!, true, @"\d+")); }
     [TestMethod]
-    public void Constructor_NullPattern_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RegexIfAttribute("Prop", true, null!)); }
+    public void Constructor_NullPattern_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new RegexIfAttribute("Prop", true, null!)); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {

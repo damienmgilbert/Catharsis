@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="Deque"/> class.
+///</summary>
 [TestClass]
 public class DequeTests
 {
@@ -17,7 +20,7 @@ public class DequeTests
     [TestMethod]
     public void Constructor_NegativeCapacity_Throws()
     {
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new Deque<int>(-1));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new Deque<int>(-1));
     }
 
     [TestMethod]
@@ -59,25 +62,25 @@ public class DequeTests
     [TestMethod]
     public void RemoveFirst_EmptyDeque_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new Deque<int>().RemoveFirst());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new Deque<int>().RemoveFirst());
     }
 
     [TestMethod]
     public void RemoveLast_EmptyDeque_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new Deque<int>().RemoveLast());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new Deque<int>().RemoveLast());
     }
 
     [TestMethod]
     public void PeekFirst_EmptyDeque_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new Deque<int>().PeekFirst());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new Deque<int>().PeekFirst());
     }
 
     [TestMethod]
     public void PeekLast_EmptyDeque_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new Deque<int>().PeekLast());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new Deque<int>().PeekLast());
     }
 
     [TestMethod]

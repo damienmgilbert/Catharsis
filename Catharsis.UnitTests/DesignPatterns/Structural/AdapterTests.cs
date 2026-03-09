@@ -16,7 +16,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "test";
-        Func<string, string?> adapter = _ => null;
+        Func<string, string?> adapter = static _ => null;
         // Act
         string? result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -49,7 +49,7 @@ public class AdapterTests
     {
         // Arrange
         DateTime obj = new DateTime(2024, 1, 15);
-        Func<DateTime, int> adapter = dt => dt.Year;
+        Func<DateTime, int> adapter = static dt => dt.Year;
         // Act
         int result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -65,7 +65,7 @@ public class AdapterTests
     {
         // Arrange
         double obj = double.NaN;
-        Func<double, bool> adapter = d => double.IsNaN(d);
+        Func<double, bool> adapter = static d => double.IsNaN(d);
         // Act
         bool result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -81,7 +81,7 @@ public class AdapterTests
     {
         // Arrange
         double obj = double.NegativeInfinity;
-        Func<double, bool> adapter = d => double.IsNegativeInfinity(d);
+        Func<double, bool> adapter = static d => double.IsNegativeInfinity(d);
         // Act
         bool result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -97,7 +97,7 @@ public class AdapterTests
     {
         // Arrange
         double obj = double.PositiveInfinity;
-        Func<double, bool> adapter = d => double.IsPositiveInfinity(d);
+        Func<double, bool> adapter = static d => double.IsPositiveInfinity(d);
         // Act
         bool result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -113,7 +113,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = string.Empty;
-        Func<string, int> adapter = s => s.Length;
+        Func<string, int> adapter = static s => s.Length;
         // Act
         int result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -129,7 +129,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "test";
-        Func<string, string> adapter = s => s;
+        Func<string, string> adapter = static s => s;
         // Act
         string result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -145,7 +145,7 @@ public class AdapterTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, long> adapter = i => i;
+        Func<int, long> adapter = static i => i;
         // Act
         long result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -161,7 +161,7 @@ public class AdapterTests
     {
         // Arrange
         int obj = int.MinValue;
-        Func<int, long> adapter = i => i;
+        Func<int, long> adapter = static i => i;
         // Act
         long result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -177,7 +177,7 @@ public class AdapterTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, int> adapter = s => (s == null) ? (-1) : s.Length;
+        Func<string?, int> adapter = static s => (s == null) ? (-1) : s.Length;
         // Act
         int result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -193,7 +193,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "test";
-        Func<string, object> adapter = s => s as object;
+        Func<string, object> adapter = static s => s as object;
         // Act
         object result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -209,7 +209,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "42";
-        Func<string, int?> adapter = s => int.TryParse(s, out int val) ? val : null;
+        Func<string, int?> adapter = static s => int.TryParse(s, out int val) ? val : null;
         // Act
         int? result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -225,7 +225,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "invalid";
-        Func<string, int?> adapter = s => int.TryParse(s, out int val) ? val : null;
+        Func<string, int?> adapter = static s => int.TryParse(s, out int val) ? val : null;
         // Act
         int? result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -241,7 +241,7 @@ public class AdapterTests
     {
         // Arrange
         int obj = 42;
-        Func<int, string> adapter = i => i.ToString();
+        Func<int, string> adapter = static i => i.ToString();
         // Act
         string result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -257,7 +257,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "42";
-        Func<string, int> adapter = s => int.Parse(s);
+        Func<string, int> adapter = static s => int.Parse(s);
         // Act
         int result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -273,7 +273,7 @@ public class AdapterTests
     {
         // Arrange
         int obj = 42;
-        Func<int, double> adapter = i => i * 1.0;
+        Func<int, double> adapter = static i => i * 1.0;
         // Act
         double result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -289,7 +289,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = new string('a', 10000);
-        Func<string, int> adapter = s => s.Length;
+        Func<string, int> adapter = static s => s.Length;
         // Act
         int result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -305,7 +305,7 @@ public class AdapterTests
     {
         // Arrange
         string obj = "   ";
-        Func<string, bool> adapter = s => string.IsNullOrWhiteSpace(s);
+        Func<string, bool> adapter = static s => string.IsNullOrWhiteSpace(s);
         // Act
         bool result = new Adapter().Adapt(obj, adapter);
         // Assert
@@ -320,7 +320,7 @@ public class AdapterTests
     {
         // Arrange
         int obj = 0;
-        Func<int, bool> adapter = i => i == 0;
+        Func<int, bool> adapter = static i => i == 0;
         // Act
         bool result = new Adapter().Adapt(obj, adapter);
         // Assert

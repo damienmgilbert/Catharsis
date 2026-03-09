@@ -97,9 +97,7 @@ public sealed class RuleQueryBuilder<T>
 
         IEnumerable<T> filtered = Apply(source);
 
-        List<(string Name, Func<T, bool> Compiled)> compiled = _namedFilters
-            .Select(nf => (nf.Name, Compiled: nf.Condition.Compile()))
-            .ToList();
+        List<(string Name, Func<T, bool> Compiled)> compiled = [.. _namedFilters.Select(nf => (nf.Name, Compiled: nf.Condition.Compile()))];
 
         return filtered
             .Select(
@@ -269,7 +267,7 @@ public sealed class RuleQueryBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(tags, nameof(tags));
 
-        foreach (Rule<T> rule in _ruleSet.WithAnyTag(tags).Where(r => r.IsEnabled))
+        foreach (Rule<T> rule in _ruleSet.WithAnyTag(tags).Where(static r => r.IsEnabled))
         {
             _filters.Add(rule.Condition);
             _namedFilters.Add((rule.Name, rule.Condition));
@@ -294,7 +292,7 @@ public sealed class RuleQueryBuilder<T>
     ///<summary>
     ///Returns the names of rules currently contributing conditions.
     ///</summary>
-    public IReadOnlyList<string> ActiveRuleNames => _namedFilters.Select(nf => nf.Name).ToList().AsReadOnly();
+    public IReadOnlyList<string> ActiveRuleNames => _namedFilters.Select(static nf => nf.Name).ToList().AsReadOnly();
 
     ///<summary>
     ///Returns the number of filters currently in the builder.

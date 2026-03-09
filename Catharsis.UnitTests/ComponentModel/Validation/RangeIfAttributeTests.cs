@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
+///<summary>
+///Unit tests for the <see cref="RangeIfAttribute"/> class.
+///</summary>
 [TestClass]
 public sealed class RangeIfAttributeTests
 {
@@ -28,7 +31,7 @@ public sealed class RangeIfAttributeTests
     }
 
     [TestMethod]
-    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RangeIfAttribute(null!, true, 1, 100)); }
+    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new RangeIfAttribute(null!, true, 1, 100)); }
     [TestMethod]
     public void FormatErrorMessage_ContainsAllParameters()
     {

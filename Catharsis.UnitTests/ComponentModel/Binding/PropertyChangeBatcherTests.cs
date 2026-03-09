@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
+///<summary>
+///Unit tests for the <see cref="PropertyChangeBatcher"/> class.
+///</summary>
 [TestClass]
 public sealed class PropertyChangeBatcherTests
 {
@@ -25,14 +28,14 @@ public sealed class PropertyChangeBatcherTests
     }
 
     [TestMethod]
-    public void Constructor_NullCallback_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyChangeBatcher(new NotifySource(), null!)); }
+    public void Constructor_NullCallback_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PropertyChangeBatcher(new NotifySource(), null!)); }
     [TestMethod]
     public void Constructor_NullSource_ThrowsArgumentNullException()
     {
         Assert.ThrowsExactly<ArgumentNullException>(
-        () => new PropertyChangeBatcher(
+        static () => new PropertyChangeBatcher(
               null!,
-              _ =>
+              static _ =>
         {
         }));
     }
@@ -137,7 +140,7 @@ public sealed class PropertyChangeBatcherTests
         NotifySource source = new NotifySource();
         using PropertyChangeBatcher batcher = new PropertyChangeBatcher(
                                               source,
-                                              _ =>
+                                              static _ =>
         {
         });
 
@@ -180,7 +183,7 @@ public sealed class PropertyChangeBatcherTests
         NotifySource source = new NotifySource();
         using PropertyChangeBatcher batcher = new PropertyChangeBatcher(
                                               source,
-                                              _ =>
+                                              static _ =>
         {
         });
 

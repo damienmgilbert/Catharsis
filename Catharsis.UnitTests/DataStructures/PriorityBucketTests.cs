@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="PriorityBucket"/> class.
+///</summary>
 [TestClass]
 public class PriorityBucketTests
 {
@@ -17,7 +20,7 @@ public class PriorityBucketTests
     }
 
     [TestMethod]
-    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new PriorityBucket<string, int>(null!)); }
+    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PriorityBucket<string, int>(null!)); }
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {

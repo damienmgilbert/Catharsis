@@ -3,12 +3,15 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelDebuggerView"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentModelDebuggerViewTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullComponent_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ComponentModelDebuggerView(null!)); }
+    public void Constructor_NullComponent_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ComponentModelDebuggerView(null!)); }
     [TestMethod]
     public void HasErrors_NoErrors_ReturnsFalse()
     {
@@ -65,8 +68,8 @@ public sealed class ComponentModelDebuggerViewTests
         ComponentModelDebuggerView.PropertyEntry[] props = view.Properties;
 
         Assert.IsGreaterThanOrEqualTo(2, props.Length);
-        Assert.IsTrue(props.Any(p => (p.Name == "Name") && ((string?)p.Value == "Alice")));
-        Assert.IsTrue(props.Any(p => (p.Name == "Age") && ((int)p.Value! == 30)));
+        Assert.IsTrue(props.Any(static p => (p.Name == "Name") && ((string?)p.Value == "Alice")));
+        Assert.IsTrue(props.Any(static p => (p.Name == "Age") && ((int)p.Value! == 30)));
     }
 
     [TestMethod]
@@ -106,7 +109,7 @@ public sealed class ComponentModelDebuggerViewTests
         ComponentModelDebuggerView.ValidationErrorEntry[] errors = view.ValidationErrors;
 
         Assert.IsNotEmpty(errors);
-        Assert.IsTrue(errors.Any(e => e.PropertyName == "Name"));
+        Assert.IsTrue(errors.Any(static e => e.PropertyName == "Name"));
     }
     #endregion
 

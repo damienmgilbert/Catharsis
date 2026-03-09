@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="ArrayExtensions"/> class.
+///</summary>
 [TestClass]
 public class ArrayExtensionsTests
 {
@@ -83,7 +86,7 @@ public class ArrayExtensionsTests
     public void ModifyAll_TransformsAllElements_ReturnsNewArray()
     {
         int[] source = new[] { 1, 2, 3 };
-        int[] result = source.ModifyAll(x => x * 10);
+        int[] result = source.ModifyAll(static x => x * 10);
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, result);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, source);
     }
@@ -92,7 +95,7 @@ public class ArrayExtensionsTests
     public void ModifyWhere_TransformsMatchingElements_ReturnsNewArray()
     {
         int[] source = new[] { 1, 2, 3, 4, 5 };
-        int[] result = source.ModifyWhere(x => x % 2 == 0, x => x * 10);
+        int[] result = source.ModifyWhere(static x => x % 2 == 0, static x => x * 10);
         CollectionAssert.AreEqual(new[] { 1, 20, 3, 40, 5 }, result);
     }
 
@@ -117,7 +120,7 @@ public class ArrayExtensionsTests
     public void RemoveAll_MatchingPredicate_RemovesMatchingElements()
     {
         int[] source = new[] { 1, 2, 3, 4, 5, 6 };
-        int[] result = source.RemoveAll(x => x % 2 == 0);
+        int[] result = source.RemoveAll(static x => x % 2 == 0);
         CollectionAssert.AreEqual(new[] { 1, 3, 5 }, result);
     }
 
@@ -125,7 +128,7 @@ public class ArrayExtensionsTests
     public void RemoveAll_NoMatch_ReturnsCopy()
     {
         int[] source = new[] { 1, 3, 5 };
-        int[] result = source.RemoveAll(x => x % 2 == 0);
+        int[] result = source.RemoveAll(static x => x % 2 == 0);
         CollectionAssert.AreEqual(new[] { 1, 3, 5 }, result);
     }
 

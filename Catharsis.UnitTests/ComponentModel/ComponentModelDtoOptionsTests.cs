@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelDtoOptions"/> class.
+///</summary>
 [TestClass]
 public class ComponentModelDtoOptionsTests
 {

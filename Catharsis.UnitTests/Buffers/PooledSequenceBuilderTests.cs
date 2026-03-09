@@ -160,12 +160,12 @@ public class PooledSequenceBuilderTests
     ///Tests that the constructor throws when pool is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PooledSequenceBuilder<byte>(null!, 4096)); }
+    public void Constructor_NullPool_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PooledSequenceBuilder<byte>(null!, 4096)); }
     ///<summary>
     ///Tests that the constructor throws when segment size is zero.
     ///</summary>
     [TestMethod]
-    public void Constructor_ZeroSegmentSize_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new PooledSequenceBuilder<byte>(0)); }
+    public void Constructor_ZeroSegmentSize_ThrowsArgumentOutOfRangeException() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new PooledSequenceBuilder<byte>(0)); }
     ///<summary>
     ///Tests that Dispose is idempotent.
     ///</summary>

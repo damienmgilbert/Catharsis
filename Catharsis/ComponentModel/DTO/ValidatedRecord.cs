@@ -47,7 +47,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
 
     private void ClearAllErrors()
     {
-        string[] keys = _errors.Keys.ToArray();
+        string[] keys = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string key in keys)
@@ -76,7 +76,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     {
         if (string.IsNullOrEmpty(propertyName))
         {
-            return _errors.Values.SelectMany(e => e);
+            return _errors.Values.SelectMany(static e => e);
         }
 
         return _errors.TryGetValue(propertyName, out List<string>? errors) ? errors : [];
@@ -97,7 +97,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
 
             if (members.Count == 0)
             {
@@ -120,7 +120,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     ///<summary>
     ///Gets the current validation errors as a read-only dictionary.
     ///</summary>
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(static kvp => kvp.Key, static kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
 
     ///<inheritdoc/>
     public bool HasErrors => _errors.Count > 0;

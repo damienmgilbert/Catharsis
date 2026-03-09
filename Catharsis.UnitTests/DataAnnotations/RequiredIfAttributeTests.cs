@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="RequiredIfAttribute"/> class.
+///</summary>
 [TestClass]
 public class RequiredIfAttributeTests
 {
@@ -69,7 +72,7 @@ public class RequiredIfAttributeTests
     }
 
     [TestMethod]
-    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RequiredIfAttribute(null!, true)); }
+    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new RequiredIfAttribute(null!, true)); }
     [TestMethod]
     public void TargetValueNull_ConditionMet_ReturnsFailure()
     {

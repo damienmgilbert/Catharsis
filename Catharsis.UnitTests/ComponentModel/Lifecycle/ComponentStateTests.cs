@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentState"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentStateTests
 {

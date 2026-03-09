@@ -2,6 +2,9 @@ using Catharsis.DesignPatterns.Structural;
 
 namespace Catharsis.UnitTests.DesignPatterns.Structural;
 
+///<summary>
+///Unit tests for the <see cref="FacadePattern"/> class.
+///</summary>
 [TestClass]
 public class FacadePatternTests
 {
@@ -10,7 +13,7 @@ public class FacadePatternTests
     public void Facade_ExecutesSimplifiedOperation()
     {
         FacadePattern facade = new FacadePattern();
-        string result = facade.Facade("hello", s => s.ToUpper());
+        string result = facade.Facade("hello", static s => s.ToUpper());
         Assert.AreEqual("HELLO", result);
     }
 

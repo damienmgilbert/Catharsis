@@ -4,6 +4,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="CompositeTypeConverter"/> class.
+///</summary>
 [TestClass]
 public sealed class CompositeTypeConverterTests
 {
@@ -41,13 +44,13 @@ public sealed class CompositeTypeConverterTests
     }
 
     [TestMethod]
-    public void Constructor_EmptyArray_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new CompositeTypeConverter(Array.Empty<System.ComponentModel.TypeConverter>())); }
+    public void Constructor_EmptyArray_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(static () => new CompositeTypeConverter(Array.Empty<System.ComponentModel.TypeConverter>())); }
     [TestMethod]
-    public void Constructor_EmptyEnumerable_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new CompositeTypeConverter(Enumerable.Empty<System.ComponentModel.TypeConverter>())); }
+    public void Constructor_EmptyEnumerable_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(static () => new CompositeTypeConverter(Enumerable.Empty<System.ComponentModel.TypeConverter>())); }
     [TestMethod]
-    public void Constructor_NullArray_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new CompositeTypeConverter((System.ComponentModel.TypeConverter[])null!)); }
+    public void Constructor_NullArray_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new CompositeTypeConverter((System.ComponentModel.TypeConverter[])null!)); }
     [TestMethod]
-    public void Constructor_NullEnumerable_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new CompositeTypeConverter((IEnumerable<System.ComponentModel.TypeConverter>)null!)); }
+    public void Constructor_NullEnumerable_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new CompositeTypeConverter((IEnumerable<System.ComponentModel.TypeConverter>)null!)); }
     [TestMethod]
     public void ConvertFrom_AllConvertersFail_ThrowsNotSupportedException()
     {
@@ -71,8 +74,8 @@ public sealed class CompositeTypeConverterTests
     public void ConvertFrom_FirstFails_FallsToSecond()
     {
         // A converter that always throws FormatException for strings, followed by a working one
-        GenericTypeConverter<int> failing = new GenericTypeConverter<int>(convertFrom: (ctx, culture, value) => throw new FormatException("fail"));
-        GenericTypeConverter<int> working = new GenericTypeConverter<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
+        GenericTypeConverter<int> failing = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => throw new FormatException("fail"));
+        GenericTypeConverter<int> working = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
         CompositeTypeConverter composite = new CompositeTypeConverter(failing, working);
 
         object? result = composite.ConvertFrom(null, CultureInfo.InvariantCulture, "42");

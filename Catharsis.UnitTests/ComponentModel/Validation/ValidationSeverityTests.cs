@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
+///<summary>
+///Unit tests for the <see cref="ValidationSeverity"/> class.
+///</summary>
 [TestClass]
 public sealed class ValidationSeverityTests
 {

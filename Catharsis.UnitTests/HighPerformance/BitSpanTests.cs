@@ -2,6 +2,9 @@ using Catharsis.HighPerformance;
 
 namespace Catharsis.UnitTests.HighPerformance;
 
+///<summary>
+///Unit tests for the <see cref="BitSpan"/> class.
+///</summary>
 [TestClass]
 public class BitSpanTests
 {

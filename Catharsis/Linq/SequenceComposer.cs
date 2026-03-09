@@ -38,7 +38,7 @@ public static class SequenceComposer
 
     private static IEnumerable<T> InterleaveManyIterator<T>(IEnumerable<T> source, IEnumerable<T>[] others)
     {
-        List<IEnumerator<T>> enumerators = [source.GetEnumerator(), .. others.Select(s => s.GetEnumerator())];
+        List<IEnumerator<T>> enumerators = [source.GetEnumerator(), .. others.Select(static s => s.GetEnumerator())];
 
         try
         {
@@ -258,7 +258,7 @@ public static class SequenceComposer
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(second, nameof(second));
-        return source.Concat(second).GroupBy(g => g.Key, comparer).Select(outer => SequenceFactory.Grouping(outer.Key, outer.SelectMany(g => g)));
+        return source.Concat(second).GroupBy(static g => g.Key, comparer).Select(static outer => SequenceFactory.Grouping(outer.Key, outer.SelectMany(static g => g)));
     }
 
     ///<summary>

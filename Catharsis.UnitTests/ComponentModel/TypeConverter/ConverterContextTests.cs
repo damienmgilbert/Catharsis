@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="ConverterContext"/> class.
+///</summary>
 [TestClass]
 public sealed class ConverterContextTests
 {
@@ -21,7 +24,7 @@ public sealed class ConverterContextTests
     }
 
     [TestMethod]
-    public void Constructor_NullCulture_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ConverterContext(null!)); }
+    public void Constructor_NullCulture_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ConverterContext(null!)); }
     [TestMethod]
     public void Constructor_ValidCulture_SetsProperties()
     {

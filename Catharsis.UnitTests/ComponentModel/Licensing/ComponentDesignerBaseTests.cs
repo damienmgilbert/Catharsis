@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
+///<summary>
+///Unit tests for the <see cref="ComponentDesignerBase"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentDesignerBaseTests
 {

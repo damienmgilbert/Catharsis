@@ -2,6 +2,9 @@ using Catharsis.Mvvm;
 
 namespace Catharsis.UnitTests.Mvvm;
 
+///<summary>
+///Unit tests for the <see cref="BufferViewModelBase"/> class.
+///</summary>
 [TestClass]
 public class BufferViewModelBaseTests
 {

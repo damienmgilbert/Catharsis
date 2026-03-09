@@ -114,7 +114,7 @@ public static class ExpressionQuoter
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
 
-        ParameterExpression[] remainingParameters = lambda.Parameters.Where(p => !replacements.ContainsKey(p)).ToArray();
+        ParameterExpression[] remainingParameters = [.. lambda.Parameters.Where(p => !replacements.ContainsKey(p))];
 
         LambdaExpression rewritten = remainingParameters.Length > 0 ? Expression.Lambda(body, remainingParameters) : Expression.Lambda(body);
 

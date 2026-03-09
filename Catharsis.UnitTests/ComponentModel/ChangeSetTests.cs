@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Observability;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ChangeSet"/> class.
+///</summary>
 [TestClass]
 public class ChangeSetTests
 {

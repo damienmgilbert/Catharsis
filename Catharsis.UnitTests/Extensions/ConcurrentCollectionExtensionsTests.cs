@@ -3,6 +3,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="ConcurrentCollectionExtensions"/> class.
+///</summary>
 [TestClass]
 public class ConcurrentCollectionExtensionsTests
 {
@@ -49,7 +52,7 @@ public class ConcurrentCollectionExtensionsTests
         ConcurrentDictionary<string, int> source = new ConcurrentDictionary<string, int>();
         source.TryAdd("a", 1);
         source.TryAdd("b", 2);
-        source.ModifyAll((k, v) => v * 10);
+        source.ModifyAll(static (k, v) => v * 10);
         Assert.AreEqual(10, source["a"]);
         Assert.AreEqual(20, source["b"]);
     }
@@ -73,7 +76,7 @@ public class ConcurrentCollectionExtensionsTests
         source.TryAdd("a", 1);
         source.TryAdd("b", 2);
         source.TryAdd("c", 3);
-        int removed = source.RemoveWhere(kvp => kvp.Value > 1);
+        int removed = source.RemoveWhere(static kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
         Assert.HasCount(1, source);
     }

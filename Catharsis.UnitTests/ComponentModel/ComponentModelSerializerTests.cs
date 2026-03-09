@@ -2,6 +2,9 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelSerializer"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentModelSerializerTests
 {
@@ -52,7 +55,7 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_WithPropertyFilter_FiltersProperties()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer { PropertyFilter = p => p.Name == "Name" };
+        ComponentModelSerializer serializer = new ComponentModelSerializer { PropertyFilter = static p => p.Name == "Name" };
         SimpleDto dto = new SimpleDto { Name = "Alice", Age = 30 };
 
         Dictionary<string, string?> result = serializer.Serialize(dto);

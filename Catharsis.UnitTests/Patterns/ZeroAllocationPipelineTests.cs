@@ -2,6 +2,9 @@ using Catharsis.Patterns;
 
 namespace Catharsis.UnitTests.Patterns;
 
+///<summary>
+///Unit tests for the <see cref="ZeroAllocationPipeline"/> class.
+///</summary>
 [TestClass]
 public class ZeroAllocationPipelineTests
 {

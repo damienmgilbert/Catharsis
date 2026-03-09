@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentLifecycleManager"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentLifecycleManagerTests
 {
@@ -82,7 +85,7 @@ public sealed class ComponentLifecycleManagerTests
     }
 
     [TestMethod]
-    public void Constructor_NullGraph_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ComponentLifecycleManager(null!)); }
+    public void Constructor_NullGraph_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ComponentLifecycleManager(null!)); }
     [TestMethod]
     public void Deactivate_AlsoDeactivatesDependents()
     {

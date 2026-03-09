@@ -2,6 +2,9 @@ using Catharsis.ComponentModel.Observability;
 
 namespace Catharsis.UnitTests.ComponentModel.Observability;
 
+///<summary>
+///Unit tests for the <see cref="ChangeTrackingComponent"/> class.
+///</summary>
 [TestClass]
 public sealed class ChangeTrackingComponentTests
 {

@@ -3,12 +3,15 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="PropertyObserver"/> class.
+///</summary>
 [TestClass]
 public class PropertyObserverTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullSource_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyObserver(null!)); }
+    public void Constructor_NullSource_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PropertyObserver(null!)); }
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {

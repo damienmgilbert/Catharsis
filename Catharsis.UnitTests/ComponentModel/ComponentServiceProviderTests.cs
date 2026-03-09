@@ -86,7 +86,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new();
-        provider.Register<ITestService>(() => null!);
+        provider.Register<ITestService>(static () => null!);
 
         // Act
         object? result = provider.GetService(typeof(ITestService));
@@ -400,7 +400,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new();
-        provider.Register<IDisposable>(() => new StubDisposable());
+        provider.Register<IDisposable>(static () => new StubDisposable());
 
         // Act
         bool result = provider.IsRegistered<IDisposable>();
@@ -435,7 +435,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new();
-        provider.Register<IDisposable>(() => new StubDisposable());
+        provider.Register<IDisposable>(static () => new StubDisposable());
         IDisposable service = new StubDisposable();
         provider.Register(service);
 
@@ -456,7 +456,7 @@ public sealed class ComponentServiceProviderTests
         ComponentServiceProvider provider = new();
         IDisposable service = new StubDisposable();
         provider.Register(service);
-        provider.Register<IDisposable>(() => new StubDisposable());
+        provider.Register<IDisposable>(static () => new StubDisposable());
 
         // Act
         bool result = provider.IsRegistered<IDisposable>();
@@ -473,7 +473,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new();
-        provider.Register<IDisposable>(() => new StubDisposable());
+        provider.Register<IDisposable>(static () => new StubDisposable());
         provider.Unregister<IDisposable>();
 
         // Act
@@ -595,7 +595,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new ComponentServiceProvider();
-        Func<ITestService> factory = () => null!;
+        Func<ITestService> factory = static () => null!;
         provider.Register(factory);
 
         // Act
@@ -828,7 +828,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new ComponentServiceProvider();
-        provider.Register<ITestService>(() => new TestService());
+        provider.Register<ITestService>(static () => new TestService());
 
         // Act
         bool result = provider.Unregister<ITestService>();
@@ -868,7 +868,7 @@ public sealed class ComponentServiceProviderTests
         ComponentServiceProvider provider = new ComponentServiceProvider();
         TestService service = new TestService();
         provider.Register<ITestService>(service);
-        provider.Register<ITestService>(() => new TestService());
+        provider.Register<ITestService>(static () => new TestService());
 
         // Act
         bool result = provider.Unregister<ITestService>();
@@ -887,7 +887,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new ComponentServiceProvider();
-        provider.Register<ITestService>(() => new TestService());
+        provider.Register<ITestService>(static () => new TestService());
         TestService service = new TestService();
         provider.Register<ITestService>(service);
 

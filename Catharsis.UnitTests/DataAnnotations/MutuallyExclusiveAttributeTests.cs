@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="MutuallyExclusiveAttribute"/> class.
+///</summary>
 [TestClass]
 public class MutuallyExclusiveAttributeTests
 {
@@ -21,7 +24,7 @@ public class MutuallyExclusiveAttributeTests
     }
 
     [TestMethod]
-    public void Constructor_FewerThanTwoProperties_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(() => new MutuallyExclusiveAttribute("OnlyOne")); }
+    public void Constructor_FewerThanTwoProperties_ThrowsArgumentException() { Assert.ThrowsExactly<ArgumentException>(static () => new MutuallyExclusiveAttribute("OnlyOne")); }
     [TestMethod]
     public void EmptyStringsNotTreatedAsValues_ReturnsSuccess()
     {

@@ -30,7 +30,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet(IEnumerable<Rule<T>> rules)
     {
         ArgumentNullException.ThrowIfNull(rules, nameof(rules));
-        _rules = rules.ToList();
+        _rules = [.. rules];
     }
     #endregion
 
@@ -89,18 +89,18 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     ///<c>true</c> predicate if no enabled rules exist.
     ///</summary>
     ///<returns>A combined AND predicate expression.</returns>
-    public Expression<Func<T, bool>> CombineWithAnd() { return ExpressionComposer.AndAll(Enabled().Select(r => r.Condition)); }
+    public Expression<Func<T, bool>> CombineWithAnd() { return ExpressionComposer.AndAll(Enabled().Select(static r => r.Condition)); }
     ///<summary>
     ///Combines all enabled rule conditions with logical OR into a single expression-tree predicate. Returns a constant
     ///<c>false</c> predicate if no enabled rules exist.
     ///</summary>
     ///<returns>A combined OR predicate expression.</returns>
-    public Expression<Func<T, bool>> CombineWithOr() { return ExpressionComposer.OrAny(Enabled().Select(r => r.Condition)); }
+    public Expression<Func<T, bool>> CombineWithOr() { return ExpressionComposer.OrAny(Enabled().Select(static r => r.Condition)); }
     ///<summary>
     ///Returns only enabled rules, ordered by priority (ascending).
     ///</summary>
     ///<returns>An ordered sequence of enabled rules.</returns>
-    public IEnumerable<Rule<T>> Enabled() { return _rules.Where(r => r.IsEnabled).OrderBy(r => r.Priority); }
+    public IEnumerable<Rule<T>> Enabled() { return _rules.Where(static r => r.IsEnabled).OrderBy(static r => r.Priority); }
 
     ///<summary>
     ///Finds a rule by name.
@@ -120,7 +120,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     ///Groups enabled rules by priority.
     ///</summary>
     ///<returns>A lookup mapping priority values to rules.</returns>
-    public ILookup<int, Rule<T>> GroupByPriority() { return _rules.Where(r => r.IsEnabled).ToLookup(r => r.Priority); }
+    public ILookup<int, Rule<T>> GroupByPriority() { return _rules.Where(static r => r.IsEnabled).ToLookup(static r => r.Priority); }
     ///<summary>
     ///Groups enabled rules by tag. Each rule appears in every tag group it belongs to.
     ///</summary>

@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="Interval"/> class.
+///</summary>
 [TestClass]
 public class IntervalTests
 {

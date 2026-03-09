@@ -2,6 +2,9 @@ using Catharsis.HighPerformance;
 
 namespace Catharsis.UnitTests.HighPerformance;
 
+///<summary>
+///Unit tests for the <see cref="PooledList"/> class.
+///</summary>
 [TestClass]
 public class PooledListTests
 {

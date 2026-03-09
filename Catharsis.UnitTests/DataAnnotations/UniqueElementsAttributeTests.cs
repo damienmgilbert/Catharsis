@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="UniqueElementsAttribute"/> class.
+///</summary>
 [TestClass]
 public class UniqueElementsAttributeTests
 {

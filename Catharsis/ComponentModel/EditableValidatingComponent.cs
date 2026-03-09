@@ -56,7 +56,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///</summary>
     protected void ClearAllErrors()
     {
-        List<string> properties = _errors.Keys.ToList();
+        List<string> properties = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string property in properties)
@@ -104,7 +104,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
             return;
         }
 
-        List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+        List<string> errorList = [.. errors.Where(static e => !string.IsNullOrWhiteSpace(e))];
 
         if (errorList.Count == 0)
         {
@@ -157,10 +157,9 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
 
         Validator.TryValidateProperty(value, context, results);
 
-        List<string> messages = results
-            .Where(r => !string.IsNullOrWhiteSpace(r.ErrorMessage))
-            .Select(r => r.ErrorMessage!)
-            .ToList();
+        List<string> messages = [.. results
+            .Where(static r => !string.IsNullOrWhiteSpace(r.ErrorMessage))
+            .Select(static r => r.ErrorMessage!)];
 
         if (messages.Count > 0)
         {
@@ -196,7 +195,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
             string message = result.ErrorMessage ?? "Validation failed.";
 
             if (members.Count == 0)
@@ -220,7 +219,7 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     ///<summary>
     ///Gets the current validation errors as a read-only dictionary.
     ///</summary>
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> CurrentErrors => _errors.ToDictionary(static kvp => kvp.Key, static kvp => (IReadOnlyList<string>)kvp.Value.AsReadOnly(), StringComparer.Ordinal);
 
     ///<inheritdoc/>
     public bool HasErrors => _errors.Count > 0;

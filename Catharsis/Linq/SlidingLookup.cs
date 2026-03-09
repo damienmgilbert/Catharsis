@@ -10,7 +10,7 @@ public static class SlidingLookup
     #region Private methods
     private static IEnumerable<(TKey Key, T Element)> KeyedSlidingPairs<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -43,7 +43,7 @@ public static class SlidingLookup
 
     private static IEnumerable<(int WindowIndex, T Element)> SlidingWindowPairs<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -62,14 +62,14 @@ public static class SlidingLookup
         foreach (T item in source)
         {
             accumulated.Add(item);
-            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)accumulated.ToList());
+            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)[.. accumulated]);
             step++;
         }
     }
 
     private static IEnumerable<IGrouping<TKey, T>> ToSlidingGroupingsByIterator<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -81,7 +81,7 @@ public static class SlidingLookup
 
     private static IEnumerable<IGrouping<int, T>> ToSlidingGroupingsIterator<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -157,7 +157,7 @@ public static class SlidingLookup
     public static ILookup<int, T> ToProgressiveLookup<T>(this IEnumerable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return ProgressivePairs(source).ToLookup(p => p.StepIndex, p => p.Element);
+        return ProgressivePairs(source).ToLookup(static p => p.StepIndex, static p => p.Element);
     }
 
     ///<summary>
@@ -209,7 +209,7 @@ public static class SlidingLookup
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentOutOfRangeException.ThrowIfLessThan(windowSize, 1, nameof(windowSize));
-        return SlidingWindowPairs(source, windowSize).ToLookup(p => p.WindowIndex, p => p.Element);
+        return SlidingWindowPairs(source, windowSize).ToLookup(static p => p.WindowIndex, static p => p.Element);
     }
 
     ///<summary>
@@ -230,7 +230,7 @@ public static class SlidingLookup
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
         ArgumentOutOfRangeException.ThrowIfLessThan(windowSize, 1, nameof(windowSize));
-        return KeyedSlidingPairs(source, windowSize, keySelector).ToLookup(p => p.Key, p => p.Element, comparer);
+        return KeyedSlidingPairs(source, windowSize, keySelector).ToLookup(static p => p.Key, static p => p.Element, comparer);
     }
 
     ///<summary>
@@ -262,7 +262,7 @@ public static class SlidingLookup
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentOutOfRangeException.ThrowIfLessThan(windowSize, 1, nameof(windowSize));
-        return TumblingPairs(source, windowSize).ToLookup(p => p.WindowIndex, p => p.Element);
+        return TumblingPairs(source, windowSize).ToLookup(static p => p.WindowIndex, static p => p.Element);
     }
     #endregion
 }

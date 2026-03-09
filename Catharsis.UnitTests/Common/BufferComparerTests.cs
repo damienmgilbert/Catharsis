@@ -2,6 +2,9 @@ using Catharsis.Common;
 
 namespace Catharsis.UnitTests.Common;
 
+///<summary>
+///Unit tests for the <see cref="BufferComparer"/> class.
+///</summary>
 [TestClass]
 public class BufferComparerTests
 {

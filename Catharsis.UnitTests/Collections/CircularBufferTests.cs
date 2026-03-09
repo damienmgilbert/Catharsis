@@ -2,6 +2,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="CircularBuffer"/> class.
+///</summary>
 [TestClass]
 public class CircularBufferTests
 {
@@ -17,7 +20,7 @@ public class CircularBufferTests
     [TestMethod]
     public void Constructor_ZeroCapacity_Throws()
     {
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new CircularBuffer<int>(0));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new CircularBuffer<int>(0));
     }
 
     [TestMethod]

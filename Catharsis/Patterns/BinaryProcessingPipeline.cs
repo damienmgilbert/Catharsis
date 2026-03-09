@@ -34,7 +34,7 @@ public sealed class BinaryProcessingPipeline : IDisposable
     ///<returns>A stage function.</returns>
     public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateReverseStage()
     {
-        return(ReadOnlySpan<byte> input) =>
+        return static (ReadOnlySpan<byte> input) =>
         {
             PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length);
             Span<byte> span = output.GetSpan(input.Length);

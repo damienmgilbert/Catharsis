@@ -15,7 +15,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         int input = default(int);
-        Func<int, bool> factory = i => i == default;
+        Func<int, bool> factory = static i => i == default;
         // Act
         bool result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -31,7 +31,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string input = string.Empty;
-        Func<string, int> factory = s => s.Length;
+        Func<string, int> factory = static s => s.Length;
         // Act
         int result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -47,7 +47,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string input = "test";
-        Func<string, string?> factory = _ => null;
+        Func<string, string?> factory = static _ => null;
         // Act
         string? result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -63,7 +63,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string input = "test";
-        Func<string, string> factory = s => s;
+        Func<string, string> factory = static s => s;
         // Act
         string result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -83,7 +83,7 @@ public class FactoryMethodPatternTests
     public void FactoryMethod_IntToDouble_ReturnsCorrectTransformation(int input)
     {
         // Arrange
-        Func<int, double> factory = i => i * 2.5;
+        Func<int, double> factory = static i => i * 2.5;
         double expected = input * 2.5;
         // Act
         double result = new FactoryMethodPattern().FactoryMethod(input, factory);
@@ -100,7 +100,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string? input = null;
-        Func<string?, string> factory = s => s ?? "default";
+        Func<string?, string> factory = static s => s ?? "default";
         // Act
         string result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -116,7 +116,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string input = "123";
-        Func<string, int> factory = s => int.Parse(s);
+        Func<string, int> factory = static s => int.Parse(s);
         // Act
         int result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -132,7 +132,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         int input = 42;
-        Func<int, string> factory = i => i.ToString();
+        Func<int, string> factory = static i => i.ToString();
         // Act
         string result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert
@@ -148,7 +148,7 @@ public class FactoryMethodPatternTests
     {
         // Arrange
         string input = "   ";
-        Func<string, int> factory = s => s.Trim().Length;
+        Func<string, int> factory = static s => s.Trim().Length;
         // Act
         int result = new FactoryMethodPattern().FactoryMethod(input, factory);
         // Assert

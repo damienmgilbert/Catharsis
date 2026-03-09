@@ -4,6 +4,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Catharsis.UnitTests.Services;
 
+///<summary>
+///Unit tests for the <see cref="PooledObjectFactory"/> class.
+///</summary>
 [TestClass]
 public class PooledObjectFactoryTests
 {

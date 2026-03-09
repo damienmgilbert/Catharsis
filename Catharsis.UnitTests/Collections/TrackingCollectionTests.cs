@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="TrackingCollection"/> class.
+///</summary>
 [TestClass]
 public class TrackingCollectionTests
 {
@@ -21,7 +24,7 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Remove_RemovesItem()
     {
-        TrackingCollection<int> c = new TrackingCollection<int>(_ => { });
+        TrackingCollection<int> c = new TrackingCollection<int>(static _ => { });
         c.Add(1); c.Add(2);
 
         Assert.IsTrue(c.Remove(1));
@@ -31,7 +34,7 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        TrackingCollection<string> c = new TrackingCollection<string>(_ => { });
+        TrackingCollection<string> c = new TrackingCollection<string>(static _ => { });
         c.Add("hello");
         Assert.IsTrue(c.Contains("hello"));
         Assert.IsFalse(c.Contains("world"));
@@ -40,7 +43,7 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Clear_RemovesAllItems()
     {
-        TrackingCollection<int> c = new TrackingCollection<int>(_ => { });
+        TrackingCollection<int> c = new TrackingCollection<int>(static _ => { });
         c.Add(1); c.Add(2);
         c.Clear();
         Assert.IsEmpty(c);

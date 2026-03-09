@@ -2,13 +2,16 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentTransition"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentTransitionTests
 {
     [TestMethod]
     public void CanExecute_GuardReturnsFalse_ReturnsFalse()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = () => false };
+        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => false };
 
         Assert.IsFalse(t.CanExecute());
     }
@@ -16,7 +19,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_GuardReturnsTrue_ReturnsTrue()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = () => true };
+        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => true };
 
         Assert.IsTrue(t.CanExecute());
     }

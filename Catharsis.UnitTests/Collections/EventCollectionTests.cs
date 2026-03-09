@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="EventCollection"/> class.
+///</summary>
 [TestClass]
 public class EventCollectionTests
 {

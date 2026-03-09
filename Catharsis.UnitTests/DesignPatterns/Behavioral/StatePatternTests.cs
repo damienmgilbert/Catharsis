@@ -2,6 +2,9 @@ using Catharsis.DesignPatterns.Behavioral;
 
 namespace Catharsis.UnitTests.DesignPatterns.Behavioral;
 
+///<summary>
+///Unit tests for the <see cref="StatePattern"/> class.
+///</summary>
 [TestClass]
 public class StatePatternTests
 {
@@ -15,10 +18,10 @@ public class StatePatternTests
         sp.State(
         list,
         "add",
-        state => state switch
+        static state => state switch
         {
-            "add" => l => l.Add(42),
-            _ => _ =>
+            "add" => static l => l.Add(42),
+            _ => static _ =>
             {
             }
         });
@@ -42,10 +45,10 @@ public class StatePatternTests
         int result = sp.State(
                      10,
                      "double",
-                     state => state switch
+                     static state => state switch
         {
-            "double" => (Func<int, int>)(x => x * 2),
-            _ => x => x
+            "double" => (Func<int, int>)(static x => x * 2),
+            _ => static x => x
         });
 
         Assert.AreEqual(20, result);

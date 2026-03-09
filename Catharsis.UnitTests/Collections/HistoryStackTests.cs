@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="HistoryStack"/> class.
+///</summary>
 [TestClass]
 public class HistoryStackTests
 {
@@ -18,7 +21,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Peek_EmptyStack_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new HistoryStack<int>().Peek());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new HistoryStack<int>().Peek());
     }
 
     [TestMethod]
@@ -37,7 +40,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Undo_EmptyStack_Throws()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new HistoryStack<int>().Undo());
+        Assert.ThrowsExactly<InvalidOperationException>(static () => new HistoryStack<int>().Undo());
     }
 
     [TestMethod]

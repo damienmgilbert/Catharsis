@@ -3,6 +3,9 @@ using Catharsis.Collections;
 
 namespace Catharsis.UnitTests.Collections;
 
+///<summary>
+///Unit tests for the <see cref="BoundedCollection"/> class.
+///</summary>
 [TestClass]
 public class BoundedCollectionTests
 {
@@ -17,7 +20,7 @@ public class BoundedCollectionTests
     [TestMethod]
     public void Constructor_ZeroCapacity_Throws()
     {
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new BoundedCollection<int>(0));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new BoundedCollection<int>(0));
     }
 
     [TestMethod]

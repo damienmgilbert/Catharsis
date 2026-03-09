@@ -2,6 +2,9 @@ using Catharsis.DesignPatterns.Structural;
 
 namespace Catharsis.UnitTests.DesignPatterns.Structural;
 
+///<summary>
+///Unit tests for the <see cref="ProxyPattern"/> class.
+///</summary>
 [TestClass]
 public class ProxyPatternTests
 {
@@ -21,7 +24,7 @@ public class ProxyPatternTests
     public void Proxy_ExecutesOperation()
     {
         ProxyPattern proxy = new ProxyPattern();
-        int result = proxy.Proxy(5, x => x * 2);
+        int result = proxy.Proxy(5, static x => x * 2);
         Assert.AreEqual(10, result);
     }
 

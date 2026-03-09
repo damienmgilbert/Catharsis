@@ -2,12 +2,15 @@ using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
+///<summary>
+///Unit tests for the <see cref="PropertyChangeScope"/> class.
+///</summary>
 [TestClass]
 public sealed class PropertyChangeScopeTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullCallback_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new PropertyChangeScope(null!)); }
+    public void Constructor_NullCallback_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new PropertyChangeScope(null!)); }
     [TestMethod]
     public void Dispose_CalledTwice_RaisesOnlyOnce()
     {
@@ -40,7 +43,7 @@ public sealed class PropertyChangeScopeTests
     public void IsDisposed_AfterDispose_ReturnsTrue()
     {
         PropertyChangeScope scope = new PropertyChangeScope(
-                                    _ =>
+                                    static _ =>
         {
         });
         scope.Dispose();
@@ -52,7 +55,7 @@ public sealed class PropertyChangeScopeTests
     public void IsDisposed_InitiallyFalse()
     {
         PropertyChangeScope scope = new PropertyChangeScope(
-                                    _ =>
+                                    static _ =>
         {
         });
 
@@ -63,7 +66,7 @@ public sealed class PropertyChangeScopeTests
     public void PendingCount_AfterDispose_ReturnsZero()
     {
         PropertyChangeScope scope = new PropertyChangeScope(
-                                    _ =>
+                                    static _ =>
         {
         });
         scope.RecordChange("Name");
@@ -76,7 +79,7 @@ public sealed class PropertyChangeScopeTests
     public void RecordChange_AddsPropertyName()
     {
         PropertyChangeScope scope = new PropertyChangeScope(
-                                    _ =>
+                                    static _ =>
         {
         });
 
@@ -101,7 +104,7 @@ public sealed class PropertyChangeScopeTests
     public void RecordChange_DuplicateProperty_NotCounted()
     {
         PropertyChangeScope scope = new PropertyChangeScope(
-                                    _ =>
+                                    static _ =>
         {
         });
 

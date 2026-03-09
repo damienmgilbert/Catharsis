@@ -2,6 +2,9 @@ using Catharsis.DataStructures;
 
 namespace Catharsis.UnitTests.DataStructures;
 
+///<summary>
+///Unit tests for the <see cref="LruCache"/> class.
+///</summary>
 [TestClass]
 public class LruCacheTests
 {
@@ -37,9 +40,9 @@ public class LruCacheTests
     }
 
     [TestMethod]
-    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(() => new LruCache<string, int>(1, null!)); }
+    public void Constructor_NullComparer_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new LruCache<string, int>(1, null!)); }
     [TestMethod]
-    public void Constructor_ZeroCapacity_Throws() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new LruCache<string, int>(0)); }
+    public void Constructor_ZeroCapacity_Throws() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(static () => new LruCache<string, int>(0)); }
     [TestMethod]
     public void Indexer_Get_ThrowsWhenNotFound()
     {

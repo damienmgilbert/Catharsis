@@ -3,12 +3,15 @@ using Catharsis.ComponentModel.DTO;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
+///<summary>
+///Unit tests for the <see cref="ValidatedRecord"/> class.
+///</summary>
 [TestClass]
 public sealed class ValidatedRecordTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new ValidatedRecord<PersonDto>(null!)); }
+    public void Constructor_NullValue_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new ValidatedRecord<PersonDto>(null!)); }
     [TestMethod]
     public void CurrentErrors_ReturnsReadOnlyDictionary()
     {
@@ -38,7 +41,7 @@ public sealed class ValidatedRecordTests
         ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
         record.Validate();
 
-        List<string> allErrors = record.GetErrors(null).Cast<string>().ToList();
+        List<string> allErrors = [.. record.GetErrors(null).Cast<string>()];
 
         Assert.IsGreaterThanOrEqualTo(2, allErrors.Count);
     }
@@ -49,7 +52,7 @@ public sealed class ValidatedRecordTests
         ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
         record.Validate();
 
-        List<string> errors = record.GetErrors("Unknown").Cast<string>().ToList();
+        List<string> errors = [.. record.GetErrors("Unknown").Cast<string>()];
 
         Assert.IsEmpty(errors);
     }
@@ -92,7 +95,7 @@ public sealed class ValidatedRecordTests
 
         record.Validate();
 
-        List<string> errors = record.GetErrors("Name").Cast<string>().ToList();
+        List<string> errors = [.. record.GetErrors("Name").Cast<string>()];
         Assert.HasCount(1, errors);
         Assert.AreEqual("Name is required.", errors[0]);
     }

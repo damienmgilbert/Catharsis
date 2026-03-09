@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
+///<summary>
+///Unit tests for the <see cref="DataAnnotationValidator"/> class.
+///</summary>
 [TestClass]
 public sealed class DataAnnotationValidatorTests
 {
@@ -46,7 +49,7 @@ public sealed class DataAnnotationValidatorTests
         DataAnnotationValidator validator = new DataAnnotationValidator();
         validator.ValidateObject(new PersonModel { Name = null, Age = 30 });
 
-        List<ErrorInfo> errors = validator.GetErrors("Name").Cast<ErrorInfo>().ToList();
+        List<ErrorInfo> errors = [.. validator.GetErrors("Name").Cast<ErrorInfo>()];
 
         Assert.HasCount(1, errors);
     }

@@ -3,6 +3,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="ImmutableCollectionExtensions"/> class.
+///</summary>
 [TestClass]
 public class ImmutableCollectionExtensionsTests
 {
@@ -21,7 +24,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableArray_ModifyAll_TransformsAllElements()
     {
         ImmutableArray<int> source = ImmutableArray.Create(1, 2, 3);
-        ImmutableArray<int> result = source.ModifyAll(x => x * 10);
+        ImmutableArray<int> result = source.ModifyAll(static x => x * 10);
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, result.ToArray());
     }
 
@@ -29,7 +32,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableArray_ModifyWhere_TransformsMatchingOnly()
     {
         ImmutableArray<int> source = ImmutableArray.Create(1, 2, 3, 4, 5);
-        ImmutableArray<int> result = source.ModifyWhere(x => x % 2 == 0, x => x * 10);
+        ImmutableArray<int> result = source.ModifyWhere(static x => x % 2 == 0, static x => x * 10);
         CollectionAssert.AreEqual(new[] { 1, 20, 3, 40, 5 }, result.ToArray());
     }
 
@@ -37,7 +40,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableArray_RemoveWhere_RemovesMatchingElements()
     {
         ImmutableArray<int> source = ImmutableArray.Create(1, 2, 3, 4, 5, 6);
-        ImmutableArray<int> result = source.RemoveWhere(x => x % 2 == 0);
+        ImmutableArray<int> result = source.RemoveWhere(static x => x % 2 == 0);
         CollectionAssert.AreEqual(new[] { 1, 3, 5 }, result.ToArray());
     }
 
@@ -62,7 +65,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableDictionary_ModifyAll_TransformsAllValues()
     {
         ImmutableDictionary<string, int> source = ImmutableDictionary<string, int>.Empty.Add("a", 1).Add("b", 2);
-        ImmutableDictionary<string, int> result = source.ModifyAll((k, v) => v * 10);
+        ImmutableDictionary<string, int> result = source.ModifyAll(static (k, v) => v * 10);
         Assert.AreEqual(10, result["a"]);
         Assert.AreEqual(20, result["b"]);
     }
@@ -71,7 +74,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableDictionary_RemoveWhere_RemovesMatchingEntries()
     {
         ImmutableDictionary<string, int> source = ImmutableDictionary<string, int>.Empty.Add("a", 1).Add("b", 2).Add("c", 3);
-        ImmutableDictionary<string, int> result = source.RemoveWhere(kvp => kvp.Value > 1);
+        ImmutableDictionary<string, int> result = source.RemoveWhere(static kvp => kvp.Value > 1);
         Assert.HasCount(1, result);
         Assert.AreEqual(1, result["a"]);
     }
@@ -80,7 +83,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableHashSet_ModifyAll_TransformsElements()
     {
         ImmutableHashSet<int> source = ImmutableHashSet.Create(1, 2, 3);
-        ImmutableHashSet<int> result = source.ModifyAll(x => x * 10);
+        ImmutableHashSet<int> result = source.ModifyAll(static x => x * 10);
         Assert.HasCount(3, result);
         Assert.Contains(10, result);
         Assert.Contains(20, result);
@@ -92,7 +95,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableHashSet_RemoveWhere_RemovesMatchingElements()
     {
         ImmutableHashSet<int> source = ImmutableHashSet.Create(1, 2, 3, 4, 5);
-        ImmutableHashSet<int> result = source.RemoveWhere(x => x % 2 == 0);
+        ImmutableHashSet<int> result = source.RemoveWhere(static x => x % 2 == 0);
         Assert.HasCount(3, result);
         Assert.Contains(1, result);
         Assert.DoesNotContain(2, result);
@@ -102,7 +105,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableList_ModifyAll_TransformsAllElements()
     {
         ImmutableList<int> source = ImmutableList.Create(1, 2, 3);
-        ImmutableList<int> result = source.ModifyAll(x => x + 100);
+        ImmutableList<int> result = source.ModifyAll(static x => x + 100);
         CollectionAssert.AreEqual(new[] { 101, 102, 103 }, result.ToArray());
     }
 
@@ -110,7 +113,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableList_ModifyWhere_TransformsMatchingOnly()
     {
         ImmutableList<int> source = ImmutableList.Create(1, 2, 3, 4);
-        ImmutableList<int> result = source.ModifyWhere(x => x % 2 == 0, x => x * 10);
+        ImmutableList<int> result = source.ModifyWhere(static x => x % 2 == 0, static x => x * 10);
         CollectionAssert.AreEqual(new[] { 1, 20, 3, 40 }, result.ToArray());
     }
 
@@ -119,7 +122,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableList_RemoveWhere_RemovesMatchingElements()
     {
         ImmutableList<int> source = ImmutableList.Create(1, 2, 3, 4, 5);
-        ImmutableList<int> result = source.RemoveWhere(x => x > 3);
+        ImmutableList<int> result = source.RemoveWhere(static x => x > 3);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result.ToArray());
     }
 
@@ -157,7 +160,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableSortedDictionary_ModifyAll_TransformsAllValues()
     {
         ImmutableSortedDictionary<string, int> source = ImmutableSortedDictionary<string, int>.Empty.Add("a", 1).Add("b", 2);
-        ImmutableSortedDictionary<string, int> result = source.ModifyAll((k, v) => v + 100);
+        ImmutableSortedDictionary<string, int> result = source.ModifyAll(static (k, v) => v + 100);
         Assert.AreEqual(101, result["a"]);
         Assert.AreEqual(102, result["b"]);
     }
@@ -167,7 +170,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableSortedDictionary_RemoveWhere_RemovesMatchingEntries()
     {
         ImmutableSortedDictionary<string, int> source = ImmutableSortedDictionary<string, int>.Empty.Add("a", 1).Add("b", 2).Add("c", 3);
-        ImmutableSortedDictionary<string, int> result = source.RemoveWhere(kvp => kvp.Value <= 2);
+        ImmutableSortedDictionary<string, int> result = source.RemoveWhere(static kvp => kvp.Value <= 2);
         Assert.HasCount(1, result);
         Assert.AreEqual(3, result["c"]);
     }
@@ -177,7 +180,7 @@ public class ImmutableCollectionExtensionsTests
     public void ImmutableSortedSet_RemoveWhere_RemovesMatchingElements()
     {
         ImmutableSortedSet<int> source = ImmutableSortedSet.Create(1, 2, 3, 4, 5);
-        ImmutableSortedSet<int> result = source.RemoveWhere(x => x > 3);
+        ImmutableSortedSet<int> result = source.RemoveWhere(static x => x > 3);
         Assert.HasCount(3, result);
         Assert.Contains(1, result);
         Assert.DoesNotContain(4, result);

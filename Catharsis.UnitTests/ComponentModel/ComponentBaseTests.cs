@@ -331,7 +331,7 @@ public class ComponentBaseTests
     {
         // Arrange
         TestComponent component = new TestComponent();
-        EventHandler handler = (sender, e) =>
+        EventHandler handler = static (sender, e) =>
         {
         };
 

@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="SpanBasedTypeConverter"/> class.
+///</summary>
 [TestClass]
 public sealed class SpanBasedTypeConverterTests
 {
@@ -54,7 +57,7 @@ public sealed class SpanBasedTypeConverterTests
     }
 
     [TestMethod]
-    public void Constructor_NullTryParse_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new SpanBasedTypeConverter<int>(null!)); }
+    public void Constructor_NullTryParse_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new SpanBasedTypeConverter<int>(null!)); }
     [TestMethod]
     public void ConvertFrom_CultureParameterIsUsed()
     {

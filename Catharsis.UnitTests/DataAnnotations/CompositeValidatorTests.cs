@@ -3,6 +3,9 @@ using Catharsis.DataAnnotations;
 
 namespace Catharsis.UnitTests.DataAnnotations;
 
+///<summary>
+///Unit tests for the <see cref="CompositeValidator"/> class.
+///</summary>
 [TestClass]
 public class CompositeValidatorTests
 {
@@ -61,7 +64,7 @@ public class CompositeValidatorTests
     }
 
     [TestMethod]
-    public void ValidateObject_NullInstance_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => CompositeValidator.ValidateObject<ValidModel>(null!)); }
+    public void ValidateObject_NullInstance_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => CompositeValidator.ValidateObject<ValidModel>(null!)); }
     [TestMethod]
     public void ValidateObject_WithIValidatableObject_RunsValidation()
     {
@@ -70,7 +73,7 @@ public class CompositeValidatorTests
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
         Assert.IsFalse(result.IsValid);
-        Assert.IsTrue(result.ErrorMessages.Any(m => m!.Contains("End must be greater")));
+        Assert.IsTrue(result.ErrorMessages.Any(static m => m!.Contains("End must be greater")));
     }
 
     [TestMethod]

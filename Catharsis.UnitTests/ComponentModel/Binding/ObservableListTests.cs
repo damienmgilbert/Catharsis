@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Binding;
 
 namespace Catharsis.UnitTests.ComponentModel.Binding;
 
+///<summary>
+///Unit tests for the <see cref="ObservableList"/> class.
+///</summary>
 [TestClass]
 public sealed class ObservableListTests
 {
@@ -95,7 +98,7 @@ public sealed class ObservableListTests
     {
         ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
 
-        int removed = list.RemoveAll(x => x > 10);
+        int removed = list.RemoveAll(static x => x > 10);
 
         Assert.AreEqual(0, removed);
     }
@@ -113,7 +116,7 @@ public sealed class ObservableListTests
     {
         ObservableList<int> list = new ObservableList<int>([ 1, 2, 3, 4, 5 ]);
 
-        int removed = list.RemoveAll(x => x > 3);
+        int removed = list.RemoveAll(static x => x > 3);
 
         Assert.AreEqual(2, removed);
         Assert.HasCount(3, list);

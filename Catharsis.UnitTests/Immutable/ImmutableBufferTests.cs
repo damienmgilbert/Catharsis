@@ -3,6 +3,9 @@ using System.Collections.Immutable;
 
 namespace Catharsis.UnitTests.Immutable;
 
+///<summary>
+///Unit tests for the <see cref="ImmutableBuffer"/> class.
+///</summary>
 [TestClass]
 public class ImmutableBufferTests
 {

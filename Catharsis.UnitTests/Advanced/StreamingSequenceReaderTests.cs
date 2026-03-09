@@ -3,6 +3,9 @@ using Catharsis.Advanced;
 
 namespace Catharsis.UnitTests.Advanced;
 
+///<summary>
+///Unit tests for the <see cref="StreamingSequenceReader"/> class.
+///</summary>
 [TestClass]
 public class StreamingSequenceReaderTests
 {

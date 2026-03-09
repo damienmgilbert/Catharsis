@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Lifecycle;
 
 namespace Catharsis.UnitTests.ComponentModel.Lifecycle;
 
+///<summary>
+///Unit tests for the <see cref="ComponentGraphBuilder"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentGraphBuilderTests
 {

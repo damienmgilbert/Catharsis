@@ -16,8 +16,8 @@ public class DecoratorTests
     {
         // Arrange
         string obj = "test";
-        Func<string?, string?> returnsNull = s => null;
-        Func<string?, string?> checksNull = s => (s == null) ? "received null" : s;
+        Func<string?, string?> returnsNull = static s => null;
+        Func<string?, string?> checksNull = static s => (s == null) ? "received null" : s;
         // Act
         string? result = new Decorator().Decorate(obj, returnsNull, checksNull);
         // Assert
@@ -33,8 +33,8 @@ public class DecoratorTests
     {
         // Arrange
         int obj = 5;
-        Func<int, int> addTen = x => x + 10;
-        Func<int, int> multiplyByTwo = x => x * 2;
+        Func<int, int> addTen = static x => x + 10;
+        Func<int, int> multiplyByTwo = static x => x * 2;
         // Act
         int result1 = new Decorator().Decorate(obj, addTen, multiplyByTwo); // (5 + 10) * 2 = 30
         int result2 = new Decorator().Decorate(obj, multiplyByTwo, addTen); // (5 * 2) + 10 = 20
@@ -53,7 +53,7 @@ public class DecoratorTests
     {
         // Arrange
         int obj = int.MaxValue;
-        Func<int, int> identity = x => x;
+        Func<int, int> identity = static x => x;
         // Act
         int result = new Decorator().Decorate(obj, identity);
         // Assert
@@ -69,7 +69,7 @@ public class DecoratorTests
     {
         // Arrange
         int obj = 100;
-        Func<int, int> identity = x => x;
+        Func<int, int> identity = static x => x;
         // Act
         int result = new Decorator().Decorate(obj, identity);
         // Assert
@@ -85,7 +85,7 @@ public class DecoratorTests
     {
         // Arrange
         int obj = 0;
-        Func<int, int> incrementor = x => x + 1;
+        Func<int, int> incrementor = static x => x + 1;
         Func<int, int>[] decorators = new Func<int, int>[100];
         for(int i = 0; i < 100; i++)
         {
@@ -107,8 +107,8 @@ public class DecoratorTests
     {
         // Arrange
         int obj = 10;
-        Func<int, int> identity = x => x;
-        Func<int, int> addFive = x => x + 5;
+        Func<int, int> identity = static x => x;
+        Func<int, int> addFive = static x => x + 5;
         // Act
         int result = new Decorator().Decorate(obj, identity, addFive, identity, addFive, identity);
         // Assert
@@ -124,9 +124,9 @@ public class DecoratorTests
     {
         // Arrange
         int obj = 5;
-        Func<int, int> addTen = x => x + 10; // 5 + 10 = 15
-        Func<int, int> multiplyByTwo = x => x * 2; // 15 * 2 = 30
-        Func<int, int> subtractThree = x => x - 3; // 30 - 3 = 27
+        Func<int, int> addTen = static x => x + 10; // 5 + 10 = 15
+        Func<int, int> multiplyByTwo = static x => x * 2; // 15 * 2 = 30
+        Func<int, int> subtractThree = static x => x - 3; // 30 - 3 = 27
         // Act
         int result = new Decorator().Decorate(obj, addTen, multiplyByTwo, subtractThree);
         // Assert
@@ -157,7 +157,7 @@ public class DecoratorTests
     {
         // Arrange
         string? obj = null;
-        Func<string?, string?> decorator = s => (s == null) ? "was null" : s.ToUpper();
+        Func<string?, string?> decorator = static s => (s == null) ? "was null" : s.ToUpper();
         // Act
         string? result = new Decorator().Decorate(obj, decorator);
         // Assert
@@ -173,8 +173,8 @@ public class DecoratorTests
     {
         // Arrange
         string obj = "hello";
-        Func<string, string> toUpper = s => s.ToUpper();
-        Func<string, string> addExclamation = s => $"{s}!";
+        Func<string, string> toUpper = static s => s.ToUpper();
+        Func<string, string> addExclamation = static s => $"{s}!";
         // Act
         string result = new Decorator().Decorate(obj, toUpper, addExclamation);
         // Assert

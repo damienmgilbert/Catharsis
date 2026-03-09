@@ -218,10 +218,10 @@ public partial class EditableComponentTests
         TestEditableWithValidProperties component = new TestEditableWithValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsTrue(properties.All(p => p.GetIndexParameters().Length == 0), "All returned properties should have no index parameters.");
+        Assert.IsTrue(properties.All(static p => p.GetIndexParameters().Length == 0), "All returned properties should have no index parameters.");
     }
 
     ///<summary>
@@ -234,10 +234,10 @@ public partial class EditableComponentTests
         TestEditableWithValidProperties component = new TestEditableWithValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsTrue(properties.All(p => p.CanRead && p.CanWrite), "All returned properties should have both CanRead and CanWrite set to true.");
+        Assert.IsTrue(properties.All(static p => p.CanRead && p.CanWrite), "All returned properties should have both CanRead and CanWrite set to true.");
     }
 
     ///<summary>
@@ -250,11 +250,11 @@ public partial class EditableComponentTests
         TestEditableWithMixedAccessProperties component = new TestEditableWithMixedAccessProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsTrue(properties.All(p => (p.GetMethod?.IsPublic == true) && !p.GetMethod.IsStatic), "Only public instance properties should be returned.");
-        Assert.IsFalse(properties.Any(p => p.Name == "PrivateProperty"), "Private properties should be excluded.");
+        Assert.IsTrue(properties.All(static p => (p.GetMethod?.IsPublic == true) && !p.GetMethod.IsStatic), "Only public instance properties should be returned.");
+        Assert.IsFalse(properties.Any(static p => p.Name == "PrivateProperty"), "Private properties should be excluded.");
     }
 
     ///<summary>
@@ -267,10 +267,10 @@ public partial class EditableComponentTests
         TestEditableWithIndexer component = new TestEditableWithIndexer();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsFalse(properties.Any(p => p.GetIndexParameters().Length > 0), "Indexer properties should be excluded from editable properties.");
+        Assert.IsFalse(properties.Any(static p => p.GetIndexParameters().Length > 0), "Indexer properties should be excluded from editable properties.");
     }
 
     ///<summary>
@@ -283,13 +283,13 @@ public partial class EditableComponentTests
         TestEditableWithMixedProperties component = new TestEditableWithMixedProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsTrue(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithMixedProperties.ValidProperty)), "Valid property should be included.");
-        Assert.IsFalse(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithMixedProperties.ReadOnlyProperty)), "Read-only property should be excluded.");
-        Assert.IsFalse(properties.Any(p => p.Name == "Site"), "Site property should be excluded.");
-        Assert.IsFalse(properties.Any(p => p.Name == "IsEditing"), "IsEditing property should be excluded.");
+        Assert.IsTrue(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithMixedProperties.ValidProperty)), "Valid property should be included.");
+        Assert.IsFalse(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithMixedProperties.ReadOnlyProperty)), "Read-only property should be excluded.");
+        Assert.IsFalse(properties.Any(static p => p.Name == "Site"), "Site property should be excluded.");
+        Assert.IsFalse(properties.Any(static p => p.Name == "IsEditing"), "IsEditing property should be excluded.");
     }
 
     ///<summary>
@@ -302,7 +302,7 @@ public partial class EditableComponentTests
         TestEditableWithNoValidProperties component = new TestEditableWithNoValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
         Assert.IsEmpty(properties, "Should return empty enumerable when no properties match the editable criteria.");
@@ -318,10 +318,10 @@ public partial class EditableComponentTests
         TestEditableWithValidProperties component = new TestEditableWithValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsFalse(properties.Any(p => p.Name == "IsEditing"), "Properties named 'IsEditing' should be excluded from editable properties.");
+        Assert.IsFalse(properties.Any(static p => p.Name == "IsEditing"), "Properties named 'IsEditing' should be excluded from editable properties.");
     }
 
     ///<summary>
@@ -334,10 +334,10 @@ public partial class EditableComponentTests
         TestEditableWithValidProperties component = new TestEditableWithValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsFalse(properties.Any(p => p.Name == "Site"), "Properties named 'Site' should be excluded from editable properties.");
+        Assert.IsFalse(properties.Any(static p => p.Name == "Site"), "Properties named 'Site' should be excluded from editable properties.");
     }
 
     ///<summary>
@@ -350,10 +350,10 @@ public partial class EditableComponentTests
         TestEditableWithReadOnlyProperty component = new TestEditableWithReadOnlyProperty();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsFalse(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithReadOnlyProperty.ReadOnlyProperty)), "Read-only properties should be excluded from editable properties.");
+        Assert.IsFalse(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithReadOnlyProperty.ReadOnlyProperty)), "Read-only properties should be excluded from editable properties.");
     }
 
     ///<summary>
@@ -366,11 +366,11 @@ public partial class EditableComponentTests
         TestEditableWithValidProperties component = new TestEditableWithValidProperties();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsTrue(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithValidProperties.ValidProperty1)), "Valid properties should be included in editable properties.");
-        Assert.IsTrue(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithValidProperties.ValidProperty2)), "Valid properties should be included in editable properties.");
+        Assert.IsTrue(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithValidProperties.ValidProperty1)), "Valid properties should be included in editable properties.");
+        Assert.IsTrue(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithValidProperties.ValidProperty2)), "Valid properties should be included in editable properties.");
     }
 
     ///<summary>
@@ -383,10 +383,10 @@ public partial class EditableComponentTests
         TestEditableWithWriteOnlyProperty component = new TestEditableWithWriteOnlyProperty();
 
         // Act
-        List<PropertyInfo> properties = component.GetEditablePropertiesPublic().ToList();
+        List<PropertyInfo> properties = [.. component.GetEditablePropertiesPublic()];
 
         // Assert
-        Assert.IsFalse(properties.Any(p => p.Name == nameof(EditableComponentTests.TestEditableWithWriteOnlyProperty.WriteOnlyProperty)), "Write-only properties should be excluded from editable properties.");
+        Assert.IsFalse(properties.Any(static p => p.Name == nameof(EditableComponentTests.TestEditableWithWriteOnlyProperty.WriteOnlyProperty)), "Write-only properties should be excluded from editable properties.");
     }
     #endregion
 

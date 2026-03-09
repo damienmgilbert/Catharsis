@@ -4,6 +4,9 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentModelInspector"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentModelInspectorTests
 {
@@ -55,7 +58,7 @@ public sealed class ComponentModelInspectorTests
         InspectableDto dto = new InspectableDto();
 
         IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
-        ComponentModelInspector.PropertyReport nameReport = report.First(r => r.Name == "Name");
+        ComponentModelInspector.PropertyReport nameReport = report.First(static r => r.Name == "Name");
 
         Assert.IsGreaterThanOrEqualTo(1, nameReport.ValidationAttributes.Count);
     }
@@ -67,7 +70,7 @@ public sealed class ComponentModelInspectorTests
         InspectableDto dto = new InspectableDto { Name = "Alice" };
 
         IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
-        ComponentModelInspector.PropertyReport nameReport = report.First(r => r.Name == "Name");
+        ComponentModelInspector.PropertyReport nameReport = report.First(static r => r.Name == "Name");
 
         Assert.AreEqual("Alice", nameReport.CurrentValue);
     }
@@ -89,8 +92,8 @@ public sealed class ComponentModelInspectorTests
         IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
 
         Assert.IsGreaterThanOrEqualTo(3, report.Count);
-        Assert.IsTrue(report.Any(r => r.Name == "Name"));
-        Assert.IsTrue(report.Any(r => r.Name == "Age"));
+        Assert.IsTrue(report.Any(static r => r.Name == "Name"));
+        Assert.IsTrue(report.Any(static r => r.Name == "Age"));
     }
 
     [TestMethod]

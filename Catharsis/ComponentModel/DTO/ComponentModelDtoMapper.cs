@@ -51,7 +51,7 @@ public sealed class ComponentModelDtoMapper
 
         if(!Validator.TryValidateObject(target, context, results, validateAllProperties: true))
         {
-            string errors = string.Join("; ", results.Select(r => r.ErrorMessage));
+            string errors = string.Join("; ", results.Select(static r => r.ErrorMessage));
             throw new ValidationException($"Validation failed after mapping to '{typeof(TTarget).Name}': {errors}");
         }
     }

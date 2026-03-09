@@ -4,6 +4,9 @@ using Catharsis.Advanced;
 
 namespace Catharsis.UnitTests.Advanced;
 
+///<summary>
+///Unit tests for the <see cref="PooledJsonDocument"/> class.
+///</summary>
 [TestClass]
 public class PooledJsonDocumentTests
 {

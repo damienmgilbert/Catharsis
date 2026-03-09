@@ -59,7 +59,7 @@ public class VisitorTests
         var obj = new { Id = 1, Name = "Test" };
         var visitor = new { ProcessorId = 42 };
         const int expectedResult = 43;
-        Func<object, object, int> visit = (v, o) =>
+        Func<object, object, int> visit = static (v, o) =>
         {
             dynamic dv = v;
             dynamic dobj = o;
@@ -99,7 +99,7 @@ public class VisitorTests
         // Arrange
         const string obj = "test";
         const string visitor = "test";
-        Func<string, string, bool> visit = (v, o) => v == o;
+        Func<string, string, bool> visit = static (v, o) => v == o;
         // Act
         bool result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -141,7 +141,7 @@ public class VisitorTests
         string obj = string.Empty;
         string visitor = string.Empty;
         const string expectedResult = "0";
-        Func<string, string, string> visit = (v, o) => (v.Length + o.Length).ToString();
+        Func<string, string, string> visit = static (v, o) => (v.Length + o.Length).ToString();
         // Act
         string result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -186,7 +186,7 @@ public class VisitorTests
         const int obj = int.MaxValue;
         const int visitor = int.MinValue;
         const long expectedResult = ((long)int.MaxValue) + int.MinValue;
-        Func<int, int, long> visit = (v, o) => ((long)v) + o;
+        Func<int, int, long> visit = static (v, o) => ((long)v) + o;
         // Act
         long result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -204,7 +204,7 @@ public class VisitorTests
         string? obj = null;
         const string visitor = "visitor";
         const string expectedResult = "visitor processed null";
-        Func<string, string?, string> visit = (v, o) => $"{v} processed {((o == null) ? "null" : o)}";
+        Func<string, string?, string> visit = static (v, o) => $"{v} processed {((o == null) ? "null" : o)}";
         // Act
         string result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -261,7 +261,7 @@ public class VisitorTests
         // Arrange
         object obj = new object();
         object visitor = new object();
-        Action<object, object> visit = (v, o) =>
+        Action<object, object> visit = static (v, o) =>
         {
         };
         // Act
@@ -306,7 +306,7 @@ public class VisitorTests
         const string obj = "element";
         const string visitor = "visitor";
         const string expectedResult = "visitor processed element";
-        Func<string, string, string> visit = (v, o) => $"{v} processed {o}";
+        Func<string, string, string> visit = static (v, o) => $"{v} processed {o}";
         // Act
         string result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -378,7 +378,7 @@ public class VisitorTests
         const int obj = 42;
         const int visitor = 10;
         const int expectedResult = 52;
-        Func<int, int, int> visit = (v, o) => v + o;
+        Func<int, int, int> visit = static (v, o) => v + o;
         // Act
         int result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -396,7 +396,7 @@ public class VisitorTests
         string obj = new string('a', 10000);
         string visitor = new string('b', 5000);
         const int expectedResult = 15000;
-        Func<string, string, int> visit = (v, o) => v.Length + o.Length;
+        Func<string, string, int> visit = static (v, o) => v.Length + o.Length;
         // Act
         int result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -412,7 +412,7 @@ public class VisitorTests
         // Arrange
         List<int> obj = new System.Collections.Generic.List<int>();
         int visitor = 42;
-        Action<int, System.Collections.Generic.List<int>> visit = (v, o) => o.Add(v);
+        Action<int, System.Collections.Generic.List<int>> visit = static (v, o) => o.Add(v);
         // Act
         List<int> result = new Visitor().Accept(obj, visitor, visit);
         // Assert
@@ -450,7 +450,7 @@ public class VisitorTests
         const string obj = "   ";
         const string visitor = "\t\n";
         const string expectedResult = "5";
-        Func<string, string, string> visit = (v, o) => (v.Length + o.Length).ToString();
+        Func<string, string, string> visit = static (v, o) => (v.Length + o.Length).ToString();
         // Act
         string result = new Visitor().Accept(obj, visitor, visit);
         // Assert

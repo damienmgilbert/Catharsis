@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="DictionaryExtensions"/> class.
+///</summary>
 [TestClass]
 public class DictionaryExtensionsTests
 {
@@ -26,7 +29,7 @@ public class DictionaryExtensionsTests
     public void AddOrUpdate_WithFactories_AddsNewKey()
     {
         IDictionary<string, int> source = new Dictionary<string, int>();
-        int value = source.AddOrUpdate("a", k => 10, (k, v) => v + 1);
+        int value = source.AddOrUpdate("a", static k => 10, static (k, v) => v + 1);
         Assert.AreEqual(10, value);
         Assert.AreEqual(10, source["a"]);
     }
@@ -35,7 +38,7 @@ public class DictionaryExtensionsTests
     public void AddOrUpdate_WithFactories_UpdatesExistingKey()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 10 } };
-        int value = source.AddOrUpdate("a", k => 0, (k, v) => v + 5);
+        int value = source.AddOrUpdate("a", static k => 0, static (k, v) => v + 5);
         Assert.AreEqual(15, value);
         Assert.AreEqual(15, source["a"]);
     }
@@ -62,7 +65,7 @@ public class DictionaryExtensionsTests
     public void GetOrAdd_ExistingKey_ReturnsExistingValue()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 42 } };
-        int result = source.GetOrAdd("a", k => 99);
+        int result = source.GetOrAdd("a", static k => 99);
         Assert.AreEqual(42, result);
     }
 
@@ -70,7 +73,7 @@ public class DictionaryExtensionsTests
     public void GetOrAdd_MissingKey_AddsAndReturnsNewValue()
     {
         IDictionary<string, int> source = new Dictionary<string, int>();
-        int result = source.GetOrAdd("a", k => 42);
+        int result = source.GetOrAdd("a", static k => 42);
         Assert.AreEqual(42, result);
         Assert.AreEqual(42, source["a"]);
     }
@@ -79,7 +82,7 @@ public class DictionaryExtensionsTests
     public void ModifyAll_TransformsAllValues()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 } };
-        source.ModifyAll((k, v) => v * 10);
+        source.ModifyAll(static (k, v) => v * 10);
         Assert.AreEqual(10, source["a"]);
         Assert.AreEqual(20, source["b"]);
     }
@@ -88,7 +91,7 @@ public class DictionaryExtensionsTests
     public void ModifyWhere_TransformsMatchingOnly()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
-        source.ModifyWhere(kvp => kvp.Value % 2 == 0, (k, v) => v * 10);
+        source.ModifyWhere(static kvp => kvp.Value % 2 == 0, static (k, v) => v * 10);
         Assert.AreEqual(1, source["a"]);
         Assert.AreEqual(20, source["b"]);
         Assert.AreEqual(3, source["c"]);
@@ -117,7 +120,7 @@ public class DictionaryExtensionsTests
     public void RemoveWhere_RemovesMatchingEntries_ReturnsCount()
     {
         IDictionary<string, int> source = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
-        int removed = source.RemoveWhere(kvp => kvp.Value > 1);
+        int removed = source.RemoveWhere(static kvp => kvp.Value > 1);
         Assert.AreEqual(2, removed);
         Assert.HasCount(1, source);
         Assert.AreEqual(1, source["a"]);

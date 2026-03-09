@@ -134,7 +134,7 @@ public sealed class PropertyChangeBatcher : IDisposable
             return;
         }
 
-        string[] names = _pending.ToArray();
+        string[] names = [.. _pending];
         _pending.Clear();
 
         foreach(string name in names)

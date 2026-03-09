@@ -2,6 +2,9 @@ using Catharsis.Extensions;
 
 namespace Catharsis.UnitTests.Extensions;
 
+///<summary>
+///Unit tests for the <see cref="ListExtensions"/> class.
+///</summary>
 [TestClass]
 public class ListExtensionsTests
 {
@@ -18,7 +21,7 @@ public class ListExtensionsTests
     public void LinkedList_ModifyAll_TransformsAllNodes()
     {
         LinkedList<int> source = new LinkedList<int>(new[] { 1, 2, 3 });
-        source.ModifyAll(x => x * 10);
+        source.ModifyAll(static x => x * 10);
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, source.ToList());
     }
 
@@ -26,7 +29,7 @@ public class ListExtensionsTests
     public void LinkedList_RemoveWhere_RemovesMatchingNodes()
     {
         LinkedList<int> source = new LinkedList<int>(new[] { 1, 2, 3, 4, 5, 6 });
-        int removed = source.RemoveWhere(x => x % 2 == 0);
+        int removed = source.RemoveWhere(static x => x % 2 == 0);
         Assert.AreEqual(3, removed);
         CollectionAssert.AreEqual(new[] { 1, 3, 5 }, source.ToList());
     }

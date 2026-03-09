@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Catharsis.UnitTests.Services;
 
+///<summary>
+///Unit tests for the <see cref="SequenceParserService"/> class.
+///</summary>
 [TestClass]
 public class SequenceParserServiceTests
 {

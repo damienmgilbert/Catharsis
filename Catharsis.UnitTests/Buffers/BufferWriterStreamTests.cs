@@ -59,7 +59,7 @@ public class BufferWriterStreamTests
     ///Tests that the constructor throws when writer is null.
     ///</summary>
     [TestMethod]
-    public void Constructor_NullWriter_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new BufferWriterStream(null!)); }
+    public void Constructor_NullWriter_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new BufferWriterStream(null!)); }
     ///<summary>
     ///Tests that Flush does not throw.
     ///</summary>

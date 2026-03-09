@@ -3,6 +3,9 @@ using Catharsis.ComponentModel.Licensing;
 
 namespace Catharsis.UnitTests.ComponentModel.Licensing;
 
+///<summary>
+///Unit tests for the <see cref="ComponentActionList"/> class.
+///</summary>
 [TestClass]
 public sealed class ComponentActionListTests
 {
@@ -23,7 +26,7 @@ public sealed class ComponentActionListTests
         list.ExposeAddVerb(
         new ComponentVerb(
         "Do",
-        () =>
+        static () =>
         {
         }));
 
@@ -37,7 +40,7 @@ public sealed class ComponentActionListTests
 
         list.ExposeAddVerb(
         "Reset",
-        () =>
+        static () =>
         {
         },
         "Reset everything");
@@ -54,7 +57,7 @@ public sealed class ComponentActionListTests
         list.ExposeAddVerb(
         new ComponentVerb(
         "Do",
-        () =>
+        static () =>
         {
         }));
 
@@ -64,7 +67,7 @@ public sealed class ComponentActionListTests
     }
 
     [TestMethod]
-    public void Constructor_NullContext_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new TestActionList(null!)); }
+    public void Constructor_NullContext_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new TestActionList(null!)); }
     [TestMethod]
     public void Count_Initial_ReturnsZero()
     {
@@ -80,17 +83,17 @@ public sealed class ComponentActionListTests
         list.ExposeAddVerb(
         new ComponentVerb(
         "A",
-        () =>
+        static () =>
         {
         }));
         list.ExposeAddVerb(
         new ComponentVerb(
         "B",
-        () =>
+        static () =>
         {
         }));
 
-        List<string> names = list.Select(v => v.Text).ToList();
+        List<string> names = [.. list.Select(static v => v.Text)];
 
         Assert.HasCount(2, names);
         CollectionAssert.Contains(names, "A");
@@ -104,13 +107,13 @@ public sealed class ComponentActionListTests
         list.ExposeAddVerb(
         new ComponentVerb(
         "First",
-        () =>
+        static () =>
         {
         }));
         list.ExposeAddVerb(
         new ComponentVerb(
         "Second",
-        () =>
+        static () =>
         {
         }));
 

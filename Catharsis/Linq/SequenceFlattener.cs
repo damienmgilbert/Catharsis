@@ -104,7 +104,7 @@ public static class SequenceFlattener
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.SelectMany(inner => inner);
+        return source.SelectMany(static inner => inner);
     }
 
     ///<summary>
@@ -117,7 +117,7 @@ public static class SequenceFlattener
     public static IEnumerable<T> Flatten<T>(this IEnumerable<T[]> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.SelectMany(inner => inner);
+        return source.SelectMany(static inner => inner);
     }
 
     ///<summary>
@@ -130,7 +130,7 @@ public static class SequenceFlattener
     public static IEnumerable<T> Flatten<T>(this IEnumerable<List<T>> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.SelectMany(inner => inner);
+        return source.SelectMany(static inner => inner);
     }
 
     ///<summary>
@@ -145,7 +145,7 @@ public static class SequenceFlattener
     public static IEnumerable<TElement> FlattenOrdered<TKey, TElement>(this IOrderedEnumerable<IGrouping<TKey, TElement>> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.SelectMany(g => g);
+        return source.SelectMany(static g => g);
     }
 
     ///<summary>
@@ -207,7 +207,7 @@ public static class SequenceFlattener
     public static IEnumerable<TElement> Ungroup<TKey, TElement>(this IEnumerable<IGrouping<TKey, TElement>> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.SelectMany(g => g);
+        return source.SelectMany(static g => g);
     }
 
     ///<summary>

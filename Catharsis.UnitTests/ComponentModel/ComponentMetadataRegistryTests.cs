@@ -2,6 +2,9 @@ using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
+///<summary>
+///Unit tests for the <see cref="ComponentMetadataRegistry"/> class.
+///</summary>
 [TestClass]
 public class ComponentMetadataRegistryTests
 {

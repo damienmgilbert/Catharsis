@@ -5,6 +5,9 @@ using Catharsis.Services;
 
 namespace Catharsis.UnitTests.Diagnostics;
 
+///<summary>
+///Unit tests for the <see cref="SafeSequenceParser"/> class.
+///</summary>
 [TestClass]
 public class SafeSequenceParserTests
 {

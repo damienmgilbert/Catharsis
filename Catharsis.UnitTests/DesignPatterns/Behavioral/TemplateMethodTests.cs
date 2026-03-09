@@ -15,11 +15,11 @@ public class TemplateMethodTests
     {
         // Arrange
         int obj = 5;
-        Action<int> setup = n =>
+        Action<int> setup = static n =>
         {
         };
-        Func<int, (int Value, string Text)> operation = n => (n, n.ToString());
-        Action<int> teardown = n =>
+        Func<int, (int Value, string Text)> operation = static n => (n, n.ToString());
+        Action<int> teardown = static n =>
         {
         };
         // Act
@@ -39,11 +39,11 @@ public class TemplateMethodTests
     public void Template_DifferentInputs_ReturnsCorrectResult(string input, int expected)
     {
         // Arrange
-        Action<string> setup = s =>
+        Action<string> setup = static s =>
         {
         };
-        Func<string, int> operation = s => s.Length;
-        Action<string> teardown = s =>
+        Func<string, int> operation = static s => s.Length;
+        Action<string> teardown = static s =>
         {
         };
         // Act
@@ -108,9 +108,9 @@ public class TemplateMethodTests
     {
         // Arrange
         List<int> obj = new List<int>();
-        Action<List<int>> setup = list => list.Add(1);
-        Func<List<int>, int> operation = list => list.Count;
-        Action<List<int>> teardown = list => list.Clear();
+        Action<List<int>> setup = static list => list.Add(1);
+        Func<List<int>, int> operation = static list => list.Count;
+        Action<List<int>> teardown = static list => list.Clear();
         // Act
         int result = new TemplateMethod().Template(obj, setup, operation, teardown);
         // Assert

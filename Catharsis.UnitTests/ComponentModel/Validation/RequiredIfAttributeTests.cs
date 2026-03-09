@@ -3,12 +3,15 @@ using Catharsis.ComponentModel.Validation;
 
 namespace Catharsis.UnitTests.ComponentModel.Validation;
 
+///<summary>
+///Unit tests for the <see cref="RequiredIfAttribute"/> class.
+///</summary>
 [TestClass]
 public sealed class RequiredIfAttributeTests
 {
     #region Public methods
     [TestMethod]
-    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(() => new RequiredIfAttribute(null!, true)); }
+    public void Constructor_NullDependentProperty_ThrowsArgumentNullException() { Assert.ThrowsExactly<ArgumentNullException>(static () => new RequiredIfAttribute(null!, true)); }
     [TestMethod]
     public void Constructor_SetsProperties()
     {

@@ -4,6 +4,9 @@ using Catharsis.ComponentModel.TypeConverter;
 
 namespace Catharsis.UnitTests.ComponentModel.TypeConverter;
 
+///<summary>
+///Unit tests for the <see cref="ConverterRegistry"/> class.
+///</summary>
 [TestClass]
 public sealed class ConverterRegistryTests
 {
@@ -35,7 +38,7 @@ public sealed class ConverterRegistryTests
     public void ConvertFrom_ValidConversion_ReturnsConverted()
     {
         ConverterRegistry registry = new ConverterRegistry();
-        registry.Register<int>(convertTo: (ctx, culture, value, dest) => value.ToString(culture));
+        registry.Register<int>(convertTo: static (ctx, culture, value, dest) => value.ToString(culture));
 
         object? result = registry.ConvertFrom(42, typeof(string), CultureInfo.InvariantCulture);
 
@@ -56,7 +59,7 @@ public sealed class ConverterRegistryTests
     public void ConvertTo_ValidConversion_ReturnsConverted()
     {
         ConverterRegistry registry = new ConverterRegistry();
-        registry.Register<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
+        registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         int result = registry.ConvertTo<int>("42", CultureInfo.InvariantCulture);
 
@@ -211,7 +214,7 @@ public sealed class ConverterRegistryTests
     {
         ConverterRegistry registry = new ConverterRegistry();
 
-        registry.Register<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
+        registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         System.ComponentModel.TypeConverter converter = registry.GetConverter<int>();
         Assert.IsInstanceOfType<GenericTypeConverter<int>>(converter);
@@ -233,7 +236,7 @@ public sealed class ConverterRegistryTests
     {
         ConverterRegistry registry = new ConverterRegistry();
 
-        registry.RegisterSpanBased<int>((ReadOnlySpan<char> span, IFormatProvider? provider, out int result) => int.TryParse(span, NumberStyles.Integer, provider, out result));
+        registry.RegisterSpanBased<int>(static (ReadOnlySpan<char> span, IFormatProvider? provider, out int result) => int.TryParse(span, NumberStyles.Integer, provider, out result));
 
         System.ComponentModel.TypeConverter converter = registry.GetConverter<int>();
         Assert.IsInstanceOfType<SpanBasedTypeConverter<int>>(converter);
@@ -251,7 +254,7 @@ public sealed class ConverterRegistryTests
     public void TryConvertTo_InvalidConversion_ReturnsFalse()
     {
         ConverterRegistry registry = new ConverterRegistry();
-        registry.Register<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
+        registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         bool success = registry.TryConvertTo<int>("not_a_number", out int result, CultureInfo.InvariantCulture);
 
@@ -263,7 +266,7 @@ public sealed class ConverterRegistryTests
     public void TryConvertTo_ValidConversion_ReturnsTrueAndResult()
     {
         ConverterRegistry registry = new ConverterRegistry();
-        registry.Register<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
+        registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         bool success = registry.TryConvertTo<int>("42", out int result, CultureInfo.InvariantCulture);
 
