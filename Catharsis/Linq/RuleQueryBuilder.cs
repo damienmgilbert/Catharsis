@@ -97,9 +97,7 @@ public sealed class RuleQueryBuilder<T>
 
         IEnumerable<T> filtered = Apply(source);
 
-        List<(string Name, Func<T, bool> Compiled)> compiled = _namedFilters
-            .Select(nf => (nf.Name, Compiled: nf.Condition.Compile()))
-            .ToList();
+        List<(string Name, Func<T, bool> Compiled)> compiled = [.. _namedFilters.Select(nf => (nf.Name, Compiled: nf.Condition.Compile()))];
 
         return filtered
             .Select(

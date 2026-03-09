@@ -190,7 +190,7 @@ public sealed class QueryableFilterBuilder<T>
         ArgumentNullException.ThrowIfNull(selector, nameof(selector));
         ArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
 
-        List<TProperty> values = allowedValues as List<TProperty> ?? allowedValues.ToList();
+        List<TProperty> values = allowedValues as List<TProperty> ?? [.. allowedValues];
         ConstantExpression valuesConstant = Expression.Constant(values, typeof(List<TProperty>));
 
         MethodCallExpression containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), [typeof(TProperty)], valuesConstant, selector.Body);

@@ -53,7 +53,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 
     private void ClearAllErrors()
     {
-        List<string> properties = _errors.Keys.ToList();
+        List<string> properties = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string property in properties)
@@ -95,7 +95,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
             string message = result.ErrorMessage ?? "Validation failed.";
 
             if (members.Count == 0)

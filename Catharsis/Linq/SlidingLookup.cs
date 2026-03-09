@@ -10,7 +10,7 @@ public static class SlidingLookup
     #region Private methods
     private static IEnumerable<(TKey Key, T Element)> KeyedSlidingPairs<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -43,7 +43,7 @@ public static class SlidingLookup
 
     private static IEnumerable<(int WindowIndex, T Element)> SlidingWindowPairs<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -62,14 +62,14 @@ public static class SlidingLookup
         foreach (T item in source)
         {
             accumulated.Add(item);
-            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)accumulated.ToList());
+            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)[.. accumulated]);
             step++;
         }
     }
 
     private static IEnumerable<IGrouping<TKey, T>> ToSlidingGroupingsByIterator<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
@@ -81,7 +81,7 @@ public static class SlidingLookup
 
     private static IEnumerable<IGrouping<int, T>> ToSlidingGroupingsIterator<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         for (int w = 0; w <= buffer.Count - windowSize; w++)
         {

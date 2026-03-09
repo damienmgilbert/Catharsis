@@ -413,7 +413,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<T> toRemove = source.Where(predicate).ToList();
+        List<T> toRemove = [.. source.Where(predicate)];
         return source.Except(toRemove);
     }
 

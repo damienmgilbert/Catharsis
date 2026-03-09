@@ -63,7 +63,7 @@ public sealed class ValidatingObservableComponentTests
         using TestComponent c = new TestComponent { Age = 200 };
         c.ValidateAllProperties();
 
-        List<string> all = c.GetErrors(null).Cast<string>().ToList();
+        List<string> all = [.. c.GetErrors(null).Cast<string>()];
 
         Assert.IsNotEmpty(all);
     }
@@ -73,7 +73,7 @@ public sealed class ValidatingObservableComponentTests
     {
         using TestComponent c = new TestComponent();
 
-        List<string> errors = c.GetErrors("Unknown").Cast<string>().ToList();
+        List<string> errors = [.. c.GetErrors("Unknown").Cast<string>()];
 
         Assert.IsEmpty(errors);
     }
@@ -96,7 +96,7 @@ public sealed class ValidatingObservableComponentTests
         c.Name = null;
 
         Assert.IsTrue(c.HasErrors);
-        List<string> errors = c.GetErrors("Name").Cast<string>().ToList();
+        List<string> errors = [.. c.GetErrors("Name").Cast<string>()];
         Assert.HasCount(1, errors);
         Assert.AreEqual("Name is required.", errors[0]);
     }

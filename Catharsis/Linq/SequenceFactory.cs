@@ -15,7 +15,7 @@ public static class SequenceFactory
 
     private static IEnumerable<T> CycleIterator<T>(IEnumerable<T> source)
     {
-        List<T> buffer = source.ToList();
+        List<T> buffer = [.. source];
 
         if (buffer.Count == 0)
         {
@@ -303,7 +303,7 @@ public static class SequenceFactory
     private sealed class SimpleGrouping<TKey, TElement>(TKey key, IEnumerable<TElement> elements) : IGrouping<TKey, TElement>
     {
         #region Fields
-        private readonly List<TElement> _elements = elements.ToList();
+        private readonly List<TElement> _elements = [.. elements];
         #endregion
 
         #region Explicit interface implementations

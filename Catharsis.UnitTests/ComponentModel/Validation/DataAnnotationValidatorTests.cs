@@ -46,7 +46,7 @@ public sealed class DataAnnotationValidatorTests
         DataAnnotationValidator validator = new DataAnnotationValidator();
         validator.ValidateObject(new PersonModel { Name = null, Age = 30 });
 
-        List<ErrorInfo> errors = validator.GetErrors("Name").Cast<ErrorInfo>().ToList();
+        List<ErrorInfo> errors = [.. validator.GetErrors("Name").Cast<ErrorInfo>()];
 
         Assert.HasCount(1, errors);
     }

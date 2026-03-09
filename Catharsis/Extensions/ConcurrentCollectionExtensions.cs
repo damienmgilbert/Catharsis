@@ -236,7 +236,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        T[] array = items as T[] ?? items.ToArray();
+        T[] array = items as T[] ?? [.. items];
         source.PushRange(array);
         return source;
     }
@@ -297,7 +297,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<TKey> keysToRemove = source.Where(predicate).Select(kvp => kvp.Key).ToList();
+        List<TKey> keysToRemove = [.. source.Where(predicate).Select(kvp => kvp.Key)];
         int removed = 0;
         foreach(TKey key in keysToRemove)
         {

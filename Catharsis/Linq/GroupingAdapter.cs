@@ -155,7 +155,7 @@ public static class GroupingAdapter
             }
             else
             {
-                result[group.Key] = group.ToList();
+                result[group.Key] = [.. group];
             }
         }
 

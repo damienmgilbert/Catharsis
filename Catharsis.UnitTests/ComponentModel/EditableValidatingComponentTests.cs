@@ -64,7 +64,7 @@ public sealed class EditableValidatingComponentTests
         using TestComponent c = new TestComponent { Age = 200 };
         c.ValidateAllProperties();
 
-        List<string> all = c.GetErrors(null).Cast<string>().ToList();
+        List<string> all = [.. c.GetErrors(null).Cast<string>()];
 
         Assert.IsNotEmpty(all);
     }
@@ -76,7 +76,7 @@ public sealed class EditableValidatingComponentTests
         c.Name = "Alice";
         c.Name = null;
 
-        List<string> errors = c.GetErrors("Name").Cast<string>().ToList();
+        List<string> errors = [.. c.GetErrors("Name").Cast<string>()];
 
         Assert.HasCount(1, errors);
     }

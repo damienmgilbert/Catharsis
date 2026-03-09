@@ -84,7 +84,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     ///</summary>
     protected void ClearAllErrors()
     {
-        List<string> properties = _errors.Keys.ToList();
+        List<string> properties = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string property in properties)
@@ -136,7 +136,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
             return;
         }
 
-        List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+        List<string> errorList = [.. errors.Where(e => !string.IsNullOrWhiteSpace(e))];
 
         if (errorList.Count == 0)
         {
@@ -189,10 +189,9 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
 
         Validator.TryValidateProperty(value, context, results);
 
-        List<string> messages = results
+        List<string> messages = [.. results
             .Where(r => !string.IsNullOrWhiteSpace(r.ErrorMessage))
-            .Select(r => r.ErrorMessage!)
-            .ToList();
+            .Select(r => r.ErrorMessage!)];
 
         if (messages.Count > 0)
         {
@@ -275,7 +274,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
             string message = result.ErrorMessage ?? "Validation failed.";
 
             if (members.Count == 0)

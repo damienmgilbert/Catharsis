@@ -156,9 +156,7 @@ public sealed class ComponentContainer : IContainer, IServiceProvider
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            IComponent[] components = _sites
-                .Select(s => s.Component)
-                .ToArray();
+            IComponent[] components = [.. _sites.Select(s => s.Component)];
 
             return new ComponentCollection(components);
         }

@@ -23,7 +23,7 @@ public class TrieTests
         trie.Insert("cat");
         trie.Insert("car");
         trie.Insert("dog");
-        List<string> result = trie.GetWordsWithPrefix("ca").OrderBy(x => x).ToList();
+        List<string> result = [.. trie.GetWordsWithPrefix("ca").OrderBy(x => x)];
         Assert.HasCount(2, result);
         Assert.Contains("cat", result);
         Assert.Contains("car", result);

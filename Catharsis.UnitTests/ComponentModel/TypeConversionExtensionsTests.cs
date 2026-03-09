@@ -60,7 +60,7 @@ public class TypeConversionExtensionsTests
     {
         var obj = new { Name = "Test", Value = 42 };
 
-        List<PropertyDescriptor> properties = obj.GetBrowsableProperties().ToList();
+        List<PropertyDescriptor> properties = [.. obj.GetBrowsableProperties()];
 
         Assert.IsNotEmpty(properties);
     }

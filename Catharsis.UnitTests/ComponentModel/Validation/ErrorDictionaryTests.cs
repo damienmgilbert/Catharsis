@@ -133,7 +133,7 @@ public sealed class ErrorDictionaryTests
         dict.AddError("Name", new ErrorInfo("Required."));
         dict.AddError("Age", new ErrorInfo("Out of range."));
 
-        List<ErrorInfo> errors = dict.GetErrors("Name").Cast<ErrorInfo>().ToList();
+        List<ErrorInfo> errors = [.. dict.GetErrors("Name").Cast<ErrorInfo>()];
 
         Assert.HasCount(1, errors);
         Assert.AreEqual("Required.", errors[0].Message);
@@ -146,7 +146,7 @@ public sealed class ErrorDictionaryTests
         dict.AddError("Name", new ErrorInfo("err1"));
         dict.AddError("Age", new ErrorInfo("err2"));
 
-        List<ErrorInfo> errors = dict.GetErrors(null).Cast<ErrorInfo>().ToList();
+        List<ErrorInfo> errors = [.. dict.GetErrors(null).Cast<ErrorInfo>()];
 
         Assert.HasCount(2, errors);
     }
@@ -156,7 +156,7 @@ public sealed class ErrorDictionaryTests
     {
         ErrorDictionary dict = new ErrorDictionary();
 
-        List<ErrorInfo> errors = dict.GetErrors("Unknown").Cast<ErrorInfo>().ToList();
+        List<ErrorInfo> errors = [.. dict.GetErrors("Unknown").Cast<ErrorInfo>()];
 
         Assert.IsEmpty(errors);
     }

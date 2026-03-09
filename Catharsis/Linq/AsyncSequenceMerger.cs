@@ -82,7 +82,7 @@ public static class AsyncSequenceMerger
     {
         Channel<T> channel = Channel.CreateUnbounded<T>(new UnboundedChannelOptions { SingleReader = true, SingleWriter = false });
 
-        List<IAsyncEnumerable<T>> sourceList = sources as List<IAsyncEnumerable<T>> ?? sources.ToList();
+        List<IAsyncEnumerable<T>> sourceList = sources as List<IAsyncEnumerable<T>> ?? [.. sources];
 
         Task[] producers = new Task[sourceList.Count];
 

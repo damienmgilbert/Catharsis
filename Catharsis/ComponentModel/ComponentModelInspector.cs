@@ -115,7 +115,7 @@ public sealed class ComponentModelInspector
                 attributes.Add(attr);
             }
 
-            List<ValidationAttribute> validationAttributes = attributes.OfType<ValidationAttribute>().ToList();
+            List<ValidationAttribute> validationAttributes = [.. attributes.OfType<ValidationAttribute>()];
 
             reports.Add(
             new PropertyReport
@@ -158,7 +158,7 @@ public sealed class ComponentModelInspector
 
             foreach(PropertyDescriptor prop in properties)
             {
-                List<string> propErrors = errorInfo.GetErrors(prop.Name).Cast<object>().Select(e => e.ToString() ?? string.Empty).Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+                List<string> propErrors = [.. errorInfo.GetErrors(prop.Name).Cast<object>().Select(e => e.ToString() ?? string.Empty).Where(e => !string.IsNullOrWhiteSpace(e))];
 
                 if(propErrors.Count > 0)
                 {

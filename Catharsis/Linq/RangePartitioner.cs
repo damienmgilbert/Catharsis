@@ -114,7 +114,7 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentOutOfRangeException.ThrowIfLessThan(bucketCount, 1, nameof(bucketCount));
 
-        List<T> sorted = source.OrderBy(valueSelector).ToList();
+        List<T> sorted = [.. source.OrderBy(valueSelector)];
 
         if (sorted.Count == 0)
         {
@@ -142,7 +142,7 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentOutOfRangeException.ThrowIfLessThan(bucketCount, 1, nameof(bucketCount));
 
-        List<T> sorted = source.OrderBy(valueSelector).ToList();
+        List<T> sorted = [.. source.OrderBy(valueSelector)];
 
         if (sorted.Count == 0)
         {

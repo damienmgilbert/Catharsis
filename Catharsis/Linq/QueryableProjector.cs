@@ -112,9 +112,7 @@ public static class QueryableProjector
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(projections, nameof(projections));
 
-        List<KeyValuePair<string, Func<T, object?>>> compiled = projections
-            .Select(kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile()))
-            .ToList();
+        List<KeyValuePair<string, Func<T, object?>>> compiled = [.. projections.Select(kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile()))];
 
         foreach (T item in source)
         {

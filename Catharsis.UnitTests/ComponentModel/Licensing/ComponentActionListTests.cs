@@ -90,7 +90,7 @@ public sealed class ComponentActionListTests
         {
         }));
 
-        List<string> names = list.Select(v => v.Text).ToList();
+        List<string> names = [.. list.Select(v => v.Text)];
 
         Assert.HasCount(2, names);
         CollectionAssert.Contains(names, "A");

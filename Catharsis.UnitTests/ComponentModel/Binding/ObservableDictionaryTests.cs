@@ -99,7 +99,7 @@ public sealed class ObservableDictionaryTests
     {
         ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
 
-        List<KeyValuePair<string, int>> pairs = dict.ToList();
+        List<KeyValuePair<string, int>> pairs = [.. dict];
 
         Assert.HasCount(2, pairs);
     }

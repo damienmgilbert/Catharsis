@@ -49,7 +49,7 @@ public static class ArrayExtensions
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        T[] itemArray = items as T[] ?? items.ToArray();
+        T[] itemArray = items as T[] ?? [.. items];
         T[] result = new T[source.Length + itemArray.Length];
         Array.Copy(source, result, source.Length);
         Array.Copy(itemArray, 0, result, source.Length, itemArray.Length);
@@ -121,7 +121,7 @@ public static class ArrayExtensions
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the valid insert range.");
         }
 
-        T[] itemArray = items as T[] ?? items.ToArray();
+        T[] itemArray = items as T[] ?? [.. items];
         T[] result = new T[source.Length + itemArray.Length];
         if(index > 0)
         {
@@ -334,7 +334,7 @@ public static class ArrayExtensions
             throw new ArgumentOutOfRangeException(nameof(index), "Index must not be negative.");
         }
 
-        T[] itemArray = items as T[] ?? items.ToArray();
+        T[] itemArray = items as T[] ?? [.. items];
         if(index + itemArray.Length > source.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Replacement range extends beyond the array bounds.");

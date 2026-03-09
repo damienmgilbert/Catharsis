@@ -118,10 +118,9 @@ public sealed class ComponentContainerSlim : IContainer
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            IComponent[] components = _sites
+            IComponent[] components = [.. _sites
                 .Select(s => s.Component)
-                .Where(c => c is not null)
-                .ToArray();
+                .Where(c => c is not null)];
 
             return new ComponentCollection(components!);
         }

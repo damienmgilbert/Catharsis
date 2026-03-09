@@ -38,7 +38,7 @@ public sealed class ValidatedRecordTests
         ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
         record.Validate();
 
-        List<string> allErrors = record.GetErrors(null).Cast<string>().ToList();
+        List<string> allErrors = [.. record.GetErrors(null).Cast<string>()];
 
         Assert.IsGreaterThanOrEqualTo(2, allErrors.Count);
     }
@@ -49,7 +49,7 @@ public sealed class ValidatedRecordTests
         ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
         record.Validate();
 
-        List<string> errors = record.GetErrors("Unknown").Cast<string>().ToList();
+        List<string> errors = [.. record.GetErrors("Unknown").Cast<string>()];
 
         Assert.IsEmpty(errors);
     }
@@ -92,7 +92,7 @@ public sealed class ValidatedRecordTests
 
         record.Validate();
 
-        List<string> errors = record.GetErrors("Name").Cast<string>().ToList();
+        List<string> errors = [.. record.GetErrors("Name").Cast<string>()];
         Assert.HasCount(1, errors);
         Assert.AreEqual("Name is required.", errors[0]);
     }

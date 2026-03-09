@@ -96,7 +96,7 @@ public sealed class ValidationResultAggregator
         return _entries.SelectMany(
                e =>
                {
-                   List<string> members = e.Result.MemberNames.ToList();
+                   List<string> members = [.. e.Result.MemberNames];
 
                    if(members.Count == 0)
                    {

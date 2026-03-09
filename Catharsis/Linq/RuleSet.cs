@@ -30,7 +30,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet(IEnumerable<Rule<T>> rules)
     {
         ArgumentNullException.ThrowIfNull(rules, nameof(rules));
-        _rules = rules.ToList();
+        _rules = [.. rules];
     }
     #endregion
 

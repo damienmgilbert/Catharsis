@@ -47,7 +47,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
 
     private void ClearAllErrors()
     {
-        string[] keys = _errors.Keys.ToArray();
+        string[] keys = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string key in keys)
@@ -97,7 +97,7 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
 
         foreach (ValidationResult result in results)
         {
-            List<string> members = result.MemberNames.ToList();
+            List<string> members = [.. result.MemberNames];
 
             if (members.Count == 0)
             {

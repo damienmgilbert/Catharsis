@@ -55,7 +55,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///</summary>
     protected void ClearAllErrors()
     {
-        List<string> propertyNames = _errors.Keys.ToList();
+        List<string> propertyNames = [.. _errors.Keys];
         _errors.Clear();
 
         foreach (string name in propertyNames)
@@ -121,7 +121,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
             return;
         }
 
-        List<string> errorList = errors.Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+        List<string> errorList = [.. errors.Where(e => !string.IsNullOrWhiteSpace(e))];
 
         if (errorList.Count == 0)
         {
