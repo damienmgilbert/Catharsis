@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<Version>0.0.1</Version>
+		<Description>A .NET library for building upon the .NET Standard Library and opinionated packages..</Description>
 		<TargetFramework>net11.0</TargetFramework>
+		<AssemblyName>Catharsis</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>preview</LangVersion>
 		<Nullable>enable</Nullable>
+		<Authors>Damien M Gilbert</Authors>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -12,11 +17,21 @@
 	  <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
 	  <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
-	  <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.3" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
+	  <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.5" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- Include must be the fully qualified .NET type name of the Attribute to create. -->
+		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+			<!-- _Parameter1, _Parameter2, etc. correspond to the
+        matching parameter of a constructor of that .NET attribute type -->
+			<_Parameter1>BuildDate</_Parameter1>
+			<_Parameter2>$(Date)</_Parameter2>
+		</AssemblyAttribute>
+	</ItemGroup>
+	
 	<ItemGroup>
 	  <InternalsVisibleTo Include="Catharsis.UnitTests" />
 	</ItemGroup>
