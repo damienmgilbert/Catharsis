@@ -15,7 +15,7 @@ public class FactoryMethodPattern
     ///<param name="obj">The source object passed to the factory.</param>
     ///<param name="factory">A delegate that produces a <typeparamref name="TResult"/> from the source.</param>
     ///<returns>The product created by <paramref name="factory"/>.</returns>
-    public TResult FactoryMethod<T, TResult>(T obj, Func<T, TResult> factory)
+    public static TResult FactoryMethod<T, TResult>(T obj, Func<T, TResult> factory)
     {
         if(factory is null)
         {

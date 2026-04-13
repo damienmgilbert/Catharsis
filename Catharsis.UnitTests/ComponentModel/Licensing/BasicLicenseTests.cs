@@ -12,7 +12,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void Constructor_DefaultOptionalParameters()
     {
-        BasicLicense license = new BasicLicense("KEY");
+        BasicLicense license = new("KEY");
 
         Assert.IsNull(license.Licensee);
         Assert.IsNull(license.ExpiresUtc);
@@ -23,8 +23,8 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        DateTime expiry = new DateTime(2030, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-        BasicLicense license = new BasicLicense("KEY-123", "Alice", expiry);
+        DateTime expiry = new(2030, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+        BasicLicense license = new("KEY-123", "Alice", expiry);
 
         Assert.AreEqual("KEY-123", license.LicenseKey);
         Assert.AreEqual("Alice", license.Licensee);
@@ -34,7 +34,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        BasicLicense license = new BasicLicense("KEY");
+        BasicLicense license = new("KEY");
 
         license.Dispose();
         license.Dispose();
@@ -43,7 +43,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsExpired_FutureExpiry_ReturnsFalse()
     {
-        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddYears(1));
+        BasicLicense license = new("KEY", expiresUtc: DateTime.UtcNow.AddYears(1));
 
         Assert.IsFalse(license.IsExpired);
     }
@@ -51,7 +51,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsExpired_NoExpiry_ReturnsFalse()
     {
-        BasicLicense license = new BasicLicense("KEY");
+        BasicLicense license = new("KEY");
 
         Assert.IsFalse(license.IsExpired);
     }
@@ -59,7 +59,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsExpired_PastExpiry_ReturnsTrue()
     {
-        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
+        BasicLicense license = new("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
 
         Assert.IsTrue(license.IsExpired);
     }
@@ -67,7 +67,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsValid_AfterDispose_ReturnsFalse()
     {
-        BasicLicense license = new BasicLicense("KEY");
+        BasicLicense license = new("KEY");
         license.Dispose();
 
         Assert.IsFalse(license.IsValid);
@@ -76,7 +76,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsValid_ExpiredLicense_ReturnsFalse()
     {
-        BasicLicense license = new BasicLicense("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
+        BasicLicense license = new("KEY", expiresUtc: DateTime.UtcNow.AddDays(-1));
 
         Assert.IsFalse(license.IsValid);
     }
@@ -84,7 +84,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void IsValid_NewPerpetualLicense_ReturnsTrue()
     {
-        BasicLicense license = new BasicLicense("KEY");
+        BasicLicense license = new("KEY");
 
         Assert.IsTrue(license.IsValid);
     }
@@ -92,7 +92,7 @@ public sealed class BasicLicenseTests
     [TestMethod]
     public void LicenseKey_ReturnsConstructorValue()
     {
-        BasicLicense license = new BasicLicense("MY-KEY-456");
+        BasicLicense license = new("MY-KEY-456");
 
         Assert.AreEqual("MY-KEY-456", license.LicenseKey);
     }

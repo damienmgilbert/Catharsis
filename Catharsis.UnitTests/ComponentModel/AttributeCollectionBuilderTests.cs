@@ -13,7 +13,7 @@ public class AttributeCollectionBuilderTests
     [TestMethod]
     public void Add_IncreasesCount()
     {
-        AttributeCollectionBuilder builder = new AttributeCollectionBuilder();
+        AttributeCollectionBuilder builder = new();
         builder.Add(new System.ComponentModel.DescriptionAttribute("test"));
         Assert.AreEqual(1, builder.Count);
     }
@@ -21,7 +21,7 @@ public class AttributeCollectionBuilderTests
     [TestMethod]
     public void Add_SameType_Replaces()
     {
-        AttributeCollectionBuilder builder = new AttributeCollectionBuilder();
+        AttributeCollectionBuilder builder = new();
         builder.Add(new System.ComponentModel.DescriptionAttribute("first"));
         builder.Add(new System.ComponentModel.DescriptionAttribute("second"));
         Assert.AreEqual(1, builder.Count);
@@ -30,7 +30,7 @@ public class AttributeCollectionBuilderTests
     [TestMethod]
     public void AddRange_AddsMultiple()
     {
-        AttributeCollectionBuilder builder = new AttributeCollectionBuilder();
+        AttributeCollectionBuilder builder = new();
         builder.AddRange([new System.ComponentModel.DescriptionAttribute("desc"), new CategoryAttribute("cat")]);
         Assert.AreEqual(2, builder.Count);
     }
@@ -38,7 +38,7 @@ public class AttributeCollectionBuilderTests
     [TestMethod]
     public void Build_ReturnsAttributeCollection()
     {
-        AttributeCollectionBuilder builder = new AttributeCollectionBuilder();
+        AttributeCollectionBuilder builder = new();
         builder.Add(new System.ComponentModel.DescriptionAttribute("hello"));
         AttributeCollection collection = builder.Build();
         Assert.IsNotNull(collection);
@@ -57,7 +57,7 @@ public class AttributeCollectionBuilderTests
     [TestMethod]
     public void Remove_ByType_RemovesAttribute()
     {
-        AttributeCollectionBuilder builder = new AttributeCollectionBuilder();
+        AttributeCollectionBuilder builder = new();
         builder.Add(new System.ComponentModel.DescriptionAttribute("test"));
         builder.Remove<System.ComponentModel.DescriptionAttribute>();
         Assert.AreEqual(0, builder.Count);

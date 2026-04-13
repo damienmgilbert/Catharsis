@@ -63,7 +63,7 @@ public sealed class ComponentGraphBuilder
     ///</exception>
     public ComponentGraph Build()
     {
-        ComponentGraph graph = new ComponentGraph();
+        ComponentGraph graph = new();
 
         foreach (ComponentGraphNode node in _nodes.Values)
         {

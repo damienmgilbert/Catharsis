@@ -12,7 +12,7 @@ public class MvvmPooledViewModelTests
     [TestMethod]
     public void ClearAllDataCommand_ClearsState()
     {
-        using MvvmPooledViewModel vm = new MvvmPooledViewModel();
+        using MvvmPooledViewModel vm = new();
         vm.ClearAllDataCommand.Execute(null);
         Assert.IsFalse(vm.HasData);
         Assert.AreEqual(string.Empty, vm.DisplayText);
@@ -21,7 +21,7 @@ public class MvvmPooledViewModelTests
     [TestMethod]
     public void Commands_AreNotNull()
     {
-        using MvvmPooledViewModel vm = new MvvmPooledViewModel();
+        using MvvmPooledViewModel vm = new();
         Assert.IsNotNull(vm.LoadSampleDataCommand);
         Assert.IsNotNull(vm.ClearAllDataCommand);
     }
@@ -29,14 +29,14 @@ public class MvvmPooledViewModelTests
     [TestMethod]
     public void DataBuffer_IsNotNull()
     {
-        using MvvmPooledViewModel vm = new MvvmPooledViewModel();
+        using MvvmPooledViewModel vm = new();
         Assert.IsNotNull(vm.DataBuffer);
     }
 
     [TestMethod]
     public async Task LoadAsync_LoadsDataIntoBuffer()
     {
-        using MvvmPooledViewModel vm = new MvvmPooledViewModel();
+        using MvvmPooledViewModel vm = new();
         await vm.LoadAsync();
         Assert.IsTrue(vm.HasData);
         Assert.AreEqual(1024, vm.DataSize);

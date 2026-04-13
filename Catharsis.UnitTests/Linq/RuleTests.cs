@@ -45,7 +45,7 @@ public class RuleTests
         Assert.IsFalse(rule.StopOnMatch);
         Assert.IsNull(rule.Description);
         Assert.IsNull(rule.OnMatch);
-        Assert.AreEqual(0, rule.Tags.Count);
+        Assert.IsEmpty(rule.Tags);
     }
 
     #endregion
@@ -70,9 +70,9 @@ public class RuleTests
         Assert.IsFalse(rule.IsEnabled);
         Assert.IsTrue(rule.StopOnMatch);
         Assert.AreEqual("A test rule", rule.Description);
-        Assert.AreEqual(2, rule.Tags.Count);
-        Assert.IsTrue(rule.Tags.Contains("validation"));
-        Assert.IsTrue(rule.Tags.Contains("security"));
+        Assert.HasCount(2, rule.Tags);
+        Assert.Contains("validation", rule.Tags);
+        Assert.Contains("security", rule.Tags);
     }
 
     #endregion
@@ -174,8 +174,8 @@ public class RuleTests
 
         Rule<int> combined = a.And(b);
 
-        Assert.IsTrue(combined.Tags.Contains("tag1"));
-        Assert.IsTrue(combined.Tags.Contains("tag2"));
+        Assert.Contains("tag1", combined.Tags);
+        Assert.Contains("tag2", combined.Tags);
     }
 
     [TestMethod]
@@ -260,7 +260,7 @@ public class RuleTests
         Rule<int> negated = rule.Negate();
 
         Assert.AreEqual(7, negated.Priority);
-        Assert.IsTrue(negated.Tags.Contains("tag1"));
+        Assert.Contains("tag1", negated.Tags);
     }
 
     #endregion

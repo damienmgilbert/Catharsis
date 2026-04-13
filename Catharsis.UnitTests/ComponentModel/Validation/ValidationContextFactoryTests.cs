@@ -13,9 +13,9 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void Constructor_WithItems_AttachesItems()
     {
-        Dictionary<object, object?> items = new Dictionary<object, object?> { ["key"] = "value" };
-        ValidationContextFactory factory = new ValidationContextFactory(items: items);
-        object instance = new object();
+        Dictionary<object, object?> items = new() { ["key"] = "value" };
+        ValidationContextFactory factory = new(items: items);
+        object instance = new();
 
         ValidationContext context = factory.CreateContext(instance);
 
@@ -25,9 +25,9 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void Constructor_WithServiceProvider_AttachesProvider()
     {
-        StubServiceProvider provider = new StubServiceProvider();
-        ValidationContextFactory factory = new ValidationContextFactory(serviceProvider: provider);
-        object instance = new object();
+        StubServiceProvider provider = new();
+        ValidationContextFactory factory = new(serviceProvider: provider);
+        object instance = new();
 
         ValidationContext context = factory.CreateContext(instance);
 
@@ -37,7 +37,7 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreateContext_NullInstance_ThrowsArgumentNullException()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
+        ValidationContextFactory factory = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateContext(null!));
     }
@@ -45,8 +45,8 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreateContext_ValidInstance_ReturnsContextForInstance()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
-        object instance = new object();
+        ValidationContextFactory factory = new();
+        object instance = new();
 
         ValidationContext context = factory.CreateContext(instance);
 
@@ -56,7 +56,7 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreatePropertyContext_NullInstance_ThrowsArgumentNullException()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
+        ValidationContextFactory factory = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreatePropertyContext(null!, "Name"));
     }
@@ -64,7 +64,7 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreatePropertyContext_NullMemberName_ThrowsArgumentNullException()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
+        ValidationContextFactory factory = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreatePropertyContext(new object(), null!));
     }
@@ -72,8 +72,8 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreatePropertyContext_SetsMemberName()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
-        object instance = new object();
+        ValidationContextFactory factory = new();
+        object instance = new();
 
         ValidationContext context = factory.CreatePropertyContext(instance, "Name");
 
@@ -83,7 +83,7 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreatePropertyContext_WithDisplayName_NullDisplayName_ThrowsArgumentNullException()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
+        ValidationContextFactory factory = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreatePropertyContext(new object(), "Name", null!));
     }
@@ -91,8 +91,8 @@ public sealed class ValidationContextFactoryTests
     [TestMethod]
     public void CreatePropertyContext_WithDisplayName_SetsDisplayName()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
-        object instance = new object();
+        ValidationContextFactory factory = new();
+        object instance = new();
 
         ValidationContext context = factory.CreatePropertyContext(instance, "Name", "Full Name");
 

@@ -15,7 +15,7 @@ public sealed class PropertyChangeScopeTests
     public void Dispose_CalledTwice_RaisesOnlyOnce()
     {
         int count = 0;
-        PropertyChangeScope scope = new PropertyChangeScope(_ => count++);
+        PropertyChangeScope scope = new(_ => count++);
         scope.RecordChange("Name");
 
         scope.Dispose();
@@ -27,8 +27,8 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void Dispose_RaisesNotificationsForPendingProperties()
     {
-        List<string> raised = new List<string>();
-        PropertyChangeScope scope = new PropertyChangeScope(name => raised.Add(name));
+        List<string> raised = [];
+        PropertyChangeScope scope = new(name => raised.Add(name));
         scope.RecordChange("Name");
         scope.RecordChange("Age");
 
@@ -42,7 +42,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void IsDisposed_AfterDispose_ReturnsTrue()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     static _ =>
         {
         });
@@ -54,7 +54,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void IsDisposed_InitiallyFalse()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     static _ =>
         {
         });
@@ -65,7 +65,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void PendingCount_AfterDispose_ReturnsZero()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     static _ =>
         {
         });
@@ -78,7 +78,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void RecordChange_AddsPropertyName()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     static _ =>
         {
         });
@@ -91,7 +91,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void RecordChange_AfterDispose_ThrowsObjectDisposedException()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     _ =>
         {
         });
@@ -103,7 +103,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void RecordChange_DuplicateProperty_NotCounted()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     static _ =>
         {
         });
@@ -117,7 +117,7 @@ public sealed class PropertyChangeScopeTests
     [TestMethod]
     public void RecordChange_NullPropertyName_ThrowsArgumentNullException()
     {
-        PropertyChangeScope scope = new PropertyChangeScope(
+        PropertyChangeScope scope = new(
                                     _ =>
         {
         });

@@ -12,7 +12,7 @@ public class SequenceScannerTests
     public void PairwiseIndexed_ReturnsIndexedPairs()
     {
         List<(int Index, int Previous, int Current)> result = new[] { 10, 20, 30 }.PairwiseIndexed().ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual((0, 10, 20), result[0]);
         Assert.AreEqual((1, 20, 30), result[1]);
     }
@@ -36,7 +36,7 @@ public class SequenceScannerTests
             .PairwiseWhere(static (prev, curr) => curr > prev)
             .ToList();
         // Pairs where current > previous: (1,5), (3,8)
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual((1, 5), result[0]);
         Assert.AreEqual((3, 8), result[1]);
     }
@@ -101,7 +101,7 @@ public class SequenceScannerTests
     public void Triplewise_ProducesOverlappingTriples()
     {
         List<(int, int, int)> result = new[] { 1, 2, 3, 4, 5 }.Triplewise().ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual((1, 2, 3), result[0]);
         Assert.AreEqual((2, 3, 4), result[1]);
         Assert.AreEqual((3, 4, 5), result[2]);

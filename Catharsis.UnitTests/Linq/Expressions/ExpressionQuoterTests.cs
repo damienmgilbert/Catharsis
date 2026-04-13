@@ -172,7 +172,7 @@ public class ExpressionQuoterTests
 
         IReadOnlyList<UnaryExpression> found = ExpressionQuoter.FindQuotedExpressions(tree);
 
-        Assert.AreEqual(1, found.Count);
+        Assert.HasCount(1, found);
     }
 
     [TestMethod]
@@ -182,7 +182,7 @@ public class ExpressionQuoterTests
 
         IReadOnlyList<UnaryExpression> found = ExpressionQuoter.FindQuotedExpressions(constant);
 
-        Assert.AreEqual(0, found.Count);
+        Assert.IsEmpty(found);
     }
 
     #endregion

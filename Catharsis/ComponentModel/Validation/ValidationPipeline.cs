@@ -73,7 +73,7 @@ public sealed class ValidationPipeline
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        ValidationResultAggregator aggregator = new ValidationResultAggregator();
+        ValidationResultAggregator aggregator = new();
 
         foreach(IValidationRule rule in _rules)
         {

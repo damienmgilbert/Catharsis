@@ -451,7 +451,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         CancellationToken? capturedConditionToken = null;
         CancellationToken? capturedActionToken = null;
@@ -486,7 +486,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? conditionReceivedToken = null;
         CancellationToken? actionReceivedToken = null;
         int actionExecutionCount = 0;
@@ -648,7 +648,7 @@ public class ControlFlowTests
     public async Task DoUntilAsync_WithCustomStruct_ReturnsOriginalValue()
     {
         // Arrange
-        TestStruct obj = new TestStruct { Value = 100 };
+        TestStruct obj = new() { Value = 100 };
         Func<TestStruct, CancellationToken, ValueTask<bool>> condition = static (x, ct) => ValueTask.FromResult(true);
         Func<TestStruct, CancellationToken, ValueTask> action = static (x, ct) => ValueTask.CompletedTask;
 
@@ -1069,7 +1069,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedInCondition = null;
         CancellationToken? receivedInAction = null;
         bool firstCall = true;
@@ -1316,7 +1316,7 @@ public class ControlFlowTests
     public async Task DoWhileAsync_WithStructType_HandlesMultipleIterations()
     {
         // Arrange
-        DateTime obj = new DateTime(2024, 1, 1);
+        DateTime obj = new(2024, 1, 1);
         int iterations = 0;
         Func<DateTime, CancellationToken, ValueTask<bool>> condition = (o, ct) =>
         {
@@ -1632,14 +1632,14 @@ public class ControlFlowTests
         // Arrange
         var obj = new { Id = 1, Name = "Test" };
         dynamic? receivedObj = null;
-        Func<object, CancellationToken, Task<bool>> condition = new Func<object, CancellationToken, Task<bool>>(
+        Func<object, CancellationToken, Task<bool>> condition = new(
                                                                 (o, _) =>
                                                                 {
                                                                     receivedObj = o;
                                                                     return Task.FromResult(true);
                                                                 });
         bool actionExecuted = false;
-        Func<object, CancellationToken, Task> action = new Func<object, CancellationToken, Task>(
+        Func<object, CancellationToken, Task> action = new(
                                                        (_, _) =>
                                                        {
                                                            actionExecuted = true;
@@ -1732,8 +1732,8 @@ public class ControlFlowTests
         // Arrange
         int obj = 42;
         bool actionExecuted = false;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(false));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(false));
+        Func<int, CancellationToken, Task> action = new(
                                                     (_, _) =>
                                                     {
                                                         actionExecuted = true;
@@ -1756,8 +1756,8 @@ public class ControlFlowTests
         // Arrange
         int obj = 42;
         bool actionExecuted = false;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(true));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(true));
+        Func<int, CancellationToken, Task> action = new(
                                                     (_, _) =>
                                                     {
                                                         actionExecuted = true;
@@ -1779,10 +1779,10 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedToken = default;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(true));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(true));
+        Func<int, CancellationToken, Task> action = new(
                                                     (_, ct) =>
                                                     {
                                                         receivedToken = ct;
@@ -1805,8 +1805,8 @@ public class ControlFlowTests
         // Arrange
         int obj = 42;
         int? receivedObj = null;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(true));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(true));
+        Func<int, CancellationToken, Task> action = new(
                                                     (o, _) =>
                                                     {
                                                         receivedObj = o;
@@ -1896,7 +1896,7 @@ public class ControlFlowTests
 
         // Assert
         Assert.IsTrue(actionExecuted);
-        Assert.AreEqual(default(CancellationToken), receivedToken);
+        Assert.AreEqual(default, receivedToken);
     }
 
     ///<summary>
@@ -1931,14 +1931,14 @@ public class ControlFlowTests
         // Arrange
         string? obj = null;
         string? receivedObj = "not null";
-        Func<string?, CancellationToken, Task<bool>> condition = new Func<string?, CancellationToken, Task<bool>>(
+        Func<string?, CancellationToken, Task<bool>> condition = new(
                                                                  (o, _) =>
                                                                  {
                                                                      receivedObj = o;
                                                                      return Task.FromResult(true);
                                                                  });
         bool actionExecuted = false;
-        Func<string?, CancellationToken, Task> action = new Func<string?, CancellationToken, Task>(
+        Func<string?, CancellationToken, Task> action = new(
                                                         (_, _) =>
                                                         {
                                                             actionExecuted = true;
@@ -2035,14 +2035,14 @@ public class ControlFlowTests
         // Arrange
         string? obj = "test";
         string? receivedObj = null;
-        Func<string?, CancellationToken, Task<bool>> condition = new Func<string?, CancellationToken, Task<bool>>(
+        Func<string?, CancellationToken, Task<bool>> condition = new(
                                                                  (o, _) =>
                                                                  {
                                                                      receivedObj = o;
                                                                      return Task.FromResult(true);
                                                                  });
         bool actionExecuted = false;
-        Func<string?, CancellationToken, Task> action = new Func<string?, CancellationToken, Task>(
+        Func<string?, CancellationToken, Task> action = new(
                                                         (_, _) =>
                                                         {
                                                             actionExecuted = true;
@@ -2065,15 +2065,15 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedToken = default;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>(
+        Func<int, CancellationToken, Task<bool>> condition = new(
                                                              (_, ct) =>
                                                              {
                                                                  receivedToken = ct;
                                                                  return Task.FromResult(false);
                                                              });
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>((_, _) => Task.CompletedTask);
+        Func<int, CancellationToken, Task> action = new((_, _) => Task.CompletedTask);
 
         // Act
         await obj.IfAsync(condition, action, cts.Token);
@@ -2091,13 +2091,13 @@ public class ControlFlowTests
         // Arrange
         int obj = 42;
         int? receivedObj = null;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>(
+        Func<int, CancellationToken, Task<bool>> condition = new(
                                                              (o, _) =>
                                                              {
                                                                  receivedObj = o;
                                                                  return Task.FromResult(false);
                                                              });
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>((_, _) => Task.CompletedTask);
+        Func<int, CancellationToken, Task> action = new((_, _) => Task.CompletedTask);
 
         // Act
         await obj.IfAsync(condition, action);
@@ -2144,8 +2144,8 @@ public class ControlFlowTests
     {
         // Arrange
         bool actionExecuted = false;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(false));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(false));
+        Func<int, CancellationToken, Task> action = new(
                                                     (_, _) =>
                                                     {
                                                         actionExecuted = true;
@@ -2170,8 +2170,8 @@ public class ControlFlowTests
     {
         // Arrange
         bool actionExecuted = false;
-        Func<int, CancellationToken, Task<bool>> condition = new Func<int, CancellationToken, Task<bool>>((_, _) => Task.FromResult(true));
-        Func<int, CancellationToken, Task> action = new Func<int, CancellationToken, Task>(
+        Func<int, CancellationToken, Task<bool>> condition = new((_, _) => Task.FromResult(true));
+        Func<int, CancellationToken, Task> action = new(
                                                     (_, _) =>
                                                     {
                                                         actionExecuted = true;
@@ -2451,7 +2451,7 @@ public class ControlFlowTests
     public void IfElse_VeryLongString_CallsIfActionCorrectly()
     {
         // Arrange
-        string testObject = new string('a', 10000);
+        string testObject = new('a', 10000);
         int conditionCallCount = 0;
         Func<string, bool> condition = x =>
         {
@@ -2522,7 +2522,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        List<string> executionOrder = new System.Collections.Generic.List<string>();
+        List<string> executionOrder = [];
 
         Func<int, CancellationToken, Task<bool>> condition = async (_, _) =>
         {
@@ -2559,7 +2559,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        List<string> executionOrder = new System.Collections.Generic.List<string>();
+        List<string> executionOrder = [];
 
         Func<int, CancellationToken, Task<bool>> condition = async (_, _) =>
         {
@@ -2882,7 +2882,7 @@ public class ControlFlowTests
         await obj.IfElseAsync(condition, ifAction, elseAction);
 
         // Assert
-        Assert.AreEqual(default(CancellationToken), receivedToken);
+        Assert.AreEqual(default, receivedToken);
     }
 
     ///<summary>
@@ -3028,7 +3028,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedToken = null;
 
         Func<int, CancellationToken, Task<bool>> condition = (_, ct) =>
@@ -3054,7 +3054,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedToken = default;
         Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) =>
         {
@@ -3080,7 +3080,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedToken = null;
 
         Func<int, CancellationToken, Task<bool>> condition = (_, _) => Task.FromResult(false);
@@ -3106,7 +3106,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedToken = default;
         Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(false);
         Func<int, CancellationToken, ValueTask> ifAction = (o, ct) => ValueTask.CompletedTask;
@@ -3132,7 +3132,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedToken = null;
 
         Func<int, CancellationToken, Task<bool>> condition = (_, _) => Task.FromResult(true);
@@ -3158,7 +3158,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedToken = default;
         Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) => ValueTask.FromResult(true);
         Func<int, CancellationToken, ValueTask> ifAction = (o, ct) =>
@@ -3689,7 +3689,7 @@ public class ControlFlowTests
     public async Task IfNotAsync_CustomReferenceType_WorksCorrectly()
     {
         // Arrange
-        TestHelper obj = new TestHelper { Value = 100 };
+        TestHelper obj = new() { Value = 100 };
         int conditionCallCount = 0;
         Func<TestHelper, CancellationToken, Task<bool>> condition = (x, ct) =>
         {
@@ -3744,7 +3744,7 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test-action";
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         string? capturedObj = null;
         CancellationToken? capturedToken = null;
@@ -3772,7 +3772,7 @@ public class ControlFlowTests
     {
         // Arrange
         string obj = "test-object";
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         string? capturedObj = null;
         CancellationToken? capturedToken = null;
@@ -3943,7 +3943,7 @@ public class ControlFlowTests
 
         // Assert
         Assert.IsTrue(tokenChecked);
-        Assert.AreEqual(default(CancellationToken), passedToken);
+        Assert.AreEqual(default, passedToken);
     }
 
     ///<summary>
@@ -3954,7 +3954,7 @@ public class ControlFlowTests
     {
         // Arrange
         int testObject = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken passedToken = default;
         Func<int, CancellationToken, ValueTask<bool>> condition = (obj, ct) => new ValueTask<bool>(false);
         Func<int, CancellationToken, ValueTask> action = (obj, ct) =>
@@ -3978,7 +3978,7 @@ public class ControlFlowTests
     {
         // Arrange
         int testObject = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken passedToken = default;
         Func<int, CancellationToken, ValueTask<bool>> condition = (obj, ct) =>
         {
@@ -4732,7 +4732,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? passedToken = null;
         Func<int, CancellationToken, Task<bool>> condition = (x, ct) => Task.FromResult(true);
         Func<int, CancellationToken, Task<int>> action = (x, ct) =>
@@ -4757,7 +4757,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? passedToken = null;
         Func<int, CancellationToken, Task<bool>> condition = (x, ct) =>
         {
@@ -4977,7 +4977,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? conditionReceivedToken = null;
         CancellationToken? actionReceivedToken = null;
         Func<int, CancellationToken, ValueTask<bool>> condition = (o, ct) =>
@@ -5826,7 +5826,7 @@ public class ControlFlowTests
         int obj = 5;
         CancellationToken conditionToken = default;
         CancellationToken actionToken = default;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
 
         Func<int, CancellationToken, ValueTask<bool>> condition = (x, ct) =>
         {
@@ -5856,7 +5856,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 50;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken receivedInCondition = default;
         CancellationToken receivedInAction = default;
 
@@ -6458,8 +6458,8 @@ public class ControlFlowTests
     public void ReturnIfNot_ReferenceType_ReturnsActionResultWhenConditionFalse()
     {
         // Arrange
-        object input = new object();
-        object expected = new object();
+        object input = new();
+        object expected = new();
 
         // Act
         object result = input.ReturnIfNot(x => x == null, x => expected);
@@ -6476,7 +6476,7 @@ public class ControlFlowTests
     public void ReturnIfNot_ReferenceType_ReturnsSameReferenceWhenConditionTrue()
     {
         // Arrange
-        object input = new object();
+        object input = new();
 
         // Act
         object result = input.ReturnIfNot(static x => x != null, static x => new object());
@@ -6779,7 +6779,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         int? receivedObj = null;
         CancellationToken? receivedToken = null;
 
@@ -6808,7 +6808,7 @@ public class ControlFlowTests
     {
         // Arrange
         int obj = 42;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         int? receivedObj = null;
         CancellationToken? receivedToken = null;
 
@@ -7037,8 +7037,8 @@ public class ControlFlowTests
     public void ReturnIfNull_NonNullArray_ReturnsOriginalArray()
     {
         // Arrange
-        int[] obj = new[] { 1, 2, 3 };
-        Func<int[]> action = static () => new[] { 4, 5, 6 };
+        int[] obj = [1, 2, 3];
+        Func<int[]> action = static () => [4, 5, 6];
 
         // Act
         int[] result = obj.ReturnIfNull(action);
@@ -7079,7 +7079,7 @@ public class ControlFlowTests
     {
         // Arrange
         int[]? obj = null;
-        int[] replacement = new[] { 4, 5, 6 };
+        int[] replacement = [4, 5, 6];
         Func<int[]> action = () => replacement;
 
         // Act
@@ -7261,7 +7261,7 @@ public class ControlFlowTests
 
         // Assert
         Assert.IsTrue(receivedToken.HasValue);
-        Assert.AreEqual(default(CancellationToken), receivedToken.Value);
+        Assert.AreEqual(default, receivedToken.Value);
     }
 
     ///<summary>
@@ -7286,7 +7286,7 @@ public class ControlFlowTests
         // Assert
         Assert.AreEqual("result", result);
         Assert.IsNotNull(receivedToken);
-        Assert.AreEqual(default(CancellationToken), receivedToken.Value);
+        Assert.AreEqual(default, receivedToken.Value);
     }
 
     ///<summary>
@@ -7342,7 +7342,7 @@ public class ControlFlowTests
     {
         // Arrange
         string? testObject = null;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedToken = null;
         Func<CancellationToken, Task<string?>> action = ct =>
         {
@@ -7367,7 +7367,7 @@ public class ControlFlowTests
     {
         // Arrange
         object? obj = null;
-        object replacement = new object();
+        object replacement = new();
         Func<CancellationToken, ValueTask<object?>> action = ct => ValueTask.FromResult<object?>(replacement);
 
         // Act
@@ -7411,7 +7411,7 @@ public class ControlFlowTests
     {
         // Arrange
         string? obj = null;
-        CancellationTokenSource cts = new CancellationTokenSource();
+        CancellationTokenSource cts = new();
         CancellationToken? receivedToken = null;
         Func<CancellationToken, ValueTask<string?>> action = ct =>
         {

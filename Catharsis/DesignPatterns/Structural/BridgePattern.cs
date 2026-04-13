@@ -17,7 +17,7 @@ public class BridgePattern
     ///<param name="implementation">The implementation to bridge to.</param>
     ///<param name="operation">A delegate that combines the abstraction with its implementation.</param>
     ///<returns>The result of applying the bridged operation.</returns>
-    public TResult Bridge<T, TImpl, TResult>(T obj, TImpl implementation, Func<T, TImpl, TResult> operation)
+    public static TResult Bridge<T, TImpl, TResult>(T obj, TImpl implementation, Func<T, TImpl, TResult> operation)
     {
         if(operation is null)
         {

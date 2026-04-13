@@ -86,7 +86,7 @@ public class PartitionBuilderTests
 
         List<IGrouping<string, int>> groups = builder.ApplyAsGroupings([1, 2, 3]).ToList();
 
-        Assert.IsTrue(groups.Count >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, groups.Count);
     }
 
     [TestMethod]

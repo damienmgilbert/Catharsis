@@ -117,7 +117,7 @@ public sealed class ComponentModelBinder : IDisposable
         PropertyDescriptor sourceDescriptor = GetPropertyDescriptor(source, sourceProperty);
         PropertyDescriptor targetDescriptor = GetPropertyDescriptor(target, targetProperty);
 
-        BindingEntry entry = new BindingEntry(source, sourceDescriptor, target, targetDescriptor, isTwoWay: true);
+        BindingEntry entry = new(source, sourceDescriptor, target, targetDescriptor, isTwoWay: true);
 
         source.PropertyChanged += entry.OnSourceChanged;
         target.PropertyChanged += entry.OnTargetChanged;
@@ -155,7 +155,7 @@ public sealed class ComponentModelBinder : IDisposable
         PropertyDescriptor sourceDescriptor = GetPropertyDescriptor(source, sourceProperty);
         PropertyDescriptor targetDescriptor = GetPropertyDescriptor(target, targetProperty);
 
-        BindingEntry entry = new BindingEntry(source, sourceDescriptor, target, targetDescriptor, isTwoWay: false);
+        BindingEntry entry = new(source, sourceDescriptor, target, targetDescriptor, isTwoWay: false);
 
         source.PropertyChanged += entry.OnSourceChanged;
 

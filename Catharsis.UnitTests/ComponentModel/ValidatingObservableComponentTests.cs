@@ -12,7 +12,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void BeginEdit_CalledTwice_IgnoresSecond()
     {
-        using TestComponent c = new TestComponent { Name = "Alice" };
+        using TestComponent c = new() { Name = "Alice" };
         c.BeginEdit();
         c.Name = "Bob";
         c.BeginEdit(); // should not re-snapshot
@@ -24,7 +24,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void BeginEdit_CancelEdit_RevertsValues()
     {
-        using TestComponent c = new TestComponent { Name = "Alice", Age = 30 };
+        using TestComponent c = new() { Name = "Alice", Age = 30 };
         c.BeginEdit();
         Assert.IsTrue(c.IsEditing);
 
@@ -40,7 +40,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void BeginEdit_EndEdit_CommitsValues()
     {
-        using TestComponent c = new TestComponent { Name = "Alice", Age = 30 };
+        using TestComponent c = new() { Name = "Alice", Age = 30 };
         c.BeginEdit();
         c.Name = "Bob";
         c.EndEdit();
@@ -52,7 +52,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void CurrentErrors_ReturnsReadOnlyDictionary()
     {
-        using TestComponent c = new TestComponent { Age = 200 };
+        using TestComponent c = new() { Age = 200 };
         c.ValidateAllProperties();
 
         IReadOnlyDictionary<string, IReadOnlyList<string>> dict = c.CurrentErrors;
@@ -63,7 +63,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void GetErrors_NullOrEmpty_ReturnsAll()
     {
-        using TestComponent c = new TestComponent { Age = 200 };
+        using TestComponent c = new() { Age = 200 };
         c.ValidateAllProperties();
 
         List<string> all = [.. c.GetErrors(null).Cast<string>()];
@@ -74,7 +74,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void GetErrors_UnknownProperty_ReturnsEmpty()
     {
-        using TestComponent c = new TestComponent();
+        using TestComponent c = new();
 
         List<string> errors = [.. c.GetErrors("Unknown").Cast<string>()];
 
@@ -84,7 +84,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void Initial_State_NoErrors()
     {
-        using TestComponent c = new TestComponent();
+        using TestComponent c = new();
 
         Assert.IsFalse(c.HasErrors);
         Assert.IsFalse(c.IsEditing);
@@ -93,7 +93,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void SetPropertyValidated_InvalidValue_HasErrors()
     {
-        using TestComponent c = new TestComponent();
+        using TestComponent c = new();
         c.Name = "Alice";
 
         c.Name = null;
@@ -107,7 +107,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void SetPropertyValidated_RaisesErrorsChanged()
     {
-        using TestComponent c = new TestComponent();
+        using TestComponent c = new();
         c.Name = "Alice";
         bool raised = false;
         c.ErrorsChanged += (s, e) => raised = true;
@@ -120,7 +120,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void SetPropertyValidated_SameValue_ReturnsFalse()
     {
-        using TestComponent c = new TestComponent { Name = "Alice" };
+        using TestComponent c = new() { Name = "Alice" };
 
         bool changed = false;
         c.PropertyChanged += (s, e) => changed = true;
@@ -135,7 +135,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void SetPropertyValidated_ValidValue_NoErrors()
     {
-        using TestComponent c = new TestComponent();
+        using TestComponent c = new();
 
         c.Name = "Alice";
 
@@ -145,7 +145,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void ValidateAllProperties_Invalid_ReturnsFalse()
     {
-        using TestComponent c = new TestComponent { Age = 200 };
+        using TestComponent c = new() { Age = 200 };
 
         Assert.IsFalse(c.ValidateAllProperties());
         Assert.IsTrue(c.HasErrors);
@@ -154,7 +154,7 @@ public sealed class ValidatingObservableComponentTests
     [TestMethod]
     public void ValidateAllProperties_Valid_ReturnsTrue()
     {
-        using TestComponent c = new TestComponent { Name = "Alice", Age = 30 };
+        using TestComponent c = new() { Name = "Alice", Age = 30 };
 
         Assert.IsTrue(c.ValidateAllProperties());
         Assert.IsFalse(c.HasErrors);

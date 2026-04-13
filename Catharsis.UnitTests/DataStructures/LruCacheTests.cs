@@ -12,7 +12,7 @@ public class LruCacheTests
     [TestMethod]
     public void AddOrUpdate_EvictsLRU()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(2);
+        LruCache<string, int> cache = new(2);
         cache.AddOrUpdate("a", 1);
         cache.AddOrUpdate("b", 2);
         cache.AddOrUpdate("c", 3);
@@ -24,7 +24,7 @@ public class LruCacheTests
     [TestMethod]
     public void AddOrUpdate_StoresValue()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(3);
+        LruCache<string, int> cache = new(3);
         cache.AddOrUpdate("a", 1);
         Assert.IsTrue(cache.TryGetValue("a", out int val));
         Assert.AreEqual(1, val);
@@ -33,7 +33,7 @@ public class LruCacheTests
     [TestMethod]
     public void Clear_RemovesAll()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(3);
+        LruCache<string, int> cache = new(3);
         cache.AddOrUpdate("a", 1);
         cache.Clear();
         Assert.IsEmpty(cache);
@@ -46,14 +46,14 @@ public class LruCacheTests
     [TestMethod]
     public void Indexer_Get_ThrowsWhenNotFound()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(2);
+        LruCache<string, int> cache = new(2);
         Assert.ThrowsExactly<KeyNotFoundException>(() => _ = cache["missing"]);
     }
 
     [TestMethod]
     public void Indexer_Set_BehavesLikeAddOrUpdate()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(2);
+        LruCache<string, int> cache = new(2);
         cache["key"] = 42;
         Assert.AreEqual(42, cache["key"]);
     }
@@ -61,7 +61,7 @@ public class LruCacheTests
     [TestMethod]
     public void Remove_ExistingKey_ReturnsTrue()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(3);
+        LruCache<string, int> cache = new(3);
         cache.AddOrUpdate("a", 1);
         Assert.IsTrue(cache.Remove("a"));
         Assert.IsEmpty(cache);
@@ -70,7 +70,7 @@ public class LruCacheTests
     [TestMethod]
     public void TryGetValue_PromotesToMRU()
     {
-        LruCache<string, int> cache = new LruCache<string, int>(2);
+        LruCache<string, int> cache = new(2);
         cache.AddOrUpdate("a", 1);
         cache.AddOrUpdate("b", 2);
         cache.TryGetValue("a", out _); // promotes "a"

@@ -89,7 +89,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new List<T>(Math.Min(count, source.Count));
+        List<T> result = new(Math.Min(count, source.Count));
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -120,7 +120,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<TElement> result = new List<TElement>(Math.Min(count, source.Count));
+        List<TElement> result = new(Math.Min(count, source.Count));
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -267,7 +267,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new List<T>(Math.Min(count, source.Count));
+        List<T> result = new(Math.Min(count, source.Count));
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Pop());

@@ -12,7 +12,7 @@ public class FileNameAttributeTests
     #region Private methods
     static ValidationContext CreateContext(object? value, string memberName)
     {
-        TestModel model = new TestModel { Name = value as string };
+        TestModel model = new() { Name = value as string };
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -21,7 +21,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void AllowedExtension_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new FileNameAttribute { AllowedExtensions = [ ".txt", ".csv" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [ ".txt", ".csv" ] };
         ValidationContext context = CreateContext("data.csv", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("data.csv", context);
@@ -32,7 +32,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void AllowedExtensionCaseInsensitive_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new FileNameAttribute { AllowedExtensions = [ ".TXT" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [ ".TXT" ] };
         ValidationContext context = CreateContext("readme.txt", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("readme.txt", context);
@@ -43,7 +43,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void DisallowedExtension_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute { AllowedExtensions = [ ".txt", ".csv" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [ ".txt", ".csv" ] };
         ValidationContext context = CreateContext("image.png", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("image.png", context);
@@ -55,7 +55,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void EmptyString_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext(string.Empty, nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult(string.Empty, context);
@@ -66,7 +66,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void ExceedsMaxLength_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute { MaxLength = 10 };
+        FileNameAttribute attribute = new() { MaxLength = 10 };
         ValidationContext context = CreateContext("verylongfilename.txt", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("verylongfilename.txt", context);
@@ -78,7 +78,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void FileNameWithInvalidChars_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext("file<name>.txt", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("file<name>.txt", context);
@@ -90,7 +90,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void NonStringValue_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext(42, nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult(42, context);
@@ -102,7 +102,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void NullValue_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext(null, nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
@@ -113,7 +113,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void ValidFileName_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext("report.pdf", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("report.pdf", context);
@@ -124,7 +124,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void WhitespaceOnly_ReturnsFailure()
     {
-        FileNameAttribute attribute = new FileNameAttribute();
+        FileNameAttribute attribute = new();
         ValidationContext context = CreateContext("   ", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("   ", context);
@@ -135,7 +135,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void WithinMaxLength_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new FileNameAttribute { MaxLength = 20 };
+        FileNameAttribute attribute = new() { MaxLength = 20 };
         ValidationContext context = CreateContext("short.txt", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("short.txt", context);

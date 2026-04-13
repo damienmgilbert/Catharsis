@@ -18,11 +18,11 @@ public sealed class ComponentSiteTests
     public void ComponentSite_MinimalParameters_UsesDefaults()
     {
         // Arrange
-        StubContainer container = new StubContainer();
-        StubComponent component = new StubComponent();
+        StubContainer container = new();
+        StubComponent component = new();
 
         // Act
-        ComponentSite site = new ComponentSite(container, component);
+        ComponentSite site = new(container, component);
 
         // Assert
         Assert.AreSame(container, site.Container);
@@ -38,7 +38,7 @@ public sealed class ComponentSiteTests
     public void ComponentSite_NameProperty_CanBeSet()
     {
         // Arrange
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent(), "InitialName");
+        ComponentSite site = new(new StubContainer(), new StubComponent(), "InitialName");
         string newName = "UpdatedName";
 
         // Act
@@ -55,10 +55,11 @@ public sealed class ComponentSiteTests
     public void ComponentSite_NameProperty_CanBeSetToNull()
     {
         // Arrange
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent(), "InitialName");
-
-        // Act
-        site.Name = null;
+        ComponentSite site = new(new StubContainer(), new StubComponent(), "InitialName")
+        {
+            // Act
+            Name = null
+        };
 
         // Assert
         Assert.IsNull(site.Name, "Name property should be settable to null.");
@@ -82,12 +83,12 @@ public sealed class ComponentSiteTests
     public void ComponentSite_ValidParameters_InitializesPropertiesCorrectly(string? name, bool designMode, bool hasServiceProvider)
     {
         // Arrange
-        StubContainer container = new StubContainer();
-        StubComponent component = new StubComponent();
+        StubContainer container = new();
+        StubComponent component = new();
         StubServiceProvider? serviceProvider = hasServiceProvider ? (new StubServiceProvider()) : null;
 
         // Act
-        ComponentSite site = new ComponentSite(container, component, name, designMode, serviceProvider);
+        ComponentSite site = new(container, component, name, designMode, serviceProvider);
 
         // Assert
         Assert.AreSame(container, site.Container, "Container property should return the provided container.");
@@ -103,12 +104,12 @@ public sealed class ComponentSiteTests
     public void ComponentSite_VeryLongName_InitializesNameCorrectly()
     {
         // Arrange
-        StubContainer container = new StubContainer();
-        StubComponent component = new StubComponent();
-        string veryLongName = new string('A', 10000);
+        StubContainer container = new();
+        StubComponent component = new();
+        string veryLongName = new('A', 10000);
 
         // Act
-        ComponentSite site = new ComponentSite(container, component, veryLongName);
+        ComponentSite site = new(container, component, veryLongName);
 
         // Assert
         Assert.AreEqual(veryLongName, site.Name, "Name property should handle very long strings.");
@@ -121,9 +122,9 @@ public sealed class ComponentSiteTests
     public void GetService_BothServiceProviderAndContainerReturnNull_ReturnsNull()
     {
         // Arrange
-        StubContainerWithServiceProvider stubContainerWithServices = new StubContainerWithServiceProvider();
-        StubServiceProvider stubServiceProvider = new StubServiceProvider();
-        ComponentSite site = new ComponentSite(stubContainerWithServices, new StubComponent(), null, false, stubServiceProvider);
+        StubContainerWithServiceProvider stubContainerWithServices = new();
+        StubServiceProvider stubServiceProvider = new();
+        ComponentSite site = new(stubContainerWithServices, new StubComponent(), null, false, stubServiceProvider);
 
         // Act
         object? result = site.GetService(typeof(string));
@@ -139,7 +140,7 @@ public sealed class ComponentSiteTests
     public void GetService_NoServiceProviderAndContainerNotServiceProvider_ReturnsNull()
     {
         // Arrange
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent());
+        ComponentSite site = new(new StubContainer(), new StubComponent());
 
         // Act
         object? result = site.GetService(typeof(string));
@@ -155,10 +156,10 @@ public sealed class ComponentSiteTests
     public void GetService_NoServiceProviderButContainerIsServiceProvider_ReturnsServiceFromContainer()
     {
         // Arrange
-        object expectedService = new object();
-        StubContainerWithServiceProvider stubContainerWithServices = new StubContainerWithServiceProvider();
+        object expectedService = new();
+        StubContainerWithServiceProvider stubContainerWithServices = new();
         stubContainerWithServices.Services[typeof(string)] = expectedService;
-        ComponentSite site = new ComponentSite(stubContainerWithServices, new StubComponent());
+        ComponentSite site = new(stubContainerWithServices, new StubComponent());
 
         // Act
         object? result = site.GetService(typeof(string));
@@ -175,7 +176,7 @@ public sealed class ComponentSiteTests
     public void GetService_NullServiceType_ThrowsArgumentNullException()
     {
         // Arrange
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent());
+        ComponentSite site = new(new StubContainer(), new StubComponent());
 
         // Act & Assert
         Assert.ThrowsExactly<ArgumentNullException>(() => site.GetService(null!));
@@ -188,8 +189,8 @@ public sealed class ComponentSiteTests
     public void GetService_RequestIComponent_ReturnsComponent()
     {
         // Arrange
-        StubComponent stubComponent = new StubComponent();
-        ComponentSite site = new ComponentSite(new StubContainer(), stubComponent);
+        StubComponent stubComponent = new();
+        ComponentSite site = new(new StubContainer(), stubComponent);
 
         // Act
         object? result = site.GetService(typeof(IComponent));
@@ -206,8 +207,8 @@ public sealed class ComponentSiteTests
     public void GetService_RequestIContainer_ReturnsContainer()
     {
         // Arrange
-        StubContainer stubContainer = new StubContainer();
-        ComponentSite site = new ComponentSite(stubContainer, new StubComponent());
+        StubContainer stubContainer = new();
+        ComponentSite site = new(stubContainer, new StubComponent());
 
         // Act
         object? result = site.GetService(typeof(IContainer));
@@ -224,7 +225,7 @@ public sealed class ComponentSiteTests
     public void GetService_RequestISite_ReturnsSiteInstance()
     {
         // Arrange
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent());
+        ComponentSite site = new(new StubContainer(), new StubComponent());
 
         // Act
         object? result = site.GetService(typeof(ISite));
@@ -241,10 +242,10 @@ public sealed class ComponentSiteTests
     public void GetService_ServiceAvailableFromServiceProvider_ReturnsService()
     {
         // Arrange
-        object expectedService = new object();
-        StubServiceProvider stubServiceProvider = new StubServiceProvider();
+        object expectedService = new();
+        StubServiceProvider stubServiceProvider = new();
         stubServiceProvider.Services[typeof(string)] = expectedService;
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent(), null, false, stubServiceProvider);
+        ComponentSite site = new(new StubContainer(), new StubComponent(), null, false, stubServiceProvider);
 
         // Act
         object? result = site.GetService(typeof(string));
@@ -261,8 +262,8 @@ public sealed class ComponentSiteTests
     public void GetService_ServiceProviderReturnsNullAndContainerNotServiceProvider_ReturnsNull()
     {
         // Arrange
-        StubServiceProvider stubServiceProvider = new StubServiceProvider();
-        ComponentSite site = new ComponentSite(new StubContainer(), new StubComponent(), null, false, stubServiceProvider);
+        StubServiceProvider stubServiceProvider = new();
+        ComponentSite site = new(new StubContainer(), new StubComponent(), null, false, stubServiceProvider);
 
         // Act
         object? result = site.GetService(typeof(string));
@@ -278,11 +279,11 @@ public sealed class ComponentSiteTests
     public void GetService_ServiceProviderReturnsNullButContainerIsServiceProvider_ReturnsServiceFromContainer()
     {
         // Arrange
-        object expectedService = new object();
-        StubContainerWithServiceProvider stubContainerWithServices = new StubContainerWithServiceProvider();
+        object expectedService = new();
+        StubContainerWithServiceProvider stubContainerWithServices = new();
         stubContainerWithServices.Services[typeof(string)] = expectedService;
-        StubServiceProvider stubServiceProvider = new StubServiceProvider();
-        ComponentSite site = new ComponentSite(stubContainerWithServices, new StubComponent(), null, false, stubServiceProvider);
+        StubServiceProvider stubServiceProvider = new();
+        ComponentSite site = new(stubContainerWithServices, new StubComponent(), null, false, stubServiceProvider);
 
         // Act
         object? result = site.GetService(typeof(string));

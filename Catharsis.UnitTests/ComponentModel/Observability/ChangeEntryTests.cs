@@ -11,8 +11,8 @@ public sealed class ChangeEntryTests
     [TestMethod]
     public void Constructor_ExplicitTimestamp_UsesProvided()
     {
-        DateTime ts = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        ChangeEntry entry = new ChangeEntry("X", null, null, ts);
+        DateTime ts = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        ChangeEntry entry = new("X", null, null, ts);
 
         Assert.AreEqual(ts, entry.Timestamp);
     }
@@ -21,7 +21,7 @@ public sealed class ChangeEntryTests
     public void Constructor_NullTimestamp_DefaultsToUtcNow()
     {
         DateTime before = DateTime.UtcNow;
-        ChangeEntry entry = new ChangeEntry("Prop", "a", "b");
+        ChangeEntry entry = new("Prop", "a", "b");
         DateTime after = DateTime.UtcNow;
 
         Assert.IsTrue((entry.Timestamp >= before) && (entry.Timestamp <= after));
@@ -30,7 +30,7 @@ public sealed class ChangeEntryTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        ChangeEntry entry = new ChangeEntry("Name", "old", "new");
+        ChangeEntry entry = new("Name", "old", "new");
 
         Assert.AreEqual("Name", entry.PropertyName);
         Assert.AreEqual("old", entry.OldValue);
@@ -41,10 +41,10 @@ public sealed class ChangeEntryTests
     [TestMethod]
     public void Equality_SamePropertyNameAndValues_DifferentTimestamp_AreNotEqual()
     {
-        DateTime ts1 = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime ts2 = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        ChangeEntry a = new ChangeEntry("P", "old", "new", ts1);
-        ChangeEntry b = new ChangeEntry("P", "old", "new", ts2);
+        DateTime ts1 = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime ts2 = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        ChangeEntry a = new("P", "old", "new", ts1);
+        ChangeEntry b = new("P", "old", "new", ts2);
 
         Assert.AreNotEqual(a, b);
     }
@@ -52,7 +52,7 @@ public sealed class ChangeEntryTests
     [TestMethod]
     public void ToString_ContainsPropertyNameAndValues()
     {
-        ChangeEntry entry = new ChangeEntry("Name", "old", "new");
+        ChangeEntry entry = new("Name", "old", "new");
         string result = entry.ToString();
 
         Assert.Contains("Name", result);

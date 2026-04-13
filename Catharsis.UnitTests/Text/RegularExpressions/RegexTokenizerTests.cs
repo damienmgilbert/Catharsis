@@ -15,7 +15,7 @@ public class RegexTokenizerTests
         RegexTokenizer tokenizer = new(@"\d+");
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("abc123def456");
 
-        Assert.AreEqual(2, tokens.Count);
+        Assert.HasCount(2, tokens);
         Assert.AreEqual("123", tokens[0].Value);
         Assert.AreEqual(3, tokens[0].Index);
         Assert.AreEqual(3, tokens[0].Length);
@@ -28,7 +28,7 @@ public class RegexTokenizerTests
     {
         RegexTokenizer tokenizer = new(@"\d+");
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("no digits here");
-        Assert.AreEqual(0, tokens.Count);
+        Assert.IsEmpty(tokens);
     }
 
     [TestMethod]
@@ -57,7 +57,7 @@ public class RegexTokenizerTests
         RegexTokenizer tokenizer = new(pattern);
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("hello world");
 
-        Assert.AreEqual(2, tokens.Count);
+        Assert.HasCount(2, tokens);
         Assert.AreEqual("hello", tokens[0].Value);
         Assert.AreEqual("world", tokens[1].Value);
     }
@@ -98,7 +98,7 @@ public class RegexTokenizerTests
         RegexTokenizer tokenizer = new(@"[a-z]+", RegexOptions.IgnoreCase);
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("ABC def");
 
-        Assert.AreEqual(2, tokens.Count);
+        Assert.HasCount(2, tokens);
         Assert.AreEqual("ABC", tokens[0].Value);
         Assert.AreEqual("def", tokens[1].Value);
     }
@@ -106,10 +106,12 @@ public class RegexTokenizerTests
     [TestMethod]
     public void Tokenize_EmailExtraction_Scenario()
     {
-        RegexTokenizer tokenizer = new(CommonPatterns.Email());
+        // CommonPatterns.Email() uses ^...$ anchors for full-string validation,
+        // so we use a non-anchored pattern for embedded extraction.
+        RegexTokenizer tokenizer = new(@"[^\s@]+@[^\s@]+\.[^\s@]+");
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("Contact us at info@example.com or support@test.org");
 
-        Assert.AreEqual(2, tokens.Count);
+        Assert.HasCount(2, tokens);
         Assert.AreEqual("info@example.com", tokens[0].Value);
         Assert.AreEqual("support@test.org", tokens[1].Value);
     }
@@ -119,6 +121,6 @@ public class RegexTokenizerTests
     {
         RegexTokenizer tokenizer = new(@"\w+");
         IReadOnlyList<MatchResult> tokens = tokenizer.Tokenize("");
-        Assert.AreEqual(0, tokens.Count);
+        Assert.IsEmpty(tokens);
     }
 }

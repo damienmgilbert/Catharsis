@@ -13,9 +13,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void BothPopulated_ReturnsFailure()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -28,9 +28,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void EmptyStringsNotTreatedAsValues_ReturnsSuccess()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = string.Empty };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = string.Empty };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -40,9 +40,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void FailureResult_ContainsMemberNames()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -54,9 +54,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void GroupNameAppearsInErrorMessage()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url)) { GroupName = "Data Source" };
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "https://example.com" };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url)) { GroupName = "Data Source" };
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = "https://example.com" };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -67,9 +67,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void NonePopulated_ReturnsSuccess()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = null, Url = null };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = null, Url = null };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -79,8 +79,8 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void NullObject_ReturnsSuccess()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        ValidationContext context = new ValidationContext(new object());
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        ValidationContext context = new(new object());
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -90,9 +90,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void OnlyOnePopulated_ReturnsSuccess()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = null };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = null };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -102,9 +102,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void ThreeProperties_TwoPopulated_ReturnsFailure()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url), nameof(TestModel.Count));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = null, Count = 5 };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url), nameof(TestModel.Count));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = null, Count = 5 };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -114,9 +114,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void UnknownProperty_ReturnsFailure()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute("NonExistent", nameof(TestModel.Url));
-        TestModel model = new TestModel { Url = "https://example.com" };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new("NonExistent", nameof(TestModel.Url));
+        TestModel model = new() { Url = "https://example.com" };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 
@@ -127,9 +127,9 @@ public class MutuallyExclusiveAttributeTests
     [TestMethod]
     public void WhitespaceNotTreatedAsValues_ReturnsSuccess()
     {
-        MutuallyExclusiveAttribute attribute = new MutuallyExclusiveAttribute(nameof(TestModel.FilePath), nameof(TestModel.Url));
-        TestModel model = new TestModel { FilePath = "C:\\file.txt", Url = "   " };
-        ValidationContext context = new ValidationContext(model);
+        MutuallyExclusiveAttribute attribute = new(nameof(TestModel.FilePath), nameof(TestModel.Url));
+        TestModel model = new() { FilePath = "C:\\file.txt", Url = "   " };
+        ValidationContext context = new(model);
 
         ValidationResult? result = attribute.GetValidationResult(model, context);
 

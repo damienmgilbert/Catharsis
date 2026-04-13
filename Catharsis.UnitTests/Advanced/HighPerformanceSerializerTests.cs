@@ -15,7 +15,7 @@ public class HighPerformanceSerializerTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        HighPerformanceSerializer serializer = new HighPerformanceSerializer();
+        HighPerformanceSerializer serializer = new();
         serializer.Dispose();
         serializer.Dispose();
     }
@@ -23,8 +23,8 @@ public class HighPerformanceSerializerTests
     [TestMethod]
     public void Serialize_ReturnsPooledArray()
     {
-        using HighPerformanceSerializer serializer = new HighPerformanceSerializer();
-        TestSerializable obj = new TestSerializable([ 1, 2, 3 ]);
+        using HighPerformanceSerializer serializer = new();
+        TestSerializable obj = new([ 1, 2, 3 ]);
 
         byte[] result = serializer.Serialize(obj, out int bytesWritten);
 
@@ -37,8 +37,8 @@ public class HighPerformanceSerializerTests
     [TestMethod]
     public void SerializeToMemoryOwner_ReturnsOwner()
     {
-        using HighPerformanceSerializer serializer = new HighPerformanceSerializer();
-        TestSerializable obj = new TestSerializable([ 10, 20 ]);
+        using HighPerformanceSerializer serializer = new();
+        TestSerializable obj = new([ 10, 20 ]);
 
         using MemoryOwner<byte> owner = serializer.SerializeToMemoryOwner(obj);
 

@@ -16,7 +16,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Advance_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        PooledSequenceBuilder<byte> builder = new();
         builder.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => builder.Advance(1));
@@ -28,7 +28,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => builder.Advance(-1));
     }
@@ -39,7 +39,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Advance_PastBuffer_ThrowsArgumentOutOfRangeException()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>(16);
+        using PooledSequenceBuilder<byte> builder = new(16);
         builder.GetSpan(10);
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => builder.Advance(100000));
@@ -51,7 +51,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Build_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        PooledSequenceBuilder<byte> builder = new();
         builder.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => builder.Build());
@@ -63,7 +63,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Build_MultipleSegments_PreservesDataOrder()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>(16);
+        using PooledSequenceBuilder<byte> builder = new(16);
 
         for(int i = 0; i < 5; i++)
         {
@@ -91,7 +91,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Build_MultipleSegments_ReturnsCorrectTotalLength()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>(16);
+        using PooledSequenceBuilder<byte> builder = new(16);
 
         // Write enough data to span multiple segments
         for(int i = 0; i < 10; i++)
@@ -116,7 +116,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Build_NoData_ReturnsEmptySequence()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
 
         ReadOnlySequence<byte> sequence = builder.Build();
 
@@ -129,7 +129,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Build_SingleSegment_ReturnsSingleSegmentSequence()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
         Span<byte> span = builder.GetSpan(3);
         span[0] = 0xAA;
         span[1] = 0xBB;
@@ -151,7 +151,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Constructor_Default_CreatesInstance()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
 
         Assert.AreEqual(0L, builder.WrittenCount);
     }
@@ -172,7 +172,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Dispose_CalledMultipleTimes_DoesNotThrow()
     {
-        PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        PooledSequenceBuilder<byte> builder = new();
 
         builder.Dispose();
         builder.Dispose();
@@ -184,7 +184,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void GetMemory_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        PooledSequenceBuilder<byte> builder = new();
         builder.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => builder.GetMemory(1));
@@ -196,7 +196,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void GetMemory_ReturnsWritableMemory()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
 
         Memory<byte> mem = builder.GetMemory(10);
 
@@ -209,7 +209,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void GetSpan_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        PooledSequenceBuilder<byte> builder = new();
         builder.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => builder.GetSpan(1));
@@ -221,7 +221,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void GetSpan_ReturnsWritableSpan()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
 
         Span<byte> span = builder.GetSpan(10);
 
@@ -234,7 +234,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Reset_AllowsReuse()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
         Span<byte> span = builder.GetSpan(5);
         builder.Advance(5);
 
@@ -255,7 +255,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void Reset_ClearsAllData()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
         Span<byte> span = builder.GetSpan(5);
         builder.Advance(5);
 
@@ -270,7 +270,7 @@ public class PooledSequenceBuilderTests
     [TestMethod]
     public void WrittenCount_AfterWrites_ReflectsTotalWritten()
     {
-        using PooledSequenceBuilder<byte> builder = new PooledSequenceBuilder<byte>();
+        using PooledSequenceBuilder<byte> builder = new();
         Span<byte> span = builder.GetSpan(5);
         span[0] = 1;
         span[1] = 2;

@@ -15,7 +15,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void CurrentErrors_ReturnsReadOnlyDictionary()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 30 });
         record.Validate();
 
         IReadOnlyDictionary<string, IReadOnlyList<string>> errors = record.CurrentErrors;
@@ -26,7 +26,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void ErrorsChanged_RaisedOnValidation()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
         bool raised = false;
         record.ErrorsChanged += (s, e) => raised = true;
 
@@ -38,7 +38,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void GetErrors_NullOrEmpty_ReturnsAll()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 200 });
         record.Validate();
 
         List<string> allErrors = [.. record.GetErrors(null).Cast<string>()];
@@ -49,7 +49,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void GetErrors_UnknownProperty_ReturnsEmpty()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
         record.Validate();
 
         List<string> errors = [.. record.GetErrors("Unknown").Cast<string>()];
@@ -60,9 +60,10 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void SettingValue_TriggersAutoValidation()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
-
-        record.Value = new PersonDto { Name = null, Age = 200 };
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 })
+        {
+            Value = new PersonDto { Name = null, Age = 200 }
+        };
 
         Assert.IsTrue(record.HasErrors);
     }
@@ -70,7 +71,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void Validate_ClearsPreviousErrors()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 30 });
         record.Validate();
         Assert.IsTrue(record.HasErrors);
 
@@ -82,7 +83,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void Validate_InvalidObject_ReturnsFalse()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 200 });
 
         Assert.IsFalse(record.Validate());
         Assert.IsTrue(record.HasErrors);
@@ -91,7 +92,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void Validate_PopulatesErrors()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 30 });
 
         record.Validate();
 
@@ -103,7 +104,7 @@ public sealed class ValidatedRecordTests
     [TestMethod]
     public void Validate_ValidObject_ReturnsTrue()
     {
-        ValidatedRecord<PersonDto> record = new ValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        ValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
 
         Assert.IsTrue(record.Validate());
         Assert.IsFalse(record.HasErrors);

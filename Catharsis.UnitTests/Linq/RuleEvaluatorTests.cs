@@ -12,7 +12,7 @@ public class RuleEvaluatorTests
 
     private static RuleSet<int> CreateStandardRuleSet()
     {
-        RuleSet<int> set = new();
+        RuleSet<int> set = [];
         set.Add("IsPositive", static x => x > 0, priority: 1);
         set.Add("IsEven", static x => x % 2 == 0, priority: 2);
         return set;
@@ -30,7 +30,7 @@ public class RuleEvaluatorTests
 
         List<RuleContext<int>> contexts = source.Evaluate(rules).ToList();
 
-        Assert.AreEqual(4, contexts.Count);
+        Assert.HasCount(4, contexts);
     }
 
     [TestMethod]
@@ -49,9 +49,11 @@ public class RuleEvaluatorTests
     public void Evaluate_NonMatchingElement_HasMatchIsFalse()
     {
         int[] source = [-3];
-        RuleSet<int> rules = new();
-        rules.Add("IsPositive", static x => x > 0);
-        rules.Add("IsEven", static x => x % 2 == 0);
+        RuleSet<int> rules = new()
+        {
+            { "IsPositive", static x => x > 0 },
+            { "IsEven", static x => x % 2 == 0 }
+        };
 
         RuleContext<int> context = source.Evaluate(rules).First();
 
@@ -72,9 +74,11 @@ public class RuleEvaluatorTests
     [TestMethod]
     public void Evaluate_StopOnMatch_StopsAfterFirstMatch()
     {
-        RuleSet<int> rules = new();
-        rules.Add(new Rule<int>("First", static x => x > 0) { StopOnMatch = true, Priority = 1 });
-        rules.Add(new Rule<int>("Second", static x => x % 2 == 0) { Priority = 2 });
+        RuleSet<int> rules =
+        [
+            new Rule<int>("First", static x => x > 0) { StopOnMatch = true, Priority = 1 },
+            new Rule<int>("Second", static x => x % 2 == 0) { Priority = 2 },
+        ];
 
         int[] source = [4]; // matches both, but should stop after First
         RuleContext<int> context = source.Evaluate(rules).First();
@@ -88,8 +92,7 @@ public class RuleEvaluatorTests
     public void Evaluate_OnMatchAction_IsInvoked()
     {
         List<int> matched = [];
-        RuleSet<int> rules = new();
-        rules.Add(new Rule<int>("Tracker", x => x > 0) { OnMatch = x => matched.Add(x) });
+        RuleSet<int> rules = [new Rule<int>("Tracker", x => x > 0) { OnMatch = x => matched.Add(x) }];
 
         int[] source = [1, -2, 3];
         _ = source.Evaluate(rules).ToList(); // Force enumeration
@@ -100,9 +103,11 @@ public class RuleEvaluatorTests
     [TestMethod]
     public void Evaluate_DisabledRule_IsSkipped()
     {
-        RuleSet<int> rules = new();
-        rules.Add(new Rule<int>("Enabled", static x => x > 0) { IsEnabled = true });
-        rules.Add(new Rule<int>("Disabled", static x => true) { IsEnabled = false });
+        RuleSet<int> rules =
+        [
+            new Rule<int>("Enabled", static x => x > 0) { IsEnabled = true },
+            new Rule<int>("Disabled", static x => true) { IsEnabled = false },
+        ];
 
         int[] source = [5];
         RuleContext<int> context = source.Evaluate(rules).First();
@@ -116,7 +121,7 @@ public class RuleEvaluatorTests
     {
         IEnumerable<int> source = null!;
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => source.Evaluate(new RuleSet<int>()).ToList());
+        Assert.ThrowsExactly<ArgumentNullException>(() => source.Evaluate([]).ToList());
     }
 
     [TestMethod]
@@ -148,7 +153,7 @@ public class RuleEvaluatorTests
     {
         IEnumerable<int> source = null!;
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => source.WhereAnyRuleMatches(new RuleSet<int>()).ToList());
+        Assert.ThrowsExactly<ArgumentNullException>(() => source.WhereAnyRuleMatches([]).ToList());
     }
 
     #endregion
@@ -171,7 +176,7 @@ public class RuleEvaluatorTests
     public void WhereAllRulesMatch_EmptyRuleSet_ReturnsAll()
     {
         int[] source = [1, 2, 3];
-        RuleSet<int> rules = new();
+        RuleSet<int> rules = [];
 
         List<int> result = source.WhereAllRulesMatch(rules).ToList();
 
@@ -211,15 +216,15 @@ public class RuleEvaluatorTests
         List<(int Element, IReadOnlyList<Rule<int>> MatchedRules)> result =
             source.ProjectWithMatches(rules).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
 
         // 4 matches both IsPositive and IsEven
         Assert.AreEqual(4, result[0].Element);
-        Assert.AreEqual(2, result[0].MatchedRules.Count);
+        Assert.HasCount(2, result[0].MatchedRules);
 
         // -3 matches nothing
         Assert.AreEqual(-3, result[1].Element);
-        Assert.AreEqual(0, result[1].MatchedRules.Count);
+        Assert.IsEmpty(result[1].MatchedRules);
     }
 
     #endregion
@@ -243,7 +248,7 @@ public class RuleEvaluatorTests
     {
         IQueryable<int> source = null!;
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => source.WhereAllRulesMatch(new RuleSet<int>()));
+        Assert.ThrowsExactly<ArgumentNullException>(() => source.WhereAllRulesMatch([]));
     }
 
     #endregion
@@ -283,7 +288,7 @@ public class RuleEvaluatorTests
     public void WhereRuleMatches_Queryable_NonExistentRule_ThrowsInvalidOperationException()
     {
         IQueryable<int> queryable = new[] { 1 }.AsQueryable();
-        RuleSet<int> rules = new();
+        RuleSet<int> rules = [];
 
         Assert.ThrowsExactly<InvalidOperationException>(() => queryable.WhereRuleMatches(rules, "NotFound"));
     }
@@ -295,9 +300,11 @@ public class RuleEvaluatorTests
     [TestMethod]
     public void WhereRulesWithTagsMatch_Queryable_FiltersbyTaggedRuleConditions()
     {
-        RuleSet<int> rules = new();
-        rules.Add(new Rule<int>("Positive", static x => x > 0) { Tags = new HashSet<string>(StringComparer.Ordinal) { "sign" } });
-        rules.Add(new Rule<int>("Even", static x => x % 2 == 0) { Tags = new HashSet<string>(StringComparer.Ordinal) { "parity" } });
+        RuleSet<int> rules =
+        [
+            new Rule<int>("Positive", static x => x > 0) { Tags = new HashSet<string>(StringComparer.Ordinal) { "sign" } },
+            new Rule<int>("Even", static x => x % 2 == 0) { Tags = new HashSet<string>(StringComparer.Ordinal) { "parity" } },
+        ];
 
         int[] source = [1, -2, -3];
         IQueryable<int> queryable = source.AsQueryable();
@@ -316,8 +323,10 @@ public class RuleEvaluatorTests
     public void RuleContext_Properties_CanStoreCustomData()
     {
         int[] source = [1];
-        RuleSet<int> rules = new();
-        rules.Add("Always", static x => true);
+        RuleSet<int> rules = new()
+        {
+            { "Always", static x => true }
+        };
 
         RuleContext<int> context = source.Evaluate(rules).First();
         context.Properties["key"] = "value";
@@ -329,8 +338,10 @@ public class RuleEvaluatorTests
     public void RuleContext_NoMatch_FirstMatchIsNull()
     {
         int[] source = [-1];
-        RuleSet<int> rules = new();
-        rules.Add("Positive", static x => x > 0);
+        RuleSet<int> rules = new()
+        {
+            { "Positive", static x => x > 0 }
+        };
 
         RuleContext<int> context = source.Evaluate(rules).First();
 

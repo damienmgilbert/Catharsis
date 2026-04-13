@@ -13,7 +13,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void AreDependenciesSatisfied_NoDependencies_ReturnsTrue()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new(new StubComponent());
 
         Assert.IsTrue(node.AreDependenciesSatisfied);
     }
@@ -21,7 +21,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void Constructor_CustomName_SetsName()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent(), "MyNode");
+        ComponentGraphNode node = new(new StubComponent(), "MyNode");
 
         Assert.AreEqual("MyNode", node.Name);
     }
@@ -31,8 +31,8 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void Constructor_SetsComponentAndDefaultName()
     {
-        StubComponent component = new StubComponent();
-        ComponentGraphNode node = new ComponentGraphNode(component);
+        StubComponent component = new();
+        ComponentGraphNode node = new(component);
 
         Assert.AreSame(component, node.Component);
         Assert.AreEqual("StubComponent", node.Name);
@@ -41,7 +41,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void Dependencies_InitiallyEmpty()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new(new StubComponent());
 
         Assert.IsEmpty(node.Dependencies);
     }
@@ -49,7 +49,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void Dependents_InitiallyEmpty()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new(new StubComponent());
 
         Assert.IsEmpty(node.Dependents);
     }
@@ -57,7 +57,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void State_DefaultIsCreated()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent());
+        ComponentGraphNode node = new(new StubComponent());
 
         Assert.AreEqual(ComponentState.Created, node.State);
     }
@@ -65,7 +65,7 @@ public sealed class ComponentGraphNodeTests
     [TestMethod]
     public void ToString_ContainsNameAndState()
     {
-        ComponentGraphNode node = new ComponentGraphNode(new StubComponent(), "DB");
+        ComponentGraphNode node = new(new StubComponent(), "DB");
 
         string result = node.ToString();
 
@@ -99,7 +99,7 @@ public sealed class ComponentGraphTests
     #region Private methods
     static ComponentGraph BuildGraph(params IComponent[] components)
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
         foreach(IComponent c in components)
         {
             builder.AddComponent(c);
@@ -121,7 +121,7 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void Contains_RegisteredComponent_ReturnsTrue()
     {
-        ComponentGraphNodeTests.StubComponent c = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
 
         Assert.IsTrue(graph.Contains(c));
@@ -138,8 +138,8 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetActivationOrder_DependenciesBeforeDependents()
     {
-        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
-        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent db = new();
+        ComponentGraphNodeTests.StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
@@ -156,8 +156,8 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetActivationOrder_NoDependencies_ReturnsAllNodes()
     {
-        ComponentGraphNodeTests.StubComponent c1 = new ComponentGraphNodeTests.StubComponent();
-        ComponentGraphNodeTests.StubComponent c2 = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent c1 = new();
+        ComponentGraphNodeTests.StubComponent c2 = new();
         ComponentGraph graph = BuildGraph(c1, c2);
 
         IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
@@ -168,8 +168,8 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetDeactivationOrder_DependentsBeforeDependencies()
     {
-        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
-        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent db = new();
+        ComponentGraphNodeTests.StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
@@ -186,8 +186,8 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetLeaves_ReturnsNodesWithNoDependents()
     {
-        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
-        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent db = new();
+        ComponentGraphNodeTests.StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
@@ -203,7 +203,7 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetNode_RegisteredComponent_ReturnsNode()
     {
-        ComponentGraphNodeTests.StubComponent c = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
 
         ComponentGraphNode? node = graph.GetNode(c);
@@ -223,8 +223,8 @@ public sealed class ComponentGraphTests
     [TestMethod]
     public void GetRoots_ReturnsNodesWithNoDependencies()
     {
-        ComponentGraphNodeTests.StubComponent db = new ComponentGraphNodeTests.StubComponent();
-        ComponentGraphNodeTests.StubComponent app = new ComponentGraphNodeTests.StubComponent();
+        ComponentGraphNodeTests.StubComponent db = new();
+        ComponentGraphNodeTests.StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")

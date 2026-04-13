@@ -102,7 +102,7 @@ public static class SlidingLookup
             if (buffer.Count == windowSize)
             {
                 yield return SequenceFactory.Grouping(windowIndex, (IEnumerable<T>)buffer);
-                buffer = new List<T>(windowSize);
+                buffer = new(windowSize);
                 windowIndex++;
             }
         }

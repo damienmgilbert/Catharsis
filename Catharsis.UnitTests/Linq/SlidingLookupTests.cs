@@ -37,7 +37,7 @@ public class SlidingLookupTests
     {
         List<IGrouping<int, int>> groups = Source.ToSlidingGroupings(2).ToList();
 
-        Assert.AreEqual(4, groups.Count);
+        Assert.HasCount(4, groups);
         Assert.AreEqual(0, groups[0].Key);
         CollectionAssert.AreEqual(new[] { 1, 2 }, groups[0].ToList());
     }
@@ -47,7 +47,7 @@ public class SlidingLookupTests
     {
         List<IGrouping<int, int>> groups = Source.ToSlidingGroupingsBy(2, static x => x * 10).ToList();
 
-        Assert.AreEqual(4, groups.Count);
+        Assert.HasCount(4, groups);
         Assert.AreEqual(10, groups[0].Key);
         CollectionAssert.AreEqual(new[] { 1, 2 }, groups[0].ToList());
     }
@@ -66,7 +66,7 @@ public class SlidingLookupTests
     {
         List<IGrouping<int, int>> groups = Source.ToTumblingGroupings(2).ToList();
 
-        Assert.AreEqual(3, groups.Count);
+        Assert.HasCount(3, groups);
         CollectionAssert.AreEqual(new[] { 1, 2 }, groups[0].ToList());
         CollectionAssert.AreEqual(new[] { 3, 4 }, groups[1].ToList());
         CollectionAssert.AreEqual(new[] { 5 }, groups[2].ToList());
@@ -87,7 +87,7 @@ public class SlidingLookupTests
     {
         List<IGrouping<int, int>> groups = new[] { 10, 20, 30 }.ToProgressiveGroupings().ToList();
 
-        Assert.AreEqual(3, groups.Count);
+        Assert.HasCount(3, groups);
         CollectionAssert.AreEqual(new[] { 10 }, groups[0].ToList());
         CollectionAssert.AreEqual(new[] { 10, 20 }, groups[1].ToList());
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, groups[2].ToList());

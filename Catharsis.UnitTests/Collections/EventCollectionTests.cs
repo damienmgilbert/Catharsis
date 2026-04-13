@@ -12,7 +12,7 @@ public class EventCollectionTests
     [TestMethod]
     public void Add_RaisesItemAddedEvent()
     {
-        EventCollection<int> c = new EventCollection<int>();
+        EventCollection<int> c = [];
         int raised = -1;
         c.ItemAdded += (_, item) => raised = item;
 
@@ -25,8 +25,7 @@ public class EventCollectionTests
     [TestMethod]
     public void Remove_ExistingItem_RaisesItemRemovedEvent()
     {
-        EventCollection<int> c = new EventCollection<int>();
-        c.Add(1);
+        EventCollection<int> c = [1];
         int raised = -1;
         c.ItemRemoved += (_, item) => raised = item;
 
@@ -37,7 +36,7 @@ public class EventCollectionTests
     [TestMethod]
     public void Remove_NonexistentItem_ReturnsFalse()
     {
-        EventCollection<int> c = new EventCollection<int>();
+        EventCollection<int> c = [];
         bool eventFired = false;
         c.ItemRemoved += (_, _) => eventFired = true;
 
@@ -48,8 +47,7 @@ public class EventCollectionTests
     [TestMethod]
     public void Clear_RaisesClearedEvent()
     {
-        EventCollection<int> c = new EventCollection<int>();
-        c.Add(1);
+        EventCollection<int> c = [1];
         bool cleared = false;
         c.Cleared += (_, _) => cleared = true;
 
@@ -62,8 +60,7 @@ public class EventCollectionTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        EventCollection<string> c = new EventCollection<string>();
-        c.Add("test");
+        EventCollection<string> c = ["test"];
         Assert.IsTrue(c.Contains("test"));
         Assert.IsFalse(c.Contains("other"));
     }

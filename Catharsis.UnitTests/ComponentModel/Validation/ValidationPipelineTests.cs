@@ -13,7 +13,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void AddRule_IncreasesCount()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         pipeline.AddRule(new PassingRule());
 
@@ -23,7 +23,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void AddRule_NullRule_ThrowsArgumentNullException()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => pipeline.AddRule(null!));
     }
@@ -31,7 +31,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void AddRule_ReturnsSelf_ForFluentChaining()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         ValidationPipeline result = pipeline.AddRule(new PassingRule());
 
@@ -41,7 +41,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void AddRules_AddsMultipleRules()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         pipeline.AddRules([ new PassingRule(), new PassingRule() ]);
 
@@ -51,7 +51,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void AddRules_NullRules_ThrowsArgumentNullException()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => pipeline.AddRules(null!));
     }
@@ -59,7 +59,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void Clear_RemovesAllRules()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
         pipeline.AddRule(new PassingRule());
         pipeline.AddRule(new PassingRule());
 
@@ -71,11 +71,11 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void Execute_AllRulesPass_AggregatorHasNoErrors()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
         pipeline.AddRule(new PassingRule());
         pipeline.AddRule(new PassingRule());
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
         ValidationResultAggregator aggregator = pipeline.Execute("value", context);
 
         Assert.IsFalse(aggregator.HasErrors);
@@ -85,7 +85,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void Execute_NullContext_ThrowsArgumentNullException()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => pipeline.Execute("value", null!));
     }
@@ -93,10 +93,10 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void Execute_RuleFails_AggregatorContainsError()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
         pipeline.AddRule(new FailingRule("Something wrong."));
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
         ValidationResultAggregator aggregator = pipeline.Execute("value", context);
 
         Assert.IsTrue(aggregator.HasErrors);
@@ -107,11 +107,11 @@ public sealed class ValidationPipelineTests
     public void Execute_StopOnFirstError_False_EvaluatesAllRules()
     {
         bool secondRuleEvaluated = false;
-        ValidationPipeline pipeline = new ValidationPipeline { StopOnFirstError = false };
+        ValidationPipeline pipeline = new() { StopOnFirstError = false };
         pipeline.AddRule(new FailingRule("First error"));
         pipeline.AddRule(new TrackingRule(() => secondRuleEvaluated = true));
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
         pipeline.Execute("value", context);
 
         Assert.IsTrue(secondRuleEvaluated);
@@ -121,11 +121,11 @@ public sealed class ValidationPipelineTests
     public void Execute_StopOnFirstError_StopsAfterFirstError()
     {
         bool secondRuleEvaluated = false;
-        ValidationPipeline pipeline = new ValidationPipeline { StopOnFirstError = true };
+        ValidationPipeline pipeline = new() { StopOnFirstError = true };
         pipeline.AddRule(new FailingRule("First error"));
         pipeline.AddRule(new TrackingRule(() => secondRuleEvaluated = true));
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
         pipeline.Execute("value", context);
 
         Assert.IsFalse(secondRuleEvaluated);
@@ -135,11 +135,11 @@ public sealed class ValidationPipelineTests
     public void Execute_StopOnFirstError_WarningDoesNotStop()
     {
         bool secondRuleEvaluated = false;
-        ValidationPipeline pipeline = new ValidationPipeline { StopOnFirstError = true };
+        ValidationPipeline pipeline = new() { StopOnFirstError = true };
         pipeline.AddRule(new FailingRule("Warning", ValidationSeverity.Warning));
         pipeline.AddRule(new TrackingRule(() => secondRuleEvaluated = true));
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
         pipeline.Execute("value", context);
 
         Assert.IsTrue(secondRuleEvaluated);
@@ -148,7 +148,7 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void Initial_State_IsEmpty()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
 
         Assert.AreEqual(0, pipeline.Count);
         Assert.IsFalse(pipeline.StopOnFirstError);
@@ -157,10 +157,10 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void IsValid_AllPass_ReturnsTrue()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
         pipeline.AddRule(new PassingRule());
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
 
         Assert.IsTrue(pipeline.IsValid("value", context));
     }
@@ -168,10 +168,10 @@ public sealed class ValidationPipelineTests
     [TestMethod]
     public void IsValid_ErrorRule_ReturnsFalse()
     {
-        ValidationPipeline pipeline = new ValidationPipeline();
+        ValidationPipeline pipeline = new();
         pipeline.AddRule(new FailingRule("error"));
 
-        ValidationContext context = new ValidationContext(new object());
+        ValidationContext context = new(new object());
 
         Assert.IsFalse(pipeline.IsValid("value", context));
     }

@@ -13,9 +13,10 @@ public class TrackingCollectionTests
     public void Add_InvokesCallback()
     {
         int tracked = -1;
-        TrackingCollection<int> c = new TrackingCollection<int>(x => tracked = x);
-
-        c.Add(42);
+        TrackingCollection<int> c = new(x => tracked = x)
+        {
+            42
+        };
 
         Assert.AreEqual(42, tracked);
         Assert.HasCount(1, c);
@@ -24,8 +25,11 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Remove_RemovesItem()
     {
-        TrackingCollection<int> c = new TrackingCollection<int>(static _ => { });
-        c.Add(1); c.Add(2);
+        TrackingCollection<int> c = new(static _ => { })
+        {
+            1,
+            2
+        };
 
         Assert.IsTrue(c.Remove(1));
         Assert.HasCount(1, c);
@@ -34,8 +38,10 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        TrackingCollection<string> c = new TrackingCollection<string>(static _ => { });
-        c.Add("hello");
+        TrackingCollection<string> c = new(static _ => { })
+        {
+            "hello"
+        };
         Assert.IsTrue(c.Contains("hello"));
         Assert.IsFalse(c.Contains("world"));
     }
@@ -43,8 +49,11 @@ public class TrackingCollectionTests
     [TestMethod]
     public void Clear_RemovesAllItems()
     {
-        TrackingCollection<int> c = new TrackingCollection<int>(static _ => { });
-        c.Add(1); c.Add(2);
+        TrackingCollection<int> c = new(static _ => { })
+        {
+            1,
+            2
+        };
         c.Clear();
         Assert.IsEmpty(c);
     }

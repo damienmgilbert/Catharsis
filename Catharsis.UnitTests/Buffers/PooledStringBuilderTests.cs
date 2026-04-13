@@ -15,7 +15,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Advance_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Advance(1));
@@ -27,7 +27,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Advance_IncreasesLength()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         sb.GetSpan(5);
 
         sb.Advance(3);
@@ -41,7 +41,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => sb.Advance(-1));
     }
@@ -52,7 +52,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_Char_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.Append('A'));
@@ -64,7 +64,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_Char_AppendsSingleCharacter()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.Append('A');
 
@@ -78,9 +78,9 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_EmptySpan_DoesNotChangeLength()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
-        sb.Append(ReadOnlySpan<char>.Empty);
+        sb.Append([]);
 
         Assert.AreEqual(0, sb.Length);
     }
@@ -91,7 +91,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_ExceedsCapacity_GrowsBuffer()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder(16);
+        using PooledStringBuilder sb = new(16);
         string longText = new('X', 100);
 
         sb.Append(longText);
@@ -106,7 +106,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_ISpanFormattable_FormatsValue()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.Append(42);
 
@@ -119,7 +119,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_MixedTypes_ProducesCorrectString()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.Append("Count: ");
         sb.Append(42);
@@ -135,7 +135,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_NullString_DoesNothing()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.Append((string?)null);
 
@@ -148,7 +148,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_Span_AppendsCharacters()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         ReadOnlySpan<char> text = "Hello".AsSpan();
 
         sb.Append(text);
@@ -162,7 +162,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Append_String_AppendsString()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.Append("World");
 
@@ -175,7 +175,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void AppendLine_AppendsNewLine()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.AppendLine();
 
@@ -188,7 +188,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void AppendLine_String_AppendsStringAndNewLine()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         sb.AppendLine("Hello");
 
@@ -201,7 +201,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Clear_AllowsReuse()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         sb.Append("Old");
         sb.Clear();
 
@@ -216,7 +216,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Clear_ResetsLength()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         sb.Append("Hello");
 
         sb.Clear();
@@ -230,7 +230,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Constructor_Default_CreatesInstance()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         Assert.AreEqual(0, sb.Length);
         Assert.IsGreaterThanOrEqualTo(256, sb.Capacity);
@@ -252,7 +252,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void Dispose_CalledMultipleTimes_DoesNotThrow()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
 
         sb.Dispose();
         sb.Dispose();
@@ -264,7 +264,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void GetMemory_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.GetMemory(1));
@@ -276,7 +276,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void GetMemory_ReturnsWritableMemory()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         Memory<char> mem = sb.GetMemory(10);
 
@@ -289,7 +289,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void GetSpan_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
         sb.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => sb.GetSpan(1));
@@ -301,7 +301,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void GetSpan_ReturnsWritableSpan()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
 
         Span<char> span = sb.GetSpan(10);
 
@@ -314,7 +314,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void ToString_ReturnsAccumulatedString()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         sb.Append("Hello, ");
         sb.Append("World!");
 
@@ -329,7 +329,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void ToStringAndDispose_ReturnsStringAndDisposes()
     {
-        PooledStringBuilder sb = new PooledStringBuilder();
+        PooledStringBuilder sb = new();
         sb.Append("Test");
 
         string result = sb.ToStringAndDispose();
@@ -345,7 +345,7 @@ public class PooledStringBuilderTests
     [TestMethod]
     public void WrittenSpan_ReturnsWrittenCharacters()
     {
-        using PooledStringBuilder sb = new PooledStringBuilder();
+        using PooledStringBuilder sb = new();
         sb.Append("ABC");
 
         ReadOnlySpan<char> span = sb.WrittenSpan;

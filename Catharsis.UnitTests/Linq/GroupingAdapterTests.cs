@@ -39,7 +39,7 @@ public class GroupingAdapterTests
 
         List<int> result = lookup.AggregatePerGroup(static (key, elements) => elements.Sum()).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -117,7 +117,7 @@ public class GroupingAdapterTests
 
         List<IGrouping<string, int>> result = lookup.ToGroupings().ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("a", result[0].Key);
     }
 
@@ -136,7 +136,7 @@ public class GroupingAdapterTests
     {
         ILookup<string, int> lookup = SampleGroupings.AsEnumerable().ToLookup();
 
-        Assert.AreEqual(2, lookup.Count);
+        Assert.HasCount(2, lookup);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, lookup["a"].ToList());
     }
 
@@ -147,7 +147,7 @@ public class GroupingAdapterTests
             .WhereCountAtLeast(3)
             .ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("a", result[0].Key);
     }
 
@@ -158,7 +158,7 @@ public class GroupingAdapterTests
             .WhereKey(static k => k == "b")
             .ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("b", result[0].Key);
     }
 }

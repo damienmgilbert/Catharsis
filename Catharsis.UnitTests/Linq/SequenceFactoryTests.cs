@@ -81,7 +81,7 @@ public class SequenceFactoryTests
     [TestMethod]
     public void Grouping_CreatesGroupWithKeyAndElements()
     {
-        IGrouping<string, int> group = SequenceFactory.Grouping("key", new[] { 1, 2, 3 });
+        IGrouping<string, int> group = SequenceFactory.Grouping("key", [1, 2, 3]);
         Assert.AreEqual("key", group.Key);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, group.ToList());
     }
@@ -98,7 +98,7 @@ public class SequenceFactoryTests
     public void Groupings_GroupsByKey()
     {
         List<IGrouping<int, int>> result = SequenceFactory.Groupings(new[] { 1, 2, 3, 4 }, static x => x % 2).ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -133,7 +133,7 @@ public class SequenceFactoryTests
     public void Random_GeneratesElements()
     {
         List<int> result = SequenceFactory.Random(static r => r.Next(0, 100), new Random(42)).Take(5).ToList();
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
         Assert.IsTrue(result.All(static x => x >= 0 && x < 100));
     }
 

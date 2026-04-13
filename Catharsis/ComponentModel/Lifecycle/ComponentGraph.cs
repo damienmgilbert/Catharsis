@@ -18,11 +18,11 @@ public sealed class ComponentGraph
     #endregion
 
     #region Private methods
-    IReadOnlyList<ComponentGraphNode> TopologicalSort(bool reverse)
+    List<ComponentGraphNode> TopologicalSort(bool reverse)
     {
-        List<ComponentGraphNode> sorted = new List<ComponentGraphNode>(_nodes.Count);
-        HashSet<ComponentGraphNode> visited = new HashSet<ComponentGraphNode>();
-        HashSet<ComponentGraphNode> visiting = new HashSet<ComponentGraphNode>();
+        List<ComponentGraphNode> sorted = new(_nodes.Count);
+        HashSet<ComponentGraphNode> visited = [];
+        HashSet<ComponentGraphNode> visiting = [];
 
         foreach(ComponentGraphNode node in _nodes.Values)
         {
@@ -110,7 +110,7 @@ public sealed class ComponentGraph
     ///</summary>
     public IReadOnlyList<ComponentGraphNode> GetLeaves()
     {
-        List<ComponentGraphNode> leaves = new List<ComponentGraphNode>();
+        List<ComponentGraphNode> leaves = [];
 
         foreach(ComponentGraphNode node in _nodes.Values)
         {
@@ -139,7 +139,7 @@ public sealed class ComponentGraph
     ///</summary>
     public IReadOnlyList<ComponentGraphNode> GetRoots()
     {
-        List<ComponentGraphNode> roots = new List<ComponentGraphNode>();
+        List<ComponentGraphNode> roots = [];
 
         foreach(ComponentGraphNode node in _nodes.Values)
         {

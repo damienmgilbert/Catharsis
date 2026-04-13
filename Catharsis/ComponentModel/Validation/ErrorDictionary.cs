@@ -12,7 +12,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
 {
     #region Fields
     private readonly Dictionary<string, List<ErrorInfo>> _errors = new(StringComparer.Ordinal);
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     #endregion
 
     #region Events

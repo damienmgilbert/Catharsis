@@ -17,7 +17,7 @@ public class Mediator
     ///<param name="mediator">The mediator that coordinates communication.</param>
     ///<param name="route">A delegate that uses the mediator to process the request.</param>
     ///<returns>The result produced by the mediator.</returns>
-    public TResult Mediate<T, TMediator, TResult>(T obj, TMediator mediator, Func<TMediator, T, TResult> route)
+    public static TResult Mediate<T, TMediator, TResult>(T obj, TMediator mediator, Func<TMediator, T, TResult> route)
     {
         if(mediator is null)
         {
@@ -42,7 +42,7 @@ public class Mediator
     ///<param name="mediator">The mediator that coordinates communication.</param>
     ///<param name="route">An action that uses the mediator to process the request.</param>
     ///<returns>The original <paramref name="obj"/>.</returns>
-    public T Mediate<T, TMediator>(T obj, TMediator mediator, Action<TMediator, T> route)
+    public static T Mediate<T, TMediator>(T obj, TMediator mediator, Action<TMediator, T> route)
     {
         if(mediator is null)
         {

@@ -13,8 +13,8 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void AddProperty_DuplicateName_Throws()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
+        DynamicTypeDescriptor descriptor = new();
+        Dictionary<string, object?> store = [];
         descriptor.AddProperty(new DictionaryPropertyDescriptor("Name", typeof(string), store));
 
         Assert.ThrowsExactly<ArgumentException>(() => descriptor.AddProperty(new DictionaryPropertyDescriptor("Name", typeof(string), store)));
@@ -23,9 +23,9 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void AddProperty_IncreasesPropertyCount()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Age", typeof(int), store);
+        DynamicTypeDescriptor descriptor = new();
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Age", typeof(int), store);
 
         descriptor.AddProperty(prop);
 
@@ -35,7 +35,7 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void AddProperty_Null_Throws()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
+        DynamicTypeDescriptor descriptor = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => descriptor.AddProperty(null!));
     }
@@ -43,8 +43,8 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void GetProperties_ReturnsDynamicProperties()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
+        DynamicTypeDescriptor descriptor = new();
+        Dictionary<string, object?> store = [];
         descriptor.AddProperty(new DictionaryPropertyDescriptor("Name", typeof(string), store));
         descriptor.AddProperty(new DictionaryPropertyDescriptor("Age", typeof(int), store));
 
@@ -58,7 +58,7 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void RemoveProperty_NonExisting_ReturnsFalse()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
+        DynamicTypeDescriptor descriptor = new();
 
         Assert.IsFalse(descriptor.RemoveProperty("DoesNotExist"));
     }
@@ -66,8 +66,8 @@ public class DynamicTypeDescriptorTests
     [TestMethod]
     public void RemoveProperty_RemovesExistingProperty()
     {
-        DynamicTypeDescriptor descriptor = new DynamicTypeDescriptor();
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
+        DynamicTypeDescriptor descriptor = new();
+        Dictionary<string, object?> store = [];
         descriptor.AddProperty(new DictionaryPropertyDescriptor("Name", typeof(string), store));
 
         bool removed = descriptor.RemoveProperty("Name");

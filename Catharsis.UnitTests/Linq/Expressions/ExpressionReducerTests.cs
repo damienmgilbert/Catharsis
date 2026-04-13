@@ -172,7 +172,7 @@ public class ExpressionReducerTests
 
         IReadOnlyList<Expression> nodes = ExpressionReducer.CollectReducible(constant);
 
-        Assert.AreEqual(0, nodes.Count);
+        Assert.IsEmpty(nodes);
     }
 
     #endregion

@@ -15,7 +15,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Advance_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        PooledBuffer<byte> buffer = new();
         buffer.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => buffer.Advance(1));
@@ -27,7 +27,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Advance_IncreasesWrittenCount()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
         buffer.GetSpan(5);
 
         buffer.Advance(5);
@@ -41,7 +41,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => buffer.Advance(-1));
     }
@@ -52,7 +52,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Advance_PastEnd_ThrowsArgumentOutOfRangeException()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16);
+        using PooledBuffer<byte> buffer = new(16);
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => buffer.Advance(buffer.Capacity + 1));
     }
@@ -63,7 +63,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Advance_Zero_DoesNotChangeWrittenCount()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
         buffer.GetSpan(1);
 
         buffer.Advance(0);
@@ -77,7 +77,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Constructor_Default_CreatesBufferWithDefaults()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
 
         Assert.IsGreaterThanOrEqualTo(256, buffer.Capacity);
         Assert.AreEqual(0, buffer.WrittenCount);
@@ -99,7 +99,7 @@ public class PooledBufferTests
     [DataRow(BufferGrowthStrategy.OnePointFive)]
     public void Constructor_WithGrowthStrategy_SetsStrategy(BufferGrowthStrategy strategy)
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(256, strategy);
+        using PooledBuffer<byte> buffer = new(256, strategy);
 
         Assert.AreEqual(strategy, buffer.GrowthStrategy);
     }
@@ -115,7 +115,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Dispose_CalledMultipleTimes_DoesNotThrow()
     {
-        PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        PooledBuffer<byte> buffer = new();
 
         buffer.Dispose();
         buffer.Dispose();
@@ -127,7 +127,7 @@ public class PooledBufferTests
     [TestMethod]
     public void EnsureCapacity_GrowsBufferWhenNeeded()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16);
+        using PooledBuffer<byte> buffer = new(16);
         int originalCapacity = buffer.Capacity;
 
         buffer.EnsureCapacity(originalCapacity + 100);
@@ -141,7 +141,7 @@ public class PooledBufferTests
     [TestMethod]
     public void EnsureCapacity_PreservesWrittenData()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16);
+        using PooledBuffer<byte> buffer = new(16);
         Span<byte> span = buffer.GetSpan(3);
         span[0] = 0xAA;
         span[1] = 0xBB;
@@ -162,7 +162,7 @@ public class PooledBufferTests
     [TestMethod]
     public void EnsureCapacity_SufficientCapacity_DoesNotChange()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(256);
+        using PooledBuffer<byte> buffer = new(256);
         int originalCapacity = buffer.Capacity;
 
         buffer.EnsureCapacity(10);
@@ -176,7 +176,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GetMemory_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        PooledBuffer<byte> buffer = new();
         buffer.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => buffer.GetMemory(1));
@@ -188,7 +188,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GetMemory_ReturnsMemoryOfAtLeastRequestedSize()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
 
         Memory<byte> mem = buffer.GetMemory(10);
 
@@ -201,7 +201,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GetSpan_AfterDispose_ThrowsObjectDisposedException()
     {
-        PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        PooledBuffer<byte> buffer = new();
         buffer.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => buffer.GetSpan(1));
@@ -213,7 +213,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GetSpan_ReturnsSpanOfAtLeastRequestedSize()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
 
         Span<byte> span = buffer.GetSpan(10);
 
@@ -226,7 +226,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GrowthStrategy_Doubling_DoublesCapacity()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16, BufferGrowthStrategy.Doubling);
+        using PooledBuffer<byte> buffer = new(16, BufferGrowthStrategy.Doubling);
         int initial = buffer.Capacity;
 
         buffer.GetSpan(initial + 1);
@@ -240,7 +240,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GrowthStrategy_Exact_GrowsToExactRequired()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16, BufferGrowthStrategy.Exact);
+        using PooledBuffer<byte> buffer = new(16, BufferGrowthStrategy.Exact);
 
         buffer.GetSpan(100);
 
@@ -253,7 +253,7 @@ public class PooledBufferTests
     [TestMethod]
     public void GrowthStrategy_Linear_IncreasesBy256()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(16, BufferGrowthStrategy.Linear);
+        using PooledBuffer<byte> buffer = new(16, BufferGrowthStrategy.Linear);
         int initial = buffer.Capacity;
 
         buffer.GetSpan(initial + 1);
@@ -267,7 +267,7 @@ public class PooledBufferTests
     [TestMethod]
     public void IBufferWriter_WriteMultipleTimes_AccumulatesData()
     {
-        using PooledBuffer<int> buffer = new PooledBuffer<int>();
+        using PooledBuffer<int> buffer = new();
 
         Span<int> s1 = buffer.GetSpan(2);
         s1[0] = 10;
@@ -290,7 +290,7 @@ public class PooledBufferTests
     [TestMethod]
     public void Reset_ClearsWrittenCount()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
         buffer.GetSpan(5);
         buffer.Advance(5);
 
@@ -306,7 +306,7 @@ public class PooledBufferTests
     [TestMethod]
     public void WrittenMemory_ReturnsWrittenData()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
         Memory<byte> mem = buffer.GetMemory(2);
         mem.Span[0] = 1;
         mem.Span[1] = 2;
@@ -325,7 +325,7 @@ public class PooledBufferTests
     [TestMethod]
     public void WrittenSpan_ReturnsWrittenData()
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>();
+        using PooledBuffer<byte> buffer = new();
         Span<byte> span = buffer.GetSpan(3);
         span[0] = 10;
         span[1] = 20;

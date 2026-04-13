@@ -52,7 +52,8 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
             (item as IDisposable)?.Dispose();
         }
 
-        _logger.LogDebug("PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.", typeof(T).Name, _totalCreated, _totalReturned);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.", typeof(T).Name, _totalCreated, _totalReturned);
     }
 
     ///<summary>
@@ -65,12 +66,15 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
 
         if(_pool.TryTake(out T? item))
         {
-            _logger.LogTrace("Rented pooled {TypeName} instance.", typeof(T).Name);
+            if (_logger.IsEnabled(LogLevel.Trace))
+                _logger.LogTrace("Rented pooled {TypeName} instance.", typeof(T).Name);
             return item;
         }
 
         Interlocked.Increment(ref _totalCreated);
-        _logger.LogTrace("Created FileName {TypeName} instance (total: {Total}).", typeof(T).Name, _totalCreated);
+
+        if (_logger.IsEnabled(LogLevel.Trace))
+            _logger.LogTrace("Created FileName {TypeName} instance (total: {Total}).", typeof(T).Name, _totalCreated);
         return new T();
     }
 
@@ -87,10 +91,13 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
         {
             _pool.Add(item);
             Interlocked.Increment(ref _totalReturned);
-            _logger.LogTrace("Returned {TypeName} to pool.", typeof(T).Name);
+
+            if (_logger.IsEnabled(LogLevel.Trace))
+                _logger.LogTrace("Returned {TypeName} to pool.", typeof(T).Name);
         } else
         {
-            _logger.LogTrace("Pool full; discarding {TypeName} instance.", typeof(T).Name);
+            if (_logger.IsEnabled(LogLevel.Trace))
+                _logger.LogTrace("Pool full; discarding {TypeName} instance.", typeof(T).Name);
             (item as IDisposable)?.Dispose();
         }
     }

@@ -12,7 +12,7 @@ public class DequeTests
     [TestMethod]
     public void Constructor_Default_CreatesEmptyDeque()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         Assert.IsEmpty(d);
         Assert.IsTrue(d.IsEmpty);
     }
@@ -26,7 +26,7 @@ public class DequeTests
     [TestMethod]
     public void AddFirst_AddsToFront()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddFirst(1); d.AddFirst(2);
         Assert.AreEqual(2, d.PeekFirst());
         Assert.AreEqual(1, d.PeekLast());
@@ -35,7 +35,7 @@ public class DequeTests
     [TestMethod]
     public void AddLast_AddsToBack()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(1); d.AddLast(2);
         Assert.AreEqual(1, d.PeekFirst());
         Assert.AreEqual(2, d.PeekLast());
@@ -44,7 +44,7 @@ public class DequeTests
     [TestMethod]
     public void RemoveFirst_RemovesFromFront()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(1); d.AddLast(2); d.AddLast(3);
         Assert.AreEqual(1, d.RemoveFirst());
         Assert.HasCount(2, d);
@@ -53,7 +53,7 @@ public class DequeTests
     [TestMethod]
     public void RemoveLast_RemovesFromBack()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(1); d.AddLast(2); d.AddLast(3);
         Assert.AreEqual(3, d.RemoveLast());
         Assert.HasCount(2, d);
@@ -86,7 +86,7 @@ public class DequeTests
     [TestMethod]
     public void Indexer_ReturnsCorrectLogicalOrder()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(10); d.AddLast(20); d.AddLast(30);
         Assert.AreEqual(10, d[0]);
         Assert.AreEqual(30, d[2]);
@@ -95,7 +95,7 @@ public class DequeTests
     [TestMethod]
     public void Clear_ResetsDeque()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(1); d.AddLast(2);
         d.Clear();
         Assert.IsEmpty(d);
@@ -105,7 +105,7 @@ public class DequeTests
     [TestMethod]
     public void AddFirst_GrowsCapacityWhenFull()
     {
-        Deque<int> d = new Deque<int>(1);
+        Deque<int> d = new(1);
         d.AddFirst(1); d.AddFirst(2); d.AddFirst(3);
         Assert.HasCount(3, d);
         Assert.AreEqual(3, d.PeekFirst());
@@ -114,7 +114,7 @@ public class DequeTests
     [TestMethod]
     public void Enumeration_ReturnsItemsFrontToBack()
     {
-        Deque<int> d = new Deque<int>();
+        Deque<int> d = new();
         d.AddLast(1); d.AddLast(2); d.AddLast(3);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, d.ToList());
     }

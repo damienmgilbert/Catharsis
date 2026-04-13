@@ -12,7 +12,7 @@ public class EditableObjectTests
     [TestMethod]
     public void BeginEdit_CalledTwice_DoesNotResetSnapshot()
     {
-        Person person = new Person { Name = "Alice" };
+        Person person = new() { Name = "Alice" };
 
         person.BeginEdit();
         person.Name = "Bob";
@@ -27,7 +27,7 @@ public class EditableObjectTests
     [TestMethod]
     public void BeginEdit_SetsIsEditingToTrue()
     {
-        Person person = new Person { Name = "Alice", Age = 30 };
+        Person person = new() { Name = "Alice", Age = 30 };
 
         person.BeginEdit();
 
@@ -37,7 +37,7 @@ public class EditableObjectTests
     [TestMethod]
     public void CancelEdit_RestoresOriginalValues()
     {
-        Person person = new Person { Name = "Alice", Age = 30 };
+        Person person = new() { Name = "Alice", Age = 30 };
 
         person.BeginEdit();
         person.Name = "Bob";
@@ -52,7 +52,7 @@ public class EditableObjectTests
     [TestMethod]
     public void CancelEdit_WithoutBeginEdit_DoesNothing()
     {
-        Person person = new Person { Name = "Alice", Age = 30 };
+        Person person = new() { Name = "Alice", Age = 30 };
 
         person.CancelEdit();
 
@@ -63,7 +63,7 @@ public class EditableObjectTests
     [TestMethod]
     public void EndEdit_KeepsChangedValues()
     {
-        Person person = new Person { Name = "Alice", Age = 30 };
+        Person person = new() { Name = "Alice", Age = 30 };
 
         person.BeginEdit();
         person.Name = "Bob";
@@ -78,7 +78,7 @@ public class EditableObjectTests
     [TestMethod]
     public void EndEdit_WithoutBeginEdit_DoesNothing()
     {
-        Person person = new Person { Name = "Alice" };
+        Person person = new() { Name = "Alice" };
 
         person.EndEdit();
 
@@ -88,7 +88,7 @@ public class EditableObjectTests
     [TestMethod]
     public void MultipleEditCycles_WorkCorrectly()
     {
-        Person person = new Person { Name = "Alice" };
+        Person person = new() { Name = "Alice" };
 
         // First cycle
         person.BeginEdit();

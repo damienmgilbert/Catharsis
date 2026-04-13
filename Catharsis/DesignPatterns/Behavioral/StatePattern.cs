@@ -16,7 +16,7 @@ public class StatePattern
     ///<param name="state">The current state.</param>
     ///<param name="behaviorSelector">A delegate that maps a state to an action.</param>
     ///<returns>The original <paramref name="obj"/> after the state-specific behavior executes.</returns>
-    public T State<T, TState>(T obj, TState state, Func<TState, Action<T>> behaviorSelector)
+    public static T State<T, TState>(T obj, TState state, Func<TState, Action<T>> behaviorSelector)
     {
         if(behaviorSelector is null)
         {
@@ -39,7 +39,7 @@ public class StatePattern
     ///<param name="state">The current state.</param>
     ///<param name="behaviorSelector">A delegate that maps a state to a function.</param>
     ///<returns>The result of the state-specific behavior.</returns>
-    public TResult State<T, TState, TResult>(T obj, TState state, Func<TState, Func<T, TResult>> behaviorSelector)
+    public static TResult State<T, TState, TResult>(T obj, TState state, Func<TState, Func<T, TResult>> behaviorSelector)
     {
         if(behaviorSelector is null)
         {

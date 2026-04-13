@@ -14,18 +14,18 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void GetComponentModelInterfaces_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
+        ComponentModelInspector inspector = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => inspector.GetComponentModelInterfaces(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelInspector.GetComponentModelInterfaces(null!));
     }
 
     [TestMethod]
     public void GetComponentModelInterfaces_ReturnsRelevantInterfaces()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        using TestValidatingComponent component = new TestValidatingComponent();
+        ComponentModelInspector inspector = new();
+        using TestValidatingComponent component = new();
 
-        IReadOnlyList<string> interfaces = inspector.GetComponentModelInterfaces(component);
+        IReadOnlyList<string> interfaces = ComponentModelInspector.GetComponentModelInterfaces(component);
 
         CollectionAssert.Contains(interfaces.ToList(), "INotifyPropertyChanged");
         CollectionAssert.Contains(interfaces.ToList(), "INotifyDataErrorInfo");
@@ -35,18 +35,18 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void GetEventReport_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
+        ComponentModelInspector inspector = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => inspector.GetEventReport(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelInspector.GetEventReport(null!));
     }
 
     [TestMethod]
     public void GetEventReport_ReturnsEvents()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        using TestValidatingComponent component = new TestValidatingComponent();
+        ComponentModelInspector inspector = new();
+        using TestValidatingComponent component = new();
 
-        IReadOnlyList<ComponentModelInspector.EventReport> report = inspector.GetEventReport(component);
+        IReadOnlyList<ComponentModelInspector.EventReport> report = ComponentModelInspector.GetEventReport(component);
 
         Assert.IsNotEmpty(report);
     }
@@ -54,10 +54,10 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void GetPropertyReport_ContainsValidationAttributes()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        InspectableDto dto = new InspectableDto();
+        ComponentModelInspector inspector = new();
+        InspectableDto dto = new();
 
-        IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
+        IReadOnlyList<ComponentModelInspector.PropertyReport> report = ComponentModelInspector.GetPropertyReport(dto);
         ComponentModelInspector.PropertyReport nameReport = report.First(static r => r.Name == "Name");
 
         Assert.IsGreaterThanOrEqualTo(1, nameReport.ValidationAttributes.Count);
@@ -66,10 +66,10 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void GetPropertyReport_CurrentValue_ReturnsActualValue()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        InspectableDto dto = new InspectableDto { Name = "Alice" };
+        ComponentModelInspector inspector = new();
+        InspectableDto dto = new() { Name = "Alice" };
 
-        IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
+        IReadOnlyList<ComponentModelInspector.PropertyReport> report = ComponentModelInspector.GetPropertyReport(dto);
         ComponentModelInspector.PropertyReport nameReport = report.First(static r => r.Name == "Name");
 
         Assert.AreEqual("Alice", nameReport.CurrentValue);
@@ -78,31 +78,31 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void GetPropertyReport_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
+        ComponentModelInspector inspector = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => inspector.GetPropertyReport(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelInspector.GetPropertyReport(null!));
     }
 
     [TestMethod]
     public void GetPropertyReport_ReturnsAllProperties()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        InspectableDto dto = new InspectableDto { Name = "Alice", Age = 30 };
+        ComponentModelInspector inspector = new();
+        InspectableDto dto = new() { Name = "Alice", Age = 30 };
 
-        IReadOnlyList<ComponentModelInspector.PropertyReport> report = inspector.GetPropertyReport(dto);
+        IReadOnlyList<ComponentModelInspector.PropertyReport> report = ComponentModelInspector.GetPropertyReport(dto);
 
         Assert.IsGreaterThanOrEqualTo(3, report.Count);
-        Assert.IsTrue(report.Any(static r => r.Name == "Name"));
-        Assert.IsTrue(report.Any(static r => r.Name == "Age"));
+        Assert.Contains(static r => r.Name == "Name", report);
+        Assert.Contains(static r => r.Name == "Age", report);
     }
 
     [TestMethod]
     public void TryGetValidationErrors_NoErrors_ReturnsFalse()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        using TestValidatingComponent component = new TestValidatingComponent { Name = "Alice" };
+        ComponentModelInspector inspector = new();
+        using TestValidatingComponent component = new() { Name = "Alice" };
 
-        bool result = inspector.TryGetValidationErrors(component, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
+        bool result = ComponentModelInspector.TryGetValidationErrors(component, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
 
         Assert.IsFalse(result);
         Assert.IsNull(errors);
@@ -111,10 +111,10 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void TryGetValidationErrors_NonValidatingComponent_ReturnsFalse()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        InspectableDto dto = new InspectableDto();
+        ComponentModelInspector inspector = new();
+        InspectableDto dto = new();
 
-        bool result = inspector.TryGetValidationErrors(dto, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
+        bool result = ComponentModelInspector.TryGetValidationErrors(dto, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
 
         Assert.IsFalse(result);
         Assert.IsNull(errors);
@@ -123,20 +123,20 @@ public sealed class ComponentModelInspectorTests
     [TestMethod]
     public void TryGetValidationErrors_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
+        ComponentModelInspector inspector = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => inspector.TryGetValidationErrors(null!, out _));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelInspector.TryGetValidationErrors(null!, out _));
     }
 
     [TestMethod]
     public void TryGetValidationErrors_WithErrors_ReturnsTrueAndErrors()
     {
-        ComponentModelInspector inspector = new ComponentModelInspector();
-        using TestValidatingComponent component = new TestValidatingComponent();
+        ComponentModelInspector inspector = new();
+        using TestValidatingComponent component = new();
         component.Name = "Alice";
         component.Name = null;
 
-        bool result = inspector.TryGetValidationErrors(component, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
+        bool result = ComponentModelInspector.TryGetValidationErrors(component, out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors);
 
         Assert.IsTrue(result);
         Assert.IsNotNull(errors);

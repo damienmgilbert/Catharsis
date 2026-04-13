@@ -46,8 +46,8 @@ public sealed class ComponentModelDtoMapper
 
     static void ValidateTarget<TTarget>(TTarget target) where TTarget : notnull
     {
-        ValidationContext context = new ValidationContext(target);
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(target);
+        List<ValidationResult> results = [];
 
         if(!Validator.TryValidateObject(target, context, results, validateAllProperties: true))
         {
@@ -144,7 +144,7 @@ public sealed class ComponentModelDtoMapper
     ///<exception cref="ArgumentNullException">
     ///<paramref name="source"/> is <c>null</c>.
     ///</exception>
-    public BindableRecord<T> ToBindable<T>(T source) where T : class
+    public static BindableRecord<T> ToBindable<T>(T source) where T : class
     {
         ArgumentNullException.ThrowIfNull(source);
         return new BindableRecord<T>(source);
@@ -159,7 +159,7 @@ public sealed class ComponentModelDtoMapper
     ///<exception cref="ArgumentNullException">
     ///<paramref name="source"/> is <c>null</c>.
     ///</exception>
-    public EditableRecord<T> ToEditable<T>(T source) where T : class
+    public static EditableRecord<T> ToEditable<T>(T source) where T : class
     {
         ArgumentNullException.ThrowIfNull(source);
         return new EditableRecord<T>(source);
@@ -174,7 +174,7 @@ public sealed class ComponentModelDtoMapper
     ///<exception cref="ArgumentNullException">
     ///<paramref name="source"/> is <c>null</c>.
     ///</exception>
-    public MetadataAnnotatedRecord<T> ToMetadataAnnotated<T>(T source) where T : class
+    public static MetadataAnnotatedRecord<T> ToMetadataAnnotated<T>(T source) where T : class
     {
         ArgumentNullException.ThrowIfNull(source);
         return new MetadataAnnotatedRecord<T>(source);
@@ -190,7 +190,7 @@ public sealed class ComponentModelDtoMapper
     ///<exception cref="ArgumentNullException">
     ///<paramref name="source"/> is <c>null</c>.
     ///</exception>
-    public ValidatedRecord<T> ToValidated<T>(T source) where T : class
+    public static ValidatedRecord<T> ToValidated<T>(T source) where T : class
     {
         ArgumentNullException.ThrowIfNull(source);
         return new ValidatedRecord<T>(source);

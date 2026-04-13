@@ -12,7 +12,7 @@ public class SequenceWindowTests
     public void Buffer_SplitsIntoFixedSizeChunks()
     {
         List<List<int>> result = new[] { 1, 2, 3, 4, 5 }.Buffer(2).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result[0]);
         CollectionAssert.AreEqual(new[] { 3, 4 }, result[1]);
         CollectionAssert.AreEqual(new[] { 5 }, result[2]);
@@ -36,7 +36,7 @@ public class SequenceWindowTests
         List<IGrouping<bool, int>> result = new[] { 2, 4, 1, 3, 6 }
             .BufferBy(static x => x % 2 == 0)
             .ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.IsTrue(result[0].Key);  // 2, 4
         Assert.IsFalse(result[1].Key); // 1, 3
         Assert.IsTrue(result[2].Key);  // 6
@@ -52,7 +52,7 @@ public class SequenceWindowTests
     public void Pairwise_Tuple_ProducesConsecutivePairs()
     {
         List<(int, int)> result = new[] { 1, 2, 3, 4 }.Pairwise().ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual((1, 2), result[0]);
         Assert.AreEqual((2, 3), result[1]);
         Assert.AreEqual((3, 4), result[2]);
@@ -81,7 +81,7 @@ public class SequenceWindowTests
     public void Sliding_ProducesSlidingWindows()
     {
         List<IReadOnlyList<int>> result = new[] { 1, 2, 3, 4, 5 }.Sliding(3).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result[0].ToList());
         CollectionAssert.AreEqual(new[] { 2, 3, 4 }, result[1].ToList());
         CollectionAssert.AreEqual(new[] { 3, 4, 5 }, result[2].ToList());
@@ -97,7 +97,7 @@ public class SequenceWindowTests
     public void Sliding_WithStep_AdvancesByStep()
     {
         List<IReadOnlyList<int>> result = new[] { 1, 2, 3, 4, 5, 6 }.Sliding(2, 3).ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result[0].ToList());
         CollectionAssert.AreEqual(new[] { 4, 5 }, result[1].ToList());
     }
@@ -106,7 +106,7 @@ public class SequenceWindowTests
     public void Tumbling_ProducesNonOverlappingWindows()
     {
         List<IReadOnlyList<int>> result = new[] { 1, 2, 3, 4, 5 }.Tumbling(2).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result[0].ToList());
         CollectionAssert.AreEqual(new[] { 3, 4 }, result[1].ToList());
         CollectionAssert.AreEqual(new[] { 5 }, result[2].ToList());
@@ -128,7 +128,7 @@ public class SequenceWindowTests
         ];
 
         List<IGrouping<string, IReadOnlyList<int>>> result = groups.AsEnumerable().SlidingPerGroup(2).ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual("a", result[0].Key);
         Assert.AreEqual(2, result[0].Count()); // windows: [1,2], [2,3]
     }

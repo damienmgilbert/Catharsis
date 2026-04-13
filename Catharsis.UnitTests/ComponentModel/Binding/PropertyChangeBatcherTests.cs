@@ -13,9 +13,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void BeginBatch_SuppressesForwarding()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
@@ -43,9 +43,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void Dispose_FlushesAndDetaches()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
@@ -62,9 +62,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void EndBatch_DuplicateProperties_FlushesOncePerProperty()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
@@ -78,9 +78,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void EndBatch_FlushesAccumulatedChanges()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
@@ -95,8 +95,8 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void EndBatch_WithoutBeginBatch_ThrowsInvalidOperationException()
     {
-        NotifySource source = new NotifySource();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(
+        NotifySource source = new();
+        using PropertyChangeBatcher batcher = new(
                                               source,
                                               _ =>
         {
@@ -108,9 +108,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void Flush_ManualFlush_DrainsPending()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         source.RaisePropertyChanged("Name");
@@ -125,9 +125,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void Flush_NothingPending_DoesNothing()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.Flush();
 
@@ -137,8 +137,8 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void IsBatching_InitiallyFalse()
     {
-        NotifySource source = new NotifySource();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(
+        NotifySource source = new();
+        using PropertyChangeBatcher batcher = new(
                                               source,
                                               static _ =>
         {
@@ -150,9 +150,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void NestedBatch_OnlyFlushesOnOutermostEnd()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         batcher.BeginBatch();
         batcher.BeginBatch();
@@ -167,9 +167,9 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void NoBatch_ForwardsImmediately()
     {
-        NotifySource source = new NotifySource();
-        List<string> raised = new List<string>();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(source, name => raised.Add(name));
+        NotifySource source = new();
+        List<string> raised = [];
+        using PropertyChangeBatcher batcher = new(source, name => raised.Add(name));
 
         source.RaisePropertyChanged("Name");
 
@@ -180,8 +180,8 @@ public sealed class PropertyChangeBatcherTests
     [TestMethod]
     public void PendingCount_InitiallyZero()
     {
-        NotifySource source = new NotifySource();
-        using PropertyChangeBatcher batcher = new PropertyChangeBatcher(
+        NotifySource source = new();
+        using PropertyChangeBatcher batcher = new(
                                               source,
                                               static _ =>
         {

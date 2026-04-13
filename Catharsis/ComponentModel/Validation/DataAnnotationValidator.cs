@@ -65,7 +65,7 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
         _errors.ClearAll();
 
         ValidationContext context = _contextFactory.CreateContext(instance);
-        List<ValidationResult> results = new List<ValidationResult>();
+        List<ValidationResult> results = [];
 
         bool isValid = Validator.TryValidateObject(instance, context, results, validateAllProperties: true);
 
@@ -107,7 +107,7 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
         _errors.ClearErrors(propertyName);
 
         ValidationContext context = _contextFactory.CreatePropertyContext(instance, propertyName);
-        List<ValidationResult> results = new List<ValidationResult>();
+        List<ValidationResult> results = [];
 
         bool isValid = Validator.TryValidateProperty(value, context, results);
 

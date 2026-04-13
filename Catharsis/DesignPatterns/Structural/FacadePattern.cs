@@ -15,7 +15,7 @@ public class FacadePattern
     ///<param name="obj">The subsystem entry point.</param>
     ///<param name="simplifiedOperation">A delegate that orchestrates the subsystem and returns a simplified result.</param>
     ///<returns>The result of the simplified operation.</returns>
-    public TResult Facade<T, TResult>(T obj, Func<T, TResult> simplifiedOperation)
+    public static TResult Facade<T, TResult>(T obj, Func<T, TResult> simplifiedOperation)
     {
         if(simplifiedOperation is null)
         {

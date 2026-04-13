@@ -56,7 +56,9 @@ public sealed class BufferProcessingService : IDisposable
         }
 
         _disposed = true;
-        _logger.LogDebug("BufferProcessingService disposed. Total bytes processed: {Total}.", TotalBytesProcessed);
+
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("BufferProcessingService disposed. Total bytes processed: {Total}.", TotalBytesProcessed);
     }
 
     ///<summary>
@@ -68,13 +70,15 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        _logger.LogDebug("Processing {ByteCount} bytes synchronously.", input.Length);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Processing {ByteCount} bytes synchronously.", input.Length);
 
-        using PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length * 2);
+        using PooledBuffer<byte> output = new(input.Length * 2);
         _processor.Process(input, output);
         TotalBytesProcessed += input.Length;
 
-        _logger.LogDebug("Processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
         return output.WrittenSpan.ToArray();
     }
 
@@ -88,18 +92,20 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        _logger.LogDebug("Processing {ByteCount} bytes asynchronously.", input.Length);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Processing {ByteCount} bytes asynchronously.", input.Length);
 
-        using PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length * 2);
+        using PooledBuffer<byte> output = new(input.Length * 2);
         await _processor.ProcessAsync(input, output, cancellationToken);
         TotalBytesProcessed += input.Length;
 
-        _logger.LogDebug("Async processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Async processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
         return output.WrittenSpan.ToArray();
     }
 
     ///<summary>
-    ///Processes data from a stream and writes results to an output stream.
+    ///Processes data from a stream
     ///</summary>
     ///<param name="inputStream">The input stream.</param>
     ///<param name="outputStream">The output stream.</param>
@@ -137,9 +143,10 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        _logger.LogDebug("Processing {ByteCount} bytes (ValueTask).", input.Length);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Processing {ByteCount} bytes (ValueTask).", input.Length);
 
-        using PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length * 2);
+        using PooledBuffer<byte> output = new(input.Length * 2);
         await _processor.ProcessValueAsync(input, output, cancellationToken);
         TotalBytesProcessed += input.Length;
 

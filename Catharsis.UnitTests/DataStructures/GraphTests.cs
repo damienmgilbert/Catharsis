@@ -12,7 +12,7 @@ public class GraphTests
     [TestMethod]
     public void AddEdge_CreatesVerticesAndEdge()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         Assert.IsTrue(g.AddEdge(1, 2));
         Assert.IsTrue(g.HasEdge(1, 2));
         Assert.IsFalse(g.HasEdge(2, 1));
@@ -23,7 +23,7 @@ public class GraphTests
     [TestMethod]
     public void AddVertex_And_ContainsVertex()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         Assert.IsTrue(g.AddVertex(1));
         Assert.IsTrue(g.ContainsVertex(1));
         Assert.AreEqual(1, g.VertexCount);
@@ -32,7 +32,7 @@ public class GraphTests
     [TestMethod]
     public void AddVertex_Duplicate_ReturnsFalse()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddVertex(1);
         Assert.IsFalse(g.AddVertex(1));
     }
@@ -40,7 +40,7 @@ public class GraphTests
     [TestMethod]
     public void BreadthFirst_TraversesCorrectly()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         g.AddEdge(2, 4);
@@ -54,7 +54,7 @@ public class GraphTests
     [TestMethod]
     public void Clear_RemovesAll()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         g.Clear();
         Assert.AreEqual(0, g.VertexCount);
@@ -65,7 +65,7 @@ public class GraphTests
     [TestMethod]
     public void DepthFirst_TraversesCorrectly()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         g.AddEdge(2, 4);
@@ -80,7 +80,7 @@ public class GraphTests
     [TestMethod]
     public void Neighbors_ReturnsAdjacentVertices()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         g.AddEdge(1, 3);
         List<int> neighbors = [.. g.Neighbors(1)];
@@ -92,7 +92,7 @@ public class GraphTests
     [TestMethod]
     public void RemoveEdge_RemovesEdge()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         Assert.IsTrue(g.RemoveEdge(1, 2));
         Assert.IsFalse(g.HasEdge(1, 2));
@@ -101,7 +101,7 @@ public class GraphTests
     [TestMethod]
     public void RemoveVertex_RemovesVertexAndEdges()
     {
-        Graph<int> g = new Graph<int>();
+        Graph<int> g = new();
         g.AddEdge(1, 2);
         g.AddEdge(2, 3);
         g.AddEdge(3, 1);

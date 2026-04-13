@@ -11,11 +11,11 @@ namespace Catharsis.Services;
 public sealed class BufferLogger : IDisposable
 {
     #region Fields
-    readonly PooledStringBuilder _builder;
-    bool _disposed;
-    readonly ILogger _innerLogger;
-    int _pendingEntries;
-    readonly object _syncLock = new();
+    private readonly PooledStringBuilder _builder;
+    private bool _disposed;
+    private readonly ILogger _innerLogger;
+    private int _pendingEntries;
+    private readonly Lock _syncLock = new();
     #endregion
 
     #region Constructors
@@ -40,7 +40,7 @@ public sealed class BufferLogger : IDisposable
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -61,9 +61,9 @@ public sealed class BufferLogger : IDisposable
         string output;
         int entries;
 
-        lock(_syncLock)
+        lock (_syncLock)
         {
-            if(_pendingEntries == 0)
+            if (_pendingEntries == 0)
             {
                 return;
             }
@@ -74,7 +74,8 @@ public sealed class BufferLogger : IDisposable
             _pendingEntries = 0;
         }
 
-        _innerLogger.LogInformation("Flushing {EntryCount} buffered log entries:\n{Content}", entries, output);
+        if (_innerLogger.IsEnabled(LogLevel.Information))
+            _innerLogger.LogInformation("Flushing {EntryCount} buffered log entries:\n{Content}", entries, output);
     }
 
     ///<summary>
@@ -86,7 +87,7 @@ public sealed class BufferLogger : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        lock(_syncLock)
+        lock (_syncLock)
         {
             _builder.Append('[');
             _builder.Append(level.ToString().AsSpan());

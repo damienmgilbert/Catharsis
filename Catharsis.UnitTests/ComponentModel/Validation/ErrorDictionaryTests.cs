@@ -12,7 +12,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void AddError_NullError_ThrowsArgumentNullException()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => dict.AddError("Name", null!));
     }
@@ -20,7 +20,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void AddError_NullPropertyName_ThrowsArgumentNullException()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => dict.AddError(null!, new ErrorInfo("msg")));
     }
@@ -28,7 +28,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void AddError_SingleError_HasErrorsReturnsTrue()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         dict.AddError("Name", new ErrorInfo("Required."));
 
@@ -38,7 +38,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ClearAll_RemovesAllErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err"));
         dict.AddError("Age", new ErrorInfo("err"));
 
@@ -52,7 +52,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ClearErrors_RemovesErrorsForProperty()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err"));
         dict.AddError("Age", new ErrorInfo("err"));
 
@@ -65,7 +65,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ErrorsChanged_NotRaisedWhenClearingEmptyProperty()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         bool raised = false;
         dict.ErrorsChanged += (s, e) => raised = true;
 
@@ -77,11 +77,11 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ErrorsChanged_RaisedForEachPropertyOnClearAll()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err"));
         dict.AddError("Age", new ErrorInfo("err"));
 
-        List<string> changedProperties = new List<string>();
+        List<string> changedProperties = [];
         dict.ErrorsChanged += (s, e) => changedProperties.Add(e.PropertyName!);
 
         dict.ClearAll();
@@ -94,7 +94,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ErrorsChanged_RaisedOnAddError()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         string? changedProperty = null;
         dict.ErrorsChanged += (s, e) => changedProperty = e.PropertyName;
 
@@ -106,7 +106,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void ErrorsChanged_RaisedOnClearErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err"));
 
         string? changedProperty = null;
@@ -120,7 +120,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void GetErrorInfos_ReturnsTypedList()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("Required."));
 
         IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
@@ -132,7 +132,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void GetErrors_ByPropertyName_ReturnsOnlyThatProperty()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("Required."));
         dict.AddError("Age", new ErrorInfo("Out of range."));
 
@@ -145,7 +145,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void GetErrors_NullOrEmpty_ReturnsAllErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err1"));
         dict.AddError("Age", new ErrorInfo("err2"));
 
@@ -157,7 +157,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void GetErrors_UnknownProperty_ReturnsEmptyList()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         List<ErrorInfo> errors = [.. dict.GetErrors("Unknown").Cast<ErrorInfo>()];
 
@@ -167,7 +167,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void HasErrors_NoErrors_ReturnsFalse()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         Assert.IsFalse(dict.HasErrors);
     }
@@ -175,7 +175,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void PropertyErrorCount_ReturnsDistinctPropertyCount()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err1"));
         dict.AddError("Name", new ErrorInfo("err2"));
         dict.AddError("Age", new ErrorInfo("err3"));
@@ -186,7 +186,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void SetErrors_EmptyList_ClearsErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err"));
 
         dict.SetErrors("Name", []);
@@ -197,7 +197,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void SetErrors_NullPropertyName_ThrowsArgumentNullException()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => dict.SetErrors(null!, [ new ErrorInfo("msg") ]));
     }
@@ -205,7 +205,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void SetErrors_ReplacesExistingErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("old"));
 
         dict.SetErrors("Name", [ new ErrorInfo("new1"), new ErrorInfo("new2") ]);
@@ -218,7 +218,7 @@ public sealed class ErrorDictionaryTests
     [TestMethod]
     public void TotalErrorCount_ReturnsSumOfAllErrors()
     {
-        ErrorDictionary dict = new ErrorDictionary();
+        ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("err1"));
         dict.AddError("Name", new ErrorInfo("err2"));
         dict.AddError("Age", new ErrorInfo("err3"));

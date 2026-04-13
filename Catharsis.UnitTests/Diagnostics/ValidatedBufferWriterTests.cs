@@ -13,8 +13,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void Advance_NegativeCount_Throws()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.Full);
         writer.GetSpan(10);
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => writer.Advance(-1));
     }
@@ -22,8 +22,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void Advance_PastSpanSize_Throws()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.Full);
         writer.GetSpan(5);
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => writer.Advance(99999));
     }
@@ -31,8 +31,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void Constructor_SetsMode()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.Full);
         Assert.AreEqual(ValidationMode.Full, writer.Mode);
         Assert.AreEqual(0L, writer.TotalAdvanced);
     }
@@ -40,8 +40,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void GetMemory_ReturnsNonEmptyMemory()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.Full);
 
         Memory<byte> mem = writer.GetMemory(10);
         Assert.IsGreaterThanOrEqualTo(10, mem.Length);
@@ -50,8 +50,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void GetSpan_And_Advance_TracksTotal()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.Full);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.Full);
 
         Span<byte> span = writer.GetSpan(5);
         span[0] = 1;
@@ -63,8 +63,8 @@ public class ValidatedBufferWriterTests
     [TestMethod]
     public void NoneMode_SkipsValidation()
     {
-        ArrayBufferWriter<byte> inner = new ArrayBufferWriter<byte>();
-        ValidatedBufferWriter<byte> writer = new ValidatedBufferWriter<byte>(inner, ValidationMode.None);
+        ArrayBufferWriter<byte> inner = new();
+        ValidatedBufferWriter<byte> writer = new(inner, ValidationMode.None);
         writer.GetSpan(5);
         writer.Advance(3);
         Assert.AreEqual(3L, writer.TotalAdvanced);

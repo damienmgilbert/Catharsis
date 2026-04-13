@@ -15,7 +15,7 @@ public class HighThroughputLoggingPipelineTests
     public void Flush_DoesNotThrow()
     {
         ILogger logger = NullLoggerFactory.Instance.CreateLogger("test");
-        HighThroughputLoggingPipeline pipeline = new HighThroughputLoggingPipeline(logger);
+        HighThroughputLoggingPipeline pipeline = new(logger);
         pipeline.Log(LogLevel.Debug, "msg");
         pipeline.Flush();
     }
@@ -24,7 +24,7 @@ public class HighThroughputLoggingPipelineTests
     public void Log_AutoFlushes_AtThreshold()
     {
         ILogger logger = NullLoggerFactory.Instance.CreateLogger("test");
-        HighThroughputLoggingPipeline pipeline = new HighThroughputLoggingPipeline(logger, flushThreshold: 3);
+        HighThroughputLoggingPipeline pipeline = new(logger, flushThreshold: 3);
 
         for(int i = 0; i < 3; i++)
         {
@@ -38,7 +38,7 @@ public class HighThroughputLoggingPipelineTests
     public void Log_IncrementsTotalEntries()
     {
         ILogger logger = NullLoggerFactory.Instance.CreateLogger("test");
-        HighThroughputLoggingPipeline pipeline = new HighThroughputLoggingPipeline(logger, flushThreshold: 10);
+        HighThroughputLoggingPipeline pipeline = new(logger, flushThreshold: 10);
 
         pipeline.Log(LogLevel.Information, "test message");
 
@@ -49,7 +49,7 @@ public class HighThroughputLoggingPipelineTests
     public void LogTimed_MeasuresExecution()
     {
         ILogger logger = NullLoggerFactory.Instance.CreateLogger("test");
-        HighThroughputLoggingPipeline pipeline = new HighThroughputLoggingPipeline(logger, flushThreshold: 100);
+        HighThroughputLoggingPipeline pipeline = new(logger, flushThreshold: 100);
         bool executed = false;
 
         pipeline.LogTimed(

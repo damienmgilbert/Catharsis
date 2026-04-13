@@ -13,7 +13,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void ActionList_DefaultCreateActionList_ReturnsNull()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
         designer.Initialize(new StubComponent());
 
         Assert.IsNull(designer.ActionList);
@@ -22,7 +22,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void ActionList_OverriddenCreateActionList_ReturnsActionList()
     {
-        using DesignerWithActions designer = new DesignerWithActions();
+        using DesignerWithActions designer = new();
         designer.Initialize(new StubComponent());
 
         Assert.IsNotNull(designer.ActionList);
@@ -31,7 +31,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Component_BeforeInitialize_ReturnsNull()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
 
         Assert.IsNull(designer.Component);
     }
@@ -39,7 +39,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        TestDesigner designer = new TestDesigner();
+        TestDesigner designer = new();
         designer.Initialize(new StubComponent());
 
         designer.Dispose();
@@ -49,7 +49,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Dispose_ClearsContextAndActionList()
     {
-        DesignerWithActions designer = new DesignerWithActions();
+        DesignerWithActions designer = new();
         designer.Initialize(new StubComponent());
         Assert.IsNotNull(designer.ActionList);
 
@@ -62,7 +62,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_AfterDispose_ThrowsObjectDisposedException()
     {
-        TestDesigner designer = new TestDesigner();
+        TestDesigner designer = new();
         designer.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => designer.Initialize(new StubComponent()));
@@ -71,7 +71,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_CalledTwice_ThrowsInvalidOperationException()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
         designer.Initialize(new StubComponent());
 
         Assert.ThrowsExactly<InvalidOperationException>(() => designer.Initialize(new StubComponent()));
@@ -80,7 +80,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_CallsOnInitialize()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
 
         designer.Initialize(new StubComponent());
 
@@ -90,7 +90,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_NullComponent_ThrowsArgumentNullException()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => designer.Initialize(null!));
     }
@@ -98,8 +98,8 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_ValidComponent_SetsComponent()
     {
-        using TestDesigner designer = new TestDesigner();
-        StubComponent component = new StubComponent();
+        using TestDesigner designer = new();
+        StubComponent component = new();
 
         designer.Initialize(component);
 
@@ -109,8 +109,8 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void Initialize_WithContainer_PassesContainerToContext()
     {
-        using TestDesigner designer = new TestDesigner();
-        StubContainer container = new StubContainer();
+        using TestDesigner designer = new();
+        StubContainer container = new();
 
         designer.Initialize(new StubComponent(), container);
 
@@ -120,7 +120,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void NotifyComponentChanged_CallsOnComponentChanged()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
         designer.Initialize(new StubComponent());
 
         designer.NotifyComponentChanged("Name");
@@ -131,7 +131,7 @@ public sealed class ComponentDesignerBaseTests
     [TestMethod]
     public void NotifyComponentChanged_NullPropertyName_ThrowsArgumentNullException()
     {
-        using TestDesigner designer = new TestDesigner();
+        using TestDesigner designer = new();
         designer.Initialize(new StubComponent());
 
         Assert.ThrowsExactly<ArgumentNullException>(() => designer.NotifyComponentChanged(null!));

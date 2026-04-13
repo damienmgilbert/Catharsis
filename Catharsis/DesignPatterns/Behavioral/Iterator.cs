@@ -16,7 +16,7 @@ public class Iterator
     ///<param name="getElements">A delegate that produces a sequence of elements from the aggregate.</param>
     ///<param name="action">The action to apply to each element.</param>
     ///<returns>The original <paramref name="obj"/> after all elements have been visited.</returns>
-    public T Iterate<T, TElement>(T obj, Func<T, IEnumerable<TElement>> getElements, Action<TElement> action)
+    public static T Iterate<T, TElement>(T obj, Func<T, IEnumerable<TElement>> getElements, Action<TElement> action)
     {
         if(getElements is null)
         {

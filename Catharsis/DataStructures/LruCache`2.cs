@@ -99,7 +99,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
             _map.Remove(lru.Value.Key);
         }
 
-        CacheEntry entry = new CacheEntry(key, value);
+        CacheEntry entry = new(key, value);
         LinkedListNode<CacheEntry> node = _order.AddFirst(entry);
         _map[key] = node;
     }

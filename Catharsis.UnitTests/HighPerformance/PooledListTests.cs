@@ -12,7 +12,7 @@ public class PooledListTests
     [TestMethod]
     public void Add_GrowsAutomatically()
     {
-        using PooledList<int> list = new PooledList<int>(2);
+        using PooledList<int> list = new(2);
         for (int i = 0; i < 100; i++)
         {
             list.Add(i);
@@ -24,7 +24,7 @@ public class PooledListTests
     [TestMethod]
     public void Add_IncreasesCount()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list.Add(2);
         Assert.HasCount(2, list);
@@ -35,7 +35,7 @@ public class PooledListTests
     [TestMethod]
     public void AddRange_AddsMultipleItems()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.AddRange([1, 2, 3]);
         Assert.HasCount(3, list);
     }
@@ -43,7 +43,7 @@ public class PooledListTests
     [TestMethod]
     public void Clear_ResetsCount()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list.Add(2);
         list.Clear();
@@ -53,7 +53,7 @@ public class PooledListTests
     [TestMethod]
     public void Constructor_Default_CreatesEmptyList()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         Assert.IsEmpty(list);
         Assert.IsGreaterThanOrEqualTo(16, list.Capacity);
     }
@@ -61,7 +61,7 @@ public class PooledListTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        using PooledList<string> list = new PooledList<string>();
+        using PooledList<string> list = new();
         list.Add("hello");
         Assert.IsTrue(list.Contains("hello"));
         Assert.IsFalse(list.Contains("world"));
@@ -70,7 +70,7 @@ public class PooledListTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        PooledList<int> list = new PooledList<int>();
+        PooledList<int> list = [];
         list.Dispose();
         list.Dispose();
     }
@@ -78,7 +78,7 @@ public class PooledListTests
     [TestMethod]
     public void Enumeration_ReturnsAllItems()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list.Add(2);
         list.Add(3);
@@ -88,7 +88,7 @@ public class PooledListTests
     [TestMethod]
     public void Indexer_SetValue()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list[0] = 42;
         Assert.AreEqual(42, list[0]);
@@ -97,7 +97,7 @@ public class PooledListTests
     [TestMethod]
     public void IndexOf_ReturnsCorrectIndex()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(10);
         list.Add(20);
         Assert.AreEqual(1, list.IndexOf(20));
@@ -107,7 +107,7 @@ public class PooledListTests
     [TestMethod]
     public void Insert_InsertsAtIndex()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list.Add(3);
         list.Insert(1, 2);
@@ -118,7 +118,7 @@ public class PooledListTests
     [TestMethod]
     public void Remove_RemovesItem()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(1);
         list.Add(2);
         Assert.IsTrue(list.Remove(1));
@@ -128,7 +128,7 @@ public class PooledListTests
     [TestMethod]
     public void RemoveAt_RemovesAtIndex()
     {
-        using PooledList<int> list = new PooledList<int>();
+        using PooledList<int> list = new();
         list.Add(10);
         list.Add(20);
         list.Add(30);

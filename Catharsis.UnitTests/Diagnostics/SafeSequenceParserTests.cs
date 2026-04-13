@@ -15,9 +15,9 @@ public class SafeSequenceParserTests
     [TestMethod]
     public void Reset_ClearsStatistics()
     {
-        TestParser inner = new TestParser { ResultToReturn = SequenceParseStatus.Success };
-        SafeSequenceParser parser = new SafeSequenceParser(inner);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1 });
+        TestParser inner = new() { ResultToReturn = SequenceParseStatus.Success };
+        SafeSequenceParser parser = new(inner);
+        ReadOnlySequence<byte> seq = new([1]);
         parser.TryParse(in seq, out _, out _);
 
         parser.Reset();
@@ -30,8 +30,8 @@ public class SafeSequenceParserTests
     [TestMethod]
     public void TryParse_EmptySequence_FullMode_ReturnsNeedMoreData()
     {
-        TestParser inner = new TestParser();
-        SafeSequenceParser parser = new SafeSequenceParser(inner, ValidationMode.Full);
+        TestParser inner = new();
+        SafeSequenceParser parser = new(inner, ValidationMode.Full);
         ReadOnlySequence<byte> seq = ReadOnlySequence<byte>.Empty;
 
         SequenceParseStatus status = parser.TryParse(in seq, out _, out _);
@@ -43,9 +43,9 @@ public class SafeSequenceParserTests
     [TestMethod]
     public void TryParse_InnerThrows_ReturnsInvalidData()
     {
-        TestParser inner = new TestParser { ThrowOnParse = true };
-        SafeSequenceParser parser = new SafeSequenceParser(inner);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1 });
+        TestParser inner = new() { ThrowOnParse = true };
+        SafeSequenceParser parser = new(inner);
+        ReadOnlySequence<byte> seq = new([1]);
 
         SequenceParseStatus status = parser.TryParse(in seq, out _, out _);
 
@@ -56,9 +56,9 @@ public class SafeSequenceParserTests
     [TestMethod]
     public void TryParse_InvalidData_IncrementsFailureCount()
     {
-        TestParser inner = new TestParser { ResultToReturn = SequenceParseStatus.InvalidData };
-        SafeSequenceParser parser = new SafeSequenceParser(inner);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1 });
+        TestParser inner = new() { ResultToReturn = SequenceParseStatus.InvalidData };
+        SafeSequenceParser parser = new(inner);
+        ReadOnlySequence<byte> seq = new([1]);
 
         parser.TryParse(in seq, out _, out _);
 
@@ -68,9 +68,9 @@ public class SafeSequenceParserTests
     [TestMethod]
     public void TryParse_Success_IncrementsSuccessCount()
     {
-        TestParser inner = new TestParser { ResultToReturn = SequenceParseStatus.Success };
-        SafeSequenceParser parser = new SafeSequenceParser(inner);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1, 2, 3 });
+        TestParser inner = new() { ResultToReturn = SequenceParseStatus.Success };
+        SafeSequenceParser parser = new(inner);
+        ReadOnlySequence<byte> seq = new([1, 2, 3]);
 
         SequenceParseStatus status = parser.TryParse(in seq, out _, out _);
 

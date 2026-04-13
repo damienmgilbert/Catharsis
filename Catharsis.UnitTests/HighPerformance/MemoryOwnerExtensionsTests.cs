@@ -76,7 +76,7 @@ public class MemoryOwnerExtensionsTests
         owner.Span[0] = 1;
         owner.Span[1] = 2;
         owner.Span[2] = 3;
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
+        ArrayBufferWriter<byte> writer = new();
 
         owner.WriteTo(writer);
 

@@ -22,8 +22,7 @@ public class VisitorTests
         Action<string, string> visit1 = (v, o) => visit1Called = true;
         Action<string, string> visit2 = (v, o) => visit2Called = true;
         // Act
-        Visitor v = new Visitor();
-        string result = v.Accept(v.Accept(obj, visitor1, visit1), visitor2, visit2);
+        string result = Visitor.Accept(Visitor.Accept(obj, visitor1, visit1), visitor2, visit2);
         // Assert
         Assert.IsTrue(visit1Called);
         Assert.IsTrue(visit2Called);
@@ -37,12 +36,12 @@ public class VisitorTests
     public void Accept_ComplexReferenceType_WorksCorrectly()
     {
         // Arrange
-        List<int> obj = new System.Collections.Generic.List<int> { 1, 2, 3 };
-        Dictionary<string, int> visitor = new System.Collections.Generic.Dictionary<string, int>();
+        List<int> obj = [1, 2, 3];
+        Dictionary<string, int> visitor = [];
         bool visitWasCalled = false;
         Action<System.Collections.Generic.Dictionary<string, int>, System.Collections.Generic.List<int>> visit = (v, o) => visitWasCalled = true;
         // Act
-        List<int> result = new Visitor().Accept(obj, visitor, visit);
+        List<int> result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreSame(obj, result);
@@ -66,7 +65,7 @@ public class VisitorTests
             return dv.ProcessorId + dobj.Id;
         };
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -83,7 +82,7 @@ public class VisitorTests
         bool visitWasCalled = false;
         Action<string, int> visit = (v, o) => visitWasCalled = true;
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreEqual(obj, result);
@@ -101,7 +100,7 @@ public class VisitorTests
         const string visitor = "test";
         Func<string, string, bool> visit = static (v, o) => v == o;
         // Act
-        bool result = new Visitor().Accept(obj, visitor, visit);
+        bool result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(result);
     }
@@ -123,7 +122,7 @@ public class VisitorTests
             capturedObj = o;
         };
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreSame(string.Empty, capturedObj);
@@ -143,7 +142,7 @@ public class VisitorTests
         const string expectedResult = "0";
         Func<string, string, string> visit = static (v, o) => (v.Length + o.Length).ToString();
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -167,7 +166,7 @@ public class VisitorTests
             capturedObj = o;
         };
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreEqual(int.MinValue, capturedVisitor);
@@ -188,7 +187,7 @@ public class VisitorTests
         const long expectedResult = ((long)int.MaxValue) + int.MinValue;
         Func<int, int, long> visit = static (v, o) => ((long)v) + o;
         // Act
-        long result = new Visitor().Accept(obj, visitor, visit);
+        long result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -204,9 +203,9 @@ public class VisitorTests
         string? obj = null;
         const string visitor = "visitor";
         const string expectedResult = "visitor processed null";
-        Func<string, string?, string> visit = static (v, o) => $"{v} processed {((o == null) ? "null" : o)}";
+        Func<string, string?, string> visit = static (v, o) => $"{v} processed {(o ?? "null")}";
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -228,7 +227,7 @@ public class VisitorTests
             capturedObj = o;
         };
         // Act
-        string? result = new Visitor().Accept(obj, visitor, visit);
+        string? result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.IsNull(capturedObj);
@@ -247,7 +246,7 @@ public class VisitorTests
         int callCount = 0;
         Action<string, string> visit = (v, o) => callCount++;
         // Act
-        new Visitor().Accept(obj, visitor, visit);
+        Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(1, callCount);
     }
@@ -259,13 +258,13 @@ public class VisitorTests
     public void Accept_ValidInputs_ReturnsSameObjectInstance()
     {
         // Arrange
-        object obj = new object();
-        object visitor = new object();
+        object obj = new();
+        object visitor = new();
         Action<object, object> visit = static (v, o) =>
         {
         };
         // Act
-        object result = new Visitor().Accept(obj, visitor, visit);
+        object result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreSame(obj, result);
     }
@@ -289,7 +288,7 @@ public class VisitorTests
             return "result";
         };
         // Act
-        new Visitor().Accept(obj, visitor, visit);
+        Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(visitor, capturedVisitor);
         Assert.AreEqual(obj, capturedObj);
@@ -308,7 +307,7 @@ public class VisitorTests
         const string expectedResult = "visitor processed element";
         Func<string, string, string> visit = static (v, o) => $"{v} processed {o}";
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -332,7 +331,7 @@ public class VisitorTests
             capturedObj = o;
         };
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreSame(visitor, capturedVisitor);
@@ -359,7 +358,7 @@ public class VisitorTests
             capturedObj = o;
         };
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreEqual(visitor, capturedVisitor);
@@ -380,7 +379,7 @@ public class VisitorTests
         const int expectedResult = 52;
         Func<int, int, int> visit = static (v, o) => v + o;
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -393,12 +392,12 @@ public class VisitorTests
     public void Accept_VeryLongStrings_ReturnsExpectedResult()
     {
         // Arrange
-        string obj = new string('a', 10000);
-        string visitor = new string('b', 5000);
+        string obj = new('a', 10000);
+        string visitor = new('b', 5000);
         const int expectedResult = 15000;
         Func<string, string, int> visit = static (v, o) => v.Length + o.Length;
         // Act
-        int result = new Visitor().Accept(obj, visitor, visit);
+        int result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -410,11 +409,11 @@ public class VisitorTests
     public void Accept_VisitActionWithSideEffects_SideEffectsAreExecuted()
     {
         // Arrange
-        List<int> obj = new System.Collections.Generic.List<int>();
+        List<int> obj = [];
         int visitor = 42;
         Action<int, System.Collections.Generic.List<int>> visit = static (v, o) => o.Add(v);
         // Act
-        List<int> result = new Visitor().Accept(obj, visitor, visit);
+        List<int> result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.HasCount(1, obj);
         Assert.AreEqual(42, obj[0]);
@@ -433,7 +432,7 @@ public class VisitorTests
         bool visitWasCalled = false;
         Action<string, string> visit = (v, o) => visitWasCalled = true;
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.IsTrue(visitWasCalled);
         Assert.AreSame(obj, result);
@@ -452,7 +451,7 @@ public class VisitorTests
         const string expectedResult = "5";
         Func<string, string, string> visit = static (v, o) => (v.Length + o.Length).ToString();
         // Act
-        string result = new Visitor().Accept(obj, visitor, visit);
+        string result = Visitor.Accept(obj, visitor, visit);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }

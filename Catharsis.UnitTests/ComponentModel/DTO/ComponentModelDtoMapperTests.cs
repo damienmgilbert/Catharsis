@@ -13,8 +13,8 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Constructor_NullOptions_UsesDefault()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper(null);
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new(null);
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
         // Should work without error using defaults
         TargetDto result = mapper.Map<SourceDto, TargetDto>(source);
@@ -25,9 +25,9 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_CopiesMatchingProperties()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
-        TargetDto target = new TargetDto();
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
+        TargetDto target = new();
 
         TargetDto result = mapper.Map<SourceDto, TargetDto>(source, target);
 
@@ -39,8 +39,8 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_CreateNewTarget_CopiesProperties()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
         TargetDto result = mapper.Map<SourceDto, TargetDto>(source);
 
@@ -51,7 +51,7 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_CreateNewTarget_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => mapper.Map<SourceDto, TargetDto>(null!));
     }
@@ -59,8 +59,8 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_MissingProperty_IgnoredByDefault()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
         PartialTargetDto result = mapper.Map<SourceDto, PartialTargetDto>(source, new PartialTargetDto());
 
@@ -70,9 +70,9 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_MissingProperty_StrictMode_ThrowsInvalidOperationException()
     {
-        ComponentModelDtoOptions options = new ComponentModelDtoOptions { IgnoreMissingProperties = false };
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper(options);
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoOptions options = new() { IgnoreMissingProperties = false };
+        ComponentModelDtoMapper mapper = new(options);
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
         Assert.ThrowsExactly<InvalidOperationException>(() => mapper.Map<SourceDto, PartialTargetDto>(source, new PartialTargetDto()));
     }
@@ -80,7 +80,7 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => mapper.Map<SourceDto, TargetDto>(null!, new TargetDto()));
     }
@@ -88,7 +88,7 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_NullTarget_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => mapper.Map<SourceDto, TargetDto>(new SourceDto(), null!));
     }
@@ -96,9 +96,9 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_WithValidation_InvalidTarget_ThrowsValidationException()
     {
-        ComponentModelDtoOptions options = new ComponentModelDtoOptions { ValidateAfterMap = true };
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper(options);
-        SourceDto source = new SourceDto { Name = null, Age = 200 };
+        ComponentModelDtoOptions options = new() { ValidateAfterMap = true };
+        ComponentModelDtoMapper mapper = new(options);
+        SourceDto source = new() { Name = null, Age = 200 };
 
         Assert.ThrowsExactly<ValidationException>(() => mapper.Map<SourceDto, ValidatedTargetDto>(source, new ValidatedTargetDto()));
     }
@@ -106,9 +106,9 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void Map_WithValidation_ValidTarget_Succeeds()
     {
-        ComponentModelDtoOptions options = new ComponentModelDtoOptions { ValidateAfterMap = true };
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper(options);
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoOptions options = new() { ValidateAfterMap = true };
+        ComponentModelDtoMapper mapper = new(options);
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
         ValidatedTargetDto result = mapper.Map<SourceDto, ValidatedTargetDto>(source, new ValidatedTargetDto());
 
@@ -118,18 +118,18 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void ToBindable_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => mapper.ToBindable<SourceDto>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelDtoMapper.ToBindable<SourceDto>(null!));
     }
 
     [TestMethod]
     public void ToBindable_WrapsSourceInBindableRecord()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
-        BindableRecord<SourceDto> result = mapper.ToBindable(source);
+        BindableRecord<SourceDto> result = ComponentModelDtoMapper.ToBindable(source);
 
         Assert.IsInstanceOfType<BindableRecord<SourceDto>>(result);
         Assert.AreSame(source, result.Value);
@@ -138,18 +138,18 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void ToEditable_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => mapper.ToEditable<SourceDto>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelDtoMapper.ToEditable<SourceDto>(null!));
     }
 
     [TestMethod]
     public void ToEditable_WrapsSourceInEditableRecord()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
-        EditableRecord<SourceDto> result = mapper.ToEditable(source);
+        EditableRecord<SourceDto> result = ComponentModelDtoMapper.ToEditable(source);
 
         Assert.IsInstanceOfType<EditableRecord<SourceDto>>(result);
         Assert.AreSame(source, result.Value);
@@ -158,18 +158,18 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void ToMetadataAnnotated_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => mapper.ToMetadataAnnotated<SourceDto>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelDtoMapper.ToMetadataAnnotated<SourceDto>(null!));
     }
 
     [TestMethod]
     public void ToMetadataAnnotated_WrapsSourceInMetadataAnnotatedRecord()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
-        MetadataAnnotatedRecord<SourceDto> result = mapper.ToMetadataAnnotated(source);
+        MetadataAnnotatedRecord<SourceDto> result = ComponentModelDtoMapper.ToMetadataAnnotated(source);
 
         Assert.IsInstanceOfType<MetadataAnnotatedRecord<SourceDto>>(result);
         Assert.AreSame(source, result.Value);
@@ -178,18 +178,18 @@ public sealed class ComponentModelDtoMapperTests
     [TestMethod]
     public void ToValidated_NullSource_ThrowsArgumentNullException()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
+        ComponentModelDtoMapper mapper = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => mapper.ToValidated<SourceDto>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ComponentModelDtoMapper.ToValidated<SourceDto>(null!));
     }
 
     [TestMethod]
     public void ToValidated_WrapsSourceInValidatedRecord()
     {
-        ComponentModelDtoMapper mapper = new ComponentModelDtoMapper();
-        SourceDto source = new SourceDto { Name = "Alice", Age = 30 };
+        ComponentModelDtoMapper mapper = new();
+        SourceDto source = new() { Name = "Alice", Age = 30 };
 
-        ValidatedRecord<SourceDto> result = mapper.ToValidated(source);
+        ValidatedRecord<SourceDto> result = ComponentModelDtoMapper.ToValidated(source);
 
         Assert.IsInstanceOfType<ValidatedRecord<SourceDto>>(result);
         Assert.AreSame(source, result.Value);

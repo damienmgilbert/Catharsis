@@ -13,9 +13,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void ConditionMet_EmptyString_ReturnsFailure()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.IsActive), true);
-        TestModel model = new TestModel { IsActive = true, Details = string.Empty };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.IsActive), true);
+        TestModel model = new() { IsActive = true, Details = string.Empty };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult(string.Empty, context);
 
@@ -25,9 +25,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void ConditionMet_EmptyStringAllowed_ReturnsSuccess()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.IsActive), true) { DisallowEmptyStrings = false };
-        TestModel model = new TestModel { IsActive = true, Details = string.Empty };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.IsActive), true) { DisallowEmptyStrings = false };
+        TestModel model = new() { IsActive = true, Details = string.Empty };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult(string.Empty, context);
 
@@ -37,9 +37,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void ConditionMet_ValueNull_ReturnsFailure()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.IsActive), true);
-        TestModel model = new TestModel { IsActive = true, Details = null };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.IsActive), true);
+        TestModel model = new() { IsActive = true, Details = null };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -50,9 +50,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void ConditionMet_ValuePresent_ReturnsSuccess()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.IsActive), true);
-        TestModel model = new TestModel { IsActive = true, Details = "provided" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.IsActive), true);
+        TestModel model = new() { IsActive = true, Details = "provided" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult("provided", context);
 
@@ -62,9 +62,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void ConditionNotMet_ValueNull_ReturnsSuccess()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.IsActive), true);
-        TestModel model = new TestModel { IsActive = false, Details = null };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.IsActive), true);
+        TestModel model = new() { IsActive = false, Details = null };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -76,9 +76,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void TargetValueNull_ConditionMet_ReturnsFailure()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute(nameof(TestModel.Details), null);
-        TestModel model = new TestModel { Details = null, IsActive = false };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.IsActive) };
+        RequiredIfAttribute attribute = new(nameof(TestModel.Details), null);
+        TestModel model = new() { Details = null, IsActive = false };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.IsActive) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -88,9 +88,9 @@ public class RequiredIfAttributeTests
     [TestMethod]
     public void UnknownDependentProperty_ReturnsFailure()
     {
-        RequiredIfAttribute attribute = new RequiredIfAttribute("NonExistent", true);
-        TestModel model = new TestModel { IsActive = true };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Details) };
+        RequiredIfAttribute attribute = new("NonExistent", true);
+        TestModel model = new() { IsActive = true };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Details) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 

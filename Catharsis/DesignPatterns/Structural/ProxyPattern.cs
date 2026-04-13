@@ -17,7 +17,7 @@ public class ProxyPattern
     ///<param name="before">An optional action executed before the operation.</param>
     ///<param name="after">An optional action executed after the operation.</param>
     ///<returns>The result of <paramref name="operation"/>.</returns>
-    public TResult Proxy<T, TResult>(T obj, Func<T, TResult> operation, Action<T>? before = null, Action<T>? after = null)
+    public static TResult Proxy<T, TResult>(T obj, Func<T, TResult> operation, Action<T>? before = null, Action<T>? after = null)
     {
         if(operation is null)
         {

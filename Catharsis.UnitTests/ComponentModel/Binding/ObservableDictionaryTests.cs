@@ -13,7 +13,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Add_RaisesCollectionChanged_Add()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
         NotifyCollectionChangedAction? action = null;
         dict.CollectionChanged += (s, e) => action = e.Action;
 
@@ -25,8 +25,8 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Add_RaisesPropertyChanged_Count()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
-        List<string> changedProperties = new List<string>();
+        ObservableDictionary<string, int> dict = [];
+        List<string> changedProperties = [];
         dict.PropertyChanged += (s, e) => changedProperties.Add(e.PropertyName!);
 
         dict.Add("key", 42);
@@ -37,7 +37,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Clear_EmptyDictionary_NoNotification()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
         bool raised = false;
         dict.CollectionChanged += (s, e) => raised = true;
 
@@ -49,7 +49,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Clear_RaisesReset()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
+        ObservableDictionary<string, int> dict = new() { { "a", 1 }, { "b", 2 } };
         NotifyCollectionChangedAction? action = null;
         dict.CollectionChanged += (s, e) => action = e.Action;
 
@@ -62,7 +62,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Constructor_Default_IsEmpty()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
 
         Assert.IsEmpty(dict);
     }
@@ -72,7 +72,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Constructor_WithComparer_UsesComparer()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        ObservableDictionary<string, int> dict = new(StringComparer.OrdinalIgnoreCase);
 
         dict.Add("key", 1);
         Assert.IsTrue(dict.ContainsKey("KEY"));
@@ -81,8 +81,8 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Constructor_WithDictionary_CopiesEntries()
     {
-        Dictionary<string, int> source = new Dictionary<string, int> { ["a"] = 1, ["b"] = 2 };
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>(source);
+        Dictionary<string, int> source = new() { ["a"] = 1, ["b"] = 2 };
+        ObservableDictionary<string, int> dict = new(source);
 
         Assert.HasCount(2, dict);
         Assert.AreEqual(1, dict["a"]);
@@ -91,7 +91,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void ContainsKey_ReturnsCorrectResult()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "key", 42 } };
+        ObservableDictionary<string, int> dict = new() { { "key", 42 } };
 
         Assert.IsTrue(dict.ContainsKey("key"));
         Assert.IsFalse(dict.ContainsKey("missing"));
@@ -100,7 +100,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Enumeration_ReturnsAllPairs()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
+        ObservableDictionary<string, int> dict = new() { { "a", 1 }, { "b", 2 } };
 
         List<KeyValuePair<string, int>> pairs = [.. dict];
 
@@ -110,7 +110,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Indexer_Set_ExistingKey_RaisesReplace()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "key", 1 } };
+        ObservableDictionary<string, int> dict = new() { { "key", 1 } };
         NotifyCollectionChangedAction? action = null;
         dict.CollectionChanged += (s, e) => action = e.Action;
 
@@ -122,7 +122,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Indexer_Set_NewKey_RaisesAdd()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
         NotifyCollectionChangedAction? action = null;
         dict.CollectionChanged += (s, e) => action = e.Action;
 
@@ -134,7 +134,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Indexer_Set_SameValue_NoNotification()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "key", 42 } };
+        ObservableDictionary<string, int> dict = new() { { "key", 42 } };
         bool raised = false;
         dict.CollectionChanged += (s, e) => raised = true;
 
@@ -146,7 +146,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Keys_ReturnsAllKeys()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
+        ObservableDictionary<string, int> dict = new() { { "a", 1 }, { "b", 2 } };
 
         Assert.HasCount(2, dict.Keys);
     }
@@ -154,7 +154,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Remove_ExistingKey_RaisesCollectionChanged_Remove()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "key", 42 } };
+        ObservableDictionary<string, int> dict = new() { { "key", 42 } };
         NotifyCollectionChangedAction? action = null;
         dict.CollectionChanged += (s, e) => action = e.Action;
 
@@ -167,7 +167,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Remove_NonExistentKey_ReturnsFalse()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
 
         Assert.IsFalse(dict.Remove("missing"));
     }
@@ -175,7 +175,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void SuppressNotifications_Nested_OnlyRaisesOnOuterDispose()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
         int resetCount = 0;
         dict.CollectionChanged += (s, e) =>
         {
@@ -200,7 +200,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void SuppressNotifications_SuppressesDuringScope()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
         int collectionChangedCount = 0;
         dict.CollectionChanged += (s, e) => collectionChangedCount++;
 
@@ -218,7 +218,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void TryGetValue_ExistingKey_ReturnsTrueAndValue()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "key", 42 } };
+        ObservableDictionary<string, int> dict = new() { { "key", 42 } };
 
         bool found = dict.TryGetValue("key", out int value);
 
@@ -229,7 +229,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void TryGetValue_MissingKey_ReturnsFalse()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int>();
+        ObservableDictionary<string, int> dict = [];
 
         Assert.IsFalse(dict.TryGetValue("missing", out _));
     }
@@ -237,7 +237,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Values_ReturnsAllValues()
     {
-        ObservableDictionary<string, int> dict = new ObservableDictionary<string, int> { { "a", 1 }, { "b", 2 } };
+        ObservableDictionary<string, int> dict = new() { { "a", 1 }, { "b", 2 } };
 
         Assert.HasCount(2, dict.Values);
     }

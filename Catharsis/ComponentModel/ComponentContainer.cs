@@ -63,7 +63,7 @@ public sealed class ComponentContainer : IContainer, IServiceProvider
         // Remove from previous container if sited elsewhere
         component.Site?.Container?.Remove(component);
 
-        ComponentSite site = new ComponentSite(this, component, name, _designMode, _serviceProvider);
+        ComponentSite site = new(this, component, name, _designMode, _serviceProvider);
         _sites.Add(site);
         component.Site = site;
     }

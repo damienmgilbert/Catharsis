@@ -73,7 +73,7 @@ public sealed class HighPerformanceSerializer : IDisposable
         int estimatedSize = serializable.GetSerializedSize();
         int bufferSize = (estimatedSize > 0) ? estimatedSize : 256;
 
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(_pool, bufferSize);
+        using PooledBuffer<byte> buffer = new(_pool, bufferSize);
         serializable.Serialize(buffer);
         bytesWritten = buffer.WrittenCount;
 
@@ -95,7 +95,7 @@ public sealed class HighPerformanceSerializer : IDisposable
         int estimatedSize = serializable.GetSerializedSize();
         int bufferSize = (estimatedSize > 0) ? estimatedSize : 256;
 
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(_pool, bufferSize);
+        using PooledBuffer<byte> buffer = new(_pool, bufferSize);
         serializable.Serialize(buffer);
 
         MemoryOwner<byte> owner = MemoryOwner<byte>.Allocate(buffer.WrittenCount);

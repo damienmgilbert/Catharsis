@@ -12,7 +12,7 @@ public class CollectionCountAttributeTests
     #region Private methods
     private static ValidationContext CreateContext(string memberName)
     {
-        TestModel model = new TestModel();
+        TestModel model = new();
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -25,7 +25,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void CountAboveMaximum_ReturnsFailure()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(1, 3);
+        CollectionCountAttribute attribute = new(1, 3);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3, 4 }, context);
@@ -36,7 +36,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void CountBelowMinimum_ReturnsFailure()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(2, 5);
+        CollectionCountAttribute attribute = new(2, 5);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1 }, context);
@@ -48,7 +48,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void CountWithinRange_ReturnsSuccess()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(1, 5);
+        CollectionCountAttribute attribute = new(1, 5);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3 }, context);
@@ -59,7 +59,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void EmptyCollection_MinimumOne_ReturnsFailure()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(1, 10);
+        CollectionCountAttribute attribute = new(1, 10);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(Array.Empty<int>(), context);
@@ -70,7 +70,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void EmptyCollection_MinimumZero_ReturnsSuccess()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(0, 10);
+        CollectionCountAttribute attribute = new(0, 10);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(Array.Empty<int>(), context);
@@ -81,7 +81,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void ExactCount_ReturnsSuccess()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(3, 3);
+        CollectionCountAttribute attribute = new(3, 3);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3 }, context);
@@ -92,7 +92,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void MinimumOnlyNoMaximum_ReturnsSuccess()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(2);
+        CollectionCountAttribute attribute = new(2);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3 }, context);
@@ -103,7 +103,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void NonEnumerableValue_ReturnsFailure()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(1, 5);
+        CollectionCountAttribute attribute = new(1, 5);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(42, context);
@@ -115,7 +115,7 @@ public class CollectionCountAttributeTests
     [TestMethod]
     public void NullValue_ReturnsSuccess()
     {
-        CollectionCountAttribute attribute = new CollectionCountAttribute(1, 5);
+        CollectionCountAttribute attribute = new(1, 5);
         ValidationContext context = CreateContext(nameof(TestModel.Items));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);

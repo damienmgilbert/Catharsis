@@ -67,11 +67,13 @@ public static class DiBufferPipeline
         {
             Guard.IsNotNull(input);
 
-            _logger.LogInformation("Starting DI pipeline with {ByteCount} bytes of input.", input.Length);
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation("Starting DI pipeline with {ByteCount} bytes of input.", input.Length);
 
             byte[] result = await _processingService.ProcessAsync(input, cancellationToken);
 
-            _logger.LogInformation("Pipeline complete. Output: {OutputBytes} bytes. Total processed: {Total} bytes.", result.Length, _processingService.TotalBytesProcessed);
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation("Pipeline complete. Output: {OutputBytes} bytes. Total processed: {Total} bytes.", result.Length, _processingService.TotalBytesProcessed);
 
             return result;
         }

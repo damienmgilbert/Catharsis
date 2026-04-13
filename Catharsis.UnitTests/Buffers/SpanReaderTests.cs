@@ -18,7 +18,7 @@ public class SpanReaderTests
     [TestMethod]
     public void Constructor_EmptySpan_ZeroLength()
     {
-        SpanReader reader = new SpanReader(ReadOnlySpan<byte>.Empty);
+        SpanReader reader = new([]);
 
         Assert.AreEqual(0, reader.Length);
         Assert.AreEqual(0, reader.Remaining);
@@ -32,7 +32,7 @@ public class SpanReaderTests
     public void Constructor_InitializesCorrectly()
     {
         byte[] data = new byte[10];
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         Assert.AreEqual(0, reader.Position);
         Assert.AreEqual(10, reader.Length);
@@ -49,7 +49,7 @@ public class SpanReaderTests
         int expected = 42;
         byte[] data = new byte[Unsafe.SizeOf<int>()];
         BitConverter.TryWriteBytes(data, expected);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         int result = reader.Read<int>();
 
@@ -63,7 +63,7 @@ public class SpanReaderTests
     public void ReadByte_AtEnd_ThrowsArgumentOutOfRangeException()
     {
         byte[] data = [ 0x01 ];
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
         reader.ReadByte();
 
         try
@@ -82,7 +82,7 @@ public class SpanReaderTests
     public void ReadByte_ReadsByteAndAdvances()
     {
         byte[] data = [ 0xAB, 0xCD ];
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         byte result = reader.ReadByte();
 
@@ -96,7 +96,7 @@ public class SpanReaderTests
     [TestMethod]
     public void ReadBytes_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        SpanReader reader = new SpanReader(new byte[10]);
+        SpanReader reader = new(new byte[10]);
 
         try
         {
@@ -113,7 +113,7 @@ public class SpanReaderTests
     [TestMethod]
     public void ReadBytes_PastEnd_ThrowsArgumentOutOfRangeException()
     {
-        SpanReader reader = new SpanReader(new byte[5]);
+        SpanReader reader = new(new byte[5]);
 
         try
         {
@@ -131,7 +131,7 @@ public class SpanReaderTests
     public void ReadBytes_ReturnsCorrectSlice()
     {
         byte[] data = [ 1, 2, 3, 4, 5 ];
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
         reader.ReadByte(); // skip first
 
         ReadOnlySpan<byte> result = reader.ReadBytes(3);
@@ -151,7 +151,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[8];
         BinaryPrimitives.WriteDoubleLittleEndian(data, 2.71828);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         double result = reader.ReadDoubleLittleEndian();
 
@@ -166,7 +166,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[2];
         BinaryPrimitives.WriteInt16LittleEndian(data, 12345);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         short result = reader.ReadInt16LittleEndian();
 
@@ -182,7 +182,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[4];
         BinaryPrimitives.WriteInt32LittleEndian(data, 123456789);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         int result = reader.ReadInt32LittleEndian();
 
@@ -198,7 +198,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[8];
         BinaryPrimitives.WriteInt64LittleEndian(data, 9876543210L);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         long result = reader.ReadInt64LittleEndian();
 
@@ -214,7 +214,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[4];
         BinaryPrimitives.WriteSingleLittleEndian(data, 3.14f);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         float result = reader.ReadSingleLittleEndian();
 
@@ -229,7 +229,7 @@ public class SpanReaderTests
     {
         byte[] data = new byte[4];
         BinaryPrimitives.WriteInt32LittleEndian(data, 0);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         string result = reader.ReadUtf8String();
 
@@ -247,7 +247,7 @@ public class SpanReaderTests
         byte[] data = new byte[4 + utf8Bytes.Length];
         BinaryPrimitives.WriteInt32LittleEndian(data, utf8Bytes.Length);
         utf8Bytes.CopyTo(data.AsSpan(4));
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         string result = reader.ReadUtf8String();
 
@@ -261,7 +261,7 @@ public class SpanReaderTests
     [TestMethod]
     public void Reset_ResetsPositionToZero()
     {
-        SpanReader reader = new SpanReader(new byte[10]);
+        SpanReader reader = new(new byte[10]);
         reader.Skip(5);
 
         reader.Reset();
@@ -280,7 +280,7 @@ public class SpanReaderTests
         data[0] = 0xFF;
         BinaryPrimitives.WriteInt32LittleEndian(data.AsSpan(1), 42);
         BinaryPrimitives.WriteInt64LittleEndian(data.AsSpan(5), 100L);
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
 
         byte b = reader.ReadByte();
         int i = reader.ReadInt32LittleEndian();
@@ -298,7 +298,7 @@ public class SpanReaderTests
     [TestMethod]
     public void Skip_AdvancesPosition()
     {
-        SpanReader reader = new SpanReader(new byte[10]);
+        SpanReader reader = new(new byte[10]);
 
         reader.Skip(5);
 
@@ -312,7 +312,7 @@ public class SpanReaderTests
     [TestMethod]
     public void Skip_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        SpanReader reader = new SpanReader(new byte[10]);
+        SpanReader reader = new(new byte[10]);
 
         try
         {
@@ -329,7 +329,7 @@ public class SpanReaderTests
     [TestMethod]
     public void Skip_PastEnd_ThrowsArgumentOutOfRangeException()
     {
-        SpanReader reader = new SpanReader(new byte[5]);
+        SpanReader reader = new(new byte[5]);
 
         try
         {
@@ -347,7 +347,7 @@ public class SpanReaderTests
     public void UnreadSpan_ReturnsRemainingBytes()
     {
         byte[] data = [ 1, 2, 3, 4, 5 ];
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
         reader.Skip(2);
 
         ReadOnlySpan<byte> unread = reader.UnreadSpan;

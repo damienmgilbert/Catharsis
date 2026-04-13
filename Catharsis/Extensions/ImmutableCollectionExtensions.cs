@@ -45,7 +45,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new List<T>(count);
+        List<T> result = new(count);
         ImmutableQueue<T> queue = source;
         for(int i = 0; (i < count) && !queue.IsEmpty; i++)
         {
@@ -271,7 +271,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new List<T>(count);
+        List<T> result = new(count);
         ImmutableStack<T> stack = source;
         for(int i = 0; (i < count) && !stack.IsEmpty; i++)
         {

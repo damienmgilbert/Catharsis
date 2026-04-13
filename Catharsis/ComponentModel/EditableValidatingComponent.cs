@@ -152,8 +152,8 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
 
         ClearErrors(propertyName);
 
-        ValidationContext context = new ValidationContext(this) { MemberName = propertyName };
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(this) { MemberName = propertyName };
+        List<ValidationResult> results = [];
 
         Validator.TryValidateProperty(value, context, results);
 
@@ -188,8 +188,8 @@ public abstract class EditableValidatingComponent : EditableComponent, INotifyDa
     {
         ClearAllErrors();
 
-        ValidationContext context = new ValidationContext(this);
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(this);
+        List<ValidationResult> results = [];
 
         Validator.TryValidateObject(this, context, results, validateAllProperties: true);
 

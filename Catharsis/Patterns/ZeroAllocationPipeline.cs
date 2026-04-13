@@ -24,7 +24,7 @@ public static class ZeroAllocationPipeline
 
         Guard.IsGreaterThanOrEqualTo(destination.Length, data.Length / recordSize);
 
-        SpanReader reader = new SpanReader(data);
+        SpanReader reader = new(data);
         int count = 0;
 
         while((reader.Remaining >= recordSize) && (count < destination.Length))
@@ -47,7 +47,7 @@ public static class ZeroAllocationPipeline
     ///<returns>The sum of all integer values.</returns>
     public static long SumCsvIntegers(ReadOnlySpan<char> csvLine)
     {
-        SpanTokenizer tokenizer = new SpanTokenizer(csvLine, ',');
+        SpanTokenizer tokenizer = new(csvLine, ',');
         long sum = 0;
 
         while(tokenizer.TryGetNext(out ReadOnlySpan<char> token))

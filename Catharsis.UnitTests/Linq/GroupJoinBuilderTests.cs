@@ -35,7 +35,7 @@ public class GroupJoinBuilderTests
             .AsTuples()
             .ToList();
 
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual("Alice", result[0].Item1.Name);
         Assert.AreEqual(2, result[0].Item2.Count());
     }
@@ -49,7 +49,7 @@ public class GroupJoinBuilderTests
             .AsGroupings()
             .ToList();
 
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual("Alice", result[0].Key.Name);
     }
 
@@ -62,8 +62,8 @@ public class GroupJoinBuilderTests
             .LeftJoin(static (p, o) => $"{p.Name}:{o?.Product ?? "none"}")
             .ToList();
 
-        Assert.IsTrue(result.Contains("Carol:none"));
-        Assert.AreEqual(4, result.Count); // Alice:Book, Alice:Pen, Bob:Laptop, Carol:none
+        Assert.Contains("Carol:none", result);
+        Assert.HasCount(4, result); // Alice:Book, Alice:Pen, Bob:Laptop, Carol:none
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public class GroupJoinBuilderTests
             .LeftJoinTuples()
             .ToList();
 
-        Assert.AreEqual(4, result.Count);
+        Assert.HasCount(4, result);
     }
 
     [TestMethod]

@@ -12,7 +12,7 @@ public class OrderedSetTests
     [TestMethod]
     public void TryAdd_UniqueItems_ReturnsTrue()
     {
-        OrderedSet<int> set = new OrderedSet<int>();
+        OrderedSet<int> set = new();
         Assert.IsTrue(set.TryAdd(1));
         Assert.IsTrue(set.TryAdd(2));
         Assert.HasCount(2, set);
@@ -21,7 +21,7 @@ public class OrderedSetTests
     [TestMethod]
     public void TryAdd_Duplicate_ReturnsFalse()
     {
-        OrderedSet<int> set = new OrderedSet<int>();
+        OrderedSet<int> set = new();
         set.TryAdd(1);
         Assert.IsFalse(set.TryAdd(1));
         Assert.HasCount(1, set);
@@ -30,7 +30,7 @@ public class OrderedSetTests
     [TestMethod]
     public void Indexer_ReturnsInsertionOrder()
     {
-        OrderedSet<string> set = new OrderedSet<string>();
+        OrderedSet<string> set = new();
         set.TryAdd("b"); set.TryAdd("a"); set.TryAdd("c");
         Assert.AreEqual("b", set[0]);
         Assert.AreEqual("a", set[1]);
@@ -40,7 +40,7 @@ public class OrderedSetTests
     [TestMethod]
     public void Remove_ExistingItem_ReturnsTrue()
     {
-        OrderedSet<int> set = new OrderedSet<int>();
+        OrderedSet<int> set = new();
         set.TryAdd(1); set.TryAdd(2);
         Assert.IsTrue(set.Remove(1));
         Assert.HasCount(1, set);
@@ -50,7 +50,7 @@ public class OrderedSetTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        OrderedSet<int> set = new OrderedSet<int>();
+        OrderedSet<int> set = new();
         set.TryAdd(42);
         Assert.IsTrue(set.Contains(42));
         Assert.IsFalse(set.Contains(99));
@@ -59,7 +59,7 @@ public class OrderedSetTests
     [TestMethod]
     public void Clear_RemovesAllItems()
     {
-        OrderedSet<int> set = new OrderedSet<int>();
+        OrderedSet<int> set = new();
         set.TryAdd(1); set.TryAdd(2);
         set.Clear();
         Assert.IsEmpty(set);

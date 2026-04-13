@@ -119,7 +119,7 @@ public class QueryableComposerTests
     public void WhereIf_ConditionFalse_ReturnsUnchanged()
     {
         List<int> result = Source.WhereIf(false, static x => x > 8).ToList();
-        Assert.AreEqual(10, result.Count);
+        Assert.HasCount(10, result);
     }
 
     [TestMethod]
@@ -135,7 +135,7 @@ public class QueryableComposerTests
     {
         string? threshold = null;
         List<int> result = Source.WhereIfNotNull(threshold, v => x => x > int.Parse(v)).ToList();
-        Assert.AreEqual(10, result.Count);
+        Assert.HasCount(10, result);
     }
 
     [TestMethod]
@@ -151,7 +151,7 @@ public class QueryableComposerTests
     {
         int? min = null;
         List<int> result = Source.WhereIfNotNull(min, v => x => x >= v).ToList();
-        Assert.AreEqual(10, result.Count);
+        Assert.HasCount(10, result);
     }
 
     [TestMethod]

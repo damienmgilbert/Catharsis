@@ -15,7 +15,7 @@ public class BufferLoggerTests
     public void Flush_ClearsPendingEntries()
     {
         ILogger inner = NullLoggerFactory.Instance.CreateLogger("test");
-        using BufferLogger logger = new BufferLogger(inner);
+        using BufferLogger logger = new(inner);
 
         logger.Log(LogLevel.Information, "msg1");
         logger.Log(LogLevel.Warning, "msg2");
@@ -29,7 +29,7 @@ public class BufferLoggerTests
     public void Flush_NoPending_DoesNothing()
     {
         ILogger inner = NullLoggerFactory.Instance.CreateLogger("test");
-        using BufferLogger logger = new BufferLogger(inner);
+        using BufferLogger logger = new(inner);
         logger.Flush();
         Assert.AreEqual(0, logger.PendingEntries);
     }
@@ -38,7 +38,7 @@ public class BufferLoggerTests
     public void Log_BuffersEntry()
     {
         ILogger inner = NullLoggerFactory.Instance.CreateLogger("test");
-        using BufferLogger logger = new BufferLogger(inner);
+        using BufferLogger logger = new(inner);
 
         logger.Log(LogLevel.Information, "test message");
 

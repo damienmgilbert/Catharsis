@@ -48,7 +48,7 @@ public sealed class GroupJoinBuilderResult<TOuter, TInner, TKey>(IEnumerable<TOu
     ///<param name="defaultInner">The fallback inner value when no match exists.</param>
     ///<returns>A flat sequence of tuples.</returns>
     public IEnumerable<(TOuter Outer, TInner? Inner)> LeftJoinTuples(TInner? defaultInner = default)
-    { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer).SelectMany(pair => pair.inners.DefaultIfEmpty(defaultInner!), (pair, innerItem) => (pair.o, innerItem)); }
+    { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer).SelectMany(pair => pair.inners.DefaultIfEmpty(defaultInner!), (pair, innerItem) => (pair.o, (TInner?)innerItem)); }
 
     ///<summary>
     ///Projects each outer element and its matched inner group into a result and executes the group join.

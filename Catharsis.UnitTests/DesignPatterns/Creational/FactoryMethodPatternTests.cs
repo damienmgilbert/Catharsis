@@ -14,10 +14,10 @@ public class FactoryMethodPatternTests
     public void FactoryMethod_DefaultValueType_ReturnsExpectedResult()
     {
         // Arrange
-        int input = default(int);
+        int input = default;
         Func<int, bool> factory = static i => i == default;
         // Act
-        bool result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        bool result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.IsTrue(result);
     }
@@ -33,7 +33,7 @@ public class FactoryMethodPatternTests
         string input = string.Empty;
         Func<string, int> factory = static s => s.Length;
         // Act
-        int result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        int result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual(0, result);
     }
@@ -49,7 +49,7 @@ public class FactoryMethodPatternTests
         string input = "test";
         Func<string, string?> factory = static _ => null;
         // Act
-        string? result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        string? result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.IsNull(result);
     }
@@ -65,7 +65,7 @@ public class FactoryMethodPatternTests
         string input = "test";
         Func<string, string> factory = static s => s;
         // Act
-        string result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        string result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreSame(input, result);
     }
@@ -86,7 +86,7 @@ public class FactoryMethodPatternTests
         Func<int, double> factory = static i => i * 2.5;
         double expected = input * 2.5;
         // Act
-        double result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        double result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual(expected, result);
     }
@@ -102,7 +102,7 @@ public class FactoryMethodPatternTests
         string? input = null;
         Func<string?, string> factory = static s => s ?? "default";
         // Act
-        string result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        string result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual("default", result);
     }
@@ -118,7 +118,7 @@ public class FactoryMethodPatternTests
         string input = "123";
         Func<string, int> factory = static s => int.Parse(s);
         // Act
-        int result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        int result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual(123, result);
     }
@@ -134,7 +134,7 @@ public class FactoryMethodPatternTests
         int input = 42;
         Func<int, string> factory = static i => i.ToString();
         // Act
-        string result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        string result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual("42", result);
     }
@@ -150,7 +150,7 @@ public class FactoryMethodPatternTests
         string input = "   ";
         Func<string, int> factory = static s => s.Trim().Length;
         // Act
-        int result = new FactoryMethodPattern().FactoryMethod(input, factory);
+        int result = FactoryMethodPattern.FactoryMethod(input, factory);
         // Assert
         Assert.AreEqual(0, result);
     }

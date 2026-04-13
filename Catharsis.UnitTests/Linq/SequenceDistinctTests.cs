@@ -30,7 +30,7 @@ public class SequenceDistinctTests
 
         List<(int, string)> result = source.DistinctByKey(static x => x.Id).ToList();
 
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual("a", result.First(static x => x.Item1 == 1).Item2);
     }
 
@@ -40,7 +40,7 @@ public class SequenceDistinctTests
         List<string> result = new[] { "abc", "ABC", "def" }
             .DistinctByKey(static x => x, StringComparer.OrdinalIgnoreCase)
             .ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class SequenceDistinctTests
             .DistinctByKey(static x => x.Id, static (existing, dup) => existing.Value >= dup.Value ? existing : dup)
             .ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual(20, result.First(static x => x.Item1 == 1).Item2);
     }
 

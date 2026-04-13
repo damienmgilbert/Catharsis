@@ -12,7 +12,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Push_AddsItemToStack()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1);
         Assert.HasCount(1, s);
         Assert.AreEqual(1, s.Peek());
@@ -27,7 +27,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Undo_MovesItemToRedoStack()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1); s.Push(2);
 
         int undone = s.Undo();
@@ -46,7 +46,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Redo_RestoresUndoneItem()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1); s.Push(2);
         s.Undo();
 
@@ -60,7 +60,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Redo_NothingToRedo_Throws()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1);
         Assert.ThrowsExactly<InvalidOperationException>(() => s.Redo());
     }
@@ -68,7 +68,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Push_ClearsRedoHistory()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1); s.Push(2);
         s.Undo();
         Assert.IsTrue(s.CanRedo);
@@ -81,7 +81,7 @@ public class HistoryStackTests
     [TestMethod]
     public void Clear_ResetsAll()
     {
-        HistoryStack<int> s = new HistoryStack<int>();
+        HistoryStack<int> s = new();
         s.Push(1); s.Push(2);
         s.Undo();
         s.Clear();

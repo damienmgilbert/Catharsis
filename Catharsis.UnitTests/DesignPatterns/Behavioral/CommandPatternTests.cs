@@ -23,9 +23,9 @@ public class CommandPatternTests
         Action<string> undo = x =>
         {
         };
-        List<Action<string>> undoHistory = new List<Action<string>>();
+        List<Action<string>> undoHistory = [];
         // Act
-        string result = new CommandPattern().Command(obj, execute, undo, undoHistory);
+        string result = CommandPattern.Command(obj, execute, undo, undoHistory);
         // Assert
         Assert.AreEqual(1, executeCallCount);
         Assert.HasCount(1, undoHistory);
@@ -41,13 +41,12 @@ public class CommandPatternTests
     public void Command_ChainedCalls_AllExecuteActionsCalledAndObjectReturned()
     {
         // Arrange
-        List<int> obj = new List<int> { 0 };
-        List<Action<List<int>>> undoHistory = new List<Action<List<int>>>();
+        List<int> obj = [0];
+        List<Action<List<int>>> undoHistory = [];
         // Act
-        CommandPattern cmd = new CommandPattern();
-        List<int> result = cmd.Command(obj, static x => x[0] = x[0] + 1, static x => x[0] = x[0] - 1, undoHistory);
-        result = cmd.Command(result, static x => x[0] = x[0] * 2, static x => x[0] = x[0] / 2, undoHistory);
-        result = cmd.Command(result, static x => x[0] = x[0] + 10, static x => x[0] = x[0] - 10, undoHistory);
+        List<int> result = CommandPattern.Command(obj, static x => x[0] = x[0] + 1, static x => x[0] = x[0] - 1, undoHistory);
+        result = CommandPattern.Command(result, static x => x[0] = x[0] * 2, static x => x[0] = x[0] / 2, undoHistory);
+        result = CommandPattern.Command(result, static x => x[0] = x[0] + 10, static x => x[0] = x[0] - 10, undoHistory);
         // Assert
         Assert.AreEqual(12, obj[0]); // ((0 + 1) * 2) + 10 = 12
         Assert.HasCount(3, undoHistory);
@@ -66,7 +65,7 @@ public class CommandPatternTests
         object? receivedObj = null;
         Action<object> execute = x => receivedObj = x;
         // Act
-        new CommandPattern().Command(obj, execute);
+        CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreSame(obj, receivedObj);
     }
@@ -82,9 +81,9 @@ public class CommandPatternTests
         int obj = 100;
         int executeCallCount = 0;
         Action<int> execute = x => executeCallCount++;
-        List<Action<int>> undoHistory = new List<Action<int>>();
+        List<Action<int>> undoHistory = [];
         // Act
-        int result = new CommandPattern().Command(obj, execute, null, undoHistory);
+        int result = CommandPattern.Command(obj, execute, null, undoHistory);
         // Assert
         Assert.AreEqual(1, executeCallCount);
         Assert.IsEmpty(undoHistory);
@@ -101,7 +100,7 @@ public class CommandPatternTests
     {
         // Arrange
         int obj = 0;
-        List<Action<int>> undoHistory = new List<Action<int>>();
+        List<Action<int>> undoHistory = [];
         Action<int> undo1 = static x =>
         {
         };
@@ -112,21 +111,21 @@ public class CommandPatternTests
         {
         };
         // Act
-        new CommandPattern().Command(
+        CommandPattern.Command(
         obj,
         static x =>
         {
         },
         undo1,
         undoHistory);
-        new CommandPattern().Command(
+        CommandPattern.Command(
         obj,
         static x =>
         {
         },
         undo2,
         undoHistory);
-        new CommandPattern().Command(
+        CommandPattern.Command(
         obj,
         static x =>
         {
@@ -163,7 +162,7 @@ public class CommandPatternTests
                             : null;
         ICollection<Action<int>>? undoHistory = provideHistory ? (new List<Action<int>>()) : null;
         // Act
-        new CommandPattern().Command(obj, execute, undo, undoHistory);
+        CommandPattern.Command(obj, execute, undo, undoHistory);
         // Assert
         if(provideHistory)
         {
@@ -187,7 +186,7 @@ public class CommandPatternTests
         {
         };
         // Act
-        string result = new CommandPattern().Command(obj, execute, undo, null);
+        string result = CommandPattern.Command(obj, execute, undo, null);
         // Assert
         Assert.AreEqual(1, executeCallCount);
         Assert.AreEqual(obj, result);
@@ -205,7 +204,7 @@ public class CommandPatternTests
         int executeCallCount = 0;
         Action<int> execute = x => executeCallCount++;
         // Act
-        int result = new CommandPattern().Command(obj, execute);
+        int result = CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreEqual(1, executeCallCount);
         Assert.AreEqual(obj, result);
@@ -219,10 +218,10 @@ public class CommandPatternTests
     public void Command_WithComplexType_ExecutesAndReturnsObject()
     {
         // Arrange
-        Dictionary<string, int> obj = new Dictionary<string, int> { { "a", 1 } };
+        Dictionary<string, int> obj = new() { { "a", 1 } };
         Action<Dictionary<string, int>> execute = static x => x["b"] = 2;
         // Act
-        Dictionary<string, int> result = new CommandPattern().Command(obj, execute);
+        Dictionary<string, int> result = CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreSame(obj, result);
         Assert.HasCount(2, result);
@@ -244,9 +243,9 @@ public class CommandPatternTests
         Action<int> undo = static x =>
         {
         };
-        List<Action<int>> undoHistory = new List<Action<int>>();
+        List<Action<int>> undoHistory = [];
         // Act
-        new CommandPattern().Command(obj, execute, undo, undoHistory);
+        CommandPattern.Command(obj, execute, undo, undoHistory);
         // Assert
         Assert.HasCount(1, undoHistory);
         Assert.AreSame(undo, undoHistory[0]);
@@ -269,14 +268,14 @@ public class CommandPatternTests
         };
         int addCallCount = 0;
         Action<string>? addedItem = null;
-        TrackingCollection<Action<string>> history = new TrackingCollection<Action<string>>(
+        TrackingCollection<Action<string>> history = new(
                                                      item =>
                                                      {
                                                          addCallCount++;
                                                          addedItem = item;
                                                      });
         // Act
-        new CommandPattern().Command(obj, execute, undo, history);
+        CommandPattern.Command(obj, execute, undo, history);
         // Assert
         Assert.AreEqual(1, addCallCount);
         Assert.AreSame(undo, addedItem);
@@ -294,7 +293,7 @@ public class CommandPatternTests
         int executeCallCount = 0;
         Action<string?> execute = x => executeCallCount++;
         // Act
-        string result = new CommandPattern().Command(obj, execute);
+        string result = CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreEqual(1, executeCallCount);
         Assert.AreSame(obj, result);
@@ -308,10 +307,10 @@ public class CommandPatternTests
     public void Command_WithReferenceType_ReturnsIdenticalReference()
     {
         // Arrange
-        List<int> obj = new List<int> { 1, 2, 3 };
+        List<int> obj = [1, 2, 3];
         Action<List<int>> execute = static x => x.Add(4);
         // Act
-        List<int> result = new CommandPattern().Command(obj, execute);
+        List<int> result = CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreSame(obj, result);
         Assert.HasCount(4, result);
@@ -329,7 +328,7 @@ public class CommandPatternTests
         int capturedValue = 0;
         Action<int> execute = x => capturedValue = x;
         // Act
-        int result = new CommandPattern().Command(obj, execute);
+        int result = CommandPattern.Command(obj, execute);
         // Assert
         Assert.AreEqual(999, capturedValue);
         Assert.AreEqual(999, result);

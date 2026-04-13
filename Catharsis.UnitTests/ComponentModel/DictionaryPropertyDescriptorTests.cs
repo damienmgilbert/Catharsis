@@ -11,8 +11,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void CanResetValue_ReturnsTrue()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.IsTrue(prop.CanResetValue(null!));
     }
@@ -20,8 +20,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void GetValue_MissingKey_ReturnsNull()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.IsNull(prop.GetValue(null));
     }
@@ -29,8 +29,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void GetValue_ReturnsValueFromStore()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?> { ["Name"] = "Alice" };
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = new() { ["Name"] = "Alice" };
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.AreEqual("Alice", prop.GetValue(null));
     }
@@ -38,8 +38,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void IsReadOnly_ReturnsFalse()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.IsFalse(prop.IsReadOnly);
     }
@@ -47,8 +47,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void PropertyType_ReturnsConfiguredType()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Age", typeof(int), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Age", typeof(int), store);
 
         Assert.AreEqual(typeof(int), prop.PropertyType);
     }
@@ -56,8 +56,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void ResetValue_RemovesFromStore()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?> { ["Name"] = "Alice" };
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = new() { ["Name"] = "Alice" };
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         prop.ResetValue(null!);
 
@@ -67,8 +67,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void SetValue_UpdatesStore()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         prop.SetValue(null, "Bob");
 
@@ -78,8 +78,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void ShouldSerializeValue_ReturnsFalseWhenAbsent()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?>();
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = [];
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.IsFalse(prop.ShouldSerializeValue(null!));
     }
@@ -87,8 +87,8 @@ public class DictionaryPropertyDescriptorTests
     [TestMethod]
     public void ShouldSerializeValue_ReturnsTrueWhenPresent()
     {
-        Dictionary<string, object?> store = new Dictionary<string, object?> { ["Name"] = "Alice" };
-        DictionaryPropertyDescriptor prop = new DictionaryPropertyDescriptor("Name", typeof(string), store);
+        Dictionary<string, object?> store = new() { ["Name"] = "Alice" };
+        DictionaryPropertyDescriptor prop = new("Name", typeof(string), store);
 
         Assert.IsTrue(prop.ShouldSerializeValue(null!));
     }

@@ -13,7 +13,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_String_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.CanConvertFrom(null, typeof(string)));
     }
@@ -21,7 +21,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_UnderlyingType_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.CanConvertFrom(null, typeof(int)));
     }
@@ -29,7 +29,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_UnsupportedType_ReturnsFalse()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsFalse(converter.CanConvertFrom(null, typeof(DateTime)));
     }
@@ -37,7 +37,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void CanConvertTo_String_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.CanConvertTo(null, typeof(string)));
     }
@@ -45,7 +45,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void CanConvertTo_UnderlyingType_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.CanConvertTo(null, typeof(int)));
     }
@@ -53,7 +53,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_CaseInsensitiveString_ReturnsEnumValue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "green");
 
@@ -63,7 +63,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_EmptyString_ThrowsFormatException()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.ThrowsExactly<FormatException>(() => converter.ConvertFrom(null, CultureInfo.InvariantCulture, string.Empty));
     }
@@ -71,7 +71,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_FlagsCommaString_ReturnsCompositeValue()
     {
-        EnumTypeConverter<Permissions> converter = new EnumTypeConverter<Permissions>();
+        EnumTypeConverter<Permissions> converter = new();
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "Read, Write");
 
@@ -81,7 +81,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_InvalidString_ThrowsFormatException()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.ThrowsExactly<FormatException>(() => converter.ConvertFrom(null, CultureInfo.InvariantCulture, "Purple"));
     }
@@ -89,7 +89,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_StringWithWhitespace_ReturnsEnumValue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "  Blue  ");
 
@@ -99,7 +99,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_UnderlyingIntValue_ReturnsEnumValue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, 1);
 
@@ -109,7 +109,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_ValidString_ReturnsEnumValue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "Green");
 
@@ -119,7 +119,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertFrom_WhitespaceOnlyString_ThrowsFormatException()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.ThrowsExactly<FormatException>(() => converter.ConvertFrom(null, CultureInfo.InvariantCulture, "   "));
     }
@@ -127,7 +127,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertTo_EnumToString_ReturnsName()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, Color.Blue, typeof(string));
 
@@ -137,7 +137,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertTo_EnumToUnderlyingType_ReturnsIntValue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, Color.Green, typeof(int));
 
@@ -147,7 +147,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertTo_FlagsComposite_ReturnsCommaString()
     {
-        EnumTypeConverter<Permissions> converter = new EnumTypeConverter<Permissions>();
+        EnumTypeConverter<Permissions> converter = new();
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, Permissions.Read | Permissions.Execute, typeof(string));
 
@@ -157,7 +157,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void ConvertTo_NullDestinationType_ThrowsArgumentNullException()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => converter.ConvertTo(null, CultureInfo.InvariantCulture, Color.Red, null!));
     }
@@ -173,7 +173,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void GetStandardValues_ReturnsAllEnumValues()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         System.ComponentModel.TypeConverter.StandardValuesCollection values = converter.GetStandardValues(null);
 
@@ -184,7 +184,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void GetStandardValuesExclusive_Flags_ReturnsFalse()
     {
-        EnumTypeConverter<Permissions> converter = new EnumTypeConverter<Permissions>();
+        EnumTypeConverter<Permissions> converter = new();
 
         Assert.IsFalse(converter.GetStandardValuesExclusive(null));
     }
@@ -192,7 +192,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void GetStandardValuesExclusive_NonFlags_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.GetStandardValuesExclusive(null));
     }
@@ -200,7 +200,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void GetStandardValuesSupported_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.GetStandardValuesSupported(null));
     }
@@ -212,7 +212,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void IsValid_InvalidString_ReturnsFalse()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsFalse(converter.IsValid(null, "Purple"));
     }
@@ -220,7 +220,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void IsValid_Null_ReturnsFalse()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsFalse(converter.IsValid(null, null));
     }
@@ -228,7 +228,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void IsValid_ValidEnumValue_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.IsValid(null, Color.Red));
     }
@@ -236,7 +236,7 @@ public sealed class EnumTypeConverterTests
     [TestMethod]
     public void IsValid_ValidString_ReturnsTrue()
     {
-        EnumTypeConverter<Color> converter = new EnumTypeConverter<Color>();
+        EnumTypeConverter<Color> converter = new();
 
         Assert.IsTrue(converter.IsValid(null, "Green"));
     }

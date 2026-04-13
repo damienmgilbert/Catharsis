@@ -23,7 +23,7 @@ public class ComponentModelDtoOptionsTests
     [TestMethod]
     public void Properties_CanBeModified()
     {
-        ComponentModelDtoOptions options = new ComponentModelDtoOptions { RaisePropertyChangedOnMap = false, ValidateAfterMap = true, PreserveMetadata = false, IgnoreMissingProperties = false, PropertyNameComparison = StringComparison.OrdinalIgnoreCase };
+        ComponentModelDtoOptions options = new() { RaisePropertyChangedOnMap = false, ValidateAfterMap = true, PreserveMetadata = false, IgnoreMissingProperties = false, PropertyNameComparison = StringComparison.OrdinalIgnoreCase };
 
         Assert.IsFalse(options.RaisePropertyChangedOnMap);
         Assert.IsTrue(options.ValidateAfterMap);

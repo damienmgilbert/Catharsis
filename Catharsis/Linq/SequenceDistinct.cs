@@ -115,7 +115,7 @@ public static class SequenceDistinct
     ///<param name="comparer">An optional equality comparer for keys.</param>
     ///<returns>A sequence of elements with distinct keys, resolved by <paramref name="duplicateResolver"/>.</returns>
     ///<exception cref="ArgumentNullException">Any delegate argument is <c>null</c>.</exception>
-    public static IEnumerable<T> DistinctByKey<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector, Func<T, T, T> duplicateResolver, IEqualityComparer<TKey>? comparer = null)
+    public static IEnumerable<T> DistinctByKey<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector, Func<T, T, T> duplicateResolver, IEqualityComparer<TKey>? comparer = null) where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));

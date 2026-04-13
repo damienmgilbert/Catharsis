@@ -13,8 +13,8 @@ public class StreamingSequenceReaderTests
     [TestMethod]
     public async Task ReadAllAsync_EmptyStream()
     {
-        using StreamingSequenceReader reader = new StreamingSequenceReader();
-        using MemoryStream stream = new MemoryStream([]);
+        using StreamingSequenceReader reader = new();
+        using MemoryStream stream = new([]);
 
         ReadOnlySequence<byte> sequence = await reader.ReadAllAsync(stream);
 
@@ -24,9 +24,9 @@ public class StreamingSequenceReaderTests
     [TestMethod]
     public async Task ReadAllAsync_ReadsEntireStream()
     {
-        using StreamingSequenceReader reader = new StreamingSequenceReader();
+        using StreamingSequenceReader reader = new();
         byte[] data = [ 1, 2, 3, 4, 5 ];
-        using MemoryStream stream = new MemoryStream(data);
+        using MemoryStream stream = new(data);
 
         ReadOnlySequence<byte> sequence = await reader.ReadAllAsync(stream);
 
@@ -37,7 +37,7 @@ public class StreamingSequenceReaderTests
     [TestMethod]
     public void Reset_ClearsTotalBytesRead()
     {
-        using StreamingSequenceReader reader = new StreamingSequenceReader();
+        using StreamingSequenceReader reader = new();
         reader.Reset();
         Assert.AreEqual(0, reader.TotalBytesRead);
     }

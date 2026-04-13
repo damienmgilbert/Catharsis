@@ -14,7 +14,7 @@ public sealed class ConverterContextTests
     public void Constructor_Defaults_AppliedCorrectly()
     {
         // Arrange & Act
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture);
+        ConverterContext context = new(CultureInfo.InvariantCulture);
 
         // Assert
         Assert.IsNull(context.Format);
@@ -32,7 +32,7 @@ public sealed class ConverterContextTests
         CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
 
         // Act
-        ConverterContext context = new ConverterContext(culture, "N2", ignoreCase: false, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
+        ConverterContext context = new(culture, "N2", ignoreCase: false, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
 
         // Assert
         Assert.AreSame(culture, context.Culture);
@@ -61,7 +61,7 @@ public sealed class ConverterContextTests
     [TestMethod]
     public void NumberStyles_BothWhiteSpaceAllowed_ReturnsCorrectStyles()
     {
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: true);
+        ConverterContext context = new(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: true);
 
         Assert.AreEqual(NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite, context.NumberStyles);
     }
@@ -69,7 +69,7 @@ public sealed class ConverterContextTests
     [TestMethod]
     public void NumberStyles_NoWhiteSpaceAllowed_ReturnsNone()
     {
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
+        ConverterContext context = new(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
 
         Assert.AreEqual(NumberStyles.None, context.NumberStyles);
     }
@@ -77,7 +77,7 @@ public sealed class ConverterContextTests
     [TestMethod]
     public void NumberStyles_OnlyLeadingAllowed_ReturnsLeadingOnly()
     {
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: false);
+        ConverterContext context = new(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: false);
 
         Assert.AreEqual(NumberStyles.AllowLeadingWhite, context.NumberStyles);
     }
@@ -85,7 +85,7 @@ public sealed class ConverterContextTests
     [TestMethod]
     public void NumberStyles_OnlyTrailingAllowed_ReturnsTrailingOnly()
     {
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: true);
+        ConverterContext context = new(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: true);
 
         Assert.AreEqual(NumberStyles.AllowTrailingWhite, context.NumberStyles);
     }
@@ -102,7 +102,7 @@ public sealed class ConverterContextTests
     public void WithCulture_ValidCulture_ReturnsNewContextWithUpdatedCulture()
     {
         // Arrange
-        ConverterContext original = new ConverterContext(CultureInfo.InvariantCulture, "N2", ignoreCase: false, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
+        ConverterContext original = new(CultureInfo.InvariantCulture, "N2", ignoreCase: false, allowLeadingWhiteSpace: false, allowTrailingWhiteSpace: false);
         CultureInfo newCulture = CultureInfo.GetCultureInfo("de-DE");
 
         // Act
@@ -119,7 +119,7 @@ public sealed class ConverterContextTests
     [TestMethod]
     public void WithFormat_Null_SetsFormatToNull()
     {
-        ConverterContext original = new ConverterContext(CultureInfo.InvariantCulture, "N2");
+        ConverterContext original = new(CultureInfo.InvariantCulture, "N2");
 
         ConverterContext result = original.WithFormat(null);
 
@@ -130,7 +130,7 @@ public sealed class ConverterContextTests
     public void WithFormat_ReturnsNewContextWithUpdatedFormat()
     {
         // Arrange
-        ConverterContext original = new ConverterContext(CultureInfo.InvariantCulture, "N2");
+        ConverterContext original = new(CultureInfo.InvariantCulture, "N2");
 
         // Act
         ConverterContext result = original.WithFormat("G");

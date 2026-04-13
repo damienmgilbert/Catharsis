@@ -32,7 +32,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///Initializes a new instance of <see cref="ObservableDictionary{TKey, TValue}"/> with the specified comparer.
     ///</summary>
     ///<param name="comparer">The key comparer.</param>
-    public ObservableDictionary(IEqualityComparer<TKey> comparer) { _dictionary = new Dictionary<TKey, TValue>(comparer); }
+    public ObservableDictionary(IEqualityComparer<TKey> comparer) { _dictionary = new(comparer); }
 
     ///<summary>
     ///Initializes a new instance of <see cref="ObservableDictionary{TKey, TValue}"/> with entries copied from the
@@ -45,7 +45,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
     {
         ArgumentNullException.ThrowIfNull(dictionary);
-        _dictionary = new Dictionary<TKey, TValue>(dictionary);
+        _dictionary = new(dictionary);
     }
     #endregion
 

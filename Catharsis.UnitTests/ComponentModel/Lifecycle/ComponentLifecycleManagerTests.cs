@@ -12,7 +12,7 @@ public sealed class ComponentLifecycleManagerTests
     #region Private methods
     static ComponentGraph BuildGraph(params IComponent[] components)
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
         foreach(IComponent c in components)
         {
             builder.AddComponent(c);
@@ -26,14 +26,14 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Activate_SingleComponent_WithSatisfiedDependencies()
     {
-        StubComponent db = new StubComponent();
-        StubComponent app = new StubComponent();
+        StubComponent db = new();
+        StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
         manager.Activate(db);
 
         manager.Activate(app);
@@ -44,14 +44,14 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Activate_UnsatisfiedDependencies_ThrowsInvalidOperationException()
     {
-        StubComponent db = new StubComponent();
-        StubComponent app = new StubComponent();
+        StubComponent db = new();
+        StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => manager.Activate(app));
     }
@@ -59,9 +59,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void ActivateAll_InitializesFirst()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         manager.ActivateAll();
 
@@ -73,9 +73,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void ActivateAll_SetsNodesActive()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         manager.ActivateAll();
 
@@ -89,14 +89,14 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Deactivate_AlsoDeactivatesDependents()
     {
-        StubComponent db = new StubComponent();
-        StubComponent app = new StubComponent();
+        StubComponent db = new();
+        StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
             .AddDependency(app, db)
             .Build();
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         manager.Deactivate(db);
@@ -108,9 +108,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Deactivate_SingleComponent()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         manager.Deactivate(c);
@@ -121,9 +121,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void DeactivateAll_SetsNodesDeactivated()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         manager.DeactivateAll();
@@ -136,10 +136,10 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void DependencyOrder_ActivationRespectsDependencies()
     {
-        List<string> activationOrder = new List<string>();
-        TrackingComponent db = new TrackingComponent("DB", activationOrder);
-        TrackingComponent cache = new TrackingComponent("Cache", activationOrder);
-        TrackingComponent app = new TrackingComponent("App", activationOrder);
+        List<string> activationOrder = [];
+        TrackingComponent db = new("DB", activationOrder);
+        TrackingComponent cache = new("Cache", activationOrder);
+        TrackingComponent app = new("App", activationOrder);
 
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
@@ -150,7 +150,7 @@ public sealed class ComponentLifecycleManagerTests
             .AddDependency(cache, db)
             .Build();
 
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         // DB must be activated before Cache, and both before App
@@ -164,9 +164,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Dispose_DisposesComponents()
     {
-        DisposableComponent c = new DisposableComponent();
+        DisposableComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         manager.Dispose();
@@ -177,9 +177,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Dispose_SetsNodesDisposed()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        ComponentLifecycleManager manager = new(graph);
         manager.ActivateAll();
 
         manager.Dispose();
@@ -190,9 +190,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void GetStateMachine_RegisteredComponent_ReturnsMachine()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         ComponentStateMachine? machine = manager.GetStateMachine(c);
 
@@ -204,7 +204,7 @@ public sealed class ComponentLifecycleManagerTests
     public void GetStateMachine_UnregisteredComponent_ReturnsNull()
     {
         ComponentGraph graph = BuildGraph(new StubComponent());
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         Assert.IsNull(manager.GetStateMachine(new StubComponent()));
     }
@@ -213,7 +213,7 @@ public sealed class ComponentLifecycleManagerTests
     public void Graph_ReturnsSameGraph()
     {
         ComponentGraph graph = BuildGraph(new StubComponent());
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         Assert.AreSame(graph, manager.Graph);
     }
@@ -222,7 +222,7 @@ public sealed class ComponentLifecycleManagerTests
     public void Initialize_NullComponent_ThrowsArgumentNullException()
     {
         ComponentGraph graph = BuildGraph(new StubComponent());
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => manager.Initialize(null!));
     }
@@ -230,9 +230,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void Initialize_SingleComponent()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         manager.Initialize(c);
 
@@ -244,9 +244,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void InitializeAll_CallsISupportInitialize()
     {
-        InitializableComponent c = new InitializableComponent();
+        InitializableComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         manager.InitializeAll();
 
@@ -257,9 +257,9 @@ public sealed class ComponentLifecycleManagerTests
     [TestMethod]
     public void InitializeAll_SetsNodesInitialized()
     {
-        StubComponent c = new StubComponent();
+        StubComponent c = new();
         ComponentGraph graph = BuildGraph(c);
-        using ComponentLifecycleManager manager = new ComponentLifecycleManager(graph);
+        using ComponentLifecycleManager manager = new(graph);
 
         manager.InitializeAll();
 

@@ -30,7 +30,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.IsTrue(result.All(static x => x.Price > 4 && x.Price < 13));
     }
 
@@ -42,7 +42,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("Cherry", result[0].Name);
     }
 
@@ -54,7 +54,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.IsTrue(result.All(static x => x.Price > 10));
     }
 
@@ -66,7 +66,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("Banana", result[0].Name);
     }
 
@@ -78,7 +78,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
     }
 
     [TestMethod]
@@ -100,7 +100,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
     }
 
     [TestMethod]
@@ -112,7 +112,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
     }
 
     [TestMethod]
@@ -124,7 +124,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
     }
 
     [TestMethod]
@@ -136,7 +136,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -148,7 +148,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
     }
 
     [TestMethod]
@@ -174,7 +174,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
     }
 
     [TestMethod]

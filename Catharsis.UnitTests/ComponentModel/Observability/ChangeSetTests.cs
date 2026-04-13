@@ -11,7 +11,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void AcceptAll_ClearsBothStacks()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", "1", "2");
         set.Undo();
         Assert.IsTrue(set.CanRedo);
@@ -27,7 +27,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Clear_ClearsBothStacks()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", "1", "2");
 
         set.Clear();
@@ -39,7 +39,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void GetAll_ReturnsChronologicalOrder()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", "1", "2");
         set.Record("B", "3", "4");
 
@@ -53,7 +53,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void GetByProperty_FiltersCorrectly()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", "1", "2");
         set.Record("B", "3", "4");
         set.Record("A", "2", "5");
@@ -66,7 +66,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void GetByProperty_NullPropertyName_ThrowsArgumentNullException()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => set.GetByProperty(null!));
     }
@@ -74,7 +74,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Initial_State_IsEmpty()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.AreEqual(0, set.Count);
         Assert.IsFalse(set.HasChanges);
@@ -85,7 +85,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Record_ByNameAndValues_NullPropertyName_ThrowsArgumentNullException()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => set.Record(null!, "old", "new"));
     }
@@ -93,7 +93,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Record_ClearsRedoStack()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", "1", "2");
         set.Undo();
         Assert.IsTrue(set.CanRedo);
@@ -106,7 +106,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Record_Entry_IncreasesCount()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         set.Record(new ChangeEntry("Name", "old", "new"));
 
@@ -118,7 +118,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Record_NullEntry_ThrowsArgumentNullException()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => set.Record(null!));
     }
@@ -126,7 +126,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Redo_EmptyStack_ReturnsNull()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.IsNull(set.Redo());
     }
@@ -134,7 +134,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Redo_ReturnsLastUndone_MovesToUndoStack()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("Name", "old", "new");
         set.Undo();
 
@@ -149,7 +149,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Undo_EmptyStack_ReturnsNull()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
 
         Assert.IsNull(set.Undo());
     }
@@ -157,7 +157,7 @@ public sealed class ChangeSetTests
     [TestMethod]
     public void Undo_ReturnsLastEntry_MovesToRedoStack()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("Name", "old", "new");
 
         ChangeEntry? entry = set.Undo();

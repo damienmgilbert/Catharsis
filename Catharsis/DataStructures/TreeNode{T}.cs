@@ -34,7 +34,7 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     ///<returns>The newly created child <see cref="TreeNode{T}"/>.</returns>
     public TreeNode<T> AddChild(T value)
     {
-        TreeNode<T> child = new TreeNode<T>(value) { Parent = this };
+        TreeNode<T> child = new(value) { Parent = this };
         _children.Add(child);
         return child;
     }
@@ -68,7 +68,7 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     ///<returns>A sequence of nodes in breadth-first order.</returns>
     public IEnumerable<TreeNode<T>> BreadthFirst()
     {
-        Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+        Queue<TreeNode<T>> queue = new();
         queue.Enqueue(this);
 
         while(queue.Count > 0)
@@ -89,7 +89,7 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     ///<returns>A sequence of nodes in pre-order.</returns>
     public IEnumerable<TreeNode<T>> DepthFirst()
     {
-        Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+        Stack<TreeNode<T>> stack = new();
         stack.Push(this);
 
         while(stack.Count > 0)

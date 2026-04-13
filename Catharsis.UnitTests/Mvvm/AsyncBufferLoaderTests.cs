@@ -12,7 +12,7 @@ public class AsyncBufferLoaderTests
     [TestMethod]
     public void Constructor_Default_InitialState()
     {
-        using AsyncBufferLoader loader = new AsyncBufferLoader();
+        using AsyncBufferLoader loader = new();
         Assert.AreEqual(0, loader.BytesLoaded);
         Assert.IsFalse(loader.IsLoading);
         Assert.AreEqual(0.0, loader.LoadProgress);
@@ -22,8 +22,8 @@ public class AsyncBufferLoaderTests
     [TestMethod]
     public async Task LoadAsync_EmptyStream()
     {
-        using AsyncBufferLoader loader = new AsyncBufferLoader();
-        using MemoryStream stream = new MemoryStream([]);
+        using AsyncBufferLoader loader = new();
+        using MemoryStream stream = new([]);
 
         await loader.LoadAsync(stream);
 
@@ -33,9 +33,9 @@ public class AsyncBufferLoaderTests
     [TestMethod]
     public async Task LoadAsync_LoadsFromStream()
     {
-        using AsyncBufferLoader loader = new AsyncBufferLoader();
+        using AsyncBufferLoader loader = new();
         byte[] data = [1, 2, 3, 4, 5];
-        using MemoryStream stream = new MemoryStream(data);
+        using MemoryStream stream = new(data);
 
         await loader.LoadAsync(stream, bufferSize: 4096);
 

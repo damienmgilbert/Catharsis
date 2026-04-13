@@ -16,7 +16,7 @@ public class CommandPattern
     ///<param name="undo">An optional action that reverses the effect of <paramref name="execute"/>.</param>
     ///<param name="undoHistory">An optional collection where <paramref name="undo"/> is recorded for later replay.</param>
     ///<returns>The original <paramref name="obj"/> after execution.</returns>
-    public T Command<T>(T obj, Action<T> execute, Action<T>? undo = null, ICollection<Action<T>>? undoHistory = null)
+    public static T Command<T>(T obj, Action<T> execute, Action<T>? undo = null, ICollection<Action<T>>? undoHistory = null)
     {
         if(execute is null)
         {

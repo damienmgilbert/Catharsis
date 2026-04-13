@@ -14,7 +14,7 @@ public class SequencePartitionTests
         List<IGrouping<char, string>> result = new[] { "apple", "avocado", "banana", "blueberry", "cherry" }
             .ChunkBy(static s => s[0])
             .ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual('a', result[0].Key);
         Assert.AreEqual(2, result[0].Count());
         Assert.AreEqual('b', result[1].Key);
@@ -45,7 +45,7 @@ public class SequencePartitionTests
     public void PartitionEvenly_DistributesRoundRobin()
     {
         List<List<int>> result = new[] { 1, 2, 3, 4, 5 }.PartitionEvenly(3);
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 4 }, result[0]);
         CollectionAssert.AreEqual(new[] { 2, 5 }, result[1]);
         CollectionAssert.AreEqual(new[] { 3 }, result[2]);
@@ -68,9 +68,9 @@ public class SequencePartitionTests
         ];
 
         var (matched, unmatched) = groups.AsEnumerable().PartitionGroups(static k => k % 2 == 0);
-        Assert.AreEqual(1, matched.Count);
+        Assert.HasCount(1, matched);
         Assert.AreEqual(2, matched[0].Key);
-        Assert.AreEqual(2, unmatched.Count);
+        Assert.HasCount(2, unmatched);
     }
 
     [TestMethod]
@@ -99,7 +99,7 @@ public class SequencePartitionTests
     public void SplitBy_SplitsAtSeparator()
     {
         List<IReadOnlyList<int>> result = new[] { 1, 2, 0, 3, 4, 0, 5 }.SplitBy(0).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result[0].ToList());
         CollectionAssert.AreEqual(new[] { 3, 4 }, result[1].ToList());
         CollectionAssert.AreEqual(new[] { 5 }, result[2].ToList());
@@ -115,7 +115,7 @@ public class SequencePartitionTests
     public void SplitWhen_SplitsAtPredicateTrigger()
     {
         List<IReadOnlyList<int>> result = new[] { 1, 2, 10, 3, 20, 4 }.SplitWhen(static x => x >= 10).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result[0].ToList());
         CollectionAssert.AreEqual(new[] { 10, 3 }, result[1].ToList());
         CollectionAssert.AreEqual(new[] { 20, 4 }, result[2].ToList());

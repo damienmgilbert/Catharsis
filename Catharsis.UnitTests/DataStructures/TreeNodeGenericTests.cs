@@ -12,7 +12,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void AddChild_AncestorAsCycle_Throws()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> child = root.AddChild(2);
         Assert.ThrowsExactly<InvalidOperationException>(() => child.AddChild(root));
     }
@@ -20,8 +20,8 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void AddChild_Node_DetachesFromPreviousParent()
     {
-        TreeNode<int> root1 = new TreeNode<int>(1);
-        TreeNode<int> root2 = new TreeNode<int>(2);
+        TreeNode<int> root1 = new(1);
+        TreeNode<int> root2 = new(2);
         TreeNode<int> child = root1.AddChild(10);
 
         root2.AddChild(child);
@@ -33,14 +33,14 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void AddChild_NullNode_Throws()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         Assert.ThrowsExactly<ArgumentNullException>(() => root.AddChild((TreeNode<int>)null!));
     }
 
     [TestMethod]
     public void AddChild_Value_CreatesChildWithParent()
     {
-        TreeNode<string> root = new TreeNode<string>("root");
+        TreeNode<string> root = new("root");
         TreeNode<string> child = root.AddChild("child");
         Assert.AreEqual("child", child.Value);
         Assert.AreSame(root, child.Parent);
@@ -52,7 +52,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void BreadthFirst_ReturnsCorrectOrder()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> c1 = root.AddChild(2);
         TreeNode<int> c2 = root.AddChild(3);
         c1.AddChild(4);
@@ -65,7 +65,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void Constructor_SetsValue()
     {
-        TreeNode<int> node = new TreeNode<int>(42);
+        TreeNode<int> node = new(42);
         Assert.AreEqual(42, node.Value);
         Assert.IsTrue(node.IsRoot);
         Assert.IsTrue(node.IsLeaf);
@@ -75,7 +75,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void Depth_ReturnsCorrectDepth()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> child = root.AddChild(2);
         TreeNode<int> grandchild = child.AddChild(3);
         Assert.AreEqual(0, root.Depth);
@@ -86,7 +86,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void DepthFirst_ReturnsCorrectOrder()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> c1 = root.AddChild(2);
         TreeNode<int> c2 = root.AddChild(3);
         c1.AddChild(4);
@@ -99,7 +99,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void IsDescendantOf_ReturnsCorrectResult()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> child = root.AddChild(2);
         TreeNode<int> grandchild = child.AddChild(3);
         Assert.IsTrue(grandchild.IsDescendantOf(root));
@@ -109,7 +109,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void RemoveChild_ExistingChild_ReturnsTrue()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> child = root.AddChild(2);
         Assert.IsTrue(root.RemoveChild(child));
         Assert.IsEmpty(root.Children);
@@ -119,7 +119,7 @@ public class TreeNodeGenericTests
     [TestMethod]
     public void Root_ReturnsRootNode()
     {
-        TreeNode<int> root = new TreeNode<int>(1);
+        TreeNode<int> root = new(1);
         TreeNode<int> child = root.AddChild(2);
         TreeNode<int> grandchild = child.AddChild(3);
         Assert.AreSame(root, grandchild.Root());

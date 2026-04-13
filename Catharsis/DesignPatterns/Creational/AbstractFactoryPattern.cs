@@ -17,7 +17,7 @@ public class AbstractFactoryPattern
     ///<param name="factory">The abstract factory instance.</param>
     ///<param name="create">A delegate that uses the factory and source to produce a product.</param>
     ///<returns>The product created via the abstract factory.</returns>
-    public TResult AbstractFactory<T, TFactory, TResult>(T obj, TFactory factory, Func<TFactory, T, TResult> create)
+    public static TResult AbstractFactory<T, TFactory, TResult>(T obj, TFactory factory, Func<TFactory, T, TResult> create)
     {
         if(factory is null)
         {

@@ -14,7 +14,7 @@ public class Builder
     ///<param name="obj">The object to configure.</param>
     ///<param name="steps">An ordered set of mutating configuration actions.</param>
     ///<returns>The configured <paramref name="obj"/>.</returns>
-    public T Build<T>(T obj, params Action<T>[] steps)
+    public static T Build<T>(T obj, params Action<T>[] steps)
     {
         if(steps is null)
         {
@@ -39,7 +39,7 @@ public class Builder
     ///<param name="finalizer">A delegate that produces the final product from the configured object.</param>
     ///<param name="steps">An ordered set of mutating configuration actions.</param>
     ///<returns>The product created by <paramref name="finalizer"/> after all steps are applied.</returns>
-    public TResult Build<T, TResult>(T obj, Func<T, TResult> finalizer, params Action<T>[] steps)
+    public static TResult Build<T, TResult>(T obj, Func<T, TResult> finalizer, params Action<T>[] steps)
     {
         if(finalizer is null)
         {

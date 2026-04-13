@@ -121,7 +121,7 @@ public class ExpressionFactoryTests
         BlockExpression result = ExpressionFactory.Block(expr1, expr2);
 
         Assert.AreEqual(ExpressionType.Block, result.NodeType);
-        Assert.AreEqual(2, result.Expressions.Count);
+        Assert.HasCount(2, result.Expressions);
     }
 
     [TestMethod]
@@ -132,7 +132,7 @@ public class ExpressionFactoryTests
 
         BlockExpression result = ExpressionFactory.Block([variable], Expression.Assign(variable, value), variable);
 
-        Assert.AreEqual(1, result.Variables.Count);
+        Assert.HasCount(1, result.Variables);
     }
 
     [TestMethod]

@@ -17,7 +17,7 @@ public partial class ObservableComponentTests
     public void SetProperty_BooleanFromFalseToTrue_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         bool field = false;
 
         // Act
@@ -35,7 +35,7 @@ public partial class ObservableComponentTests
     public void SetProperty_BooleanSameValue_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         bool field = true;
 
         // Act
@@ -53,7 +53,7 @@ public partial class ObservableComponentTests
     public void SetProperty_BothStringValuesEmpty_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string field = string.Empty;
 
         // Act
@@ -71,7 +71,7 @@ public partial class ObservableComponentTests
     public void SetProperty_BothStringValuesNull_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = null;
 
         // Act
@@ -89,9 +89,9 @@ public partial class ObservableComponentTests
     public void SetProperty_CustomObjectType_UpdatesFieldAndRaisesEvents()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
-        object oldObject = new object();
-        object newObject = new object();
+        TestObservableComponent component = new();
+        object oldObject = new();
+        object newObject = new();
         object? field = oldObject;
         bool eventRaised = false;
         component.PropertyChanged += (s, e) => eventRaised = true;
@@ -112,7 +112,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DefaultValueType_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = default;
 
         // Act
@@ -120,7 +120,7 @@ public partial class ObservableComponentTests
 
         // Assert
         Assert.IsFalse(result);
-        Assert.AreEqual(default(int), field);
+        Assert.AreEqual(default, field);
     }
 
     ///<summary>
@@ -130,9 +130,9 @@ public partial class ObservableComponentTests
     public void SetProperty_DifferentValue_RaisesEventsInCorrectOrder()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
-        List<string> eventOrder = new List<string>();
+        List<string> eventOrder = [];
         component.PropertyChanging += (s, e) => eventOrder.Add("Changing");
         component.PropertyChanged += (s, e) => eventOrder.Add("Changed");
 
@@ -152,7 +152,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DifferentValue_RaisesPropertyChangedEvent()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         bool eventRaised = false;
         string? eventPropertyName = null;
@@ -177,7 +177,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DifferentValue_RaisesPropertyChangingEvent()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         bool eventRaised = false;
         string? eventPropertyName = null;
@@ -202,7 +202,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DifferentValue_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
 
         // Act
@@ -220,7 +220,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DifferentValue_UpdatesFieldBeforePropertyChangedEvent()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         int fieldValueDuringEvent = 0;
         component.PropertyChanged += (s, e) => fieldValueDuringEvent = field;
@@ -239,7 +239,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DoubleFromNaNToValue_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         double field = double.NaN;
 
         // Act
@@ -257,7 +257,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DoubleNaN_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         double field = double.NaN;
 
         // Act
@@ -275,7 +275,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DoubleNegativeInfinity_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         double field = double.NegativeInfinity;
 
         // Act
@@ -293,7 +293,7 @@ public partial class ObservableComponentTests
     public void SetProperty_DoublePositiveInfinity_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         double field = double.PositiveInfinity;
 
         // Act
@@ -311,7 +311,7 @@ public partial class ObservableComponentTests
     public void SetProperty_EmptyPropertyName_RaisesEventsWithEmptyPropertyName()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         string? changingPropertyName = null;
         string? changedPropertyName = null;
@@ -333,7 +333,7 @@ public partial class ObservableComponentTests
     public void SetProperty_IntFromMinToMax_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = int.MinValue;
 
         // Act
@@ -351,7 +351,7 @@ public partial class ObservableComponentTests
     public void SetProperty_IntFromZeroToNonZero_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 0;
 
         // Act
@@ -369,7 +369,7 @@ public partial class ObservableComponentTests
     public void SetProperty_IntMaxValue_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = int.MaxValue;
 
         // Act
@@ -387,7 +387,7 @@ public partial class ObservableComponentTests
     public void SetProperty_IntMinValue_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = int.MinValue;
 
         // Act
@@ -405,7 +405,7 @@ public partial class ObservableComponentTests
     public void SetProperty_IntZeroValue_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 0;
 
         // Act
@@ -423,7 +423,7 @@ public partial class ObservableComponentTests
     public void SetProperty_NullableIntBothNull_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int? field = null;
 
         // Act
@@ -441,7 +441,7 @@ public partial class ObservableComponentTests
     public void SetProperty_NullableIntFromNullToValue_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int? field = null;
 
         // Act
@@ -459,7 +459,7 @@ public partial class ObservableComponentTests
     public void SetProperty_NullableIntFromValueToNull_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int? field = 42;
 
         // Act
@@ -477,7 +477,7 @@ public partial class ObservableComponentTests
     public void SetProperty_NullPropertyName_RaisesEventsWithNullPropertyName()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         string? changingPropertyName = "NotNull";
         string? changedPropertyName = "NotNull";
@@ -499,8 +499,8 @@ public partial class ObservableComponentTests
     public void SetProperty_SameObjectReference_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
-        object obj = new object();
+        TestObservableComponent component = new();
+        object obj = new();
         object? field = obj;
 
         // Act
@@ -518,7 +518,7 @@ public partial class ObservableComponentTests
     public void SetProperty_SameValue_DoesNotRaiseEvents()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         bool propertyChangingRaised = false;
         bool propertyChangedRaised = false;
@@ -540,7 +540,7 @@ public partial class ObservableComponentTests
     public void SetProperty_SameValue_ReturnsFalse()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
 
         // Act
@@ -558,7 +558,7 @@ public partial class ObservableComponentTests
     public void SetProperty_StringFromNullToValue_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = null;
 
         // Act
@@ -576,7 +576,7 @@ public partial class ObservableComponentTests
     public void SetProperty_StringFromValueToNull_ReturnsTrue()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = "value";
 
         // Act
@@ -594,7 +594,7 @@ public partial class ObservableComponentTests
     public void SetProperty_StringType_UpdatesFieldAndRaisesEvents()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = "old";
         bool eventRaised = false;
         component.PropertyChanged += (s, e) => eventRaised = true;
@@ -615,7 +615,7 @@ public partial class ObservableComponentTests
     public void SetProperty_StringWithSpecialCharacters_UpdatesFieldAndRaisesEvents()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = "normal";
         string specialString = "Hello\r\n\t\0World!@#$%^&*()";
 
@@ -634,9 +634,9 @@ public partial class ObservableComponentTests
     public void SetProperty_VeryLongString_UpdatesFieldAndRaisesEvents()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         string? field = "short";
-        string longString = new string('x', 10000);
+        string longString = new('x', 10000);
 
         // Act
         bool result = component.TestSetProperty(ref field, longString, "TestProperty");
@@ -653,7 +653,7 @@ public partial class ObservableComponentTests
     public void SetProperty_WhitespacePropertyName_RaisesEventsWithWhitespacePropertyName()
     {
         // Arrange
-        TestObservableComponent component = new TestObservableComponent();
+        TestObservableComponent component = new();
         int field = 42;
         string? changingPropertyName = null;
         string? changedPropertyName = null;

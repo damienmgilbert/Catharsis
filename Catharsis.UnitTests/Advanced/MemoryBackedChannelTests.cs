@@ -12,12 +12,12 @@ public class MemoryBackedChannelTests
     [TestMethod]
     public async Task Complete_And_ReadAll()
     {
-        using MemoryBackedChannel<byte> channel = new MemoryBackedChannel<byte>();
+        using MemoryBackedChannel<byte> channel = new();
         await channel.WriteAsync(new byte[] { 10 });
         await channel.WriteAsync(new byte[] { 20 });
         channel.Complete();
 
-        List<byte> segments = new List<byte>();
+        List<byte> segments = [];
         while(channel.Reader.TryRead(out MemoryBackedChannel<byte>.OwnedSegment? seg))
         {
             segments.Add(seg.Memory.Span[0]);
@@ -30,7 +30,7 @@ public class MemoryBackedChannelTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        MemoryBackedChannel<byte> channel = new MemoryBackedChannel<byte>();
+        MemoryBackedChannel<byte> channel = new();
         channel.Dispose();
         channel.Dispose();
     }
@@ -38,7 +38,7 @@ public class MemoryBackedChannelTests
     [TestMethod]
     public async Task WriteAsync_And_ReadAsync_RoundTrips()
     {
-        using MemoryBackedChannel<byte> channel = new MemoryBackedChannel<byte>();
+        using MemoryBackedChannel<byte> channel = new();
         byte[] data = [ 1, 2, 3 ];
 
         await channel.WriteAsync(data);

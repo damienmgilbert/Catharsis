@@ -13,7 +13,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Add_RaisesCollectionChanged()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
         NotifyCollectionChangedAction? action = null;
         list.CollectionChanged += (s, e) => action = e.Action;
 
@@ -25,9 +25,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void AddRange_AddsAllItems()
     {
-        ObservableList<int> list = new ObservableList<int>();
-
-        list.AddRange([ 1, 2, 3, 4, 5 ]);
+        ObservableList<int> list = [1, 2, 3, 4, 5];
 
         Assert.HasCount(5, list);
     }
@@ -35,7 +33,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void AddRange_NullItems_ThrowsArgumentNullException()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
 
         Assert.ThrowsExactly<ArgumentNullException>(() => list.AddRange(null!));
     }
@@ -43,7 +41,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void AddRange_RaisesSingleResetNotification()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
         int collectionChangedCount = 0;
         list.CollectionChanged += (s, e) => collectionChangedCount++;
 
@@ -55,7 +53,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Constructor_Default_IsEmpty()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
 
         Assert.IsEmpty(list);
     }
@@ -63,7 +61,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Constructor_WithCollection_CopiesItems()
     {
-        ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
+        ObservableList<int> list = new([ 1, 2, 3 ]);
 
         Assert.HasCount(3, list);
     }
@@ -71,7 +69,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void IsNotificationSuppressed_ReturnsTrueDuringScope()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
 
         using(list.SuppressNotifications())
         {
@@ -84,7 +82,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Remove_RaisesCollectionChanged()
     {
-        ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
+        ObservableList<int> list = new([ 1, 2, 3 ]);
         NotifyCollectionChangedAction? action = null;
         list.CollectionChanged += (s, e) => action = e.Action;
 
@@ -96,7 +94,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_NoMatches_ReturnsZero()
     {
-        ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
+        ObservableList<int> list = new([ 1, 2, 3 ]);
 
         int removed = list.RemoveAll(static x => x > 10);
 
@@ -106,7 +104,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_NullPredicate_ThrowsArgumentNullException()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
 
         Assert.ThrowsExactly<ArgumentNullException>(() => list.RemoveAll(null!));
     }
@@ -114,7 +112,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_RemovesMatchingItems()
     {
-        ObservableList<int> list = new ObservableList<int>([ 1, 2, 3, 4, 5 ]);
+        ObservableList<int> list = new([ 1, 2, 3, 4, 5 ]);
 
         int removed = list.RemoveAll(static x => x > 3);
 
@@ -125,7 +123,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void ReplaceAll_NullItems_ThrowsArgumentNullException()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
 
         Assert.ThrowsExactly<ArgumentNullException>(() => list.ReplaceAll(null!));
     }
@@ -133,7 +131,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void ReplaceAll_ReplacesContent()
     {
-        ObservableList<int> list = new ObservableList<int>([ 1, 2, 3 ]);
+        ObservableList<int> list = new([ 1, 2, 3 ]);
 
         list.ReplaceAll([ 10, 20 ]);
 
@@ -145,7 +143,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void SuppressNotifications_Nested_OnlyRaisesOnOuterDispose()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
         int resetCount = 0;
         list.CollectionChanged += (s, e) =>
         {
@@ -170,7 +168,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void SuppressNotifications_SuppressesDuringScope()
     {
-        ObservableList<int> list = new ObservableList<int>();
+        ObservableList<int> list = [];
         int collectionChangedCount = 0;
         list.CollectionChanged += (s, e) => collectionChangedCount++;
 

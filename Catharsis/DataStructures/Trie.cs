@@ -89,7 +89,7 @@ public class Trie
             yield break;
         }
 
-        Stack<(TrieNode Node, string Word)> stack = new Stack<(TrieNode Node, string Word)>();
+        Stack<(TrieNode Node, string Word)> stack = new();
         stack.Push((node, prefix));
 
         while(stack.Count > 0)

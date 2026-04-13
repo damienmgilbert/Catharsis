@@ -17,7 +17,7 @@ public class PrototypePatternTests
         string obj = "test";
         Func<string?, string?> clone = static _ => null;
         // Act
-        string? result = new PrototypePattern().Prototype<string?>(obj, clone);
+        string? result = PrototypePattern.Prototype<string?>(obj, clone);
         // Assert
         Assert.IsNull(result);
     }
@@ -33,7 +33,7 @@ public class PrototypePatternTests
         double value = double.NaN;
         Func<double, double> clone = static x => double.IsNaN(x) ? 0.0 : x;
         // Act
-        double result = new PrototypePattern().Prototype(value, clone);
+        double result = PrototypePattern.Prototype(value, clone);
         // Assert
         Assert.AreEqual(0.0, result);
     }
@@ -49,7 +49,7 @@ public class PrototypePatternTests
         double value = double.NegativeInfinity;
         Func<double, double> clone = static x => x;
         // Act
-        double result = new PrototypePattern().Prototype(value, clone);
+        double result = PrototypePattern.Prototype(value, clone);
         // Assert
         Assert.AreEqual(double.NegativeInfinity, result);
     }
@@ -65,7 +65,7 @@ public class PrototypePatternTests
         double value = double.PositiveInfinity;
         Func<double, double> clone = static x => x;
         // Act
-        double result = new PrototypePattern().Prototype(value, clone);
+        double result = PrototypePattern.Prototype(value, clone);
         // Assert
         Assert.AreEqual(double.PositiveInfinity, result);
     }
@@ -86,7 +86,7 @@ public class PrototypePatternTests
         int expected = value * 2;
         Func<int, int> clone = static x => x * 2;
         // Act
-        int result = new PrototypePattern().Prototype(value, clone);
+        int result = PrototypePattern.Prototype(value, clone);
         // Assert
         Assert.AreEqual(expected, result);
     }
@@ -99,11 +99,11 @@ public class PrototypePatternTests
     public void Prototype_ReferenceType_ReturnsClonedObject()
     {
         // Arrange
-        object original = new object();
-        object clonedObject = new object();
+        object original = new();
+        object clonedObject = new();
         Func<object, object> clone = _ => clonedObject;
         // Act
-        object result = new PrototypePattern().Prototype(original, clone);
+        object result = PrototypePattern.Prototype(original, clone);
         // Assert
         Assert.AreSame(clonedObject, result);
         Assert.AreNotSame(original, result);
@@ -124,7 +124,7 @@ public class PrototypePatternTests
         // Arrange
         Func<string?, string> clone = _ => expected;
         // Act
-        string? result = new PrototypePattern().Prototype(original, clone);
+        string? result = PrototypePattern.Prototype(original, clone);
         // Assert
         Assert.AreEqual(expected, result);
     }
@@ -144,7 +144,7 @@ public class PrototypePatternTests
         string expected = "processed";
         Func<string, string> clone = _ => expected;
         // Act
-        string result = new PrototypePattern().Prototype(input, clone);
+        string result = PrototypePattern.Prototype(input, clone);
         // Assert
         Assert.AreEqual(expected, result);
     }
@@ -167,7 +167,7 @@ public class PrototypePatternTests
             return x * 2;
         };
         // Act
-        int result = new PrototypePattern().Prototype(obj, clone);
+        int result = PrototypePattern.Prototype(obj, clone);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.AreEqual(obj, passedValue);
@@ -182,11 +182,11 @@ public class PrototypePatternTests
     public void Prototype_VeryLongString_ReturnsCloneFunctionResult()
     {
         // Arrange
-        string longString = new string('a', 10000);
-        string expectedClone = new string('b', 10000);
+        string longString = new('a', 10000);
+        string expectedClone = new('b', 10000);
         Func<string, string> clone = _ => expectedClone;
         // Act
-        string result = new PrototypePattern().Prototype(longString, clone);
+        string result = PrototypePattern.Prototype(longString, clone);
         // Assert
         Assert.AreEqual(expectedClone, result);
     }

@@ -42,7 +42,7 @@ public class LookupFactoryTests
     {
         ILookup<string, int> lookup = LookupFactory.Empty<string, int>();
 
-        Assert.AreEqual(0, lookup.Count);
+        Assert.IsEmpty(lookup);
         Assert.IsFalse(lookup.Contains("any"));
         Assert.AreEqual(0, lookup["any"].Count());
     }
@@ -53,7 +53,7 @@ public class LookupFactoryTests
         Dictionary<string, int> dict = new() { ["a"] = 1, ["b"] = 2 };
         ILookup<string, int> lookup = LookupFactory.FromDictionary(dict);
 
-        Assert.AreEqual(2, lookup.Count);
+        Assert.HasCount(2, lookup);
         Assert.AreEqual(1, lookup["a"].Single());
     }
 
@@ -83,7 +83,7 @@ public class LookupFactoryTests
 
         ILookup<string, int> lookup = LookupFactory.FromGroupings(groups);
 
-        Assert.AreEqual(2, lookup.Count);
+        Assert.HasCount(2, lookup);
         CollectionAssert.AreEqual(new[] { 1, 2 }, lookup["a"].ToList());
     }
 

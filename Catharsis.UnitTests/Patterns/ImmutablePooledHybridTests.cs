@@ -13,7 +13,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        ImmutablePooledHybrid<byte> hybrid = new ImmutablePooledHybrid<byte>();
+        ImmutablePooledHybrid<byte> hybrid = new();
         hybrid.Dispose();
         hybrid.Dispose();
     }
@@ -21,7 +21,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Freeze_CreatesImmutableSnapshot()
     {
-        using ImmutablePooledHybrid<int> hybrid = new ImmutablePooledHybrid<int>();
+        using ImmutablePooledHybrid<int> hybrid = new();
         hybrid.Write([ 10, 20 ]);
         ImmutableBuffer<int> frozen = hybrid.Freeze();
         Assert.IsTrue(hybrid.IsFrozen);
@@ -33,7 +33,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Reset_AllowsRewrite()
     {
-        using ImmutablePooledHybrid<byte> hybrid = new ImmutablePooledHybrid<byte>();
+        using ImmutablePooledHybrid<byte> hybrid = new();
         hybrid.Write([ 1 ]);
         hybrid.Freeze();
 
@@ -48,7 +48,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Span_ReturnsMutableDataBeforeFreeze()
     {
-        using ImmutablePooledHybrid<byte> hybrid = new ImmutablePooledHybrid<byte>();
+        using ImmutablePooledHybrid<byte> hybrid = new();
         hybrid.Write([ 5, 10 ]);
         ReadOnlySpan<byte> span = hybrid.Span;
         Assert.AreEqual(2, span.Length);
@@ -58,7 +58,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Write_AfterFreeze_Throws()
     {
-        using ImmutablePooledHybrid<byte> hybrid = new ImmutablePooledHybrid<byte>();
+        using ImmutablePooledHybrid<byte> hybrid = new();
         hybrid.Write([ 1 ]);
         hybrid.Freeze();
         Assert.ThrowsExactly<ArgumentException>(() => hybrid.Write([ 2 ]));
@@ -67,7 +67,7 @@ public class ImmutablePooledHybridTests
     [TestMethod]
     public void Write_IncreasesCount()
     {
-        using ImmutablePooledHybrid<byte> hybrid = new ImmutablePooledHybrid<byte>();
+        using ImmutablePooledHybrid<byte> hybrid = new();
         hybrid.Write([ 1, 2, 3 ]);
         Assert.AreEqual(3, hybrid.Count);
         Assert.IsFalse(hybrid.IsFrozen);

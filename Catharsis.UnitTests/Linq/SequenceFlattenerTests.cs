@@ -27,7 +27,7 @@ public class SequenceFlattenerTests
     [TestMethod]
     public void Flatten_Lists_FlattensAll()
     {
-        List<List<int>> source = [new() { 1, 2 }, new() { 3 }];
+        List<List<int>> source = [[1, 2], [3]];
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, source.Flatten().ToList());
     }
 

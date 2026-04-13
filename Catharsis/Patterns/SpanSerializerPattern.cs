@@ -38,7 +38,7 @@ public static class SpanSerializerPattern
     ///<returns>A byte array containing the serialized readings.</returns>
     public static byte[] SerializeBatch(ReadOnlySpan<SensorReading> readings)
     {
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(readings.Length * SensorReading.SerializedSizeValue);
+        using PooledBuffer<byte> buffer = new(readings.Length * SensorReading.SerializedSizeValue);
 
         foreach(SensorReading reading in readings)
         {
@@ -71,7 +71,7 @@ public static class SpanSerializerPattern
         {
             Guard.IsGreaterThanOrEqualTo(data.Length, SerializedSizeValue);
 
-            SpanReader reader = new SpanReader(data);
+            SpanReader reader = new(data);
             int sensorId = reader.ReadInt32LittleEndian();
             float temperature = reader.ReadSingleLittleEndian();
             float humidity = reader.ReadSingleLittleEndian();
@@ -89,7 +89,7 @@ public static class SpanSerializerPattern
             Guard.IsNotNull(writer);
 
             Span<byte> span = writer.GetSpan(SerializedSizeValue);
-            SpanWriter w = new SpanWriter(span);
+            SpanWriter w = new(span);
             w.WriteInt32LittleEndian(SensorId);
             w.WriteSingleLittleEndian(Temperature);
             w.WriteSingleLittleEndian(Humidity);

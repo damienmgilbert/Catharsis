@@ -16,7 +16,7 @@ public class TemplateMethod
     ///<param name="hook">The customizable hook step.</param>
     ///<param name="teardown">The invariant teardown step.</param>
     ///<returns>The original <paramref name="obj"/> after the algorithm completes.</returns>
-    public T Template<T>(T obj, Action<T> setup, Action<T> hook, Action<T> teardown)
+    public static T Template<T>(T obj, Action<T> setup, Action<T> hook, Action<T> teardown)
     {
         if(setup is null)
         {
@@ -50,7 +50,7 @@ public class TemplateMethod
     ///<param name="operation">The customizable operation step.</param>
     ///<param name="teardown">The invariant teardown step.</param>
     ///<returns>The result of <paramref name="operation"/>.</returns>
-    public TResult Template<T, TResult>(T obj, Action<T> setup, Func<T, TResult> operation, Action<T> teardown)
+    public static TResult Template<T, TResult>(T obj, Action<T> setup, Func<T, TResult> operation, Action<T> teardown)
     {
         if(setup is null)
         {

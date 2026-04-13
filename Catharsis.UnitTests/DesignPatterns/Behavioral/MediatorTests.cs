@@ -18,7 +18,7 @@ public class MediatorTests
         string mediator = "mediator";
         Func<string, string, string> route = static (m, o) => $"{m}{o}";
         // Act
-        string result = new Mediator().Mediate(obj, mediator, route);
+        string result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual("mediatortest", result);
     }
@@ -30,11 +30,11 @@ public class MediatorTests
     public void Mediate_ComplexCustomTypes_ReturnsExpectedResult()
     {
         // Arrange
-        CustomRequest obj = new CustomRequest { Id = 123, Name = "Test" };
-        CustomMediator mediator = new CustomMediator { ProcessingId = 999 };
+        CustomRequest obj = new() { Id = 123, Name = "Test" };
+        CustomMediator mediator = new() { ProcessingId = 999 };
         Func<CustomMediator, CustomRequest, CustomResponse> route = static (m, o) => new CustomResponse { RequestId = o.Id, ProcessedBy = m.ProcessingId };
         // Act
-        CustomResponse result = new Mediator().Mediate(obj, mediator, route);
+        CustomResponse result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(123, result.RequestId);
         Assert.AreEqual(999, result.ProcessedBy);
@@ -51,7 +51,7 @@ public class MediatorTests
         int mediator = 20;
         Func<int, int, int> route = static (m, o) => m + o;
         // Act
-        int result = new Mediator().Mediate(obj, mediator, route);
+        int result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(30, result);
     }
@@ -64,10 +64,10 @@ public class MediatorTests
     {
         // Arrange
         string? obj = null;
-        TestMediator mediator = new TestMediator();
+        TestMediator mediator = new();
         Func<TestMediator, string?, bool> route = static (m, o) => o == null;
         // Act
-        bool result = new Mediator().Mediate(obj, mediator, route);
+        bool result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.IsTrue(result);
     }
@@ -84,11 +84,11 @@ public class MediatorTests
     public void Mediate_NumericBoundaryValues_ReturnsExpectedResult(int value)
     {
         // Arrange
-        TestMediator mediator = new TestMediator();
+        TestMediator mediator = new();
         Func<TestMediator, int, long> route = static (m, o) => ((long)o) * 2;
         long expectedResult = ((long)value) * 2;
         // Act
-        long result = new Mediator().Mediate(value, mediator, route);
+        long result = Mediator.Mediate(value, mediator, route);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -106,7 +106,7 @@ public class MediatorTests
         string externalState = "initial";
         Action<string, string> route = (m, o) => externalState = $"{m}-{o}";
         // Act
-        new Mediator().Mediate(obj, mediator, route);
+        Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual("mediator-input", externalState);
     }
@@ -119,11 +119,11 @@ public class MediatorTests
     {
         // Arrange
         string obj = "input";
-        TestMediator mediator = new TestMediator();
-        CustomResponse expectedResponse = new CustomResponse { RequestId = 42, ProcessedBy = 1 };
+        TestMediator mediator = new();
+        CustomResponse expectedResponse = new() { RequestId = 42, ProcessedBy = 1 };
         Func<TestMediator, string, CustomResponse> route = (m, o) => expectedResponse;
         // Act
-        CustomResponse result = new Mediator().Mediate(obj, mediator, route);
+        CustomResponse result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreSame(expectedResponse, result);
     }
@@ -136,11 +136,11 @@ public class MediatorTests
     {
         // Arrange
         string obj = "Hello";
-        TestMediator mediator = new TestMediator();
+        TestMediator mediator = new();
         int expectedResult = 5;
         Func<TestMediator, string, int> route = static (m, o) => o.Length;
         // Act
-        int result = new Mediator().Mediate(obj, mediator, route);
+        int result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -153,11 +153,11 @@ public class MediatorTests
     {
         // Arrange
         int obj = 42;
-        TestMediator mediator = new TestMediator();
+        TestMediator mediator = new();
         string expectedResult = "42";
         Func<TestMediator, int, string> route = static (m, o) => o.ToString();
         // Act
-        string result = new Mediator().Mediate(obj, mediator, route);
+        string result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -174,11 +174,11 @@ public class MediatorTests
     public void Mediate_VariousStringInputs_ReturnsExpectedResult(string value)
     {
         // Arrange
-        TestMediator mediator = new TestMediator();
+        TestMediator mediator = new();
         Func<TestMediator, string, int> route = static (m, o) => o.Length;
         int expectedResult = value.Length;
         // Act
-        int result = new Mediator().Mediate(value, mediator, route);
+        int result = Mediator.Mediate(value, mediator, route);
         // Assert
         Assert.AreEqual(expectedResult, result);
     }
@@ -201,7 +201,7 @@ public class MediatorTests
             capturedObj = o;
         };
         // Act
-        int result = new Mediator().Mediate(obj, mediator, route);
+        int result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.AreEqual(mediator, capturedMediator);
@@ -221,7 +221,7 @@ public class MediatorTests
         string? capturedObj = "not-null";
         Action<string, string?> route = (m, o) => capturedObj = o;
         // Act
-        string? result = new Mediator().Mediate(obj, mediator, route);
+        string? result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.IsNull(result);
         Assert.IsNull(capturedObj);
@@ -240,7 +240,7 @@ public class MediatorTests
         bool routeExecuted = false;
         Action<string, string> route = (m, o) => routeExecuted = true;
         // Act
-        new Mediator().Mediate(obj, mediator, route);
+        Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.IsTrue(routeExecuted);
     }
@@ -263,7 +263,7 @@ public class MediatorTests
             capturedObj = o;
         };
         // Act
-        new Mediator().Mediate(obj, mediator, route);
+        Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(mediator, capturedMediator);
         Assert.AreEqual(obj, capturedObj);
@@ -283,7 +283,7 @@ public class MediatorTests
         {
         };
         // Act
-        string result = new Mediator().Mediate(obj, mediator, route);
+        string result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreSame(obj, result);
     }
@@ -301,7 +301,7 @@ public class MediatorTests
         int capturedObj = 0;
         Action<string, int> route = (m, o) => capturedObj = o;
         // Act
-        int result = new Mediator().Mediate(obj, mediator, route);
+        int result = Mediator.Mediate(obj, mediator, route);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.AreEqual(obj, capturedObj);

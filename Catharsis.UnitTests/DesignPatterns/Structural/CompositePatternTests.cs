@@ -15,15 +15,15 @@ public class CompositePatternTests
     public void Composite_ActionModifiesNodes_NodesAreModified()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
-        TreeNode child1 = new TreeNode("child1");
-        TreeNode child2 = new TreeNode("child2");
+        TreeNode root = new("root");
+        TreeNode child1 = new("child1");
+        TreeNode child2 = new("child2");
         root.AddChild(child1);
         root.AddChild(child2);
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = static n => n.Children;
         Action<TreeNode> action = static n => n.Name = n.Name.ToUpper();
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.AreEqual("ROOT", root.Name);
         Assert.AreEqual("CHILD1", child1.Name);
@@ -37,14 +37,14 @@ public class CompositePatternTests
     public void Composite_AnyValidInput_ReturnsOriginalObject()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
+        TreeNode root = new("root");
         root.AddChild(new TreeNode("child1"));
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = static n => n.Children;
         Action<TreeNode> action = static n =>
         {
         };
         // Act
-        TreeNode result = new CompositePattern().Composite(root, getChildren, action);
+        TreeNode result = CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.AreSame(root, result);
     }
@@ -56,24 +56,24 @@ public class CompositePatternTests
     public void Composite_ComplexTreeStructure_VisitsAllNodesInCorrectOrder()
     {
         // Arrange
-        TreeNode root = new TreeNode("A");
-        TreeNode b = new TreeNode("B");
-        TreeNode c = new TreeNode("C");
-        TreeNode d = new TreeNode("D");
-        TreeNode e = new TreeNode("E");
-        TreeNode f = new TreeNode("F");
-        TreeNode g = new TreeNode("G");
+        TreeNode root = new("A");
+        TreeNode b = new("B");
+        TreeNode c = new("C");
+        TreeNode d = new("D");
+        TreeNode e = new("E");
+        TreeNode f = new("F");
+        TreeNode g = new("G");
         root.AddChild(b);
         root.AddChild(c);
         b.AddChild(d);
         b.AddChild(e);
         c.AddChild(f);
         f.AddChild(g);
-        List<string> visitedNodes = new List<string>();
+        List<string> visitedNodes = [];
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
         Action<TreeNode> action = n => visitedNodes.Add(n.Name);
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.HasCount(7, visitedNodes);
         Assert.AreEqual("A", visitedNodes[0]);
@@ -92,20 +92,20 @@ public class CompositePatternTests
     public void Composite_DeepNestedTree_VisitsAllNodesInPreOrderDepthFirst()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
-        TreeNode child1 = new TreeNode("child1");
-        TreeNode child2 = new TreeNode("child2");
-        TreeNode grandchild1 = new TreeNode("grandchild1");
-        TreeNode grandchild2 = new TreeNode("grandchild2");
+        TreeNode root = new("root");
+        TreeNode child1 = new("child1");
+        TreeNode child2 = new("child2");
+        TreeNode grandchild1 = new("grandchild1");
+        TreeNode grandchild2 = new("grandchild2");
         root.AddChild(child1);
         root.AddChild(child2);
         child1.AddChild(grandchild1);
         child1.AddChild(grandchild2);
-        List<string> visitedNodes = new List<string>();
+        List<string> visitedNodes = [];
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
         Action<TreeNode> action = n => visitedNodes.Add(n.Name);
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.HasCount(5, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
@@ -122,15 +122,15 @@ public class CompositePatternTests
     public void Composite_FlatTreeWithMultipleChildren_VisitsAllNodesInPreOrder()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
+        TreeNode root = new("root");
         root.AddChild(new TreeNode("child1"));
         root.AddChild(new TreeNode("child2"));
         root.AddChild(new TreeNode("child3"));
-        List<string> visitedNodes = new List<string>();
+        List<string> visitedNodes = [];
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
         Action<TreeNode> action = n => visitedNodes.Add(n.Name);
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.HasCount(4, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
@@ -146,12 +146,12 @@ public class CompositePatternTests
     public void Composite_GetChildrenReturnsEmptyCollection_ProcessesOnlyRoot()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
+        TreeNode root = new("root");
         int visitCount = 0;
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => new List<TreeNode>();
         Action<TreeNode> action = n => visitCount++;
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.AreEqual(1, visitCount);
     }
@@ -163,19 +163,19 @@ public class CompositePatternTests
     public void Composite_MixedTreeSomeNodesHaveChildrenSomeDont_VisitsAllNodes()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
-        TreeNode child1 = new TreeNode("child1");
-        TreeNode child2 = new TreeNode("child2");
-        TreeNode grandchild = new TreeNode("grandchild");
+        TreeNode root = new("root");
+        TreeNode child1 = new("child1");
+        TreeNode child2 = new("child2");
+        TreeNode grandchild = new("grandchild");
         root.AddChild(child1);
         root.AddChild(child2);
         child1.AddChild(grandchild);
         // child2 has no children
-        List<string> visitedNodes = new List<string>();
+        List<string> visitedNodes = [];
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
         Action<TreeNode> action = n => visitedNodes.Add(n.Name);
         // Act
-        new CompositePattern().Composite(root, getChildren, action);
+        CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.HasCount(4, visitedNodes);
         CollectionAssert.AreEqual(new[] { "root", "child1", "grandchild", "child2" }, visitedNodes);
@@ -190,7 +190,7 @@ public class CompositePatternTests
         // Arrange
         TreeNode? root = null;
         bool actionCalled = false;
-        TreeNode? receivedNode = new TreeNode("dummy");
+        TreeNode? receivedNode = new("dummy");
         Func<TreeNode?, IEnumerable<TreeNode?>> getChildren = n => Array.Empty<TreeNode?>();
         Action<TreeNode?> action = n =>
         {
@@ -198,7 +198,7 @@ public class CompositePatternTests
             receivedNode = n;
         };
         // Act
-        TreeNode? result = new CompositePattern().Composite(root, getChildren, action);
+        TreeNode? result = CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.IsTrue(actionCalled);
         Assert.IsNull(receivedNode);
@@ -212,12 +212,12 @@ public class CompositePatternTests
     public void Composite_SingleNodeWithNoChildren_CallsActionOnce()
     {
         // Arrange
-        TreeNode root = new TreeNode("root");
-        List<string> visitedNodes = new List<string>();
+        TreeNode root = new("root");
+        List<string> visitedNodes = [];
         Func<TreeNode, IEnumerable<TreeNode>> getChildren = n => n.Children;
         Action<TreeNode> action = n => visitedNodes.Add(n.Name);
         // Act
-        TreeNode result = new CompositePattern().Composite(root, getChildren, action);
+        TreeNode result = CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.HasCount(1, visitedNodes);
         Assert.AreEqual("root", visitedNodes[0]);
@@ -232,11 +232,11 @@ public class CompositePatternTests
     {
         // Arrange
         int root = 1;
-        List<int> visitedValues = new List<int>();
-        Func<int, IEnumerable<int>> getChildren = n => (n < 3) ? (new[] { n + 1 }) : Array.Empty<int>();
+        List<int> visitedValues = [];
+        Func<int, IEnumerable<int>> getChildren = n => (n < 3) ? ([n + 1]) : Array.Empty<int>();
         Action<int> action = n => visitedValues.Add(n);
         // Act
-        int result = new CompositePattern().Composite(root, getChildren, action);
+        int result = CompositePattern.Composite(root, getChildren, action);
         // Assert
         Assert.AreEqual(1, result);
         Assert.HasCount(3, visitedValues);

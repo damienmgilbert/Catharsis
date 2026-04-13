@@ -13,7 +13,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ClearAll_ClearsAllErrors()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
         validator.ValidateObject(new PersonModel { Name = null, Age = 200 });
         Assert.IsTrue(validator.HasErrors);
 
@@ -25,8 +25,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void Constructor_WithCustomContextFactory_UsesFactory()
     {
-        ValidationContextFactory factory = new ValidationContextFactory();
-        DataAnnotationValidator validator = new DataAnnotationValidator(factory);
+        ValidationContextFactory factory = new();
+        DataAnnotationValidator validator = new(factory);
 
         Assert.IsNotNull(validator);
     }
@@ -34,8 +34,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ErrorsChanged_RaisedWhenErrorsChange()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        List<string> changedProperties = new List<string>();
+        DataAnnotationValidator validator = new();
+        List<string> changedProperties = [];
         validator.ErrorsChanged += (s, e) => changedProperties.Add(e.PropertyName!);
 
         validator.ValidateObject(new PersonModel { Name = null, Age = 200 });
@@ -46,7 +46,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void GetErrors_ReturnsErrorsFromDictionary()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
         validator.ValidateObject(new PersonModel { Name = null, Age = 30 });
 
         List<ErrorInfo> errors = [.. validator.GetErrors("Name").Cast<ErrorInfo>()];
@@ -57,7 +57,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void Initial_State_HasNoErrors()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
 
         Assert.IsFalse(validator.HasErrors);
         Assert.AreEqual(0, validator.Errors.TotalErrorCount);
@@ -66,7 +66,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateObject_ClearsPreviousErrors()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
 
         validator.ValidateObject(new PersonModel { Name = null, Age = 30 });
         Assert.IsTrue(validator.HasErrors);
@@ -78,8 +78,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateObject_InvalidModel_ReturnsFalse()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = null, Age = 200 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = null, Age = 200 };
 
         bool result = validator.ValidateObject(model);
 
@@ -90,7 +90,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateObject_NullInstance_ThrowsArgumentNullException()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => validator.ValidateObject(null!));
     }
@@ -98,8 +98,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateObject_PopulatesErrorDictionary()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = null, Age = 30 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = null, Age = 30 };
 
         validator.ValidateObject(model);
 
@@ -111,8 +111,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateObject_ValidModel_ReturnsTrue()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = "Alice", Age = 30 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = "Alice", Age = 30 };
 
         bool result = validator.ValidateObject(model);
 
@@ -123,8 +123,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateProperty_ClearsPreviousErrorsForThatProperty()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = "Alice", Age = 30 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = "Alice", Age = 30 };
 
         validator.ValidateProperty(model, "Name", null);
         Assert.IsTrue(validator.HasErrors);
@@ -136,8 +136,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateProperty_InvalidProperty_ReturnsFalse()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = null, Age = 30 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = null, Age = 30 };
 
         bool result = validator.ValidateProperty(model, "Name", null);
 
@@ -147,7 +147,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateProperty_NullInstance_ThrowsArgumentNullException()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => validator.ValidateProperty(null!, "Name", "Alice"));
     }
@@ -155,7 +155,7 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateProperty_NullPropertyName_ThrowsArgumentNullException()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
+        DataAnnotationValidator validator = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => validator.ValidateProperty(new PersonModel(), null!, "Alice"));
     }
@@ -163,8 +163,8 @@ public sealed class DataAnnotationValidatorTests
     [TestMethod]
     public void ValidateProperty_ValidProperty_ReturnsTrue()
     {
-        DataAnnotationValidator validator = new DataAnnotationValidator();
-        PersonModel model = new PersonModel { Name = "Alice", Age = 30 };
+        DataAnnotationValidator validator = new();
+        PersonModel model = new() { Name = "Alice", Age = 30 };
 
         bool result = validator.ValidateProperty(model, "Name", "Alice");
 

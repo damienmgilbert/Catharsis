@@ -15,7 +15,7 @@ public class Adapter
     ///<param name="obj">The object to adapt.</param>
     ///<param name="adapter">A delegate that converts the source to the target type.</param>
     ///<returns>The adapted representation of <paramref name="obj"/>.</returns>
-    public TResult Adapt<T, TResult>(T obj, Func<T, TResult> adapter)
+    public static TResult Adapt<T, TResult>(T obj, Func<T, TResult> adapter)
     {
         if(adapter is null)
         {

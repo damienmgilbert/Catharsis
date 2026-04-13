@@ -12,28 +12,28 @@ public class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_GuardReturnsFalse_ReturnsFalse()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initialized) { Guard = static () => false };
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initialized) { Guard = static () => false };
         Assert.IsFalse(t.CanExecute());
     }
 
     [TestMethod]
     public void CanExecute_NoGuard_ReturnsTrue()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initialized);
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initialized);
         Assert.IsTrue(t.CanExecute());
     }
 
     [TestMethod]
     public void Constructor_CustomName()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Active, ComponentState.Deactivating, "Pause");
+        ComponentTransition t = new(ComponentState.Active, ComponentState.Deactivating, "Pause");
         Assert.AreEqual("Pause", t.Name);
     }
 
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing);
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing);
         Assert.AreEqual(ComponentState.Created, t.From);
         Assert.AreEqual(ComponentState.Initializing, t.To);
         Assert.AreEqual("Created -> Initializing", t.Name);
@@ -43,7 +43,7 @@ public class ComponentTransitionTests
     public void OnTransition_Invoked()
     {
         bool invoked = false;
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initialized) { OnTransition = () => invoked = true };
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initialized) { OnTransition = () => invoked = true };
         t.OnTransition?.Invoke();
         Assert.IsTrue(invoked);
     }
@@ -51,7 +51,7 @@ public class ComponentTransitionTests
     [TestMethod]
     public void ToString_ReturnsName()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Active, ComponentState.Disposed);
+        ComponentTransition t = new(ComponentState.Active, ComponentState.Disposed);
         Assert.AreEqual("Active -> Disposed", t.ToString());
     }
     #endregion

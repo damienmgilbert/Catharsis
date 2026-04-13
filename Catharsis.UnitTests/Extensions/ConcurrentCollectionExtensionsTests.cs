@@ -13,7 +13,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void BlockingCollection_AddRange_AddsAllItems()
     {
-        BlockingCollection<int> source = new BlockingCollection<int>();
+        BlockingCollection<int> source = [];
         source.AddRange(new[] { 1, 2, 3 });
         Assert.HasCount(3, source);
     }
@@ -21,7 +21,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void BlockingCollection_TakeRange_TakesUpToCount()
     {
-        BlockingCollection<int> source = new BlockingCollection<int>();
+        BlockingCollection<int> source = [];
         source.AddRange(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.TakeRange(3);
         Assert.HasCount(3, result);
@@ -31,15 +31,14 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentBag_AddRange_AddsAllItems()
     {
-        ConcurrentBag<int> source = new ConcurrentBag<int>();
-        source.AddRange(new[] { 1, 2, 3 });
+        ConcurrentBag<int> source = [.. new[] { 1, 2, 3 }];
         Assert.HasCount(3, source);
     }
 
     [TestMethod]
     public void ConcurrentDictionary_AddRange_AddsAndUpdates()
     {
-        ConcurrentDictionary<string, int> source = new ConcurrentDictionary<string, int>();
+        ConcurrentDictionary<string, int> source = new();
         source.TryAdd("a", 1);
         source.AddRange(new Dictionary<string, int> { { "a", 99 }, { "b", 2 } });
         Assert.AreEqual(99, source["a"]);
@@ -49,7 +48,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentDictionary_ModifyAll_TransformsAllValues()
     {
-        ConcurrentDictionary<string, int> source = new ConcurrentDictionary<string, int>();
+        ConcurrentDictionary<string, int> source = new();
         source.TryAdd("a", 1);
         source.TryAdd("b", 2);
         source.ModifyAll(static (k, v) => v * 10);
@@ -60,7 +59,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentDictionary_RemoveRange_RemovesMatchingKeys()
     {
-        ConcurrentDictionary<string, int> source = new ConcurrentDictionary<string, int>();
+        ConcurrentDictionary<string, int> source = new();
         source.TryAdd("a", 1);
         source.TryAdd("b", 2);
         source.TryAdd("c", 3);
@@ -72,7 +71,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentDictionary_RemoveWhere_RemovesMatchingEntries()
     {
-        ConcurrentDictionary<string, int> source = new ConcurrentDictionary<string, int>();
+        ConcurrentDictionary<string, int> source = new();
         source.TryAdd("a", 1);
         source.TryAdd("b", 2);
         source.TryAdd("c", 3);
@@ -84,7 +83,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentQueue_DequeueRange_DequeuesUpToCount()
     {
-        ConcurrentQueue<int> source = new ConcurrentQueue<int>();
+        ConcurrentQueue<int> source = new();
         source.EnqueueRange(new[] { 1, 2, 3, 4, 5 });
         List<int> result = source.DequeueRange(3);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result);
@@ -94,7 +93,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentQueue_DequeueRange_MoreThanAvailable_ReturnsAll()
     {
-        ConcurrentQueue<int> source = new ConcurrentQueue<int>();
+        ConcurrentQueue<int> source = new();
         source.EnqueueRange(new[] { 1, 2 });
         List<int> result = source.DequeueRange(10);
         CollectionAssert.AreEqual(new[] { 1, 2 }, result);
@@ -104,7 +103,7 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentQueue_EnqueueRange_EnqueuesAll()
     {
-        ConcurrentQueue<int> source = new ConcurrentQueue<int>();
+        ConcurrentQueue<int> source = new();
         source.EnqueueRange(new[] { 1, 2, 3 });
         Assert.HasCount(3, source);
         source.TryDequeue(out int first);
@@ -114,8 +113,8 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentStack_PopRange_PopsUpToCount()
     {
-        ConcurrentStack<int> source = new ConcurrentStack<int>();
-        source.PushRange(new[] { 1, 2, 3, 4, 5 });
+        ConcurrentStack<int> source = new();
+        source.PushRange([1, 2, 3, 4, 5]);
         List<int> result = source.PopRange(3);
         Assert.HasCount(3, result);
         Assert.HasCount(2, source);
@@ -124,8 +123,8 @@ public class ConcurrentCollectionExtensionsTests
     [TestMethod]
     public void ConcurrentStack_PushRange_PushesAll()
     {
-        ConcurrentStack<int> source = new ConcurrentStack<int>();
-        source.PushRange(new[] { 1, 2, 3 });
+        ConcurrentStack<int> source = new();
+        source.PushRange([1, 2, 3]);
         Assert.HasCount(3, source);
     }
     #endregion

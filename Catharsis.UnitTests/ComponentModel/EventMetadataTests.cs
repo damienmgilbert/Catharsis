@@ -16,7 +16,7 @@ public class EventMetadataTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        EventMetadata meta = new EventMetadata("Click", typeof(EventHandler), typeof(object));
+        EventMetadata meta = new("Click", typeof(EventHandler), typeof(object));
         Assert.AreEqual("Click", meta.Name);
         Assert.AreEqual(typeof(EventHandler), meta.EventType);
         Assert.AreEqual(typeof(object), meta.ComponentType);
@@ -26,7 +26,7 @@ public class EventMetadataTests
     [TestMethod]
     public void ToString_ReturnsNameAndType()
     {
-        EventMetadata meta = new EventMetadata("Click", typeof(EventHandler), typeof(object));
+        EventMetadata meta = new("Click", typeof(EventHandler), typeof(object));
         Assert.AreEqual("Click (EventHandler)", meta.ToString());
     }
     #endregion

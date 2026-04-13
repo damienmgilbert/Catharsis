@@ -17,7 +17,7 @@ public sealed class ComponentServiceProviderTests
     public void ComponentServiceProvider_WithDefaultParameter_CreatesInstance()
     {
         // Arrange & Act
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
 
         // Assert
         Assert.IsNotNull(provider);
@@ -34,7 +34,7 @@ public sealed class ComponentServiceProviderTests
         IServiceProvider? parent = null;
 
         // Act
-        ComponentServiceProvider provider = new ComponentServiceProvider(parent);
+        ComponentServiceProvider provider = new(parent);
 
         // Assert
         Assert.IsNotNull(provider);
@@ -48,10 +48,10 @@ public sealed class ComponentServiceProviderTests
     public void ComponentServiceProvider_WithValidParent_CreatesInstance()
     {
         // Arrange
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
 
         // Act
-        ComponentServiceProvider provider = new ComponentServiceProvider(parentStub);
+        ComponentServiceProvider provider = new(parentStub);
 
         // Assert
         Assert.IsNotNull(provider);
@@ -124,7 +124,7 @@ public sealed class ComponentServiceProviderTests
         // Arrange
         TestService localService = new();
         TestService parentService = new();
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         parentStub.Services[typeof(ITestService)] = parentService;
         ComponentServiceProvider provider = new(parentStub);
         provider.Register<ITestService>(() => localService);
@@ -146,7 +146,7 @@ public sealed class ComponentServiceProviderTests
         // Arrange
         TestService localService = new();
         TestService parentService = new();
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         parentStub.Services[typeof(ITestService)] = parentService;
         ComponentServiceProvider provider = new(parentStub);
         provider.Register<ITestService>(localService);
@@ -182,7 +182,7 @@ public sealed class ComponentServiceProviderTests
     public void GetService_NotRegisteredAndParentReturnsNull_ReturnsNull()
     {
         // Arrange
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         ComponentServiceProvider provider = new(parentStub);
 
         // Act
@@ -200,7 +200,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         TestService expectedService = new();
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         parentStub.Services[typeof(ITestService)] = expectedService;
         ComponentServiceProvider provider = new(parentStub);
 
@@ -307,7 +307,7 @@ public sealed class ComponentServiceProviderTests
     {
         // Arrange
         ComponentServiceProvider provider = new();
-        System.Collections.Generic.IList<string> stringListService = new List<string>();
+        System.Collections.Generic.IList<string> stringListService = [];
         provider.Register(stringListService);
 
         // Act
@@ -360,7 +360,7 @@ public sealed class ComponentServiceProviderTests
     public void IsRegistered_ServiceInBothLocalAndParent_ReturnsTrue()
     {
         // Arrange
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         parentStub.Services[typeof(IDisposable)] = new StubDisposable();
         ComponentServiceProvider provider = new(parentStub);
         IDisposable localService = new StubDisposable();
@@ -381,7 +381,7 @@ public sealed class ComponentServiceProviderTests
     public void IsRegistered_ServiceOnlyInParentProvider_ReturnsFalse()
     {
         // Arrange
-        StubServiceProvider parentStub = new StubServiceProvider();
+        StubServiceProvider parentStub = new();
         parentStub.Services[typeof(IDisposable)] = new StubDisposable();
         ComponentServiceProvider provider = new(parentStub);
 
@@ -509,9 +509,9 @@ public sealed class ComponentServiceProviderTests
     public void Register_ChainedCalls_EnablesFluentRegistration()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service1 = new TestService();
-        AnotherTestService service2 = new AnotherTestService();
+        ComponentServiceProvider provider = new();
+        TestService service1 = new();
+        AnotherTestService service2 = new();
 
         // Act
         ComponentServiceProvider result = provider
@@ -531,9 +531,9 @@ public sealed class ComponentServiceProviderTests
     public void Register_ExistingInstance_OverwritesPreviousRegistration()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService firstInstance = new TestService();
-        TestService secondInstance = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService firstInstance = new();
+        TestService secondInstance = new();
 
         // Act
         provider.Register<ITestService>(firstInstance);
@@ -551,9 +551,9 @@ public sealed class ComponentServiceProviderTests
     public void Register_FactoryAfterInstance_RemovesExistingInstance()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService instance = new TestService();
-        TestService factoryService = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService instance = new();
+        TestService factoryService = new();
         Func<ITestService> factory = () => factoryService;
 
         // Act
@@ -572,9 +572,9 @@ public sealed class ComponentServiceProviderTests
     public void Register_FactoryMultipleTimes_ReplacesExistingFactory()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service1 = new TestService();
-        TestService service2 = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service1 = new();
+        TestService service2 = new();
         Func<ITestService> factory1 = () => service1;
         Func<ITestService> factory2 = () => service2;
 
@@ -594,7 +594,7 @@ public sealed class ComponentServiceProviderTests
     public void Register_FactoryReturnsNull_GetServiceReturnsNull()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
         Func<ITestService> factory = static () => null!;
         provider.Register(factory);
 
@@ -612,9 +612,9 @@ public sealed class ComponentServiceProviderTests
     public void Register_MultipleDifferentTypes_RegistersEachIndependently()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service1 = new TestService();
-        AnotherTestService service2 = new AnotherTestService();
+        ComponentServiceProvider provider = new();
+        TestService service1 = new();
+        AnotherTestService service2 = new();
 
         // Act
         provider.Register<ITestService>(service1);
@@ -632,8 +632,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidFactory_CanBeUnregistered()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         Func<ITestService> factory = () => service;
         provider.Register(factory);
 
@@ -653,8 +653,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidFactory_GetServiceInvokesFactory()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         Func<ITestService> factory = () => service;
         provider.Register(factory);
 
@@ -672,7 +672,7 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidFactory_GetServiceInvokesFactoryEachTime()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
         int invocationCount = 0;
         Func<ITestService> factory = () =>
         {
@@ -699,8 +699,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidFactory_IsRegisteredReturnsTrue()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         Func<ITestService> factory = () => service;
 
         // Act
@@ -717,8 +717,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidFactory_ReturnsProviderForFluentChaining()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         Func<ITestService> factory = () => service;
 
         // Act
@@ -735,8 +735,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidInstance_ReturnsProviderForChaining()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService instance = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService instance = new();
 
         // Act
         ComponentServiceProvider result = provider.Register<ITestService>(instance);
@@ -752,8 +752,8 @@ public sealed class ComponentServiceProviderTests
     public void Register_ValidInstance_StoresInstanceForRetrieval()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService instance = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService instance = new();
 
         // Act
         provider.Register<ITestService>(instance);
@@ -770,8 +770,8 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_CalledTwice_SecondCallReturnsFalse()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         provider.Register<ITestService>(service);
         provider.Unregister<ITestService>();
 
@@ -789,9 +789,9 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_MultipleServicesRegistered_OnlyRemovesSpecifiedService()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service1 = new TestService();
-        AnotherTestService service2 = new AnotherTestService();
+        ComponentServiceProvider provider = new();
+        TestService service1 = new();
+        AnotherTestService service2 = new();
         provider.Register<ITestService>(service1);
         provider.Register<IAnotherTestService>(service2);
 
@@ -811,7 +811,7 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_ServiceNotRegistered_ReturnsFalse()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
 
         // Act
         bool result = provider.Unregister<ITestService>();
@@ -827,7 +827,7 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_ServiceRegisteredAsFactory_ReturnsTrueAndRemovesService()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
         provider.Register<ITestService>(static () => new TestService());
 
         // Act
@@ -845,8 +845,8 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_ServiceRegisteredAsInstance_ReturnsTrueAndRemovesService()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         provider.Register<ITestService>(service);
 
         // Act
@@ -865,8 +865,8 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_ServiceReregisteredAsFactory_ReturnsTrueAndRemovesService()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
-        TestService service = new TestService();
+        ComponentServiceProvider provider = new();
+        TestService service = new();
         provider.Register<ITestService>(service);
         provider.Register<ITestService>(static () => new TestService());
 
@@ -886,9 +886,9 @@ public sealed class ComponentServiceProviderTests
     public void Unregister_ServiceReregisteredAsInstance_ReturnsTrueAndRemovesService()
     {
         // Arrange
-        ComponentServiceProvider provider = new ComponentServiceProvider();
+        ComponentServiceProvider provider = new();
         provider.Register<ITestService>(static () => new TestService());
-        TestService service = new TestService();
+        TestService service = new();
         provider.Register<ITestService>(service);
 
         // Act

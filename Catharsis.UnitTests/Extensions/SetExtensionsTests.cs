@@ -29,7 +29,7 @@ public class SetExtensionsTests
     [TestMethod]
     public void HashSet_RemoveWhere_RemovesMatchingElements()
     {
-        HashSet<int> source = new HashSet<int> { 1, 2, 3, 4, 5, 6 };
+        HashSet<int> source = [1, 2, 3, 4, 5, 6];
         int removed = source.RemoveWhere(static x => x % 2 == 0);
         Assert.AreEqual(3, removed);
         Assert.HasCount(3, source);
@@ -76,7 +76,7 @@ public class SetExtensionsTests
     [TestMethod]
     public void SortedSet_RemoveWhere_RemovesMatchingElements()
     {
-        SortedSet<int> source = new SortedSet<int> { 1, 2, 3, 4, 5, 6 };
+        SortedSet<int> source = [1, 2, 3, 4, 5, 6];
         int removed = source.RemoveWhere(static x => x > 4);
         Assert.AreEqual(2, removed);
         Assert.HasCount(4, source);

@@ -12,7 +12,7 @@ public class TrieTests
     [TestMethod]
     public void Clear_RemovesAllWords()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("a");
         trie.Insert("b");
         trie.Clear();
@@ -22,7 +22,7 @@ public class TrieTests
     [TestMethod]
     public void GetWordsWithPrefix_ReturnsMatchingWords()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("cat");
         trie.Insert("car");
         trie.Insert("dog");
@@ -35,7 +35,7 @@ public class TrieTests
     [TestMethod]
     public void Insert_And_Search()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("hello");
         Assert.IsTrue(trie.Search("hello"));
         Assert.IsFalse(trie.Search("hell"));
@@ -45,7 +45,7 @@ public class TrieTests
     [TestMethod]
     public void Insert_DuplicateWord_DoesNotIncreaseCount()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("hello");
         trie.Insert("hello");
         Assert.AreEqual(1, trie.Count);
@@ -56,7 +56,7 @@ public class TrieTests
     [TestMethod]
     public void Remove_ExistingWord_ReturnsTrue()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("hello");
         Assert.IsTrue(trie.Remove("hello"));
         Assert.IsFalse(trie.Search("hello"));
@@ -66,7 +66,7 @@ public class TrieTests
     [TestMethod]
     public void Remove_NonexistentWord_ReturnsFalse()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         Assert.IsFalse(trie.Remove("xyz"));
     }
 
@@ -75,7 +75,7 @@ public class TrieTests
     [TestMethod]
     public void StartsWith_ReturnsCorrectResult()
     {
-        Trie trie = new Trie();
+        Trie trie = new();
         trie.Insert("apple");
         trie.Insert("app");
         Assert.IsTrue(trie.StartsWith("app"));

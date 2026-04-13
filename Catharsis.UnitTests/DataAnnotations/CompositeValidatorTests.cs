@@ -13,7 +13,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void InvalidObject_ErrorMessagesPopulated()
     {
-        ValidModel model = new ValidModel { Name = null!, Age = 25 };
+        ValidModel model = new() { Name = null!, Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -24,7 +24,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void InvalidObject_MemberNamesPopulated()
     {
-        ValidModel model = new ValidModel { Name = null!, Age = 25 };
+        ValidModel model = new() { Name = null!, Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -35,7 +35,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void InvalidObject_ReturnsIsValidFalse()
     {
-        ValidModel model = new ValidModel { Name = null!, Age = 200 };
+        ValidModel model = new() { Name = null!, Age = 200 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -46,7 +46,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ThrowIfInvalid_InvalidObject_ThrowsValidationException()
     {
-        ValidModel model = new ValidModel { Name = null!, Age = 25 };
+        ValidModel model = new() { Name = null!, Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -56,7 +56,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ThrowIfInvalid_ValidObject_DoesNotThrow()
     {
-        ValidModel model = new ValidModel { Name = "Alice", Age = 25 };
+        ValidModel model = new() { Name = "Alice", Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -68,18 +68,18 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateObject_WithIValidatableObject_RunsValidation()
     {
-        SelfValidatingModel model = new SelfValidatingModel { Start = 10, End = 5 };
+        SelfValidatingModel model = new() { Start = 10, End = 5 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
         Assert.IsFalse(result.IsValid);
-        Assert.IsTrue(result.ErrorMessages.Any(static m => m!.Contains("End must be greater")));
+        Assert.Contains(static m => m!.Contains("End must be greater"), result.ErrorMessages);
     }
 
     [TestMethod]
     public void ValidateObject_WithValidIValidatableObject_ReturnsSuccess()
     {
-        SelfValidatingModel model = new SelfValidatingModel { Start = 5, End = 10 };
+        SelfValidatingModel model = new() { Start = 5, End = 10 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 
@@ -89,7 +89,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateProperty_InvalidProperty_ReturnsFailure()
     {
-        ValidModel model = new ValidModel { Name = null!, Age = 25 };
+        ValidModel model = new() { Name = null!, Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateProperty(model, nameof(ValidModel.Name));
 
@@ -99,7 +99,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateProperty_UnknownProperty_ThrowsArgumentException()
     {
-        ValidModel model = new ValidModel { Name = "Alice", Age = 25 };
+        ValidModel model = new() { Name = "Alice", Age = 25 };
 
         Assert.ThrowsExactly<ArgumentException>(() => CompositeValidator.ValidateProperty(model, "NonExistent"));
     }
@@ -107,7 +107,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateProperty_ValidProperty_ReturnsSuccess()
     {
-        ValidModel model = new ValidModel { Name = "Alice", Age = 25 };
+        ValidModel model = new() { Name = "Alice", Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateProperty(model, nameof(ValidModel.Name));
 
@@ -117,7 +117,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateValue_InvalidValue_ReturnsFailure()
     {
-        ValidationAttribute[] attributes = new ValidationAttribute[] { new RequiredAttribute() };
+        ValidationAttribute[] attributes = [new RequiredAttribute()];
 
         CompositeValidationResult result = CompositeValidator.ValidateValue(null, "TestField", attributes);
 
@@ -127,7 +127,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidateValue_ValidValue_ReturnsSuccess()
     {
-        ValidationAttribute[] attributes = new ValidationAttribute[] { new RequiredAttribute(), new StringLengthAttribute(50) };
+        ValidationAttribute[] attributes = [new RequiredAttribute(), new StringLengthAttribute(50)];
 
         CompositeValidationResult result = CompositeValidator.ValidateValue("hello", "TestField", attributes);
 
@@ -137,7 +137,7 @@ public class CompositeValidatorTests
     [TestMethod]
     public void ValidObject_ReturnsIsValidTrue()
     {
-        ValidModel model = new ValidModel { Name = "Alice", Age = 25 };
+        ValidModel model = new() { Name = "Alice", Age = 25 };
 
         CompositeValidationResult result = CompositeValidator.ValidateObject(model);
 

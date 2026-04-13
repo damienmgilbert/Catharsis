@@ -66,6 +66,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
         _pool.Return(_buffer);
         _buffer = [];
         Length = 0;
+        GC.SuppressFinalize(this);
     }
 
     ///<summary>

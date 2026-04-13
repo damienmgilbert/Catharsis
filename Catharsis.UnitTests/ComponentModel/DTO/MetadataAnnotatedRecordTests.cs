@@ -13,7 +13,7 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void AllPropertyMetadata_ReturnsEntriesForAllProperties()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         Assert.IsGreaterThanOrEqualTo(3, record.AllPropertyMetadata.Count);
     }
@@ -23,18 +23,18 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void GetPropertyMetadata_Attributes_ContainsAppliedAttributes()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         PropertyMetadataEntry? nameMeta = record.GetPropertyMetadata("Name");
 
         Assert.IsNotNull(nameMeta);
-        Assert.IsTrue(nameMeta.Attributes.Any(static a => a is RequiredAttribute));
+        Assert.Contains(static a => a is RequiredAttribute, nameMeta.Attributes);
     }
 
     [TestMethod]
     public void GetPropertyMetadata_ExistingProperty_ReturnsEntry()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         PropertyMetadataEntry? meta = record.GetPropertyMetadata("Name");
 
@@ -48,7 +48,7 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void GetPropertyMetadata_NonExistentProperty_ReturnsNull()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         PropertyMetadataEntry? meta = record.GetPropertyMetadata("NonExistent");
 
@@ -58,7 +58,7 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void GetPropertyMetadata_NullPropertyName_ThrowsArgumentNullException()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         Assert.ThrowsExactly<ArgumentNullException>(() => record.GetPropertyMetadata(null!));
     }
@@ -66,7 +66,7 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void GetPropertyMetadata_PropertyType_IsCorrect()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30 });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30 });
 
         PropertyMetadataEntry? ageMeta = record.GetPropertyMetadata("Age");
 
@@ -77,7 +77,7 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void GetPropertyMetadata_PropertyWithoutDisplayAttr_UsesPropertyName()
     {
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(new AnnotatedDto { Name = "Alice", Age = 30, Nickname = "Al" });
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(new AnnotatedDto { Name = "Alice", Age = 30, Nickname = "Al" });
 
         PropertyMetadataEntry? meta = record.GetPropertyMetadata("Nickname");
 
@@ -89,8 +89,8 @@ public sealed class MetadataAnnotatedRecordTests
     [TestMethod]
     public void Value_InheritsBindableRecordBehavior()
     {
-        AnnotatedDto initial = new AnnotatedDto { Name = "Alice", Age = 30 };
-        MetadataAnnotatedRecord<AnnotatedDto> record = new MetadataAnnotatedRecord<AnnotatedDto>(initial);
+        AnnotatedDto initial = new() { Name = "Alice", Age = 30 };
+        MetadataAnnotatedRecord<AnnotatedDto> record = new(initial);
         string? changedProp = null;
         record.PropertyChanged += (s, e) => changedProp = e.PropertyName;
 

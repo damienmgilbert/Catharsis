@@ -16,11 +16,11 @@ public class DiBufferPipelineTests
     [TestMethod]
     public async Task PipelineRunner_RunAsync_ProcessesData()
     {
-        EchoProcessor processor = new EchoProcessor();
+        EchoProcessor processor = new();
         ILogger<BufferProcessingService> processingLogger = NullLoggerFactory.Instance.CreateLogger<BufferProcessingService>();
-        using BufferProcessingService processingService = new BufferProcessingService(processor, processingLogger);
+        using BufferProcessingService processingService = new(processor, processingLogger);
         ILogger<DiBufferPipeline.PipelineRunner> runnerLogger = NullLoggerFactory.Instance.CreateLogger<DiBufferPipeline.PipelineRunner>();
-        DiBufferPipeline.PipelineRunner runner = new DiBufferPipeline.PipelineRunner(processingService, runnerLogger);
+        DiBufferPipeline.PipelineRunner runner = new(processingService, runnerLogger);
 
         byte[] result = await runner.RunAsync([ 1, 2, 3 ]);
 

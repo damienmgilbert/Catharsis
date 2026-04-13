@@ -19,7 +19,7 @@ public class SpanWriterTests
     [TestMethod]
     public void Constructor_EmptySpan_ZeroLength()
     {
-        SpanWriter writer = new SpanWriter(Span<byte>.Empty);
+        SpanWriter writer = new([]);
 
         Assert.AreEqual(0, writer.Length);
         Assert.AreEqual(0, writer.Remaining);
@@ -32,7 +32,7 @@ public class SpanWriterTests
     public void Constructor_InitializesCorrectly()
     {
         byte[] data = new byte[10];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         Assert.AreEqual(0, writer.Position);
         Assert.AreEqual(10, writer.Length);
@@ -46,7 +46,7 @@ public class SpanWriterTests
     public void FreeSpan_ReturnsRemainingArea()
     {
         byte[] data = new byte[10];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
         writer.Skip(3);
 
         Span<byte> free = writer.FreeSpan;
@@ -60,7 +60,7 @@ public class SpanWriterTests
     [TestMethod]
     public void Reset_ResetsPositionToZero()
     {
-        SpanWriter writer = new SpanWriter(new byte[10]);
+        SpanWriter writer = new(new byte[10]);
         writer.WriteByte(1);
         writer.WriteByte(2);
 
@@ -77,13 +77,13 @@ public class SpanWriterTests
     public void RoundTrip_WriteAndRead_ProducesOriginalValues()
     {
         byte[] buffer = new byte[4 + 8 + 4 + Encoding.UTF8.GetByteCount("Test")];
-        SpanWriter writer = new SpanWriter(buffer);
+        SpanWriter writer = new(buffer);
 
         writer.WriteInt32LittleEndian(42);
         writer.WriteDoubleLittleEndian(3.14);
         writer.WriteUtf8String("Test");
 
-        SpanReader reader = new SpanReader(buffer);
+        SpanReader reader = new(buffer);
 
         Assert.AreEqual(42, reader.ReadInt32LittleEndian());
         Assert.AreEqual(3.14, reader.ReadDoubleLittleEndian());
@@ -97,7 +97,7 @@ public class SpanWriterTests
     public void SequentialWrites_MixedTypes_WritesCorrectly()
     {
         byte[] data = new byte[1 + 4 + 8];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteByte(0xFF);
         writer.WriteInt32LittleEndian(42);
@@ -117,7 +117,7 @@ public class SpanWriterTests
     public void Skip_AdvancesAndClearsBytes()
     {
         byte[] data = [ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF ];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.Skip(3);
 
@@ -134,7 +134,7 @@ public class SpanWriterTests
     [TestMethod]
     public void Skip_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        SpanWriter writer = new SpanWriter(new byte[10]);
+        SpanWriter writer = new(new byte[10]);
 
         try
         {
@@ -151,7 +151,7 @@ public class SpanWriterTests
     [TestMethod]
     public void Skip_PastEnd_ThrowsArgumentOutOfRangeException()
     {
-        SpanWriter writer = new SpanWriter(new byte[5]);
+        SpanWriter writer = new(new byte[5]);
 
         try
         {
@@ -169,7 +169,7 @@ public class SpanWriterTests
     public void Write_UnmanagedType_WritesCorrectValue()
     {
         byte[] data = new byte[Unsafe.SizeOf<int>()];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.Write(42);
 
@@ -183,7 +183,7 @@ public class SpanWriterTests
     public void WriteByte_AtEnd_ThrowsArgumentOutOfRangeException()
     {
         byte[] data = new byte[1];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
         writer.WriteByte(0x01);
 
         try
@@ -202,7 +202,7 @@ public class SpanWriterTests
     public void WriteByte_WritesByteAndAdvances()
     {
         byte[] data = new byte[5];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteByte(0xAB);
 
@@ -217,11 +217,11 @@ public class SpanWriterTests
     public void WriteBytes_PastEnd_ThrowsArgumentOutOfRangeException()
     {
         byte[] data = new byte[2];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         try
         {
-            writer.WriteBytes(new byte[] { 1, 2, 3, 4 });
+            writer.WriteBytes([1, 2, 3, 4]);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
         } catch(ArgumentOutOfRangeException)
         {
@@ -235,7 +235,7 @@ public class SpanWriterTests
     public void WriteBytes_WritesDataCorrectly()
     {
         byte[] data = new byte[10];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
         byte[] source = [ 0xAA, 0xBB, 0xCC ];
 
         writer.WriteBytes(source);
@@ -253,7 +253,7 @@ public class SpanWriterTests
     public void WriteDoubleLittleEndian_WritesCorrectValue()
     {
         byte[] data = new byte[8];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteDoubleLittleEndian(2.71828);
 
@@ -267,7 +267,7 @@ public class SpanWriterTests
     public void WriteInt16LittleEndian_WritesCorrectValue()
     {
         byte[] data = new byte[2];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteInt16LittleEndian(12345);
 
@@ -282,7 +282,7 @@ public class SpanWriterTests
     public void WriteInt32LittleEndian_WritesCorrectValue()
     {
         byte[] data = new byte[4];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteInt32LittleEndian(123456789);
 
@@ -297,7 +297,7 @@ public class SpanWriterTests
     public void WriteInt64LittleEndian_WritesCorrectValue()
     {
         byte[] data = new byte[8];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteInt64LittleEndian(9876543210L);
 
@@ -312,7 +312,7 @@ public class SpanWriterTests
     public void WriteSingleLittleEndian_WritesCorrectValue()
     {
         byte[] data = new byte[4];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteSingleLittleEndian(3.14f);
 
@@ -326,9 +326,9 @@ public class SpanWriterTests
     public void WriteUtf8String_EmptyString_WritesZeroLength()
     {
         byte[] data = new byte[4];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
-        writer.WriteUtf8String(ReadOnlySpan<char>.Empty);
+        writer.WriteUtf8String([]);
 
         Assert.AreEqual(4, writer.Position);
         Assert.AreEqual(0, BinaryPrimitives.ReadInt32LittleEndian(data));
@@ -343,7 +343,7 @@ public class SpanWriterTests
         string text = "Hello";
         int byteCount = Encoding.UTF8.GetByteCount(text);
         byte[] data = new byte[4 + byteCount];
-        SpanWriter writer = new SpanWriter(data);
+        SpanWriter writer = new(data);
 
         writer.WriteUtf8String(text);
 

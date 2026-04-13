@@ -16,7 +16,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void ActiveRentals_MultipleRentReturn_TracksCorrectly()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         byte[] a1 = manager.RentArray(10);
         byte[] a2 = manager.RentArray(20);
@@ -37,7 +37,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void Constructor_Default_CreatesInstance()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         Assert.AreEqual(0, manager.ActiveRentals);
     }
@@ -58,7 +58,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void Dispose_CalledMultipleTimes_DoesNotThrow()
     {
-        MemoryPoolManager manager = new MemoryPoolManager();
+        MemoryPoolManager manager = new();
 
         manager.Dispose();
         manager.Dispose();
@@ -70,7 +70,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentArray_AfterDispose_ThrowsObjectDisposedException()
     {
-        MemoryPoolManager manager = new MemoryPoolManager();
+        MemoryPoolManager manager = new();
         manager.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => manager.RentArray(10));
@@ -82,7 +82,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentArray_IncrementsActiveRentals()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         byte[] array = manager.RentArray(10);
 
@@ -96,7 +96,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentArray_NegativeLength_ThrowsArgumentOutOfRangeException()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => manager.RentArray(-1));
     }
@@ -107,7 +107,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentArray_ReturnsArrayOfAtLeastRequestedLength()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         byte[] array = manager.RentArray(100);
 
@@ -121,7 +121,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_AccessMemoryAfterOwnerDispose_ThrowsObjectDisposedException()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
         IMemoryOwner<byte> owner = manager.RentMemory(32);
         owner.Dispose();
 
@@ -134,7 +134,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_AfterDispose_ThrowsObjectDisposedException()
     {
-        MemoryPoolManager manager = new MemoryPoolManager();
+        MemoryPoolManager manager = new();
         manager.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => manager.RentMemory(10));
@@ -146,7 +146,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_DisposeOwner_DecrementsActiveRentals()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
         IMemoryOwner<byte> owner = manager.RentMemory(32);
 
         owner.Dispose();
@@ -160,7 +160,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_DisposeOwnerTwice_DoesNotDecrementBelowZero()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
         IMemoryOwner<byte> owner = manager.RentMemory(32);
 
         owner.Dispose();
@@ -175,7 +175,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_IncrementsActiveRentals()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         using IMemoryOwner<byte> owner = manager.RentMemory(32);
 
@@ -188,7 +188,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void RentMemory_ReturnsValidMemoryOwner()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         using IMemoryOwner<byte> owner = manager.RentMemory(64);
 
@@ -201,7 +201,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void ReturnArray_AfterDispose_ThrowsObjectDisposedException()
     {
-        MemoryPoolManager manager = new MemoryPoolManager();
+        MemoryPoolManager manager = new();
         byte[] array = manager.RentArray(10);
         manager.Dispose();
 
@@ -214,7 +214,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void ReturnArray_DecrementsActiveRentals()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
         byte[] array = manager.RentArray(10);
 
         manager.ReturnArray(array);
@@ -228,7 +228,7 @@ public class MemoryPoolManagerTests
     [TestMethod]
     public void ReturnArray_NullArray_ThrowsArgumentNullException()
     {
-        using MemoryPoolManager manager = new MemoryPoolManager();
+        using MemoryPoolManager manager = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => manager.ReturnArray(null!));
     }

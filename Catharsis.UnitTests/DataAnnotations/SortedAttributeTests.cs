@@ -12,7 +12,7 @@ public class SortedAttributeTests
     #region Private methods
     static ValidationContext CreateContext(string memberName)
     {
-        TestModel model = new TestModel();
+        TestModel model = new();
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -21,7 +21,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void AscendingSorted_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Ascending);
+        SortedAttribute attribute = new(SortDirection.Ascending);
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3, 4, 5 }, context);
@@ -32,7 +32,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void DefaultDirection_IsAscending()
     {
-        SortedAttribute attribute = new SortedAttribute();
+        SortedAttribute attribute = new();
 
         Assert.AreEqual(SortDirection.Ascending, attribute.Direction);
     }
@@ -40,7 +40,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void DescendingSorted_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Descending);
+        SortedAttribute attribute = new(SortDirection.Descending);
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 5, 4, 3, 2, 1 }, context);
@@ -51,7 +51,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void DuplicatesAllowed_WithDuplicates_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Ascending) { AllowDuplicates = true };
+        SortedAttribute attribute = new(SortDirection.Ascending) { AllowDuplicates = true };
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 2, 3 }, context);
@@ -62,7 +62,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void DuplicatesDisallowed_WithDuplicates_ReturnsFailure()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Ascending) { AllowDuplicates = false };
+        SortedAttribute attribute = new(SortDirection.Ascending) { AllowDuplicates = false };
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 2, 3 }, context);
@@ -73,7 +73,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void EmptyCollection_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute();
+        SortedAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(Array.Empty<int>(), context);
@@ -84,7 +84,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void NonEnumerableValue_ReturnsFailure()
     {
-        SortedAttribute attribute = new SortedAttribute();
+        SortedAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(42, context);
@@ -96,7 +96,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void NullValue_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute();
+        SortedAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
@@ -107,7 +107,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void SingleElement_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute();
+        SortedAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 42 }, context);
@@ -118,7 +118,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void StringsSortedAscending_ReturnsSuccess()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Ascending);
+        SortedAttribute attribute = new(SortDirection.Ascending);
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { "apple", "banana", "cherry" }, context);
@@ -129,7 +129,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void UnsortedAscending_ReturnsFailure()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Ascending);
+        SortedAttribute attribute = new(SortDirection.Ascending);
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 3, 2, 4 }, context);
@@ -141,7 +141,7 @@ public class SortedAttributeTests
     [TestMethod]
     public void UnsortedDescending_ReturnsFailure()
     {
-        SortedAttribute attribute = new SortedAttribute(SortDirection.Descending);
+        SortedAttribute attribute = new(SortDirection.Descending);
         ValidationContext context = CreateContext(nameof(TestModel.Values));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 5, 3, 4, 1 }, context);

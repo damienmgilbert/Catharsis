@@ -104,7 +104,7 @@ public static class SequenceFactory
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<returns>An empty sequence.</returns>
-    public static IEnumerable<T> Empty<T>() { return Enumerable.Empty<T>(); }
+    public static IEnumerable<T> Empty<T>() { return []; }
 
     ///<summary>
     ///Generates a sequence by repeatedly applying <paramref name="generator"/> to produce successive elements, starting

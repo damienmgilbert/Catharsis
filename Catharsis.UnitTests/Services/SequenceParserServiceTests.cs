@@ -17,8 +17,8 @@ public class SequenceParserServiceTests
     public void Parse_InvalidData_IncrementsFailureCount()
     {
         ILogger<SequenceParserService> logger = NullLoggerFactory.Instance.CreateLogger<SequenceParserService>();
-        SequenceParserService service = new SequenceParserService(new FailParser(), logger);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1 });
+        SequenceParserService service = new(new FailParser(), logger);
+        ReadOnlySequence<byte> seq = new([1]);
 
         service.Parse(in seq, out _, out _);
 
@@ -29,8 +29,8 @@ public class SequenceParserServiceTests
     public void Parse_Success_IncrementsSuccessCount()
     {
         ILogger<SequenceParserService> logger = NullLoggerFactory.Instance.CreateLogger<SequenceParserService>();
-        SequenceParserService service = new SequenceParserService(new SuccessParser(), logger);
-        ReadOnlySequence<byte> seq = new ReadOnlySequence<byte>(new byte[] { 1, 2, 3 });
+        SequenceParserService service = new(new SuccessParser(), logger);
+        ReadOnlySequence<byte> seq = new([1, 2, 3]);
 
         SequenceParseStatus status = service.Parse(in seq, out _, out _);
 

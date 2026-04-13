@@ -149,7 +149,7 @@ public class ImmutableCollectionExtensionsTests
     [TestMethod]
     public void ImmutableQueue_EnqueueRange_EnqueuesAll()
     {
-        ImmutableQueue<int> source = ImmutableQueue<int>.Empty;
+        ImmutableQueue<int> source = [];
         ImmutableQueue<int> result = source.EnqueueRange(new[] { 1, 2, 3 });
         Assert.IsFalse(result.IsEmpty);
         result = result.Dequeue(out int first);
@@ -201,7 +201,7 @@ public class ImmutableCollectionExtensionsTests
     [TestMethod]
     public void ImmutableStack_PushRange_PushesAll()
     {
-        ImmutableStack<int> source = ImmutableStack<int>.Empty;
+        ImmutableStack<int> source = [];
         ImmutableStack<int> result = source.PushRange(new[] { 1, 2, 3 });
         Assert.IsFalse(result.IsEmpty);
         result = result.Pop(out int top);

@@ -13,9 +13,10 @@ public class ChangeTrackerTests
     [TestMethod]
     public void AcceptChanges_UpdatesOriginalAndResetsIsChanged()
     {
-        ChangeTracker<string> tracker = new ChangeTracker<string>("hello");
-
-        tracker.Value = "world";
+        ChangeTracker<string> tracker = new("hello")
+        {
+            Value = "world"
+        };
         Assert.IsTrue(tracker.IsChanged);
 
         tracker.AcceptChanges();
@@ -28,7 +29,7 @@ public class ChangeTrackerTests
     [TestMethod]
     public void AcceptChanges_WhenNotChanged_DoesNothing()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(5);
+        ChangeTracker<int> tracker = new(5);
         bool changed = false;
         tracker.PropertyChanged += (_, _) => changed = true;
 
@@ -48,7 +49,7 @@ public class ChangeTrackerTests
     [TestMethod]
     public void InitialState_IsChangedIsFalse()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(42);
+        ChangeTracker<int> tracker = new(42);
 
         Assert.IsFalse(tracker.IsChanged);
         Assert.AreEqual(42, tracker.Value);
@@ -58,8 +59,10 @@ public class ChangeTrackerTests
     [TestMethod]
     public void IRevertibleChangeTracking_RejectChanges_Works()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(5);
-        tracker.Value = 99;
+        ChangeTracker<int> tracker = new(5)
+        {
+            Value = 99
+        };
 
         IRevertibleChangeTracking revertible = tracker;
         revertible.RejectChanges();
@@ -71,8 +74,8 @@ public class ChangeTrackerTests
     [TestMethod]
     public void PropertyChanged_FiredForValueAndIsChanged()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(0);
-        List<string> changedProperties = new List<string>();
+        ChangeTracker<int> tracker = new(0);
+        List<string> changedProperties = [];
         tracker.PropertyChanged += (_, e) => changedProperties.Add(e.PropertyName!);
 
         tracker.Value = 10;
@@ -84,9 +87,10 @@ public class ChangeTrackerTests
     [TestMethod]
     public void RejectChanges_RevertsValueAndResetsIsChanged()
     {
-        ChangeTracker<string> tracker = new ChangeTracker<string>("hello");
-
-        tracker.Value = "world";
+        ChangeTracker<string> tracker = new("hello")
+        {
+            Value = "world"
+        };
         Assert.IsTrue(tracker.IsChanged);
 
         tracker.RejectChanges();
@@ -99,7 +103,7 @@ public class ChangeTrackerTests
     [TestMethod]
     public void RejectChanges_WhenNotChanged_DoesNothing()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(5);
+        ChangeTracker<int> tracker = new(5);
         bool changed = false;
         tracker.PropertyChanged += (_, _) => changed = true;
 
@@ -111,9 +115,10 @@ public class ChangeTrackerTests
     [TestMethod]
     public void SettingNewValue_SetsIsChangedToTrue()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(42);
-
-        tracker.Value = 100;
+        ChangeTracker<int> tracker = new(42)
+        {
+            Value = 100
+        };
 
         Assert.IsTrue(tracker.IsChanged);
         Assert.AreEqual(100, tracker.Value);
@@ -123,7 +128,7 @@ public class ChangeTrackerTests
     [TestMethod]
     public void SettingSameValue_DoesNotTriggerChange()
     {
-        ChangeTracker<int> tracker = new ChangeTracker<int>(42);
+        ChangeTracker<int> tracker = new(42);
         bool changed = false;
         tracker.PropertyChanged += (_, _) => changed = true;
 

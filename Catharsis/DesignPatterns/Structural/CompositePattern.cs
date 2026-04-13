@@ -15,7 +15,7 @@ public class CompositePattern
     ///<param name="getChildren">A delegate that returns the children of a component.</param>
     ///<param name="action">The action to apply to each component in the tree.</param>
     ///<returns>The original <paramref name="obj"/> after the action has been applied to the entire tree.</returns>
-    public T Composite<T>(T obj, Func<T, IEnumerable<T>> getChildren, Action<T> action)
+    public static T Composite<T>(T obj, Func<T, IEnumerable<T>> getChildren, Action<T> action)
     {
         if(getChildren is null)
         {

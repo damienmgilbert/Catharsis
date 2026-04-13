@@ -18,7 +18,7 @@ public static class SequenceChunkMap
             if (chunk.Count == chunkSize)
             {
                 yield return mapper(chunk.AsReadOnly());
-                chunk = new List<T>(chunkSize);
+                chunk = new(chunkSize);
             }
         }
 
@@ -83,7 +83,7 @@ public static class SequenceChunkMap
                         yield return result;
                     }
 
-                    chunk = new List<TElement>(chunkSize);
+                    chunk = new(chunkSize);
                 }
             }
 
@@ -113,7 +113,7 @@ public static class SequenceChunkMap
                     yield return result;
                 }
 
-                chunk = new List<T>(chunkSize);
+                chunk = new(chunkSize);
                 chunkIndex++;
             }
         }
@@ -142,7 +142,7 @@ public static class SequenceChunkMap
                     yield return result;
                 }
 
-                chunk = new List<T>(chunkSize);
+                chunk = new(chunkSize);
             }
         }
 

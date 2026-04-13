@@ -14,7 +14,7 @@ public class ImmutableBufferTests
     public void Constructor_FromImmutableArray()
     {
         ImmutableArray<int> arr = ImmutableArray.Create(10, 20);
-        ImmutableBuffer<int> buf = new ImmutableBuffer<int>(arr);
+        ImmutableBuffer<int> buf = new(arr);
         Assert.HasCount(2, buf);
     }
 
@@ -22,7 +22,7 @@ public class ImmutableBufferTests
     public void Constructor_FromSpan_CopiesData()
     {
         ReadOnlySpan<int> data = [1, 2, 3];
-        ImmutableBuffer<int> buf = new ImmutableBuffer<int>(data);
+        ImmutableBuffer<int> buf = new(data);
         Assert.HasCount(3, buf);
         Assert.AreEqual(1, buf[0]);
         Assert.AreEqual(3, buf[2]);

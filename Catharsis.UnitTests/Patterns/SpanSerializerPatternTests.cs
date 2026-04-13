@@ -13,16 +13,16 @@ public class SpanSerializerPatternTests
     [TestMethod]
     public void GetSerializedSize_ReturnsExpected()
     {
-        SpanSerializerPattern.SensorReading reading = new SpanSerializerPattern.SensorReading(0, 0, 0, 0);
+        SpanSerializerPattern.SensorReading reading = new(0, 0, 0, 0);
         Assert.AreEqual(SpanSerializerPattern.SensorReading.SerializedSizeValue, reading.GetSerializedSize());
     }
 
     [TestMethod]
     public void SensorReading_RoundTrip()
     {
-        SpanSerializerPattern.SensorReading reading = new SpanSerializerPattern.SensorReading(1, 25.5f, 60.0f, 1000L);
+        SpanSerializerPattern.SensorReading reading = new(1, 25.5f, 60.0f, 1000L);
 
-        using PooledBuffer<byte> buffer = new PooledBuffer<byte>(SpanSerializerPattern.SensorReading.SerializedSizeValue);
+        using PooledBuffer<byte> buffer = new(SpanSerializerPattern.SensorReading.SerializedSizeValue);
         reading.Serialize(buffer);
 
         SpanSerializerPattern.SensorReading deserialized = SpanSerializerPattern.SensorReading.Deserialize(buffer.WrittenSpan);

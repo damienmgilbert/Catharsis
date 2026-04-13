@@ -14,9 +14,9 @@ public class AbstractFactoryPatternTests
     public void AbstractFactory_ComplexReferenceTypes_WorksCorrectly()
     {
         // Arrange
-        object sourceObj = new object();
-        object factoryObj = new object();
-        object expectedResult = new object();
+        object sourceObj = new();
+        object factoryObj = new();
+        object expectedResult = new();
         int createCallCount = 0;
         Func<object, object, object> create = (f, o) =>
         {
@@ -24,7 +24,7 @@ public class AbstractFactoryPatternTests
             return expectedResult;
         };
         // Act
-        object result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        object result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.AreSame(expectedResult, result);
         Assert.AreEqual(1, createCallCount);
@@ -39,7 +39,7 @@ public class AbstractFactoryPatternTests
     {
         // Arrange
         string sourceObj = "source";
-        object factoryObj = new object();
+        object factoryObj = new();
         int createCallCount = 0;
         Func<object, string, string?> create = (f, o) =>
         {
@@ -47,7 +47,7 @@ public class AbstractFactoryPatternTests
             return null;
         };
         // Act
-        string? result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        string? result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.IsNull(result);
         Assert.AreEqual(1, createCallCount);
@@ -71,7 +71,7 @@ public class AbstractFactoryPatternTests
             return expectedResult;
         };
         // Act
-        double result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        double result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.AreEqual(expectedResult, result);
         Assert.AreEqual(1, createCallCount);
@@ -86,7 +86,7 @@ public class AbstractFactoryPatternTests
     {
         // Arrange
         string? sourceObj = null;
-        object factoryObj = new object();
+        object factoryObj = new();
         string expectedResult = "result";
         int createCallCount = 0;
         Func<object, string?, string> create = (f, o) =>
@@ -95,7 +95,7 @@ public class AbstractFactoryPatternTests
             return expectedResult;
         };
         // Act
-        string result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        string result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.AreEqual(expectedResult, result);
         Assert.AreEqual(1, createCallCount);
@@ -111,7 +111,7 @@ public class AbstractFactoryPatternTests
     {
         // Arrange
         string sourceObj = "source";
-        object factoryObj = new object();
+        object factoryObj = new();
         int expectedResult = 42;
         int createCallCount = 0;
         Func<object, string, int> create = (f, o) =>
@@ -120,7 +120,7 @@ public class AbstractFactoryPatternTests
             return expectedResult;
         };
         // Act
-        int result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        int result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.AreEqual(expectedResult, result);
         Assert.AreEqual(1, createCallCount);
@@ -146,7 +146,7 @@ public class AbstractFactoryPatternTests
             return true;
         };
         // Act
-        new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, createFunc);
+        AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, createFunc);
         // Assert
         Assert.AreEqual(factoryObj, capturedFactory);
         Assert.AreEqual(sourceObj, capturedObj);
@@ -170,7 +170,7 @@ public class AbstractFactoryPatternTests
             return expectedResult;
         };
         // Act
-        int result = new AbstractFactoryPattern().AbstractFactory(sourceObj, factoryObj, create);
+        int result = AbstractFactoryPattern.AbstractFactory(sourceObj, factoryObj, create);
         // Assert
         Assert.AreEqual(expectedResult, result);
         Assert.AreEqual(1, createCallCount);

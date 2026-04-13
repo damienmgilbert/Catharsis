@@ -28,7 +28,7 @@ public class MementoTests
         }
 
         // Act
-        string result = new Memento().Restore(obj, memento, RestoreAction);
+        string result = Memento.Restore(obj, memento, RestoreAction);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.AreEqual(obj, capturedObj);
@@ -57,7 +57,7 @@ public class MementoTests
         }
 
         // Act
-        string? result = new Memento().Restore(obj, memento, RestoreAction);
+        string? result = Memento.Restore(obj, memento, RestoreAction);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.IsNull(capturedObj);
@@ -86,7 +86,7 @@ public class MementoTests
         }
 
         // Act
-        string? result = new Memento().Restore(obj, memento, RestoreAction);
+        string? result = Memento.Restore(obj, memento, RestoreAction);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.IsNull(capturedObj);
@@ -116,7 +116,7 @@ public class MementoTests
         }
 
         // Act
-        string result = new Memento().Restore(obj, memento, RestoreAction);
+        string result = Memento.Restore(obj, memento, RestoreAction);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.AreEqual(obj, capturedObj);
@@ -145,7 +145,7 @@ public class MementoTests
         }
 
         // Act
-        int result = new Memento().Restore(obj, memento, RestoreAction);
+        int result = Memento.Restore(obj, memento, RestoreAction);
         // Assert
         Assert.IsTrue(wasCalled);
         Assert.AreEqual(obj, capturedObj);

@@ -13,7 +13,7 @@ public class PrototypePattern
     ///<param name="obj">The object to clone.</param>
     ///<param name="clone">A delegate that produces a copy of the source object.</param>
     ///<returns>A clone of <paramref name="obj"/>.</returns>
-    public T Prototype<T>(T obj, Func<T, T> clone)
+    public static T Prototype<T>(T obj, Func<T, T> clone)
     {
         if(clone is null)
         {

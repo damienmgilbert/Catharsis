@@ -18,7 +18,7 @@ public class AdapterTests
         string obj = "test";
         Func<string, string?> adapter = static _ => null;
         // Act
-        string? result = new Adapter().Adapt(obj, adapter);
+        string? result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsNull(result);
     }
@@ -35,7 +35,7 @@ public class AdapterTests
         int addValue = 10;
         Func<int, int> adapter = i => i + addValue;
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(15, result);
     }
@@ -48,10 +48,10 @@ public class AdapterTests
     public void Adapt_ComplexObjectTransformation_ReturnsTransformedValue()
     {
         // Arrange
-        DateTime obj = new DateTime(2024, 1, 15);
+        DateTime obj = new(2024, 1, 15);
         Func<DateTime, int> adapter = static dt => dt.Year;
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(2024, result);
     }
@@ -67,7 +67,7 @@ public class AdapterTests
         double obj = double.NaN;
         Func<double, bool> adapter = static d => double.IsNaN(d);
         // Act
-        bool result = new Adapter().Adapt(obj, adapter);
+        bool result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsTrue(result);
     }
@@ -83,7 +83,7 @@ public class AdapterTests
         double obj = double.NegativeInfinity;
         Func<double, bool> adapter = static d => double.IsNegativeInfinity(d);
         // Act
-        bool result = new Adapter().Adapt(obj, adapter);
+        bool result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsTrue(result);
     }
@@ -99,7 +99,7 @@ public class AdapterTests
         double obj = double.PositiveInfinity;
         Func<double, bool> adapter = static d => double.IsPositiveInfinity(d);
         // Act
-        bool result = new Adapter().Adapt(obj, adapter);
+        bool result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsTrue(result);
     }
@@ -115,7 +115,7 @@ public class AdapterTests
         string obj = string.Empty;
         Func<string, int> adapter = static s => s.Length;
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(0, result);
     }
@@ -131,7 +131,7 @@ public class AdapterTests
         string obj = "test";
         Func<string, string> adapter = static s => s;
         // Act
-        string result = new Adapter().Adapt(obj, adapter);
+        string result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual("test", result);
     }
@@ -147,7 +147,7 @@ public class AdapterTests
         int obj = int.MaxValue;
         Func<int, long> adapter = static i => i;
         // Act
-        long result = new Adapter().Adapt(obj, adapter);
+        long result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(int.MaxValue, result);
     }
@@ -163,7 +163,7 @@ public class AdapterTests
         int obj = int.MinValue;
         Func<int, long> adapter = static i => i;
         // Act
-        long result = new Adapter().Adapt(obj, adapter);
+        long result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(int.MinValue, result);
     }
@@ -179,7 +179,7 @@ public class AdapterTests
         string? obj = null;
         Func<string?, int> adapter = static s => (s == null) ? (-1) : s.Length;
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(-1, result);
     }
@@ -195,7 +195,7 @@ public class AdapterTests
         string obj = "test";
         Func<string, object> adapter = static s => s as object;
         // Act
-        object result = new Adapter().Adapt(obj, adapter);
+        object result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual("test", result);
     }
@@ -211,7 +211,7 @@ public class AdapterTests
         string obj = "42";
         Func<string, int?> adapter = static s => int.TryParse(s, out int val) ? val : null;
         // Act
-        int? result = new Adapter().Adapt(obj, adapter);
+        int? result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(42, result);
     }
@@ -227,7 +227,7 @@ public class AdapterTests
         string obj = "invalid";
         Func<string, int?> adapter = static s => int.TryParse(s, out int val) ? val : null;
         // Act
-        int? result = new Adapter().Adapt(obj, adapter);
+        int? result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsNull(result);
     }
@@ -243,7 +243,7 @@ public class AdapterTests
         int obj = 42;
         Func<int, string> adapter = static i => i.ToString();
         // Act
-        string result = new Adapter().Adapt(obj, adapter);
+        string result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual("42", result);
     }
@@ -259,7 +259,7 @@ public class AdapterTests
         string obj = "42";
         Func<string, int> adapter = static s => int.Parse(s);
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(42, result);
     }
@@ -275,7 +275,7 @@ public class AdapterTests
         int obj = 42;
         Func<int, double> adapter = static i => i * 1.0;
         // Act
-        double result = new Adapter().Adapt(obj, adapter);
+        double result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(42.0, result);
     }
@@ -288,10 +288,10 @@ public class AdapterTests
     public void Adapt_VeryLongString_ReturnsExpectedValue()
     {
         // Arrange
-        string obj = new string('a', 10000);
+        string obj = new('a', 10000);
         Func<string, int> adapter = static s => s.Length;
         // Act
-        int result = new Adapter().Adapt(obj, adapter);
+        int result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.AreEqual(10000, result);
     }
@@ -307,7 +307,7 @@ public class AdapterTests
         string obj = "   ";
         Func<string, bool> adapter = static s => string.IsNullOrWhiteSpace(s);
         // Act
-        bool result = new Adapter().Adapt(obj, adapter);
+        bool result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsTrue(result);
     }
@@ -322,7 +322,7 @@ public class AdapterTests
         int obj = 0;
         Func<int, bool> adapter = static i => i == 0;
         // Act
-        bool result = new Adapter().Adapt(obj, adapter);
+        bool result = Adapter.Adapt(obj, adapter);
         // Assert
         Assert.IsTrue(result);
     }

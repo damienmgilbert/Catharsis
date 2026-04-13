@@ -63,6 +63,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
 
         _disposed = true;
         Clear();
+        GC.SuppressFinalize(this);
     }
 
     ///<summary>

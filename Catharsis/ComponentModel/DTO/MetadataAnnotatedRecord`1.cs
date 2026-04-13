@@ -15,7 +15,7 @@ namespace Catharsis.ComponentModel.DTO;
 public class MetadataAnnotatedRecord<T> : BindableRecord<T> where T : class
 {
     #region Fields
-    readonly IReadOnlyList<PropertyMetadataEntry> _metadata;
+    readonly List<PropertyMetadataEntry> _metadata;
     #endregion
 
     #region Constructors
@@ -30,10 +30,10 @@ public class MetadataAnnotatedRecord<T> : BindableRecord<T> where T : class
     #endregion
 
     #region Private methods
-    static IReadOnlyList<PropertyMetadataEntry> BuildMetadata()
+    static List<PropertyMetadataEntry> BuildMetadata()
     {
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
-        List<PropertyMetadataEntry> entries = new List<PropertyMetadataEntry>(properties.Count);
+        List<PropertyMetadataEntry> entries = new(properties.Count);
 
         foreach(PropertyDescriptor prop in properties)
         {

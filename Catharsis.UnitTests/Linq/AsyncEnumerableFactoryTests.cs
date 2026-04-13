@@ -54,7 +54,7 @@ public class AsyncEnumerableFactoryTests
     {
         List<int> result = await ToListAsync(AsyncEnumerableFactory.Empty<int>());
 
-        Assert.AreEqual(0, result.Count);
+        Assert.IsEmpty(result);
     }
 
     [TestMethod]

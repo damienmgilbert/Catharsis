@@ -88,8 +88,8 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
     ///<param name="value">The value to validate.</param>
     protected virtual void ValidateValue(T value)
     {
-        ValidationContext context = new ValidationContext(value);
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(value);
+        List<ValidationResult> results = [];
 
         Validator.TryValidateObject(value, context, results, validateAllProperties: true);
 

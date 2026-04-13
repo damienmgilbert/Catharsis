@@ -16,7 +16,7 @@ public class PropertyMetadataTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        PropertyMetadata meta = new PropertyMetadata("Name", typeof(string), typeof(object));
+        PropertyMetadata meta = new("Name", typeof(string), typeof(object));
         Assert.AreEqual("Name", meta.Name);
         Assert.AreEqual(typeof(string), meta.PropertyType);
         Assert.AreEqual(typeof(object), meta.ComponentType);
@@ -27,7 +27,7 @@ public class PropertyMetadataTests
     [TestMethod]
     public void Constructor_WithDefaults()
     {
-        PropertyMetadata meta = new PropertyMetadata("Age", typeof(int), typeof(object), isReadOnly: true, defaultValue: 25);
+        PropertyMetadata meta = new("Age", typeof(int), typeof(object), isReadOnly: true, defaultValue: 25);
         Assert.IsTrue(meta.IsReadOnly);
         Assert.AreEqual(25, meta.DefaultValue);
     }

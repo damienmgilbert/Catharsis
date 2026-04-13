@@ -12,7 +12,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void BeginInit_CalledTwice_Throws()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
         obj.BeginInit();
 
         Assert.ThrowsExactly<InvalidOperationException>(() => obj.BeginInit());
@@ -21,7 +21,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void BeginInit_SetsIsInitializing()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
 
         obj.BeginInit();
 
@@ -33,7 +33,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void EndInit_SetsIsInitializedAndRaisesEvent()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
         bool eventRaised = false;
         obj.Initialized += (_, _) => eventRaised = true;
 
@@ -49,7 +49,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void EndInit_WithoutBeginInit_Throws()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
 
         Assert.ThrowsExactly<InvalidOperationException>(() => obj.EndInit());
     }
@@ -57,7 +57,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void InitialState_NotInitializedOrInitializing()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
 
         Assert.IsFalse(obj.IsInitializing);
         Assert.IsFalse(obj.IsInitialized);
@@ -66,7 +66,7 @@ public class InitializableObjectTests
     [TestMethod]
     public void MultipleInitCycles_WorkCorrectly()
     {
-        TestInitializable obj = new TestInitializable();
+        TestInitializable obj = new();
         int initCount = 0;
         obj.Initialized += (_, _) => initCount++;
 

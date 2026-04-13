@@ -173,7 +173,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
         #region Private methods
         static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
         {
-            Dictionary<string, EventDescriptor> merged = new Dictionary<string, EventDescriptor>(StringComparer.Ordinal);
+            Dictionary<string, EventDescriptor> merged = new(StringComparer.Ordinal);
 
             foreach(EventDescriptor evt in baseEvents)
             {
@@ -201,7 +201,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
 
         static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
-            Dictionary<string, PropertyDescriptor> merged = new Dictionary<string, PropertyDescriptor>(StringComparer.Ordinal);
+            Dictionary<string, PropertyDescriptor> merged = new(StringComparer.Ordinal);
 
             foreach(PropertyDescriptor prop in baseProperties)
             {
@@ -253,7 +253,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
                 return all;
             }
 
-            List<EventDescriptor> filtered = new List<EventDescriptor>();
+            List<EventDescriptor> filtered = [];
 
             foreach(EventDescriptor evt in all)
             {
@@ -288,7 +288,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
                 return all;
             }
 
-            List<PropertyDescriptor> filtered = new List<PropertyDescriptor>();
+            List<PropertyDescriptor> filtered = [];
 
             foreach(PropertyDescriptor prop in all)
             {

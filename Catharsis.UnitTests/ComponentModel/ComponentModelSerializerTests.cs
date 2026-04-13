@@ -12,7 +12,7 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
+        ComponentModelSerializer serializer = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => serializer.Serialize(null!));
     }
@@ -20,8 +20,8 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_NullPropertyValue_ReturnsNull()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
-        SimpleDto dto = new SimpleDto { Name = null };
+        ComponentModelSerializer serializer = new();
+        SimpleDto dto = new() { Name = null };
 
         Dictionary<string, string?> result = serializer.Serialize(dto);
 
@@ -31,8 +31,8 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_ReturnsPropertyDictionary()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
-        SimpleDto dto = new SimpleDto { Name = "Alice", Age = 30, IsActive = true };
+        ComponentModelSerializer serializer = new();
+        SimpleDto dto = new() { Name = "Alice", Age = 30, IsActive = true };
 
         Dictionary<string, string?> result = serializer.Serialize(dto);
 
@@ -44,8 +44,8 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_SkipDefaultValues_OmitsDefaults()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer { SkipDefaultValues = true };
-        SimpleDto dto = new SimpleDto { Name = "Alice" };
+        ComponentModelSerializer serializer = new() { SkipDefaultValues = true };
+        SimpleDto dto = new() { Name = "Alice" };
 
         Dictionary<string, string?> result = serializer.Serialize(dto);
 
@@ -55,8 +55,8 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void Serialize_WithPropertyFilter_FiltersProperties()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer { PropertyFilter = static p => p.Name == "Name" };
-        SimpleDto dto = new SimpleDto { Name = "Alice", Age = 30 };
+        ComponentModelSerializer serializer = new() { PropertyFilter = static p => p.Name == "Name" };
+        SimpleDto dto = new() { Name = "Alice", Age = 30 };
 
         Dictionary<string, string?> result = serializer.Serialize(dto);
 
@@ -67,7 +67,7 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void SerializeRaw_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
+        ComponentModelSerializer serializer = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => serializer.SerializeRaw(null!));
     }
@@ -75,8 +75,8 @@ public sealed class ComponentModelSerializerTests
     [TestMethod]
     public void SerializeRaw_ReturnsTypedValues()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
-        SimpleDto dto = new SimpleDto { Name = "Alice", Age = 30, IsActive = true };
+        ComponentModelSerializer serializer = new();
+        SimpleDto dto = new() { Name = "Alice", Age = 30, IsActive = true };
 
         Dictionary<string, object?> result = serializer.SerializeRaw(dto);
 

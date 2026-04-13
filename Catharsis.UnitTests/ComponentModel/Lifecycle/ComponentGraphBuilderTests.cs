@@ -13,8 +13,8 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddComponent_DuplicateComponent_ThrowsInvalidOperationException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
-        StubComponent c = new StubComponent();
+        ComponentGraphBuilder builder = new();
+        StubComponent c = new();
         builder.AddComponent(c);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => builder.AddComponent(c));
@@ -23,7 +23,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddComponent_NullComponent_ThrowsArgumentNullException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddComponent(null!));
     }
@@ -31,7 +31,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddComponent_ReturnsSelfForChaining()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
 
         ComponentGraphBuilder result = builder.AddComponent(new StubComponent());
 
@@ -41,7 +41,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddDependency_NullDependency_ThrowsArgumentNullException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddDependency(new StubComponent(), null!));
     }
@@ -49,7 +49,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddDependency_NullDependent_ThrowsArgumentNullException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.AddDependency(null!, new StubComponent()));
     }
@@ -57,9 +57,9 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void AddDependency_ReturnsSelfForChaining()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
-        StubComponent c1 = new StubComponent();
-        StubComponent c2 = new StubComponent();
+        ComponentGraphBuilder builder = new();
+        StubComponent c1 = new();
+        StubComponent c2 = new();
         builder.AddComponent(c1);
         builder.AddComponent(c2);
 
@@ -71,7 +71,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_EmptyGraph_Succeeds()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
 
         ComponentGraph graph = builder.Build();
 
@@ -81,9 +81,9 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_UnregisteredDependency_ThrowsInvalidOperationException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
-        StubComponent registered = new StubComponent();
-        StubComponent unregistered = new StubComponent();
+        ComponentGraphBuilder builder = new();
+        StubComponent registered = new();
+        StubComponent unregistered = new();
         builder.AddComponent(registered);
         builder.AddDependency(registered, unregistered);
 
@@ -93,9 +93,9 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_UnregisteredDependent_ThrowsInvalidOperationException()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
-        StubComponent registered = new StubComponent();
-        StubComponent unregistered = new StubComponent();
+        ComponentGraphBuilder builder = new();
+        StubComponent registered = new();
+        StubComponent unregistered = new();
         builder.AddComponent(registered);
         builder.AddDependency(unregistered, registered);
 
@@ -105,8 +105,8 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_WithComponents_ReturnsGraph()
     {
-        StubComponent c1 = new StubComponent();
-        StubComponent c2 = new StubComponent();
+        StubComponent c1 = new();
+        StubComponent c2 = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(c1, "A")
             .AddComponent(c2, "B")
@@ -120,8 +120,8 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Build_WithDependencies_WiresNodes()
     {
-        StubComponent db = new StubComponent();
-        StubComponent app = new StubComponent();
+        StubComponent db = new();
+        StubComponent app = new();
         ComponentGraph graph = new ComponentGraphBuilder()
             .AddComponent(db, "DB")
             .AddComponent(app, "App")
@@ -137,7 +137,7 @@ public sealed class ComponentGraphBuilderTests
     [TestMethod]
     public void Clear_ResetsBuilder()
     {
-        ComponentGraphBuilder builder = new ComponentGraphBuilder();
+        ComponentGraphBuilder builder = new();
         builder.AddComponent(new StubComponent());
 
         ComponentGraphBuilder result = builder.Clear();

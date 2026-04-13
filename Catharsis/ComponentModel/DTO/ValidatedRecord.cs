@@ -90,8 +90,8 @@ public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where 
     {
         ClearAllErrors();
 
-        ValidationContext context = new ValidationContext(Value);
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(Value);
+        List<ValidationResult> results = [];
 
         Validator.TryValidateObject(Value, context, results, validateAllProperties: true);
 

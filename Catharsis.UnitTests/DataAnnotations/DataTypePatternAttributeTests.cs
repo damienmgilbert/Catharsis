@@ -12,7 +12,7 @@ public class DataTypePatternAttributeTests
     #region Private methods
     static ValidationContext CreateContext(string memberName)
     {
-        TestModel model = new TestModel();
+        TestModel model = new();
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -21,7 +21,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void InvalidEmail_ReturnsFailure()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new(DataType.EmailAddress);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("not-an-email", context);
@@ -33,7 +33,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void InvalidPhoneNumber_ReturnsFailure()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
+        DataTypePatternAttribute attribute = new(DataType.PhoneNumber);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("abc", context);
@@ -44,7 +44,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void NonStringValue_ReturnsFailure()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new(DataType.EmailAddress);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult(42, context);
@@ -56,7 +56,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void NullValue_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new(DataType.EmailAddress);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
@@ -67,7 +67,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void PatternProperty_MatchesExpectedDataType()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new(DataType.EmailAddress);
 
         Assert.AreEqual(DataType.EmailAddress, attribute.DataType);
         Assert.IsNotNull(attribute.Pattern);
@@ -78,7 +78,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidCurrency_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Currency);
+        DataTypePatternAttribute attribute = new(DataType.Currency);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("$1,234.56", context);
@@ -89,7 +89,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDate_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Date);
+        DataTypePatternAttribute attribute = new(DataType.Date);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("2024-01-15", context);
@@ -100,7 +100,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDateTime_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.DateTime);
+        DataTypePatternAttribute attribute = new(DataType.DateTime);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("2024-01-15T14:30:00", context);
@@ -111,7 +111,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidDuration_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Duration);
+        DataTypePatternAttribute attribute = new(DataType.Duration);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("P1DT2H30M", context);
@@ -122,7 +122,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidEmail_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.EmailAddress);
+        DataTypePatternAttribute attribute = new(DataType.EmailAddress);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("user@example.com", context);
@@ -133,7 +133,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidImageUrl_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.ImageUrl);
+        DataTypePatternAttribute attribute = new(DataType.ImageUrl);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("https://example.com/photo.jpg", context);
@@ -144,7 +144,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidPhoneNumber_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PhoneNumber);
+        DataTypePatternAttribute attribute = new(DataType.PhoneNumber);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("+1 (555) 123-4567", context);
@@ -155,7 +155,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidPostalCode_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PostalCode);
+        DataTypePatternAttribute attribute = new(DataType.PostalCode);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("12345", context);
@@ -166,7 +166,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidPostalCodeWithExtension_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.PostalCode);
+        DataTypePatternAttribute attribute = new(DataType.PostalCode);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("12345-6789", context);
@@ -177,7 +177,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidTime_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Time);
+        DataTypePatternAttribute attribute = new(DataType.Time);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("14:30:00", context);
@@ -188,7 +188,7 @@ public class DataTypePatternAttributeTests
     [TestMethod]
     public void ValidUrl_ReturnsSuccess()
     {
-        DataTypePatternAttribute attribute = new DataTypePatternAttribute(DataType.Url);
+        DataTypePatternAttribute attribute = new(DataType.Url);
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("https://example.com/path?q=1", context);

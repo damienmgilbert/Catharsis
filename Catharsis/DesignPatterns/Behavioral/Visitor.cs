@@ -16,7 +16,7 @@ public class Visitor
     ///<param name="visitor">The visitor instance.</param>
     ///<param name="visit">An action that applies the visitor to the element.</param>
     ///<returns>The original <paramref name="obj"/> after the visit.</returns>
-    public T Accept<T, TVisitor>(T obj, TVisitor visitor, Action<TVisitor, T> visit)
+    public static T Accept<T, TVisitor>(T obj, TVisitor visitor, Action<TVisitor, T> visit)
     {
         if(visitor is null)
         {
@@ -43,7 +43,7 @@ public class Visitor
     ///<param name="visitor">The visitor instance.</param>
     ///<param name="visit">A function that applies the visitor to the element and returns a result.</param>
     ///<returns>The result of the visit.</returns>
-    public TResult Accept<T, TVisitor, TResult>(T obj, TVisitor visitor, Func<TVisitor, T, TResult> visit)
+    public static TResult Accept<T, TVisitor, TResult>(T obj, TVisitor visitor, Func<TVisitor, T, TResult> visit)
     {
         if(visitor is null)
         {

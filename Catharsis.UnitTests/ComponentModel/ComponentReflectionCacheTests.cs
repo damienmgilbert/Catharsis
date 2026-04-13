@@ -13,7 +13,7 @@ public class ComponentReflectionCacheTests
     [TestMethod]
     public void GetEvents_ReturnsCachedCollection()
     {
-        ComponentReflectionCache cache = new ComponentReflectionCache();
+        ComponentReflectionCache cache = new();
         EventDescriptorCollection events1 = cache.GetEvents(typeof(Component));
         EventDescriptorCollection events2 = cache.GetEvents(typeof(Component));
         Assert.AreSame(events1, events2);
@@ -22,14 +22,14 @@ public class ComponentReflectionCacheTests
     [TestMethod]
     public void GetProperties_NullType_Throws()
     {
-        ComponentReflectionCache cache = new ComponentReflectionCache();
+        ComponentReflectionCache cache = new();
         Assert.ThrowsExactly<ArgumentNullException>(() => cache.GetProperties(null!));
     }
 
     [TestMethod]
     public void GetProperties_ReturnsCachedCollection()
     {
-        ComponentReflectionCache cache = new ComponentReflectionCache();
+        ComponentReflectionCache cache = new();
         PropertyDescriptorCollection props1 = cache.GetProperties(typeof(string));
         PropertyDescriptorCollection props2 = cache.GetProperties(typeof(string));
         Assert.AreSame(props1, props2);

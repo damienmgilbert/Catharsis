@@ -50,7 +50,7 @@ public class RangePartitionerTests
             .PartitionByRangeAsGroupings(static x => x, 10)
             .ToList();
 
-        Assert.IsTrue(groups.Count >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, groups.Count);
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public class RangePartitionerTests
         ILookup<int, int> lookup = Enumerable.Range(1, 10)
             .PartitionByQuantile(static x => x, 3);
 
-        Assert.IsTrue(lookup.Count >= 2);
+        Assert.IsGreaterThanOrEqualTo(2, lookup.Count);
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class RangePartitionerTests
             .PartitionByQuantileAsGroupings(static x => x, 3)
             .ToList();
 
-        Assert.AreEqual(3, groups.Count);
+        Assert.HasCount(3, groups);
         Assert.AreEqual(3, groups[0].Count());
     }
 

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Version>0.0.1</Version>
 		<Description>A .NET library for building upon the .NET Standard Library and opinionated packages..</Description>
-		<TargetFramework>net11.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<AssemblyName>Catharsis</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>preview</LangVersion>
@@ -17,9 +17,9 @@
 	  <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
 	  <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
-	  <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.5" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.2.26159.112" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-preview.2.26159.112" />
+	  <PackageReference Include="Microsoft.Extensions.Primitives" Version="11.0.0-preview.2.26159.112" />
 	</ItemGroup>
 
 	<ItemGroup>

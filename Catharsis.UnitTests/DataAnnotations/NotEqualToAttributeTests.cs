@@ -13,9 +13,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void BothNull_ReturnsFailure()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute(nameof(TestModel.Other));
-        TestModel model = new TestModel { Value = null, Other = null };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new(nameof(TestModel.Other));
+        TestModel model = new() { Value = null, Other = null };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -27,9 +27,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void CustomDisplayName_AppearsInErrorMessage()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute(nameof(TestModel.Other)) { OtherPropertyDisplayName = "Comparison Field" };
-        TestModel model = new TestModel { Value = "X", Other = "X" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new(nameof(TestModel.Other)) { OtherPropertyDisplayName = "Comparison Field" };
+        TestModel model = new() { Value = "X", Other = "X" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult("X", context);
 
@@ -40,9 +40,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void DifferentValues_ReturnsSuccess()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute(nameof(TestModel.Other));
-        TestModel model = new TestModel { Value = "A", Other = "B" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new(nameof(TestModel.Other));
+        TestModel model = new() { Value = "A", Other = "B" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult("A", context);
 
@@ -52,9 +52,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void EqualValues_ReturnsFailure()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute(nameof(TestModel.Other));
-        TestModel model = new TestModel { Value = "same", Other = "same" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new(nameof(TestModel.Other));
+        TestModel model = new() { Value = "same", Other = "same" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult("same", context);
 
@@ -65,9 +65,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void OneNullOneDifferent_ReturnsSuccess()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute(nameof(TestModel.Other));
-        TestModel model = new TestModel { Value = null, Other = "not null" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new(nameof(TestModel.Other));
+        TestModel model = new() { Value = null, Other = "not null" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
 
@@ -77,9 +77,9 @@ public class NotEqualToAttributeTests
     [TestMethod]
     public void UnknownProperty_ReturnsFailure()
     {
-        NotEqualToAttribute attribute = new NotEqualToAttribute("NonExistent");
-        TestModel model = new TestModel { Value = "A" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Value) };
+        NotEqualToAttribute attribute = new("NonExistent");
+        TestModel model = new() { Value = "A" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Value) };
 
         ValidationResult? result = attribute.GetValidationResult("A", context);
 

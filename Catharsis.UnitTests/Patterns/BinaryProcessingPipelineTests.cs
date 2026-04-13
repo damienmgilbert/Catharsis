@@ -12,7 +12,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void AddStage_IncreasesStageCount()
     {
-        using BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        using BinaryProcessingPipeline pipeline = new();
         pipeline.AddStage(BinaryProcessingPipeline.CreateXorStage(0xFF));
         Assert.AreEqual(1, pipeline.StageCount);
     }
@@ -20,7 +20,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        BinaryProcessingPipeline pipeline = new();
         pipeline.Dispose();
         pipeline.Dispose();
     }
@@ -28,7 +28,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void Execute_DoubleXor_ReturnsOriginal()
     {
-        using BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        using BinaryProcessingPipeline pipeline = new();
         pipeline.AddStage(BinaryProcessingPipeline.CreateXorStage(0xAB));
         pipeline.AddStage(BinaryProcessingPipeline.CreateXorStage(0xAB));
 
@@ -40,7 +40,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void Execute_NoStages_ReturnsOriginal()
     {
-        using BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        using BinaryProcessingPipeline pipeline = new();
         byte[] result = pipeline.Execute([1, 2], out _);
         CollectionAssert.AreEqual(new byte[] { 1, 2 }, result);
     }
@@ -48,7 +48,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void Execute_ReverseStage_ReversesData()
     {
-        using BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        using BinaryProcessingPipeline pipeline = new();
         pipeline.AddStage(BinaryProcessingPipeline.CreateReverseStage());
 
         byte[] result = pipeline.Execute([1, 2, 3], out _);
@@ -59,7 +59,7 @@ public class BinaryProcessingPipelineTests
     [TestMethod]
     public void Execute_XorStage_TransformsData()
     {
-        using BinaryProcessingPipeline pipeline = new BinaryProcessingPipeline();
+        using BinaryProcessingPipeline pipeline = new();
         pipeline.AddStage(BinaryProcessingPipeline.CreateXorStage(0xFF));
 
         byte[] result = pipeline.Execute([0x00, 0x01, 0x02], out double elapsed);

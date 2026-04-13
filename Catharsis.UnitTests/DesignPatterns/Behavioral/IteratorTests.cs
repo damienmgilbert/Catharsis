@@ -14,12 +14,12 @@ public class IteratorTests
     public void Iterate_ActionModifiesExternalState_StateIsModified()
     {
         // Arrange
-        int[] obj = new[] { 1, 2, 3, 4, 5 };
+        int[] obj = [1, 2, 3, 4, 5];
         int sum = 0;
         Func<int[], IEnumerable<int>> getElements = arr => arr;
         Action<int> action = i => sum += i;
         // Act
-        int[] result = new Iterator().Iterate(obj, getElements, action);
+        int[] result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.AreEqual(15, sum);
@@ -32,12 +32,12 @@ public class IteratorTests
     public void Iterate_ComplexElementType_WorksCorrectly()
     {
         // Arrange
-        Dictionary<string, int> obj = new Dictionary<string, int> { { "one", 1 }, { "two", 2 }, { "three", 3 } };
-        List<string> capturedKeys = new List<string>();
+        Dictionary<string, int> obj = new() { { "one", 1 }, { "two", 2 }, { "three", 3 } };
+        List<string> capturedKeys = [];
         Func<Dictionary<string, int>, IEnumerable<KeyValuePair<string, int>>> getElements = dict => dict;
         Action<KeyValuePair<string, int>> action = kvp => capturedKeys.Add(kvp.Key);
         // Act
-        Dictionary<string, int> result = new Iterator().Iterate(obj, getElements, action);
+        Dictionary<string, int> result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.HasCount(3, capturedKeys);
@@ -58,7 +58,7 @@ public class IteratorTests
         Func<string, IEnumerable<char>> getElements = s => new List<char>();
         Action<char> action = c => callCount++;
         // Act
-        string result = new Iterator().Iterate(obj, getElements, action);
+        string result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.AreEqual(0, callCount);
@@ -71,7 +71,7 @@ public class IteratorTests
     public void Iterate_LargeCollection_WorksCorrectly()
     {
         // Arrange
-        List<int> obj = new List<int>(1000);
+        List<int> obj = new(1000);
         for(int i = 0; i < 1000; i++)
         {
             obj.Add(i);
@@ -81,7 +81,7 @@ public class IteratorTests
         Func<List<int>, IEnumerable<int>> getElements = list => list;
         Action<int> action = i => count++;
         // Act
-        List<int> result = new Iterator().Iterate(obj, getElements, action);
+        List<int> result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.AreEqual(1000, count);
@@ -94,12 +94,12 @@ public class IteratorTests
     public void Iterate_MultipleElements_CallsActionForEachElementInOrder()
     {
         // Arrange
-        List<int> obj = new List<int> { 1, 2, 3, 4, 5 };
-        List<int> capturedElements = new List<int>();
+        List<int> obj = [1, 2, 3, 4, 5];
+        List<int> capturedElements = [];
         Func<List<int>, IEnumerable<int>> getElements = list => list;
         Action<int> action = i => capturedElements.Add(i);
         // Act
-        List<int> result = new Iterator().Iterate(obj, getElements, action);
+        List<int> result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.HasCount(5, capturedElements);
@@ -118,7 +118,7 @@ public class IteratorTests
         Func<string?, IEnumerable<char>> getElements = s => s ?? string.Empty;
         Action<char> action = c => callCount++;
         // Act
-        string? result = new Iterator().Iterate(obj, getElements, action);
+        string? result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.IsNull(result);
         Assert.AreEqual(0, callCount);
@@ -131,13 +131,13 @@ public class IteratorTests
     public void Iterate_ReferenceType_ReturnsSameReference()
     {
         // Arrange
-        List<string> obj = new List<string> { "a", "b", "c" };
+        List<string> obj = ["a", "b", "c"];
         Func<List<string>, IEnumerable<string>> getElements = static list => list;
         Action<string> action = static s =>
         {
         };
         // Act
-        List<string> result = new Iterator().Iterate(obj, getElements, action);
+        List<string> result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.IsTrue(ReferenceEquals(obj, result));
     }
@@ -150,11 +150,11 @@ public class IteratorTests
     {
         // Arrange
         string obj = "A";
-        List<char> capturedElements = new List<char>();
+        List<char> capturedElements = [];
         Func<string, IEnumerable<char>> getElements = s => s;
         Action<char> action = c => capturedElements.Add(c);
         // Act
-        string result = new Iterator().Iterate(obj, getElements, action);
+        string result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreSame(obj, result);
         Assert.HasCount(1, capturedElements);
@@ -169,11 +169,11 @@ public class IteratorTests
     {
         // Arrange
         int obj = 42;
-        List<char> capturedElements = new List<char>();
+        List<char> capturedElements = [];
         Func<int, IEnumerable<char>> getElements = i => i.ToString();
         Action<char> action = c => capturedElements.Add(c);
         // Act
-        int result = new Iterator().Iterate(obj, getElements, action);
+        int result = Iterator.Iterate(obj, getElements, action);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.HasCount(2, capturedElements);

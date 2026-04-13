@@ -36,8 +36,8 @@ public sealed class ComponentModelDebuggerView
     string[] GetComponentModelInterfaces()
     {
         Type type = _component.GetType();
-        Type[] relevant = new[]
-                          {
+        Type[] relevant =
+                          [
                           typeof(IComponent),
                           typeof(INotifyPropertyChanged),
                           typeof(INotifyPropertyChanging),
@@ -50,9 +50,9 @@ public sealed class ComponentModelDebuggerView
                           typeof(ISupportInitialize),
                           typeof(IServiceProvider),
                           typeof(IDisposable)
-                          };
+                          ];
 
-        List<string> result = new List<string>();
+        List<string> result = [];
 
         foreach(Type iface in relevant)
         {
@@ -96,7 +96,7 @@ public sealed class ComponentModelDebuggerView
             return [];
         }
 
-        List<ValidationErrorEntry> errors = new List<ValidationErrorEntry>();
+        List<ValidationErrorEntry> errors = [];
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(_component);
 
         foreach(PropertyDescriptor prop in properties)

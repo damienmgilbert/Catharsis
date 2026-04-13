@@ -11,7 +11,7 @@ public sealed class ComponentStateMachineTests
     [TestMethod]
     public void AddTransition_IncreasesTransitionsCount()
     {
-        ComponentStateMachine machine = new ComponentStateMachine();
+        ComponentStateMachine machine = new();
 
         machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing));
 
@@ -21,7 +21,7 @@ public sealed class ComponentStateMachineTests
     [TestMethod]
     public void AddTransition_NullTransition_ThrowsArgumentNullException()
     {
-        ComponentStateMachine machine = new ComponentStateMachine();
+        ComponentStateMachine machine = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => machine.AddTransition(null!));
     }
@@ -71,7 +71,7 @@ public sealed class ComponentStateMachineTests
     [TestMethod]
     public void Initial_State_IsCreated()
     {
-        ComponentStateMachine machine = new ComponentStateMachine();
+        ComponentStateMachine machine = new();
 
         Assert.AreEqual(ComponentState.Created, machine.CurrentState);
     }
@@ -139,7 +139,7 @@ public sealed class ComponentStateMachineTests
     [TestMethod]
     public void TryTransitionTo_GuardBlocksTransition()
     {
-        ComponentStateMachine machine = new ComponentStateMachine();
+        ComponentStateMachine machine = new();
         machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => false });
 
         Assert.IsFalse(machine.TryTransitionTo(ComponentState.Initializing));
@@ -159,7 +159,7 @@ public sealed class ComponentStateMachineTests
     public void TryTransitionTo_OnTransitionAction_IsInvoked()
     {
         bool invoked = false;
-        ComponentStateMachine machine = new ComponentStateMachine();
+        ComponentStateMachine machine = new();
         machine.AddTransition(new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { OnTransition = () => invoked = true });
 
         machine.TryTransitionTo(ComponentState.Initializing);

@@ -18,7 +18,7 @@ public class BridgePatternTests
         string obj = "hello";
         string impl = "world";
         // Act
-        string result = new BridgePattern().Bridge(obj, impl, static (a, b) => $"{a} {b}");
+        string result = BridgePattern.Bridge(obj, impl, static (a, b) => $"{a} {b}");
         // Assert
         Assert.AreEqual("hello world", result);
     }
@@ -34,7 +34,7 @@ public class BridgePatternTests
         bool obj = true;
         bool impl = false;
         // Act
-        bool result = new BridgePattern().Bridge(obj, impl, static (a, b) => a && b);
+        bool result = BridgePattern.Bridge(obj, impl, static (a, b) => a && b);
         // Assert
         Assert.IsFalse(result);
     }
@@ -50,7 +50,7 @@ public class BridgePatternTests
         int minValue = int.MinValue;
         int maxValue = int.MaxValue;
         // Act
-        int result = new BridgePattern().Bridge(minValue, maxValue, static (a, b) => unchecked(a + b));
+        int result = BridgePattern.Bridge(minValue, maxValue, static (a, b) => unchecked(a + b));
         // Assert
         Assert.AreEqual(-1, result);
     }
@@ -64,15 +64,15 @@ public class BridgePatternTests
     public void Bridge_ComplexTypes_ReturnsExpectedResult()
     {
         // Arrange
-        List<int> list = new List<int> { 1, 2, 3 };
-        HashSet<int> set = new HashSet<int> { 3, 4, 5 };
+        List<int> list = [1, 2, 3];
+        HashSet<int> set = [3, 4, 5];
         // Act
-        int result = new BridgePattern().Bridge(
+        int result = BridgePattern.Bridge(
                      list,
                      set,
                      static (l, s) =>
                      {
-                         HashSet<int> combined = new HashSet<int>(l);
+                         HashSet<int> combined = new(l);
                          combined.UnionWith(s);
                          return combined.Count;
                      });
@@ -91,10 +91,10 @@ public class BridgePatternTests
         string obj = "key";
         int impl = 42;
         // Act
-        (string a, int b) result = new BridgePattern().Bridge(obj, impl, static (a, b) => (a, b));
+        (string a, int b) result = BridgePattern.Bridge(obj, impl, static (a, b) => (a, b));
         // Assert
-        Assert.AreEqual("key", result.Item1);
-        Assert.AreEqual(42, result.Item2);
+        Assert.AreEqual("key", result.a);
+        Assert.AreEqual(42, result.b);
     }
 
     ///<summary>
@@ -108,7 +108,7 @@ public class BridgePatternTests
         double positiveInfinity = double.PositiveInfinity;
         double negativeInfinity = double.NegativeInfinity;
         // Act
-        double result = new BridgePattern().Bridge(positiveInfinity, negativeInfinity, static (a, b) => a + b);
+        double result = BridgePattern.Bridge(positiveInfinity, negativeInfinity, static (a, b) => a + b);
         // Assert
         Assert.IsTrue(double.IsNaN(result));
     }
@@ -124,7 +124,7 @@ public class BridgePatternTests
         double nan = double.NaN;
         double infinity = double.PositiveInfinity;
         // Act
-        double result = new BridgePattern().Bridge(nan, infinity, static (a, b) => a + b);
+        double result = BridgePattern.Bridge(nan, infinity, static (a, b) => a + b);
         // Assert
         Assert.IsTrue(double.IsNaN(result));
     }
@@ -141,7 +141,7 @@ public class BridgePatternTests
         string? nullObj = null;
         string? nullImpl = null;
         // Act
-        string result = new BridgePattern().Bridge(nullObj, nullImpl, static (obj, impl) => $"{((obj == null) ? "null" : obj)}_{((impl == null) ? "null" : impl)}");
+        string result = BridgePattern.Bridge(nullObj, nullImpl, static (obj, impl) => $"{(obj ?? "null")}_{(impl ?? "null")}");
         // Assert
         Assert.AreEqual("null_null", result);
     }
@@ -157,7 +157,7 @@ public class BridgePatternTests
         int obj = 42;
         string impl = "test";
         // Act
-        string? result = new BridgePattern().Bridge(obj, impl, static (o, i) => (string?)null);
+        string? result = BridgePattern.Bridge(obj, impl, static (o, i) => (string?)null);
         // Assert
         Assert.IsNull(result);
     }
@@ -173,7 +173,7 @@ public class BridgePatternTests
         int obj = 5;
         int impl = 10;
         // Act
-        int result = new BridgePattern().Bridge(obj, impl, static (a, b) => a * b);
+        int result = BridgePattern.Bridge(obj, impl, static (a, b) => a * b);
         // Assert
         Assert.AreEqual(50, result);
     }
@@ -198,7 +198,7 @@ public class BridgePatternTests
             return true;
         };
         // Act
-        new BridgePattern().Bridge(expectedObj, expectedImpl, operation);
+        BridgePattern.Bridge(expectedObj, expectedImpl, operation);
         // Assert
         Assert.AreEqual(expectedObj, actualObj);
         Assert.AreEqual(expectedImpl, actualImpl);
@@ -216,17 +216,19 @@ public class BridgePatternTests
     public void Bridge_ValidOperation_ReturnsExpectedResult(object objValue, object implValue, object expected)
     {
         // Arrange & Act & Assert based on type
-        if((objValue is string strObj) && (implValue is int intImpl) && (expected is string strExpected))
+        if ((objValue is string strObj) && (implValue is int intImpl) && (expected is string strExpected))
         {
-            string result = new BridgePattern().Bridge(strObj, intImpl, static (s, i) => $"{s}{i}");
+            string result = BridgePattern.Bridge(strObj, intImpl, static (s, i) => $"{s}{i}");
             Assert.AreEqual(strExpected, result);
-        } else if((objValue is int intObj) && (implValue is int intImpl2) && (expected is int intExpected))
+        }
+        else if ((objValue is int intObj) && (implValue is int intImpl2) && (expected is int intExpected))
         {
-            int result = new BridgePattern().Bridge(intObj, intImpl2, static (a, b) => a + b);
+            int result = BridgePattern.Bridge(intObj, intImpl2, static (a, b) => a + b);
             Assert.AreEqual(intExpected, result);
-        } else if((objValue is double dblObj) && (implValue is double dblImpl) && (expected is double dblExpected))
+        }
+        else if ((objValue is double dblObj) && (implValue is double dblImpl) && (expected is double dblExpected))
         {
-            double result = new BridgePattern().Bridge(dblObj, dblImpl, static (a, b) => a + b);
+            double result = BridgePattern.Bridge(dblObj, dblImpl, static (a, b) => a + b);
             Assert.AreEqual(dblExpected, result, 0.0001);
         }
     }
@@ -235,14 +237,14 @@ public class BridgePatternTests
     ///<summary>
     ///Test mediator type used for testing.
     ///</summary>
-    class TestMediator
+    private class TestMediator
     {
     }
 
     ///<summary>
     ///Custom mediator type for testing complex scenarios.
     ///</summary>
-    class CustomMediator
+    private class CustomMediator
     {
         #region Public properties
         public int ProcessingId { get; set; }
@@ -252,7 +254,7 @@ public class BridgePatternTests
     ///<summary>
     ///Custom request type for testing complex scenarios.
     ///</summary>
-    class CustomRequest
+    private class CustomRequest
     {
         #region Public properties
         public int Id { get; set; }
@@ -264,7 +266,7 @@ public class BridgePatternTests
     ///<summary>
     ///Custom response type for testing complex scenarios.
     ///</summary>
-    class CustomResponse
+    private class CustomResponse
     {
         #region Public properties
         public int ProcessedBy { get; set; }

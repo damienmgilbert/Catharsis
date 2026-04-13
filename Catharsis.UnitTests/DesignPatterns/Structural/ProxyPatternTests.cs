@@ -12,10 +12,10 @@ public class ProxyPatternTests
     [TestMethod]
     public void Proxy_ExecutesBeforeAndAfter()
     {
-        ProxyPattern proxy = new ProxyPattern();
-        List<string> log = new List<string>();
+        ProxyPattern proxy = new();
+        List<string> log = [];
 
-        proxy.Proxy("test", x => x.Length, x => log.Add("before"), x => log.Add("after"));
+        ProxyPattern.Proxy("test", x => x.Length, x => log.Add("before"), x => log.Add("after"));
 
         CollectionAssert.AreEqual(new[] { "before", "after" }, log);
     }
@@ -23,16 +23,16 @@ public class ProxyPatternTests
     [TestMethod]
     public void Proxy_ExecutesOperation()
     {
-        ProxyPattern proxy = new ProxyPattern();
-        int result = proxy.Proxy(5, static x => x * 2);
+        ProxyPattern proxy = new();
+        int result = ProxyPattern.Proxy(5, static x => x * 2);
         Assert.AreEqual(10, result);
     }
 
     [TestMethod]
     public void Proxy_NullOperation_Throws()
     {
-        ProxyPattern proxy = new ProxyPattern();
-        Assert.ThrowsExactly<ArgumentNullException>(() => proxy.Proxy(1, (Func<int, int>)null!));
+        ProxyPattern proxy = new();
+        Assert.ThrowsExactly<ArgumentNullException>(() => ProxyPattern.Proxy(1, (Func<int, int>)null!));
     }
     #endregion
 }

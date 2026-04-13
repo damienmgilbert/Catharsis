@@ -14,7 +14,7 @@ public class ChainOfResponsibility
     ///<param name="obj">The request to pass through the chain.</param>
     ///<param name="handlers">Ordered handlers; each returns <c>true</c> if it handled the request.</param>
     ///<returns>The original <paramref name="obj"/> after the chain completes.</returns>
-    public T Chain<T>(T obj, params Func<T, bool>[] handlers)
+    public static T Chain<T>(T obj, params Func<T, bool>[] handlers)
     {
         if(handlers is null)
         {

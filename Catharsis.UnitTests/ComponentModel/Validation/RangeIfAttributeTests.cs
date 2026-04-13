@@ -13,7 +13,7 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Constructor_DoubleRange_SetsProperties()
     {
-        RangeIfAttribute attr = new RangeIfAttribute("Prop", true, 0.0, 1.0);
+        RangeIfAttribute attr = new("Prop", true, 0.0, 1.0);
 
         Assert.AreEqual(0.0, attr.Minimum);
         Assert.AreEqual(1.0, attr.Maximum);
@@ -22,7 +22,7 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Constructor_IntRange_SetsProperties()
     {
-        RangeIfAttribute attr = new RangeIfAttribute("Prop", true, 1, 100);
+        RangeIfAttribute attr = new("Prop", true, 1, 100);
 
         Assert.AreEqual("Prop", attr.DependentProperty);
         Assert.IsTrue((bool?)attr.TargetValue);
@@ -35,7 +35,7 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void FormatErrorMessage_ContainsAllParameters()
     {
-        RangeIfAttribute attr = new RangeIfAttribute("Flag", true, 1, 100);
+        RangeIfAttribute attr = new("Flag", true, 1, 100);
 
         string msg = attr.FormatErrorMessage("Score");
 
@@ -48,8 +48,8 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_BoundaryMax_Passes()
     {
-        TestModel model = new TestModel { EnforceRange = true, Score = 100 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
+        TestModel model = new() { EnforceRange = true, Score = 100 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Score, context, null));
     }
@@ -57,8 +57,8 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_BoundaryMin_Passes()
     {
-        TestModel model = new TestModel { EnforceRange = true, Score = 1 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
+        TestModel model = new() { EnforceRange = true, Score = 1 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Score, context, null));
     }
@@ -66,8 +66,8 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_InRange_Passes()
     {
-        TestModel model = new TestModel { EnforceRange = true, Score = 50 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
+        TestModel model = new() { EnforceRange = true, Score = 50 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
 
         bool result = Validator.TryValidateProperty(model.Score, context, null);
 
@@ -77,9 +77,9 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_OutOfRange_Fails()
     {
-        TestModel model = new TestModel { EnforceRange = true, Score = 200 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
-        List<ValidationResult> results = new List<ValidationResult>();
+        TestModel model = new() { EnforceRange = true, Score = 200 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
+        List<ValidationResult> results = [];
 
         bool isValid = Validator.TryValidateProperty(model.Score, context, results);
 
@@ -90,8 +90,8 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_ConditionNotMet_OutOfRange_Passes()
     {
-        TestModel model = new TestModel { EnforceRange = false, Score = 999 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
+        TestModel model = new() { EnforceRange = false, Score = 999 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
 
         bool result = Validator.TryValidateProperty(model.Score, context, null);
 
@@ -101,8 +101,8 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_DoubleRange_ConditionMet_InRange_Passes()
     {
-        DoubleModel model = new DoubleModel { EnforceRange = true, Rate = 0.5 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(DoubleModel.Rate) };
+        DoubleModel model = new() { EnforceRange = true, Rate = 0.5 };
+        ValidationContext context = new(model) { MemberName = nameof(DoubleModel.Rate) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Rate, context, null));
     }
@@ -110,9 +110,9 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_DoubleRange_ConditionMet_OutOfRange_Fails()
     {
-        DoubleModel model = new DoubleModel { EnforceRange = true, Rate = 1.5 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(DoubleModel.Rate) };
-        List<ValidationResult> results = new List<ValidationResult>();
+        DoubleModel model = new() { EnforceRange = true, Rate = 1.5 };
+        ValidationContext context = new(model) { MemberName = nameof(DoubleModel.Rate) };
+        List<ValidationResult> results = [];
 
         Assert.IsFalse(Validator.TryValidateProperty(model.Rate, context, results));
         Assert.HasCount(1, results);
@@ -121,9 +121,9 @@ public sealed class RangeIfAttributeTests
     [TestMethod]
     public void Validate_NonExistentDependentProperty_Passes()
     {
-        RangeIfAttribute attr = new RangeIfAttribute("NonExistent", true, 1, 100);
-        TestModel model = new TestModel { EnforceRange = true, Score = 999 };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Score) };
+        RangeIfAttribute attr = new("NonExistent", true, 1, 100);
+        TestModel model = new() { EnforceRange = true, Score = 999 };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Score) };
 
         ValidationResult? result = attr.GetValidationResult(model.Score, context);
 

@@ -42,7 +42,7 @@ public sealed class ComponentContainerSlim : IContainer
             throw new ArgumentException($"A component named '{name}' already exists in the container.", nameof(name));
         }
 
-        SlimSite site = new SlimSite(this, component, name);
+        SlimSite site = new(this, component, name);
         _sites.Add(site);
         component.Site = site;
     }

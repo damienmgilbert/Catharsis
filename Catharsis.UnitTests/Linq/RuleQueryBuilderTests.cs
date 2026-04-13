@@ -35,7 +35,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Ctor_ValidRuleSet_CreatesBuilder()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.AreEqual(0, builder.FilterCount);
     }
@@ -59,7 +59,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereRule_NonExistentRule_ThrowsInvalidOperationException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => builder.WhereRule("NotFound"));
     }
@@ -67,7 +67,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereRule_NullRuleName_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.WhereRule(null!));
     }
@@ -85,15 +85,17 @@ public class RuleQueryBuilderTests
         builder.WhereAllRules();
 
         Assert.AreEqual(3, builder.FilterCount);
-        Assert.AreEqual(3, builder.ActiveRuleNames.Count);
+        Assert.HasCount(3, builder.ActiveRuleNames);
     }
 
     [TestMethod]
     public void WhereAllRules_SkipsDisabledRules()
     {
-        RuleSet<int> rules = new();
-        rules.Add(new Rule<int>("Enabled", static x => true) { IsEnabled = true });
-        rules.Add(new Rule<int>("Disabled", static x => true) { IsEnabled = false });
+        RuleSet<int> rules =
+        [
+            new Rule<int>("Enabled", static x => true) { IsEnabled = true },
+            new Rule<int>("Disabled", static x => true) { IsEnabled = false },
+        ];
 
         RuleQueryBuilder<int> builder = new(rules);
         builder.WhereAllRules();
@@ -119,7 +121,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereRulesWithTags_NullTags_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.WhereRulesWithTags(null!));
     }
@@ -131,18 +133,18 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Where_AddsCustomPredicate()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         builder.Where(static x => x > 100);
 
         Assert.AreEqual(1, builder.FilterCount);
-        Assert.AreEqual(0, builder.ActiveRuleNames.Count);
+        Assert.IsEmpty(builder.ActiveRuleNames);
     }
 
     [TestMethod]
     public void Where_NullPredicate_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.Where(null!));
     }
@@ -154,7 +156,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereIf_ConditionTrue_AddsPredicate()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         builder.WhereIf(true, static x => x > 0);
 
@@ -164,7 +166,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereIf_ConditionFalse_DoesNotAddPredicate()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         builder.WhereIf(false, static x => x > 0);
 
@@ -174,7 +176,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WhereIf_NullPredicate_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.WhereIf(true, null!));
     }
@@ -186,7 +188,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Skip_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => builder.Skip(-1));
     }
@@ -194,7 +196,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Take_ZeroCount_ThrowsArgumentOutOfRangeException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => builder.Take(0));
     }
@@ -237,7 +239,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void BuildPredicate_NoFilters_AndMode_ReturnsTrue()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Func<int, bool> compiled = builder.BuildPredicate().Compile();
 
@@ -264,8 +266,10 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Apply_Enumerable_WithSkipAndTake()
     {
-        RuleSet<int> rules = new();
-        rules.Add("Always", static x => true);
+        RuleSet<int> rules = new()
+        {
+            { "Always", static x => true }
+        };
 
         RuleQueryBuilder<int> builder = new(rules);
         builder.WhereAllRules().Skip(1).Take(2);
@@ -279,7 +283,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Apply_Enumerable_NullSource_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.Apply((IEnumerable<int>)null!));
     }
@@ -304,8 +308,10 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Apply_Queryable_WithSkipAndTake()
     {
-        RuleSet<int> rules = new();
-        rules.Add("Always", static x => true);
+        RuleSet<int> rules = new()
+        {
+            { "Always", static x => true }
+        };
 
         RuleQueryBuilder<int> builder = new(rules);
         builder.WhereAllRules().Skip(2).Take(2);
@@ -319,7 +325,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void Apply_Queryable_NullSource_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.Apply((IQueryable<int>)null!));
     }
@@ -331,8 +337,10 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void ApplyAndProject_Enumerable_ProjectsFilteredElements()
     {
-        RuleSet<int> rules = new();
-        rules.Add("Positive", static x => x > 0);
+        RuleSet<int> rules = new()
+        {
+            { "Positive", static x => x > 0 }
+        };
 
         RuleQueryBuilder<int> builder = new(rules);
         builder.WhereAllRules();
@@ -346,8 +354,10 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void ApplyAndProject_Queryable_ProjectsFilteredElements()
     {
-        RuleSet<int> rules = new();
-        rules.Add("Positive", static x => x > 0);
+        RuleSet<int> rules = new()
+        {
+            { "Positive", static x => x > 0 }
+        };
 
         RuleQueryBuilder<int> builder = new(rules);
         builder.WhereAllRules();
@@ -356,13 +366,13 @@ public class RuleQueryBuilderTests
         Expression<Func<int, string>> selector = static x => "val:" + x;
         List<string> result = builder.ApplyAndProject(source, selector).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
     public void ApplyAndProject_Enumerable_NullSelector_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.ApplyAndProject((IEnumerable<int>)[], (Func<int, string>)null!));
     }
@@ -374,7 +384,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void ApplyAndGroupByRule_GroupsFilteredElementsByFirstMatchingRule()
     {
-        RuleSet<int> rules = new();
+        RuleSet<int> rules = [];
         rules.Add("Positive", static x => x > 0, priority: 1);
         rules.Add("Even", static x => x % 2 == 0, priority: 2);
 
@@ -394,7 +404,7 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void ApplyAndGroupByRule_NullSource_ThrowsArgumentNullException()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => builder.ApplyAndGroupByRule(null!));
     }
@@ -413,13 +423,13 @@ public class RuleQueryBuilderTests
         builder.Clear();
 
         Assert.AreEqual(0, builder.FilterCount);
-        Assert.AreEqual(0, builder.ActiveRuleNames.Count);
+        Assert.IsEmpty(builder.ActiveRuleNames);
     }
 
     [TestMethod]
     public void Clear_ReturnsSameInstance()
     {
-        RuleQueryBuilder<int> builder = new(new RuleSet<int>());
+        RuleQueryBuilder<int> builder = new([]);
 
         Assert.AreSame(builder, builder.Clear());
     }
@@ -453,19 +463,21 @@ public class RuleQueryBuilderTests
     [TestMethod]
     public void WithCombineMode_AffectsPredicateCombination()
     {
-        RuleSet<int> rules = new();
-        rules.Add("Positive", static x => x > 0);
-        rules.Add("Even", static x => x % 2 == 0);
+        RuleSet<int> rules = new()
+        {
+            { "Positive", static x => x > 0 },
+            { "Even", static x => x % 2 == 0 }
+        };
 
         // AND mode
         RuleQueryBuilder<int> andBuilder = new(rules);
         andBuilder.WhereAllRules();
-        List<int> andResult = andBuilder.Apply((IEnumerable<int>)new[] { 1, 2, 3, 4, -2 }).ToList();
+        List<int> andResult = andBuilder.Apply((IEnumerable<int>)[1, 2, 3, 4, -2]).ToList();
 
         // OR mode
         RuleQueryBuilder<int> orBuilder = new(rules);
         orBuilder.WithCombineMode(FilterCombineMode.Or).WhereAllRules();
-        List<int> orResult = orBuilder.Apply((IEnumerable<int>)new[] { 1, 2, 3, 4, -2 }).ToList();
+        List<int> orResult = orBuilder.Apply((IEnumerable<int>)[1, 2, 3, 4, -2]).ToList();
 
         // AND: positive AND even → 2, 4
         CollectionAssert.AreEqual(new[] { 2, 4 }, andResult);

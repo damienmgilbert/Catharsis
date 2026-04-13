@@ -12,7 +12,7 @@ public class BufferViewModelBaseTests
     [TestMethod]
     public void ClearData_ResetsState()
     {
-        using TestBufferViewModel vm = new TestBufferViewModel();
+        using TestBufferViewModel vm = new();
         vm.ClearData();
         Assert.IsFalse(vm.HasData);
         Assert.AreEqual(0, vm.DataSize);
@@ -22,7 +22,7 @@ public class BufferViewModelBaseTests
     [TestMethod]
     public async Task LoadAsync_SetsCancelledMessage()
     {
-        using TestBufferViewModel vm = new TestBufferViewModel { ShouldCancel = true };
+        using TestBufferViewModel vm = new() { ShouldCancel = true };
         await vm.LoadAsync();
         Assert.IsTrue(vm.HasError);
         Assert.AreEqual("Operation was cancelled.", vm.ErrorMessage);
@@ -31,7 +31,7 @@ public class BufferViewModelBaseTests
     [TestMethod]
     public async Task LoadAsync_SetsErrorMessageOnException()
     {
-        using TestBufferViewModel vm = new TestBufferViewModel { ShouldThrow = true };
+        using TestBufferViewModel vm = new() { ShouldThrow = true };
         await vm.LoadAsync();
         Assert.IsTrue(vm.HasError);
         Assert.AreEqual("Test error", vm.ErrorMessage);
@@ -41,7 +41,7 @@ public class BufferViewModelBaseTests
     [TestMethod]
     public async Task LoadAsync_SetsHasDataOnSuccess()
     {
-        using TestBufferViewModel vm = new TestBufferViewModel();
+        using TestBufferViewModel vm = new();
         await vm.LoadAsync();
         Assert.IsTrue(vm.LoadCoreCalled);
         Assert.IsTrue(vm.HasData);

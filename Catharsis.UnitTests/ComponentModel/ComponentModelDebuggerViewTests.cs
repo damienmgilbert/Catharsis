@@ -15,7 +15,7 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void HasErrors_NoErrors_ReturnsFalse()
     {
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
+        ComponentModelDebuggerView view = new(new SimpleDto());
 
         Assert.IsFalse(view.HasErrors);
     }
@@ -23,10 +23,10 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void HasErrors_WithErrors_ReturnsTrue()
     {
-        using TestValidatingComponent component = new TestValidatingComponent();
+        using TestValidatingComponent component = new();
         component.Name = "Alice";
         component.Name = null;
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(component);
+        ComponentModelDebuggerView view = new(component);
 
         Assert.IsTrue(view.HasErrors);
     }
@@ -34,8 +34,8 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void Interfaces_ReturnsRelevantInterfaces()
     {
-        using TestValidatingComponent component = new TestValidatingComponent();
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(component);
+        using TestValidatingComponent component = new();
+        ComponentModelDebuggerView view = new(component);
 
         string[] ifaces = view.Interfaces;
 
@@ -46,7 +46,7 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void IsChanged_NonTrackingComponent_ReturnsFalse()
     {
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
+        ComponentModelDebuggerView view = new(new SimpleDto());
 
         Assert.IsFalse(view.IsChanged);
     }
@@ -54,7 +54,7 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void IsDesignMode_NonSitedComponent_ReturnsFalse()
     {
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
+        ComponentModelDebuggerView view = new(new SimpleDto());
 
         Assert.IsFalse(view.IsDesignMode);
     }
@@ -62,20 +62,20 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void Properties_ReturnsPropertyEntries()
     {
-        SimpleDto dto = new SimpleDto { Name = "Alice", Age = 30 };
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(dto);
+        SimpleDto dto = new() { Name = "Alice", Age = 30 };
+        ComponentModelDebuggerView view = new(dto);
 
         ComponentModelDebuggerView.PropertyEntry[] props = view.Properties;
 
         Assert.IsGreaterThanOrEqualTo(2, props.Length);
-        Assert.IsTrue(props.Any(static p => (p.Name == "Name") && ((string?)p.Value == "Alice")));
-        Assert.IsTrue(props.Any(static p => (p.Name == "Age") && ((int)p.Value! == 30)));
+        Assert.Contains(static p => (p.Name == "Name") && ((string?)p.Value == "Alice"), props);
+        Assert.Contains(static p => (p.Name == "Age") && ((int)p.Value! == 30), props);
     }
 
     [TestMethod]
     public void SiteName_NonSitedComponent_ReturnsNull()
     {
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
+        ComponentModelDebuggerView view = new(new SimpleDto());
 
         Assert.IsNull(view.SiteName);
     }
@@ -83,7 +83,7 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void TypeName_ReturnsFullTypeName()
     {
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(new SimpleDto());
+        ComponentModelDebuggerView view = new(new SimpleDto());
 
         Assert.IsNotNull(view.TypeName);
         Assert.Contains("SimpleDto", view.TypeName);
@@ -92,8 +92,8 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void ValidationErrors_NoErrors_ReturnsEmpty()
     {
-        using TestValidatingComponent component = new TestValidatingComponent { Name = "Alice" };
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(component);
+        using TestValidatingComponent component = new() { Name = "Alice" };
+        ComponentModelDebuggerView view = new(component);
 
         Assert.IsEmpty(view.ValidationErrors);
     }
@@ -101,15 +101,15 @@ public sealed class ComponentModelDebuggerViewTests
     [TestMethod]
     public void ValidationErrors_WithErrors_ReturnsEntries()
     {
-        using TestValidatingComponent component = new TestValidatingComponent();
+        using TestValidatingComponent component = new();
         component.Name = "Alice";
         component.Name = null;
-        ComponentModelDebuggerView view = new ComponentModelDebuggerView(component);
+        ComponentModelDebuggerView view = new(component);
 
         ComponentModelDebuggerView.ValidationErrorEntry[] errors = view.ValidationErrors;
 
         Assert.IsNotEmpty(errors);
-        Assert.IsTrue(errors.Any(static e => e.PropertyName == "Name"));
+        Assert.Contains(static e => e.PropertyName == "Name", errors);
     }
     #endregion
 

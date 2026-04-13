@@ -132,7 +132,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
 
         foreach(PooledSegment seg in _segments)
         {
-            SequenceSegment<T> node = new SequenceSegment<T>(seg.Array.AsMemory(0, seg.Length), last);
+            SequenceSegment<T> node = new(seg.Array.AsMemory(0, seg.Length), last);
             first ??= node;
             last = node;
         }

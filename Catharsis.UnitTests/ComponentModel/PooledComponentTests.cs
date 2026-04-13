@@ -17,7 +17,7 @@ public partial class PooledComponentTests
     public void Activate_ComponentNotActive_CallsOnActivate()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
 
         // Act
         component.Activate();
@@ -33,7 +33,7 @@ public partial class PooledComponentTests
     public void Activate_ComponentNotActive_IncrementsLeaseVersion()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         int initialLeaseVersion = component.LeaseVersion;
 
         // Act
@@ -50,7 +50,7 @@ public partial class PooledComponentTests
     public void Activate_ComponentNotActive_SetsIsActiveToTrue()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         Assert.IsFalse(component.IsActive);
 
         // Act
@@ -67,7 +67,7 @@ public partial class PooledComponentTests
     public void Activate_ComponentNotActiveAndNotDisposed_ActivatesSuccessfully()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
 
         // Act
         component.Activate();
@@ -83,7 +83,7 @@ public partial class PooledComponentTests
     public void Activate_MultipleActivationsAfterReset_IncrementsLeaseVersionEachTime()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
 
         // Act & Assert
         component.Activate();
@@ -108,7 +108,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_AfterDisposal_RemainsUnchanged()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         component.Activate();
         int versionBeforeDispose = component.LeaseVersion;
 
@@ -128,7 +128,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_AfterFirstActivation_ReturnsOne()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         component.Activate();
 
         // Act
@@ -145,7 +145,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_AfterMultipleActivations_IncrementsEachTime()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         component.Activate();
         component.Reset();
         component.Activate();
@@ -173,7 +173,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_AfterMultipleCycles_ReflectsCorrectCount(int activationCount, int expectedVersion)
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
 
         // Act
         for(int i = 0; i < activationCount; i++)
@@ -198,7 +198,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_AfterReset_RemainsUnchanged()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         component.Activate();
         int versionBeforeReset = component.LeaseVersion;
 
@@ -218,7 +218,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_InitialState_ReturnsZero()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
 
         // Act
         int result = component.LeaseVersion;
@@ -234,7 +234,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_MultipleReads_ReturnsSameValue()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         component.Activate();
 
         // Act
@@ -255,7 +255,7 @@ public partial class PooledComponentTests
     public void LeaseVersion_NearIntMaxValue_HandlesCorrectly()
     {
         // Arrange
-        TestPooledComponent component = new TestPooledComponent();
+        TestPooledComponent component = new();
         // Set internal version to near max value by activating many times
         // Since we can't directly set the field, we test that the property returns the current value correctly
         component.Activate();
@@ -277,7 +277,7 @@ public partial class PooledComponentTests
     public void OnActivate_OverriddenInDerivedClass_ExecutesCustomLogic()
     {
         // Arrange
-        CustomOnActivateComponent component = new CustomOnActivateComponent();
+        CustomOnActivateComponent component = new();
 
         // Act
         component.PublicOnActivate();
@@ -310,7 +310,7 @@ public partial class PooledComponentTests
     public void Reset_AfterReactivation_ResetsComponentSuccessfully()
     {
         // Arrange
-        TestablePooledComponent component = new TestablePooledComponent();
+        TestablePooledComponent component = new();
         component.Activate();
         component.Reset();
         component.Activate();
@@ -330,7 +330,7 @@ public partial class PooledComponentTests
     public void Reset_WhenActive_ResetsComponentAndSetsIsActiveFalse()
     {
         // Arrange
-        TestablePooledComponent component = new TestablePooledComponent();
+        TestablePooledComponent component = new();
         component.Activate();
         Assert.IsTrue(component.IsActive);
 

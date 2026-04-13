@@ -12,7 +12,7 @@ public class UniqueElementsAttributeTests
     #region Private methods
     static ValidationContext CreateContext(string memberName)
     {
-        TestModel model = new TestModel();
+        TestModel model = new();
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -21,7 +21,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void DuplicateElements_ReturnsFailure()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { "a", "b", "a" }, context);
@@ -33,7 +33,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void DuplicateIntegers_ReturnsFailure()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { 1, 2, 3, 2 }, context);
@@ -45,7 +45,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void DuplicateNulls_ReturnsFailure()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(new string?[] { null, "a", null }, context);
@@ -56,7 +56,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void EmptyCollection_ReturnsSuccess()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(Array.Empty<string>(), context);
@@ -67,7 +67,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void NonEnumerableValue_ReturnsFailure()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(42, context);
@@ -79,7 +79,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void NullValue_ReturnsSuccess()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
@@ -90,7 +90,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void SingleElement_ReturnsSuccess()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { "only" }, context);
@@ -101,7 +101,7 @@ public class UniqueElementsAttributeTests
     [TestMethod]
     public void UniqueElements_ReturnsSuccess()
     {
-        UniqueElementsAttribute attribute = new UniqueElementsAttribute();
+        UniqueElementsAttribute attribute = new();
         ValidationContext context = CreateContext(nameof(TestModel.Tags));
 
         ValidationResult? result = attribute.GetValidationResult(new[] { "a", "b", "c" }, context);

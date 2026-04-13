@@ -18,7 +18,7 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        RegexIfAttribute attr = new RegexIfAttribute("Prop", "yes", @"\d+", RegexOptions.IgnoreCase);
+        RegexIfAttribute attr = new("Prop", "yes", @"\d+", RegexOptions.IgnoreCase);
 
         Assert.AreEqual("Prop", attr.DependentProperty);
         Assert.AreEqual("yes", attr.TargetValue);
@@ -28,7 +28,7 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void FormatErrorMessage_ContainsPatternAndDependentInfo()
     {
-        RegexIfAttribute attr = new RegexIfAttribute("Format", "email", @"^\d+$");
+        RegexIfAttribute attr = new("Format", "email", @"^\d+$");
 
         string msg = attr.FormatErrorMessage("Contact");
 
@@ -41,8 +41,8 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_MatchingValue_Passes()
     {
-        TestModel model = new TestModel { Format = "email", Contact = "user@example.com" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Contact) };
+        TestModel model = new() { Format = "email", Contact = "user@example.com" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Contact) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Contact, context, null));
     }
@@ -50,9 +50,9 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_NonMatchingValue_Fails()
     {
-        TestModel model = new TestModel { Format = "email", Contact = "not-an-email" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Contact) };
-        List<ValidationResult> results = new List<ValidationResult>();
+        TestModel model = new() { Format = "email", Contact = "not-an-email" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Contact) };
+        List<ValidationResult> results = [];
 
         Assert.IsFalse(Validator.TryValidateProperty(model.Contact, context, results));
         Assert.HasCount(1, results);
@@ -61,8 +61,8 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Validate_ConditionMet_NullValue_Passes()
     {
-        TestModel model = new TestModel { Format = "email", Contact = null };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Contact) };
+        TestModel model = new() { Format = "email", Contact = null };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Contact) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Contact, context, null));
     }
@@ -70,8 +70,8 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Validate_ConditionNotMet_InvalidValue_Passes()
     {
-        TestModel model = new TestModel { Format = "phone", Contact = "not-an-email" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Contact) };
+        TestModel model = new() { Format = "phone", Contact = "not-an-email" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Contact) };
 
         Assert.IsTrue(Validator.TryValidateProperty(model.Contact, context, null));
     }
@@ -79,9 +79,9 @@ public sealed class RegexIfAttributeTests
     [TestMethod]
     public void Validate_NonExistentDependentProperty_Passes()
     {
-        RegexIfAttribute attr = new RegexIfAttribute("NonExistent", true, @"\d+");
-        TestModel model = new TestModel { Format = "email", Contact = "abc" };
-        ValidationContext context = new ValidationContext(model) { MemberName = nameof(TestModel.Contact) };
+        RegexIfAttribute attr = new("NonExistent", true, @"\d+");
+        TestModel model = new() { Format = "email", Contact = "abc" };
+        ValidationContext context = new(model) { MemberName = nameof(TestModel.Contact) };
 
         ValidationResult? result = attr.GetValidationResult(model.Contact, context);
 

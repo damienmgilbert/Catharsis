@@ -16,7 +16,7 @@ public class BufferProcessingServiceTests
     public void Process_ReturnsProcessedData()
     {
         ILogger<BufferProcessingService> logger = NullLoggerFactory.Instance.CreateLogger<BufferProcessingService>();
-        using BufferProcessingService service = new BufferProcessingService(new EchoProcessor(), logger);
+        using BufferProcessingService service = new(new EchoProcessor(), logger);
 
         byte[] result = service.Process([ 1, 2, 3 ]);
 
@@ -28,7 +28,7 @@ public class BufferProcessingServiceTests
     public async Task ProcessAsync_ReturnsProcessedData()
     {
         ILogger<BufferProcessingService> logger = NullLoggerFactory.Instance.CreateLogger<BufferProcessingService>();
-        using BufferProcessingService service = new BufferProcessingService(new EchoProcessor(), logger);
+        using BufferProcessingService service = new(new EchoProcessor(), logger);
 
         byte[] result = await service.ProcessAsync(new byte[] { 10, 20 });
 

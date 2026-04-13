@@ -34,7 +34,7 @@ public sealed class MetadataProvider
     #endregion
 
     #region Private methods
-    private IReadOnlyList<EventMetadata> ConvertToEventMetadata(Type componentType)
+    private EventMetadata[] ConvertToEventMetadata(Type componentType)
     {
         EventDescriptorCollection descriptors = _cache.GetEvents(componentType);
         EventMetadata[] result = new EventMetadata[descriptors.Count];
@@ -47,7 +47,7 @@ public sealed class MetadataProvider
         return result;
     }
 
-    private IReadOnlyList<PropertyMetadata> ConvertToPropertyMetadata(Type componentType)
+    private PropertyMetadata[] ConvertToPropertyMetadata(Type componentType)
     {
         PropertyDescriptorCollection descriptors = _cache.GetProperties(componentType);
         PropertyMetadata[] result = new PropertyMetadata[descriptors.Count];

@@ -85,6 +85,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
         _buffer = [];
         Count = 0;
         Capacity = 0;
+        GC.SuppressFinalize(this);
     }
 
     ///<summary>

@@ -18,9 +18,9 @@ public class ComponentBaseTests
     public void Container_WhenSiteAndContainerAreNotNull_ReturnsContainer()
     {
         // Arrange
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
-        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
+        TestableComponentBase component = new() { Site = stubSite };
 
         // Act
         IContainer? container = component.ExposedContainer;
@@ -37,9 +37,9 @@ public class ComponentBaseTests
     public void Container_WhenSiteChangedFromNonNullToNull_ReturnsNull()
     {
         // Arrange
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
-        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
+        TestableComponentBase component = new() { Site = stubSite };
 
         // Act
         component.Site = null;
@@ -56,9 +56,9 @@ public class ComponentBaseTests
     public void Container_WhenSiteChangedFromNullToNonNull_ReturnsNewContainer()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new();
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
 
         // Act
         component.Site = stubSite;
@@ -76,8 +76,8 @@ public class ComponentBaseTests
     public void Container_WhenSiteContainerIsNull_ReturnsNull()
     {
         // Arrange
-        StubSite stubSite = new StubSite { ContainerValue = null };
-        TestableComponentBase component = new TestableComponentBase { Site = stubSite };
+        StubSite stubSite = new() { ContainerValue = null };
+        TestableComponentBase component = new() { Site = stubSite };
 
         // Act
         IContainer? container = component.ExposedContainer;
@@ -93,7 +93,7 @@ public class ComponentBaseTests
     public void Container_WhenSiteIsNull_ReturnsNull()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
+        TestableComponentBase component = new();
 
         // Act
         IContainer? container = component.ExposedContainer;
@@ -109,7 +109,7 @@ public class ComponentBaseTests
     public void Dispose_FirstCall_RaisesDisposedEvent()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
+        TestableComponentBase component = new();
         object? eventSender = null;
         EventArgs? eventArgs = null;
         component.Disposed += (sender, args) =>
@@ -135,7 +135,7 @@ public class ComponentBaseTests
     public void Dispose_MultipleCalls_RaisesEventOnlyOnce()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
+        TestableComponentBase component = new();
         int eventRaisedCount = 0;
         component.Disposed += (sender, args) => eventRaisedCount++;
 
@@ -155,9 +155,9 @@ public class ComponentBaseTests
     public void Dispose_WithSite_ClearsSite()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new();
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
         component.Site = stubSite;
 
         // Act
@@ -174,9 +174,9 @@ public class ComponentBaseTests
     public void Dispose_WithSite_RemovesFromContainer()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
+        TestableComponentBase component = new();
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
         component.Site = stubSite;
 
         // Act
@@ -194,7 +194,7 @@ public class ComponentBaseTests
     public void Disposed_AddHandler_HandlerInvokedOnDispose()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         bool eventRaised = false;
         object? capturedSender = null;
         EventArgs? capturedArgs = null;
@@ -223,7 +223,7 @@ public class ComponentBaseTests
     public void Disposed_AddRemoveSameHandlerMultipleTimes_BehavesCorrectly()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         int invocationCount = 0;
 
         EventHandler handler = (sender, e) => invocationCount++;
@@ -245,7 +245,7 @@ public class ComponentBaseTests
     public void Disposed_MultipleDisposes_EventRaisedOnlyOnce()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         int invocationCount = 0;
 
         EventHandler handler = (sender, e) => invocationCount++;
@@ -267,7 +267,7 @@ public class ComponentBaseTests
     public void Disposed_MultipleHandlers_AllHandlersInvoked()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         bool handler1Invoked = false;
         bool handler2Invoked = false;
         bool handler3Invoked = false;
@@ -295,7 +295,7 @@ public class ComponentBaseTests
     public void Disposed_NoHandlers_DisposalDoesNotThrow()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
 
         // Act & Assert
         component.Dispose(); // Should not throw
@@ -309,7 +309,7 @@ public class ComponentBaseTests
     public void Disposed_RemoveHandler_HandlerNotInvokedOnDispose()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         bool eventRaised = false;
 
         EventHandler handler = (sender, e) => eventRaised = true;
@@ -330,7 +330,7 @@ public class ComponentBaseTests
     public void Disposed_RemoveNonExistentHandler_DoesNotThrow()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         EventHandler handler = static (sender, e) =>
         {
         };
@@ -347,7 +347,7 @@ public class ComponentBaseTests
     public void Disposed_RemoveOneOfMultipleHandlers_RemainingHandlersInvoked()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
         bool handler1Invoked = false;
         bool handler2Invoked = false;
         bool handler3Invoked = false;
@@ -377,7 +377,7 @@ public class ComponentBaseTests
     public void GetService_RequestIComponent_ReturnsThis()
     {
         // Arrange
-        TestComponent component = new TestComponent();
+        TestComponent component = new();
 
         // Act
         object? result = component.GetService(typeof(IComponent));
@@ -393,9 +393,9 @@ public class ComponentBaseTests
     public void GetService_RequestIContainerWithContainerSet_ReturnsContainer()
     {
         // Arrange
-        StubContainer stubContainer = new StubContainer();
-        StubSite stubSite = new StubSite { ContainerValue = stubContainer };
-        TestComponent component = new TestComponent { Site = stubSite };
+        StubContainer stubContainer = new();
+        StubSite stubSite = new() { ContainerValue = stubContainer };
+        TestComponent component = new() { Site = stubSite };
 
         // Act
         object? result = component.GetService(typeof(IContainer));
@@ -411,8 +411,8 @@ public class ComponentBaseTests
     public void GetService_RequestIContainerWithNullContainer_ReturnsNull()
     {
         // Arrange
-        StubSite stubSite = new StubSite { ContainerValue = null };
-        TestComponent component = new TestComponent { Site = stubSite };
+        StubSite stubSite = new() { ContainerValue = null };
+        TestComponent component = new() { Site = stubSite };
 
         // Act
         object? result = component.GetService(typeof(IContainer));
@@ -428,7 +428,7 @@ public class ComponentBaseTests
     public void GetService_RequestIContainerWithNullSite_ReturnsNull()
     {
         // Arrange
-        TestComponent component = new TestComponent { Site = null };
+        TestComponent component = new() { Site = null };
 
         // Act
         object? result = component.GetService(typeof(IContainer));
@@ -444,7 +444,7 @@ public class ComponentBaseTests
     public void GetService_RequestISiteWithNullSite_ReturnsNull()
     {
         // Arrange
-        TestComponent component = new TestComponent { Site = null };
+        TestComponent component = new() { Site = null };
 
         // Act
         object? result = component.GetService(typeof(ISite));
@@ -460,8 +460,8 @@ public class ComponentBaseTests
     public void GetService_RequestISiteWithSiteSet_ReturnsSite()
     {
         // Arrange
-        StubSite stubSite = new StubSite();
-        TestComponent component = new TestComponent { Site = stubSite };
+        StubSite stubSite = new();
+        TestComponent component = new() { Site = stubSite };
 
         // Act
         object? result = component.GetService(typeof(ISite));
@@ -477,7 +477,7 @@ public class ComponentBaseTests
     public void GetService_RequestOtherServiceWithNullSite_ReturnsNull()
     {
         // Arrange
-        TestComponent component = new TestComponent { Site = null };
+        TestComponent component = new() { Site = null };
 
         // Act
         object? result = component.GetService(typeof(IServiceProvider));
@@ -493,8 +493,8 @@ public class ComponentBaseTests
     public void GetService_RequestOtherServiceWithSiteReturningNull_ReturnsNull()
     {
         // Arrange
-        StubSite stubSite = new StubSite();
-        TestComponent component = new TestComponent { Site = stubSite };
+        StubSite stubSite = new();
+        TestComponent component = new() { Site = stubSite };
 
         // Act
         object? result = component.GetService(typeof(IServiceProvider));
@@ -511,10 +511,10 @@ public class ComponentBaseTests
     public void GetService_RequestOtherServiceWithSiteSet_DelegatesToSiteGetService()
     {
         // Arrange
-        object expectedService = new object();
-        StubSite stubSite = new StubSite();
+        object expectedService = new();
+        StubSite stubSite = new();
         stubSite.Services[typeof(IServiceProvider)] = expectedService;
-        TestComponent component = new TestComponent { Site = stubSite };
+        TestComponent component = new() { Site = stubSite };
 
         // Act
         object? result = component.GetService(typeof(IServiceProvider));
@@ -528,7 +528,7 @@ public class ComponentBaseTests
     public void Site_InitialValue_ReturnsNull()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
+        TestableComponentBase component = new();
 
         // Act
         ISite? result = component.Site;
@@ -545,9 +545,9 @@ public class ComponentBaseTests
     public void Site_SetMultipleTimes_ReturnsLastValue()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubSite stubSite1 = new StubSite();
-        StubSite stubSite2 = new StubSite();
+        TestableComponentBase component = new();
+        StubSite stubSite1 = new();
+        StubSite stubSite2 = new();
 
         // Act
         component.Site = stubSite1;
@@ -566,8 +566,8 @@ public class ComponentBaseTests
     public void Site_SetNull_ReturnsNull()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubSite stubSite = new StubSite();
+        TestableComponentBase component = new();
+        StubSite stubSite = new();
         component.Site = stubSite;
 
         // Act
@@ -586,8 +586,8 @@ public class ComponentBaseTests
     public void Site_SetValue_ReturnsSetValue()
     {
         // Arrange
-        TestableComponentBase component = new TestableComponentBase();
-        StubSite stubSite = new StubSite();
+        TestableComponentBase component = new();
+        StubSite stubSite = new();
 
         // Act
         component.Site = stubSite;
@@ -604,7 +604,7 @@ public class ComponentBaseTests
     public void ThrowIfDisposed_CalledMultipleTimesWhenNotDisposed_DoesNotThrow()
     {
         // Arrange
-        using TestableComponent component = new TestableComponent();
+        using TestableComponent component = new();
 
         // Act & Assert
         component.ExposeThrowIfDisposed();
@@ -619,7 +619,7 @@ public class ComponentBaseTests
     public void ThrowIfDisposed_WhenNotDisposed_DoesNotThrow()
     {
         // Arrange
-        using TestableComponent component = new TestableComponent();
+        using TestableComponent component = new();
 
         // Act & Assert
         component.ExposeThrowIfDisposed();
@@ -650,7 +650,7 @@ public class ComponentBaseTests
     {
         // Arrange
         TestComponent component = new();
-        StubSite stubSite = new StubSite { NameValue = string.Empty };
+        StubSite stubSite = new() { NameValue = string.Empty };
         component.Site = stubSite;
         string expected = "TestComponent []";
 
@@ -672,7 +672,7 @@ public class ComponentBaseTests
     {
         // Arrange
         TestComponent component = new();
-        StubSite stubSite = new StubSite { NameValue = siteName };
+        StubSite stubSite = new() { NameValue = siteName };
         component.Site = stubSite;
         string expected = $"TestComponent [{siteName}]";
 
@@ -691,7 +691,7 @@ public class ComponentBaseTests
     {
         // Arrange
         TestComponent component = new();
-        StubSite stubSite = new StubSite { NameValue = null };
+        StubSite stubSite = new() { NameValue = null };
         component.Site = stubSite;
         string expectedTypeName = "TestComponent";
 
@@ -711,7 +711,7 @@ public class ComponentBaseTests
         // Arrange
         TestComponent component = new();
         string whitespace = "   ";
-        StubSite stubSite = new StubSite { NameValue = whitespace };
+        StubSite stubSite = new() { NameValue = whitespace };
         component.Site = stubSite;
         string expected = $"TestComponent [{whitespace}]";
 

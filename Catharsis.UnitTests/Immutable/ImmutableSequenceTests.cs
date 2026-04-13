@@ -30,7 +30,7 @@ public class ImmutableSequenceTests
     [TestMethod]
     public void CreateFrom_ReadOnlySequence()
     {
-        ReadOnlySequence<byte> data = new ReadOnlySequence<byte>(new byte[] { 10, 20, 30 });
+        ReadOnlySequence<byte> data = new([10, 20, 30]);
         ImmutableSequence<byte> seq = ImmutableSequence<byte>.CreateFrom(in data);
         Assert.HasCount(3, seq);
         Assert.AreEqual(10, seq[0]);

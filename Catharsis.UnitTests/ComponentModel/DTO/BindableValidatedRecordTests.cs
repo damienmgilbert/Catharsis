@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Catharsis.ComponentModel.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.UnitTests.ComponentModel.DTO;
 
@@ -13,8 +13,10 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void AcceptChanges_ResetsIsChanged()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
-        record.Value = new PersonDto { Name = "Bob", Age = 25 };
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 })
+        {
+            Value = new PersonDto { Name = "Bob", Age = 25 }
+        };
 
         record.AcceptChanges();
 
@@ -24,8 +26,8 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void BeginEdit_CancelEdit_RevertsValue()
     {
-        PersonDto original = new PersonDto { Name = "Alice", Age = 30 };
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(original);
+        PersonDto original = new() { Name = "Alice", Age = 30 };
+        BindableValidatedRecord<PersonDto> record = new(original);
         record.BeginEdit();
         Assert.IsTrue(record.IsEditing);
 
@@ -39,9 +41,9 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void BeginEdit_EndEdit_CommitsValue()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
         record.BeginEdit();
-        PersonDto newVal = new PersonDto { Name = "Bob", Age = 25 };
+        PersonDto newVal = new() { Name = "Bob", Age = 25 };
         record.Value = newVal;
         record.EndEdit();
 
@@ -54,7 +56,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void CurrentErrors_ReturnsReadOnlyDictionary()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 30 });
         record.Validate();
 
         Assert.IsTrue(record.CurrentErrors.ContainsKey("Name"));
@@ -63,7 +65,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void ErrorsChanged_Raised()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
         bool raised = false;
         record.ErrorsChanged += (s, e) => raised = true;
 
@@ -75,7 +77,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void GetErrors_NullOrEmpty_ReturnsAll()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 200 });
         record.Validate();
 
         List<string> all = [.. record.GetErrors(null).Cast<string>()];
@@ -86,7 +88,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void GetErrors_ReturnsErrorsForProperty()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 30 });
         record.Validate();
 
         List<string> errors = [.. record.GetErrors("Name").Cast<string>()];
@@ -97,9 +99,10 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void IsChanged_AfterValueChange_ReturnsTrue()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
-
-        record.Value = new PersonDto { Name = "Bob", Age = 25 };
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 })
+        {
+            Value = new PersonDto { Name = "Bob", Age = 25 }
+        };
 
         Assert.IsTrue(record.IsChanged);
     }
@@ -107,7 +110,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void IsChanged_InitiallyFalse()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
 
         Assert.IsFalse(record.IsChanged);
     }
@@ -115,9 +118,11 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void RejectChanges_RevertsToAcceptedValue()
     {
-        PersonDto original = new PersonDto { Name = "Alice", Age = 30 };
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(original);
-        record.Value = new PersonDto { Name = "Bob", Age = 25 };
+        PersonDto original = new() { Name = "Alice", Age = 30 };
+        BindableValidatedRecord<PersonDto> record = new(original)
+        {
+            Value = new PersonDto { Name = "Bob", Age = 25 }
+        };
 
         record.RejectChanges();
 
@@ -127,9 +132,10 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void SettingValue_TriggersAutoValidation()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
-
-        record.Value = new PersonDto { Name = null, Age = 200 };
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 })
+        {
+            Value = new PersonDto { Name = null, Age = 200 }
+        };
 
         Assert.IsTrue(record.HasErrors);
     }
@@ -137,7 +143,7 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void Validate_InvalidObject_ReturnsFalse()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = null, Age = 200 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = null, Age = 200 });
 
         Assert.IsFalse(record.Validate());
         Assert.IsTrue(record.HasErrors);
@@ -146,14 +152,14 @@ public sealed class BindableValidatedRecordTests
     [TestMethod]
     public void Validate_ValidObject_ReturnsTrue()
     {
-        BindableValidatedRecord<PersonDto> record = new BindableValidatedRecord<PersonDto>(new PersonDto { Name = "Alice", Age = 30 });
+        BindableValidatedRecord<PersonDto> record = new(new PersonDto { Name = "Alice", Age = 30 });
 
         Assert.IsTrue(record.Validate());
         Assert.IsFalse(record.HasErrors);
     }
     #endregion
 
-    sealed class PersonDto
+    private sealed class PersonDto
     {
         #region Public properties
         [Range(0, 150, ErrorMessage = "Age must be between 0 and 150.")]

@@ -12,8 +12,8 @@ public class TreeNodeNonGenericTests
     [TestMethod]
     public void AddChild_AddsToChildren()
     {
-        TreeNode parent = new TreeNode("parent");
-        TreeNode child = new TreeNode("child");
+        TreeNode parent = new("parent");
+        TreeNode child = new("child");
         parent.AddChild(child);
         Assert.HasCount(1, parent.Children);
         Assert.AreSame(child, parent.Children[0]);
@@ -22,7 +22,7 @@ public class TreeNodeNonGenericTests
     [TestMethod]
     public void Constructor_SetsNameAndEmptyChildren()
     {
-        TreeNode node = new TreeNode("root");
+        TreeNode node = new("root");
         Assert.AreEqual("root", node.Name);
         Assert.IsEmpty(node.Children);
     }

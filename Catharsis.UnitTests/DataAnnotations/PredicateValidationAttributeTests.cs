@@ -12,7 +12,7 @@ public class PredicateValidationAttributeTests
     #region Private methods
     static ValidationContext CreateContext(string memberName)
     {
-        TestModel model = new TestModel();
+        TestModel model = new();
         return new ValidationContext(model) { MemberName = memberName, DisplayName = memberName };
     }
     #endregion
@@ -25,7 +25,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void NonExistentMethod_ReturnsFailure()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), "NonExistent");
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), "NonExistent");
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("test", context);
@@ -37,7 +37,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void NullValuePassedToPredicate_PredicateDecides()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsNotNull));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsNotNull));
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult(null, context);
@@ -48,7 +48,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void PredicateReturnsFalse_ReturnsFailure()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult(-1, context);
@@ -60,7 +60,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void PredicateReturnsTrue_ReturnsSuccess()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult(5, context);
@@ -71,7 +71,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void StringPredicate_InvalidValue_ReturnsFailure()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("hello", context);
@@ -82,7 +82,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void StringPredicate_ValidValue_ReturnsSuccess()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsUpperCase));
         ValidationContext context = CreateContext(nameof(TestModel.Value));
 
         ValidationResult? result = attribute.GetValidationResult("HELLO", context);
@@ -93,7 +93,7 @@ public class PredicateValidationAttributeTests
     [TestMethod]
     public void ValidatorTypeAndMethodName_AreExposed()
     {
-        PredicateValidationAttribute attribute = new PredicateValidationAttribute(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
+        PredicateValidationAttribute attribute = new(typeof(TestPredicates), nameof(TestPredicates.IsPositive));
 
         Assert.AreEqual(typeof(TestPredicates), attribute.ValidatorType);
         Assert.AreEqual(nameof(TestPredicates.IsPositive), attribute.MethodName);

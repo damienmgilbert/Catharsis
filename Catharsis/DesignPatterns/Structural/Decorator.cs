@@ -14,7 +14,7 @@ public class Decorator
     ///<param name="obj">The object to decorate.</param>
     ///<param name="decorators">One or more wrapping transformations applied in order.</param>
     ///<returns>The fully decorated object.</returns>
-    public T Decorate<T>(T obj, params Func<T, T>[] decorators)
+    public static T Decorate<T>(T obj, params Func<T, T>[] decorators)
     {
         if(decorators is null)
         {

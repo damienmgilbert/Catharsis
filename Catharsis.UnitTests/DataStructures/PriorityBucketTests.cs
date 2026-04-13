@@ -12,7 +12,7 @@ public class PriorityBucketTests
     [TestMethod]
     public void Clear_RemovesAllElements()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         pq.Enqueue("a", 1);
         pq.Clear();
         Assert.IsEmpty(pq);
@@ -24,7 +24,7 @@ public class PriorityBucketTests
     [TestMethod]
     public void Contains_ReturnsCorrectResult()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         pq.Enqueue("test", 1);
         Assert.IsTrue(pq.Contains("test"));
         Assert.IsFalse(pq.Contains("other"));
@@ -33,7 +33,7 @@ public class PriorityBucketTests
     [TestMethod]
     public void Enqueue_And_Dequeue_ReturnsInPriorityOrder()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         pq.Enqueue("low", 3);
         pq.Enqueue("high", 1);
         pq.Enqueue("mid", 2);
@@ -44,7 +44,7 @@ public class PriorityBucketTests
     [TestMethod]
     public void Peek_ReturnsHighestPriority()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         pq.Enqueue("a", 2);
         pq.Enqueue("b", 1);
         Assert.AreEqual("b", pq.Peek());
@@ -54,14 +54,14 @@ public class PriorityBucketTests
     [TestMethod]
     public void TryDequeue_EmptyQueue_ReturnsFalse()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         Assert.IsFalse(pq.TryDequeue(out _, out _));
     }
 
     [TestMethod]
     public void TryPeek_EmptyQueue_ReturnsFalse()
     {
-        PriorityBucket<string, int> pq = new PriorityBucket<string, int>();
+        PriorityBucket<string, int> pq = new();
         Assert.IsFalse(pq.TryPeek(out _, out _));
     }
     #endregion

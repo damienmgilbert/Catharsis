@@ -13,7 +13,7 @@ public class ComponentContainerTests
     [TestMethod]
     public void Add_Component_IncreasesCount()
     {
-        using ComponentContainer container = new ComponentContainer();
+        using ComponentContainer container = new();
         container.Add(new TestComponent());
         Assert.AreEqual(1, container.Count);
     }
@@ -21,7 +21,7 @@ public class ComponentContainerTests
     [TestMethod]
     public void Add_DuplicateName_Throws()
     {
-        using ComponentContainer container = new ComponentContainer();
+        using ComponentContainer container = new();
         container.Add(new TestComponent(), "name");
         Assert.ThrowsExactly<ArgumentException>(() => container.Add(new TestComponent(), "name"));
     }
@@ -29,7 +29,7 @@ public class ComponentContainerTests
     [TestMethod]
     public void Add_Null_IsIgnored()
     {
-        using ComponentContainer container = new ComponentContainer();
+        using ComponentContainer container = new();
         container.Add(null);
         Assert.AreEqual(0, container.Count);
     }
@@ -37,8 +37,8 @@ public class ComponentContainerTests
     [TestMethod]
     public void Add_WithName_SitesComponent()
     {
-        using ComponentContainer container = new ComponentContainer();
-        TestComponent comp = new TestComponent();
+        using ComponentContainer container = new();
+        TestComponent comp = new();
         container.Add(comp, "test");
         Assert.IsNotNull(comp.Site);
         Assert.AreEqual("test", comp.Site.Name);
@@ -47,7 +47,7 @@ public class ComponentContainerTests
     [TestMethod]
     public void Components_ReturnsAllComponents()
     {
-        using ComponentContainer container = new ComponentContainer();
+        using ComponentContainer container = new();
         container.Add(new TestComponent());
         container.Add(new TestComponent());
         Assert.HasCount(2, container.Components);
@@ -56,8 +56,8 @@ public class ComponentContainerTests
     [TestMethod]
     public void GetComponent_ByName_ReturnsComponent()
     {
-        using ComponentContainer container = new ComponentContainer();
-        TestComponent comp = new TestComponent();
+        using ComponentContainer container = new();
+        TestComponent comp = new();
         container.Add(comp, "myComp");
         Assert.AreSame(comp, container.GetComponent("myComp"));
     }
@@ -65,8 +65,8 @@ public class ComponentContainerTests
     [TestMethod]
     public void Remove_Component_DecreasesCount()
     {
-        using ComponentContainer container = new ComponentContainer();
-        TestComponent comp = new TestComponent();
+        using ComponentContainer container = new();
+        TestComponent comp = new();
         container.Add(comp);
         container.Remove(comp);
         Assert.AreEqual(0, container.Count);

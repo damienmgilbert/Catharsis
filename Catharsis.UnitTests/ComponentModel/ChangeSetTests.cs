@@ -12,7 +12,7 @@ public class ChangeSetTests
     [TestMethod]
     public void AcceptAll_ClearsBothStacks()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("P", null, 1);
         set.Undo();
         set.AcceptAll();
@@ -23,7 +23,7 @@ public class ChangeSetTests
     [TestMethod]
     public void Clear_ResetsBothStacks()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("P", null, 1);
         set.Clear();
         Assert.AreEqual(0, set.Count);
@@ -32,7 +32,7 @@ public class ChangeSetTests
     [TestMethod]
     public void GetAll_ReturnsChronologicalOrder()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", null, 1);
         set.Record("B", null, 2);
         IReadOnlyList<ChangeEntry> all = set.GetAll();
@@ -44,7 +44,7 @@ public class ChangeSetTests
     [TestMethod]
     public void GetByProperty_FiltersCorrectly()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("A", null, 1);
         set.Record("B", null, 2);
         set.Record("A", 1, 3);
@@ -55,7 +55,7 @@ public class ChangeSetTests
     [TestMethod]
     public void Record_AddsEntry()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("Prop", "old", "new");
         Assert.AreEqual(1, set.Count);
         Assert.IsTrue(set.HasChanges);
@@ -65,7 +65,7 @@ public class ChangeSetTests
     [TestMethod]
     public void Record_ClearsRedoStack()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("P", "a", "b");
         set.Undo();
         Assert.IsTrue(set.CanRedo);
@@ -76,14 +76,14 @@ public class ChangeSetTests
     [TestMethod]
     public void Redo_EmptyStack_ReturnsNull()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         Assert.IsNull(set.Redo());
     }
 
     [TestMethod]
     public void Redo_RestoresEntry()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("Prop", "a", "b");
         set.Undo();
         ChangeEntry? entry = set.Redo();
@@ -95,14 +95,14 @@ public class ChangeSetTests
     [TestMethod]
     public void Undo_EmptyStack_ReturnsNull()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         Assert.IsNull(set.Undo());
     }
 
     [TestMethod]
     public void Undo_MovesToRedoStack()
     {
-        ChangeSet set = new ChangeSet();
+        ChangeSet set = new();
         set.Record("Prop", "a", "b");
         ChangeEntry? entry = set.Undo();
         Assert.IsNotNull(entry);

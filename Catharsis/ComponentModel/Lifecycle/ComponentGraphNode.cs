@@ -60,7 +60,7 @@ public sealed class ComponentGraphNode
 
     bool WouldCreateCycle(ComponentGraphNode target)
     {
-        HashSet<ComponentGraphNode> visited = new HashSet<ComponentGraphNode>();
+        HashSet<ComponentGraphNode> visited = [];
         return HasPathTo(target, this, visited);
     }
     #endregion

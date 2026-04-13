@@ -23,7 +23,7 @@ public class TemplateMethodTests
         {
         };
         // Act
-        (int Value, string Text) result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        (int Value, string Text) result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(5, result.Value);
         Assert.AreEqual("5", result.Text);
@@ -47,7 +47,7 @@ public class TemplateMethodTests
         {
         };
         // Act
-        int result = new TemplateMethod().Template(input, setup, operation, teardown);
+        int result = TemplateMethod.Template(input, setup, operation, teardown);
         // Assert
         Assert.AreEqual(expected, result);
     }
@@ -71,7 +71,7 @@ public class TemplateMethodTests
         };
         Action<string?> teardown = s => teardownReceived = s == null;
         // Act
-        bool result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        bool result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.IsTrue(result);
         Assert.IsTrue(setupReceived);
@@ -86,14 +86,14 @@ public class TemplateMethodTests
     public void Template_ReferenceTypeContext_WorksCorrectly()
     {
         // Arrange
-        List<int> obj = new List<int> { 1, 2, 3 };
+        List<int> obj = [1, 2, 3];
         bool setupCalled = false;
         bool teardownCalled = false;
         Action<List<int>> setup = list => setupCalled = true;
         Func<List<int>, int> operation = list => list.Count;
         Action<List<int>> teardown = list => teardownCalled = true;
         // Act
-        int result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        int result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(3, result);
         Assert.IsTrue(setupCalled);
@@ -107,12 +107,12 @@ public class TemplateMethodTests
     public void Template_SetupModifiesState_OperationSeesModification()
     {
         // Arrange
-        List<int> obj = new List<int>();
+        List<int> obj = [];
         Action<List<int>> setup = static list => list.Add(1);
         Func<List<int>, int> operation = static list => list.Count;
         Action<List<int>> teardown = static list => list.Clear();
         // Act
-        int result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        int result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(1, result);
         Assert.IsEmpty(obj); // Teardown was called and cleared the list
@@ -127,7 +127,7 @@ public class TemplateMethodTests
     {
         // Arrange
         string obj = "test";
-        List<string> executionOrder = new List<string>();
+        List<string> executionOrder = [];
         Action<string> setup = s => executionOrder.Add("setup");
         Func<string, int> operation = s =>
         {
@@ -136,7 +136,7 @@ public class TemplateMethodTests
         };
         Action<string> teardown = s => executionOrder.Add("teardown");
         // Act
-        int result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        int result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(4, result);
         CollectionAssert.AreEqual(new[] { "setup", "operation", "teardown" }, executionOrder);
@@ -161,7 +161,7 @@ public class TemplateMethodTests
         };
         Action<string> teardown = s => teardownCount++;
         // Act
-        int result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        int result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(4, result);
         Assert.AreEqual(1, setupCount);
@@ -188,7 +188,7 @@ public class TemplateMethodTests
         };
         Action<int> teardown = n => teardownReceived = n;
         // Act
-        string result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        string result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual("42", result);
         Assert.AreEqual(42, setupReceived);
@@ -210,7 +210,7 @@ public class TemplateMethodTests
         Func<int, int> operation = n => n * 2;
         Action<int> teardown = n => teardownCalled = true;
         // Act
-        int result = new TemplateMethod().Template(obj, setup, operation, teardown);
+        int result = TemplateMethod.Template(obj, setup, operation, teardown);
         // Assert
         Assert.AreEqual(20, result);
         Assert.IsTrue(setupCalled);

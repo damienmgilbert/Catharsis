@@ -13,7 +13,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_AfterDispose_Throws()
     {
-        ComponentContainerSlim container = new ComponentContainerSlim();
+        ComponentContainerSlim container = new();
         container.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => container.Add(new TestComponent()));
@@ -22,8 +22,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_Component_IncreasesCount()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
 
         container.Add(component);
 
@@ -33,7 +33,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_DuplicateName_Throws()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
+        using ComponentContainerSlim container = new();
         container.Add(new TestComponent(), "name");
 
         Assert.ThrowsExactly<ArgumentException>(() => container.Add(new TestComponent(), "name"));
@@ -42,7 +42,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_NullComponent_DoesNothing()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
+        using ComponentContainerSlim container = new();
 
         container.Add(null);
 
@@ -52,8 +52,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_SetsComponentSite()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
 
         container.Add(component);
 
@@ -64,8 +64,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Add_WithName_AssignsNameToSite()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
 
         container.Add(component, "myComponent");
 
@@ -76,9 +76,9 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Components_ReturnsAllComponents()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent c1 = new TestComponent();
-        TestComponent c2 = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent c1 = new();
+        TestComponent c2 = new();
         container.Add(c1, "first");
         container.Add(c2, "second");
 
@@ -90,7 +90,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        ComponentContainerSlim container = new ComponentContainerSlim();
+        ComponentContainerSlim container = new();
         container.Add(new TestComponent());
 
         container.Dispose();
@@ -100,9 +100,9 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Dispose_DisposesAllComponentsInReverseOrder()
     {
-        ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent c1 = new TestComponent();
-        TestComponent c2 = new TestComponent();
+        ComponentContainerSlim container = new();
+        TestComponent c1 = new();
+        TestComponent c2 = new();
         container.Add(c1);
         container.Add(c2);
 
@@ -115,8 +115,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void GetComponent_ByName_ReturnsComponent()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
         container.Add(component, "test");
 
         IComponent? found = container.GetComponent("test");
@@ -127,7 +127,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void GetComponent_NonExisting_ReturnsNull()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
+        using ComponentContainerSlim container = new();
 
         IComponent? found = container.GetComponent("nope");
 
@@ -137,8 +137,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Remove_ExistingComponent_RemovesIt()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
         container.Add(component);
 
         container.Remove(component);
@@ -150,7 +150,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Remove_NonExistingComponent_DoesNothing()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
+        using ComponentContainerSlim container = new();
         container.Add(new TestComponent());
 
         container.Remove(new TestComponent());
@@ -161,7 +161,7 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Remove_NullComponent_DoesNothing()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
+        using ComponentContainerSlim container = new();
         container.Add(new TestComponent());
 
         container.Remove(null);
@@ -172,8 +172,8 @@ public class ComponentContainerSlimTests
     [TestMethod]
     public void Site_GetService_ReturnsContainerForIContainer()
     {
-        using ComponentContainerSlim container = new ComponentContainerSlim();
-        TestComponent component = new TestComponent();
+        using ComponentContainerSlim container = new();
+        TestComponent component = new();
         container.Add(component);
 
         object? service = component.Site!.GetService(typeof(IContainer));

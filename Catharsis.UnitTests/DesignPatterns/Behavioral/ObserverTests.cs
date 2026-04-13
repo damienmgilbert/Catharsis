@@ -16,7 +16,7 @@ public class ObserverTests
         // Arrange
         string obj = "test";
         // Act
-        string result = new Observer().Notify(obj);
+        string result = Observer.Notify(obj);
         // Assert
         Assert.AreSame(obj, result);
     }
@@ -32,8 +32,7 @@ public class ObserverTests
         int invocationCount = 0;
         Action<int> observer = x => invocationCount++;
         // Act
-        Observer n = new Observer();
-        int result = n.Notify(n.Notify(n.Notify(obj, observer), observer), observer);
+        int result = Observer.Notify(Observer.Notify(Observer.Notify(obj, observer), observer), observer);
         // Assert
         Assert.AreEqual(3, invocationCount);
         Assert.AreEqual(obj, result);
@@ -48,12 +47,12 @@ public class ObserverTests
     {
         // Arrange
         string obj = "notify";
-        List<int> invocationOrder = new List<int>();
+        List<int> invocationOrder = [];
         Action<string> observer1 = x => invocationOrder.Add(1);
         Action<string> observer2 = x => invocationOrder.Add(2);
         Action<string> observer3 = x => invocationOrder.Add(3);
         // Act
-        string result = new Observer().Notify(obj, observer1, observer2, observer3);
+        string result = Observer.Notify(obj, observer1, observer2, observer3);
         // Assert
         Assert.HasCount(3, invocationOrder);
         Assert.AreEqual(1, invocationOrder[0]);
@@ -75,7 +74,7 @@ public class ObserverTests
         Action<string> observer2 = x => counter += 20;
         Action<string> observer3 = x => counter += 30;
         // Act
-        string result = new Observer().Notify(obj, observer1, observer2, observer3);
+        string result = Observer.Notify(obj, observer1, observer2, observer3);
         // Assert
         Assert.AreEqual(60, counter);
         Assert.AreSame(obj, result);
@@ -98,7 +97,7 @@ public class ObserverTests
             receivedValue = x;
         };
         // Act
-        int result = new Observer().Notify(obj, observer);
+        int result = Observer.Notify(obj, observer);
         // Assert
         Assert.AreEqual(1, invocationCount);
         Assert.AreEqual(obj, receivedValue);
@@ -121,7 +120,7 @@ public class ObserverTests
         }
 
         // Act
-        string result = new Observer().Notify(obj, observers);
+        string result = Observer.Notify(obj, observers);
         // Assert
         Assert.AreEqual(100, invocationCount);
         Assert.AreSame(obj, result);
@@ -138,7 +137,7 @@ public class ObserverTests
         string? receivedValue = "not null";
         Action<string?> observer = x => receivedValue = x;
         // Act
-        string? result = new Observer().Notify(obj, observer);
+        string? result = Observer.Notify(obj, observer);
         // Assert
         Assert.IsNull(receivedValue);
         Assert.IsNull(result);
@@ -151,13 +150,13 @@ public class ObserverTests
     public void Notify_WithReferenceType_AllObserversReceiveSameReference()
     {
         // Arrange
-        List<int> obj = new List<int> { 1, 2, 3 };
+        List<int> obj = [1, 2, 3];
         List<int>? receivedByObserver1 = null;
         List<int>? receivedByObserver2 = null;
         Action<List<int>> observer1 = x => receivedByObserver1 = x;
         Action<List<int>> observer2 = x => receivedByObserver2 = x;
         // Act
-        List<int> result = new Observer().Notify(obj, observer1, observer2);
+        List<int> result = Observer.Notify(obj, observer1, observer2);
         // Assert
         Assert.AreSame(obj, receivedByObserver1);
         Assert.AreSame(obj, receivedByObserver2);
@@ -177,7 +176,7 @@ public class ObserverTests
         Action<int> observer1 = x => receivedByObserver1 = x;
         Action<int> observer2 = x => receivedByObserver2 = x;
         // Act
-        int result = new Observer().Notify(obj, observer1, observer2);
+        int result = Observer.Notify(obj, observer1, observer2);
         // Assert
         Assert.AreEqual(obj, receivedByObserver1);
         Assert.AreEqual(obj, receivedByObserver2);

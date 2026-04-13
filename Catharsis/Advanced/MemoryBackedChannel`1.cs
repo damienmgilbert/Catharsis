@@ -88,7 +88,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
         IMemoryOwner<T> owner = _pool.Rent(data.Length);
         data.CopyTo(owner.Memory);
 
-        OwnedSegment segment = new OwnedSegment(owner, data.Length);
+        OwnedSegment segment = new(owner, data.Length);
         await _channel.Writer.WriteAsync(segment, cancellationToken);
     }
     #endregion

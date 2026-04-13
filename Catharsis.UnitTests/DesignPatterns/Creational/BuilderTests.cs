@@ -15,13 +15,13 @@ public class BuilderTests
     public void Build_ComplexObjectGraph_AppliesStepsCorrectly()
     {
         // Arrange
-        Dictionary<string, int> obj = new Dictionary<string, int>();
+        Dictionary<string, int> obj = [];
         Func<Dictionary<string, int>, int> finalizer = static dict => dict.Values.Sum();
         Action<Dictionary<string, int>> step1 = static dict => dict["a"] = 10;
         Action<Dictionary<string, int>> step2 = static dict => dict["b"] = 20;
         Action<Dictionary<string, int>> step3 = static dict => dict["a"] = dict["a"] * 2;
         // Act
-        int result = new Builder().Build(obj, finalizer, step1, step2, step3);
+        int result = Builder.Build(obj, finalizer, step1, step2, step3);
         // Assert
         Assert.AreEqual(40, result); // a=20, b=20
     }
@@ -33,13 +33,13 @@ public class BuilderTests
     public void Build_DifferentResultType_TransformsObjectCorrectly()
     {
         // Arrange
-        List<int> obj = new List<int>();
+        List<int> obj = [];
         Func<List<int>, int> finalizer = static list => list.Sum();
         Action<List<int>> step1 = static list => list.Add(10);
         Action<List<int>> step2 = static list => list.Add(20);
         Action<List<int>> step3 = static list => list.Add(30);
         // Act
-        int result = new Builder().Build(obj, finalizer, step1, step2, step3);
+        int result = Builder.Build(obj, finalizer, step1, step2, step3);
         // Assert
         Assert.AreEqual(60, result);
     }
@@ -52,11 +52,11 @@ public class BuilderTests
     public void Build_EmptyStepsArray_CallsFinalizerOnUnmodifiedObject()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder("initial");
+        StringBuilder obj = new("initial");
         Func<StringBuilder, string> finalizer = static sb => sb.ToString();
-        Action<StringBuilder>[] steps = Array.Empty<Action<StringBuilder>>();
+        Action<StringBuilder>[] steps = [];
         // Act
-        string result = new Builder().Build(obj, finalizer, steps);
+        string result = Builder.Build(obj, finalizer, steps);
         // Assert
         Assert.AreEqual("initial", result);
     }
@@ -68,13 +68,13 @@ public class BuilderTests
     public void Build_MultipleSteps_AppliesStepsInOrderThenCallsFinalizer()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder();
+        StringBuilder obj = new();
         Func<StringBuilder, string> finalizer = static sb => sb.ToString();
         Action<StringBuilder> step1 = static sb => sb.Append("first");
         Action<StringBuilder> step2 = static sb => sb.Append(" second");
         Action<StringBuilder> step3 = static sb => sb.Append(" third");
         // Act
-        string result = new Builder().Build(obj, finalizer, step1, step2, step3);
+        string result = Builder.Build(obj, finalizer, step1, step2, step3);
         // Assert
         Assert.AreEqual("first second third", result);
     }
@@ -87,10 +87,10 @@ public class BuilderTests
     public void Build_NoStepsProvided_CallsFinalizerOnUnmodifiedObject()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder("initial");
+        StringBuilder obj = new("initial");
         Func<StringBuilder, string> finalizer = static sb => sb.ToString();
         // Act
-        string result = new Builder().Build(obj, finalizer);
+        string result = Builder.Build(obj, finalizer);
         // Assert
         Assert.AreEqual("initial", result);
     }
@@ -117,7 +117,7 @@ public class BuilderTests
             Assert.IsNull(sb);
         };
         // Act
-        string result = new Builder().Build(obj, finalizer, step);
+        string result = Builder.Build(obj, finalizer, step);
         // Assert
         Assert.IsTrue(stepCalled);
         Assert.IsTrue(finalizerCalled);
@@ -134,7 +134,7 @@ public class BuilderTests
         TestObject? obj = null;
         bool stepExecuted = false;
         // Act
-        TestObject? result = new Builder().Build(
+        TestObject? result = Builder.Build(
                              obj,
                              o =>
                              {
@@ -153,11 +153,11 @@ public class BuilderTests
     public void Build_ResultTypeSameAsObjectType_AppliesStepsAndReturnsResult()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder("start");
+        StringBuilder obj = new("start");
         Func<StringBuilder, StringBuilder> finalizer = static sb => sb;
         Action<StringBuilder> step = static sb => sb.Append(" end");
         // Act
-        StringBuilder result = new Builder().Build(obj, finalizer, step);
+        StringBuilder result = Builder.Build(obj, finalizer, step);
         // Assert
         Assert.AreEqual("start end", result.ToString());
         Assert.AreSame(obj, result);
@@ -170,7 +170,7 @@ public class BuilderTests
     public void Build_SameObjectPassedToAllSteps_VerifiesObjectIdentity()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder();
+        StringBuilder obj = new();
         StringBuilder? capturedInStep1 = null;
         StringBuilder? capturedInStep2 = null;
         StringBuilder? capturedInFinalizer = null;
@@ -182,7 +182,7 @@ public class BuilderTests
         Action<StringBuilder> step1 = sb => capturedInStep1 = sb;
         Action<StringBuilder> step2 = sb => capturedInStep2 = sb;
         // Act
-        new Builder().Build(obj, finalizer, step1, step2);
+        Builder.Build(obj, finalizer, step1, step2);
         // Assert
         Assert.AreSame(obj, capturedInStep1);
         Assert.AreSame(obj, capturedInStep2);
@@ -196,11 +196,11 @@ public class BuilderTests
     public void Build_SingleStep_AppliesStepThenCallsFinalizer()
     {
         // Arrange
-        StringBuilder obj = new StringBuilder("initial");
+        StringBuilder obj = new("initial");
         Func<StringBuilder, string> finalizer = static sb => sb.ToString();
         Action<StringBuilder> step = static sb => sb.Append(" modified");
         // Act
-        string result = new Builder().Build(obj, finalizer, step);
+        string result = Builder.Build(obj, finalizer, step);
         // Assert
         Assert.AreEqual("initial modified", result);
     }
@@ -212,14 +212,14 @@ public class BuilderTests
     public void Build_StepsAppliedInOrder_LaterStepsCanOverrideEarlierSteps()
     {
         // Arrange
-        List<int> obj = new List<int>();
+        List<int> obj = [];
         Func<List<int>, int> finalizer = static list => list.Count;
         Action<List<int>> step1 = static list => list.Add(1);
         Action<List<int>> step2 = static list => list.Add(2);
         Action<List<int>> step3 = static list => list.Clear();
         Action<List<int>> step4 = static list => list.Add(100);
         // Act
-        int result = new Builder().Build(obj, finalizer, step1, step2, step3, step4);
+        int result = Builder.Build(obj, finalizer, step1, step2, step3, step4);
         // Assert
         Assert.AreEqual(1, result);
         Assert.AreEqual(100, obj[0]);
@@ -235,7 +235,7 @@ public class BuilderTests
         string obj = "test";
         bool stepExecuted = false;
         // Act
-        string result = new Builder().Build(
+        string result = Builder.Build(
                         obj,
                         s =>
                         {
@@ -258,7 +258,7 @@ public class BuilderTests
         // Act
         // Note: For value types, the modification won't persist on the original
         // but Build should still execute and return the value
-        int result = new Builder().Build(
+        int result = Builder.Build(
                      value,
                      static v =>
                      { /* no-op on value type */
@@ -278,7 +278,7 @@ public class BuilderTests
         Func<int, string> finalizer = static i => i.ToString();
         // Note: Value type cannot be modified by steps, but steps can still be called
         // Act
-        string result = new Builder().Build(obj, finalizer);
+        string result = Builder.Build(obj, finalizer);
         // Assert
         Assert.AreEqual("10", result);
     }

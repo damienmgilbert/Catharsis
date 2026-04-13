@@ -16,10 +16,10 @@ public class DataErrorInfoAdapterTests
     [TestMethod]
     public void Error_AggregatesAllErrors()
     {
-        TestValidatable source = new TestValidatable();
+        TestValidatable source = new();
         source.AddError("Name", "Name is required.");
         source.AddError("Age", "Age must be positive.");
-        DataErrorInfoAdapter adapter = new DataErrorInfoAdapter(source);
+        DataErrorInfoAdapter adapter = new(source);
 
         string error = adapter.Error;
 
@@ -30,8 +30,8 @@ public class DataErrorInfoAdapterTests
     [TestMethod]
     public void Error_NoErrors_ReturnsEmpty()
     {
-        TestValidatable source = new TestValidatable();
-        DataErrorInfoAdapter adapter = new DataErrorInfoAdapter(source);
+        TestValidatable source = new();
+        DataErrorInfoAdapter adapter = new(source);
 
         Assert.AreEqual(string.Empty, adapter.Error);
     }
@@ -39,10 +39,10 @@ public class DataErrorInfoAdapterTests
     [TestMethod]
     public void Indexer_MultipleErrors_JoinsThem()
     {
-        TestValidatable source = new TestValidatable();
+        TestValidatable source = new();
         source.AddError("Name", "Too short.");
         source.AddError("Name", "Contains invalid characters.");
-        DataErrorInfoAdapter adapter = new DataErrorInfoAdapter(source);
+        DataErrorInfoAdapter adapter = new(source);
 
         string result = adapter["Name"];
 
@@ -53,8 +53,8 @@ public class DataErrorInfoAdapterTests
     [TestMethod]
     public void Indexer_NoErrors_ReturnsEmpty()
     {
-        TestValidatable source = new TestValidatable();
-        DataErrorInfoAdapter adapter = new DataErrorInfoAdapter(source);
+        TestValidatable source = new();
+        DataErrorInfoAdapter adapter = new(source);
 
         Assert.AreEqual(string.Empty, adapter["Name"]);
     }
@@ -62,9 +62,9 @@ public class DataErrorInfoAdapterTests
     [TestMethod]
     public void Indexer_ReturnsErrorForProperty()
     {
-        TestValidatable source = new TestValidatable();
+        TestValidatable source = new();
         source.AddError("Name", "Name is required.");
-        DataErrorInfoAdapter adapter = new DataErrorInfoAdapter(source);
+        DataErrorInfoAdapter adapter = new(source);
 
         Assert.AreEqual("Name is required.", adapter["Name"]);
     }

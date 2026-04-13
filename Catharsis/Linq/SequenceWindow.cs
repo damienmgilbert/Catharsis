@@ -48,7 +48,7 @@ public static class SequenceWindow
             if (buffer.Count == size)
             {
                 yield return buffer;
-                buffer = new List<T>(size);
+                buffer = new(size);
             }
         }
 
@@ -154,7 +154,7 @@ public static class SequenceWindow
             if (buffer.Count == size)
             {
                 yield return buffer.AsReadOnly();
-                buffer = new List<T>(size);
+                buffer = new(size);
             }
         }
 

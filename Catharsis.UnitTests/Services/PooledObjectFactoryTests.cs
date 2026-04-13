@@ -15,7 +15,7 @@ public class PooledObjectFactoryTests
     public void Dispose_DisposesPooledObjects()
     {
         ILogger<PooledObjectFactory<TestObj>> logger = NullLoggerFactory.Instance.CreateLogger<PooledObjectFactory<TestObj>>();
-        PooledObjectFactory<TestObj> factory = new PooledObjectFactory<TestObj>(logger);
+        PooledObjectFactory<TestObj> factory = new(logger);
         TestObj obj = factory.Rent();
         factory.Return(obj);
 
@@ -28,7 +28,7 @@ public class PooledObjectFactoryTests
     public void Rent_AfterDispose_Throws()
     {
         ILogger<PooledObjectFactory<TestObj>> logger = NullLoggerFactory.Instance.CreateLogger<PooledObjectFactory<TestObj>>();
-        PooledObjectFactory<TestObj> factory = new PooledObjectFactory<TestObj>(logger);
+        PooledObjectFactory<TestObj> factory = new(logger);
         factory.Dispose();
         Assert.ThrowsExactly<ObjectDisposedException>(() => factory.Rent());
     }
@@ -37,7 +37,7 @@ public class PooledObjectFactoryTests
     public void Rent_CreatesNewObject()
     {
         ILogger<PooledObjectFactory<TestObj>> logger = NullLoggerFactory.Instance.CreateLogger<PooledObjectFactory<TestObj>>();
-        using PooledObjectFactory<TestObj> factory = new PooledObjectFactory<TestObj>(logger);
+        using PooledObjectFactory<TestObj> factory = new(logger);
 
         TestObj obj = factory.Rent();
 
@@ -49,7 +49,7 @@ public class PooledObjectFactoryTests
     public void Return_And_Rent_ReusesObject()
     {
         ILogger<PooledObjectFactory<TestObj>> logger = NullLoggerFactory.Instance.CreateLogger<PooledObjectFactory<TestObj>>();
-        using PooledObjectFactory<TestObj> factory = new PooledObjectFactory<TestObj>(logger);
+        using PooledObjectFactory<TestObj> factory = new(logger);
 
         TestObj obj = factory.Rent();
         factory.Return(obj);

@@ -15,8 +15,8 @@ public class PropertyObserverTests
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        NotifySource source = new NotifySource();
-        PropertyObserver observer = new PropertyObserver(source);
+        NotifySource source = new();
+        PropertyObserver observer = new(source);
 
         observer.Dispose();
         observer.Dispose(); // should not throw
@@ -25,7 +25,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void Dispose_UnsubscribesFromSource()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         PropertyObserver observer = new PropertyObserver(source)
@@ -40,7 +40,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void MultipleHandlers_SameProperty_AllInvoked()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int count1 = 0;
         int count2 = 0;
 
@@ -57,7 +57,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void NullPropertyName_InvokesAllHandlers()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         using PropertyObserver observer = new PropertyObserver(source)
@@ -71,8 +71,8 @@ public class PropertyObserverTests
     [TestMethod]
     public void OnChanged_AfterDispose_Throws()
     {
-        NotifySource source = new NotifySource();
-        PropertyObserver observer = new PropertyObserver(source);
+        NotifySource source = new();
+        PropertyObserver observer = new(source);
         observer.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(
@@ -86,7 +86,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void OnChanged_DoesNotInvokeForOtherProperties()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         using PropertyObserver observer = new PropertyObserver(source)
@@ -100,7 +100,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void OnChanged_InvokesHandlerWhenPropertyChanges()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         using PropertyObserver observer = new PropertyObserver(source)
@@ -114,7 +114,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void StopAll_RemovesAllHandlers()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         using PropertyObserver observer = new PropertyObserver(source)
@@ -129,7 +129,7 @@ public class PropertyObserverTests
     [TestMethod]
     public void StopObserving_RemovesHandlersForProperty()
     {
-        NotifySource source = new NotifySource();
+        NotifySource source = new();
         int callCount = 0;
 
         using PropertyObserver observer = new PropertyObserver(source)

@@ -24,9 +24,9 @@ public class SequenceComposerTests
     public void CartesianProduct_ProducesAllPairs()
     {
         List<(int, string)> result = new[] { 1, 2 }.CartesianProduct(new[] { "a", "b" }, static (x, y) => (x, y)).ToList();
-        Assert.AreEqual(4, result.Count);
-        Assert.IsTrue(result.Contains((1, "a")));
-        Assert.IsTrue(result.Contains((2, "b")));
+        Assert.HasCount(4, result);
+        Assert.Contains((1, "a"), result);
+        Assert.Contains((2, "b"), result);
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class SequenceComposerTests
     {
         // With reverse-indexed round-robin, the interleave goes from end to start
         List<int> result = new[] { 1, 2 }.InterleaveMany([10, 20], [100, 200]).ToList();
-        Assert.AreEqual(6, result.Count);
+        Assert.HasCount(6, result);
     }
 
     [TestMethod]
@@ -94,7 +94,7 @@ public class SequenceComposerTests
         IGrouping<string, int>[] g2 = [SequenceFactory.Grouping("a", 3)];
 
         List<IGrouping<string, int>> result = g1.AsEnumerable().MergeGroupings(g2).ToList();
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result[0].ToList());
     }
 
@@ -121,7 +121,7 @@ public class SequenceComposerTests
     public void ZipLongest_PadsShorterSequence()
     {
         var result = new[] { 1, 2, 3 }.ZipLongest(new[] { "a" }).ToList();
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual(1, result[0].First);
         Assert.AreEqual("a", result[0].Second);
         Assert.AreEqual(2, result[1].First);
@@ -132,7 +132,7 @@ public class SequenceComposerTests
     public void ZipWith_ZipsToShorterLength()
     {
         List<(int, string)> result = new[] { 1, 2, 3 }.ZipWith(new[] { "a", "b" }).ToList();
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
         Assert.AreEqual((1, "a"), result[0]);
         Assert.AreEqual((2, "b"), result[1]);
     }
@@ -149,7 +149,7 @@ public class SequenceComposerTests
     {
         IGrouping<string, int>[] source = [SequenceFactory.Grouping("g", 1, 2)];
         List<IGrouping<string, int>> result = source.AsEnumerable().AppendToGroup("g", new[] { 3 }).ToList();
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, result[0].ToList());
     }
 }

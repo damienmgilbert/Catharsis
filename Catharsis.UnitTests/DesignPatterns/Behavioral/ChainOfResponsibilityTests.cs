@@ -12,10 +12,10 @@ public class ChainOfResponsibilityTests
     [TestMethod]
     public void Chain_FirstHandlerHandles_StopsChain()
     {
-        ChainOfResponsibility cor = new ChainOfResponsibility();
+        ChainOfResponsibility cor = new();
         int callCount = 0;
 
-        cor.Chain(
+        ChainOfResponsibility.Chain(
         10,
         x =>
         {
@@ -34,10 +34,10 @@ public class ChainOfResponsibilityTests
     [TestMethod]
     public void Chain_NoHandlerHandles_AllCalled()
     {
-        ChainOfResponsibility cor = new ChainOfResponsibility();
+        ChainOfResponsibility cor = new();
         int callCount = 0;
 
-        cor.Chain(
+        ChainOfResponsibility.Chain(
         "test",
         x =>
         {
@@ -56,15 +56,15 @@ public class ChainOfResponsibilityTests
     [TestMethod]
     public void Chain_NullHandlers_Throws()
     {
-        ChainOfResponsibility cor = new ChainOfResponsibility();
-        Assert.ThrowsExactly<ArgumentNullException>(() => cor.Chain(1, null!));
+        ChainOfResponsibility cor = new();
+        Assert.ThrowsExactly<ArgumentNullException>(() => ChainOfResponsibility.Chain(1, null!));
     }
 
     [TestMethod]
     public void Chain_ReturnsOriginalObject()
     {
-        ChainOfResponsibility cor = new ChainOfResponsibility();
-        int result = cor.Chain(42, static x => false);
+        ChainOfResponsibility cor = new();
+        int result = ChainOfResponsibility.Chain(42, static x => false);
         Assert.AreEqual(42, result);
     }
     #endregion

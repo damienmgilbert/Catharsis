@@ -18,7 +18,7 @@ public partial class ValidatableComponentTests
     public void GetErrors_EmptyPropertyNameWithNoErrors_ReturnsEmptyEnumerable()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
+        TestValidatableComponent component = new();
 
         // Act
         IEnumerable result = component.GetErrors(string.Empty);
@@ -35,7 +35,7 @@ public partial class ValidatableComponentTests
     public void GetErrors_NullPropertyNameWithNoErrors_ReturnsEmptyEnumerable()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
+        TestValidatableComponent component = new();
 
         // Act
         IEnumerable result = component.GetErrors(null);
@@ -52,7 +52,7 @@ public partial class ValidatableComponentTests
     public void GetErrors_PropertyNameWithNoErrors_ReturnsEmptyCollection()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
+        TestValidatableComponent component = new();
 
         // Act
         IEnumerable result = component.GetErrors("SomeProperty");
@@ -70,8 +70,8 @@ public partial class ValidatableComponentTests
     public void HasErrors_AfterSettingErrors_ReturnsTrue()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
-        List<string> errors = new List<string> { "Error 1", "Error 2" };
+        TestValidatableComponent component = new();
+        List<string> errors = ["Error 1", "Error 2"];
 
         // Act
         component.SetErrorsPublic(errors, "TestProperty");
@@ -89,7 +89,7 @@ public partial class ValidatableComponentTests
     public void HasErrors_AfterSettingErrorsWithOnlyWhitespace_ReturnsFalse()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
+        TestValidatableComponent component = new();
 
         // Act
         component.SetErrorsPublic(new List<string> { "   ", "\t", "\n" }, "TestProperty");
@@ -107,7 +107,7 @@ public partial class ValidatableComponentTests
     public void HasErrors_WhenNoErrorsAdded_ReturnsFalse()
     {
         // Arrange
-        TestValidatableComponent component = new TestValidatableComponent();
+        TestValidatableComponent component = new();
 
         // Act
         bool hasErrors = component.HasErrors;
@@ -123,7 +123,7 @@ public partial class ValidatableComponentTests
     public void OnErrorsChanged_WhenOverridden_AllowsCustomBehavior()
     {
         // Arrange
-        OverridableTestComponent component = new OverridableTestComponent();
+        OverridableTestComponent component = new();
 
         // Act
         component.InvokeOnErrorsChanged("TestProperty");
@@ -139,7 +139,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_BooleanValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", true);
@@ -152,7 +152,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_DoubleNaN_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", double.NaN);
@@ -165,7 +165,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_DoubleNegativeInfinity_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", double.NegativeInfinity);
@@ -178,7 +178,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_DoublePositiveInfinity_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", double.PositiveInfinity);
@@ -191,7 +191,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_EmptyPropertyName_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty(string.Empty, "value");
@@ -204,7 +204,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_IntMaxValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", int.MaxValue);
@@ -217,7 +217,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_IntMinValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", int.MinValue);
@@ -227,7 +227,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_NullPropertyNameAndNullValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty(null, null);
@@ -240,7 +240,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_NullValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", null);
@@ -253,7 +253,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethod_CalledMultipleTimes()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
 
         // Act
         component.PublicValidateProperty("Property1", 1);
@@ -271,7 +271,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethod_IsCalled()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
 
         // Act
         component.PublicValidateProperty("TestProperty", "test");
@@ -287,7 +287,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethod_ReceivesCorrectPropertyName()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
         string propertyName = "MyProperty";
 
         // Act
@@ -304,7 +304,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethod_ReceivesCorrectValue()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
         int value = 456;
 
         // Act
@@ -321,7 +321,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethodWithNullPropertyName_ReceivesNull()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
 
         // Act
         component.PublicValidateProperty(null, "value");
@@ -337,7 +337,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_OverriddenMethodWithNullValue_ReceivesNull()
     {
         // Arrange
-        OverriddenValidatableComponent component = new OverriddenValidatableComponent();
+        OverriddenValidatableComponent component = new();
 
         // Act
         component.PublicValidateProperty("TestProperty", null);
@@ -353,7 +353,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_SpecialCharactersInPropertyName_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("Property@#$%^&*()", 42);
@@ -366,7 +366,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_StringValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", "test value");
@@ -379,8 +379,8 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_VeryLongPropertyName_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
-        string longPropertyName = new string('A', 10000);
+        TestableValidatableComponent component = new();
+        string longPropertyName = new('A', 10000);
 
         // Act & Assert
         component.PublicValidateProperty(longPropertyName, true);
@@ -393,7 +393,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_WhitespacePropertyName_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("   ", 123);
@@ -406,7 +406,7 @@ public partial class ValidatableComponentTests
     public void ValidateProperty_ZeroValue_DoesNotThrow()
     {
         // Arrange
-        TestableValidatableComponent component = new TestableValidatableComponent();
+        TestableValidatableComponent component = new();
 
         // Act & Assert
         component.PublicValidateProperty("TestProperty", 0);

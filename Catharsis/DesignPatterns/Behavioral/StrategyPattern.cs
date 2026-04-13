@@ -15,7 +15,7 @@ public class StrategyPattern
     ///<param name="obj">The context object.</param>
     ///<param name="strategy">The algorithm to apply.</param>
     ///<returns>The result of the strategy.</returns>
-    public TResult Strategy<T, TResult>(T obj, Func<T, TResult> strategy)
+    public static TResult Strategy<T, TResult>(T obj, Func<T, TResult> strategy)
     {
         if(strategy is null)
         {
@@ -33,7 +33,7 @@ public class StrategyPattern
     ///<param name="obj">The context object.</param>
     ///<param name="strategy">The algorithm to apply.</param>
     ///<returns>The original <paramref name="obj"/>.</returns>
-    public T Strategy<T>(T obj, Action<T> strategy)
+    public static T Strategy<T>(T obj, Action<T> strategy)
     {
         if(strategy is null)
         {

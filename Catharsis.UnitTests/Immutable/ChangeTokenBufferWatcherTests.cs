@@ -13,9 +13,9 @@ public class ChangeTokenBufferWatcherTests
     [TestMethod]
     public void Change_IncrementsChangeCount()
     {
-        TestNotifier notifier = new TestNotifier();
+        TestNotifier notifier = new();
         int callbackCount = 0;
-        using ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(notifier, () => callbackCount++);
+        using ChangeTokenBufferWatcher watcher = new(notifier, () => callbackCount++);
         watcher.Start();
 
         notifier.TriggerChange();
@@ -29,8 +29,8 @@ public class ChangeTokenBufferWatcherTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        TestNotifier notifier = new TestNotifier();
-        ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
+        TestNotifier notifier = new();
+        ChangeTokenBufferWatcher watcher = new(
                                            notifier,
                                            static () =>
         {
@@ -42,8 +42,8 @@ public class ChangeTokenBufferWatcherTests
     [TestMethod]
     public void Start_SetsIsWatchingTrue()
     {
-        TestNotifier notifier = new TestNotifier();
-        using ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
+        TestNotifier notifier = new();
+        using ChangeTokenBufferWatcher watcher = new(
                                                  notifier,
                                                  static () =>
         {
@@ -55,8 +55,8 @@ public class ChangeTokenBufferWatcherTests
     [TestMethod]
     public void Stop_SetsIsWatchingFalse()
     {
-        TestNotifier notifier = new TestNotifier();
-        using ChangeTokenBufferWatcher watcher = new ChangeTokenBufferWatcher(
+        TestNotifier notifier = new();
+        using ChangeTokenBufferWatcher watcher = new(
                                                  notifier,
                                                  static () =>
         {

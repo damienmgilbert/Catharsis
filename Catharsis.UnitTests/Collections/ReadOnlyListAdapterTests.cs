@@ -19,7 +19,7 @@ public class ReadOnlyListAdapterTests
     public void Count_ReflectsSourceCount()
     {
         List<int> source = [1, 2, 3];
-        ReadOnlyListAdapter<int> adapter = new ReadOnlyListAdapter<int>(source);
+        ReadOnlyListAdapter<int> adapter = new(source);
         Assert.AreEqual(3, adapter.Count);
     }
 
@@ -27,7 +27,7 @@ public class ReadOnlyListAdapterTests
     public void Indexer_ReturnsCorrectElement()
     {
         List<string> source = ["a", "b", "c"];
-        ReadOnlyListAdapter<string> adapter = new ReadOnlyListAdapter<string>(source);
+        ReadOnlyListAdapter<string> adapter = new(source);
         Assert.AreEqual("a", adapter[0]);
         Assert.AreEqual("b", adapter[1]);
         Assert.AreEqual("c", adapter[2]);
@@ -37,7 +37,7 @@ public class ReadOnlyListAdapterTests
     public void Contains_ExistingItem_ReturnsTrue()
     {
         List<int> source = [10, 20, 30];
-        ReadOnlyListAdapter<int> adapter = new ReadOnlyListAdapter<int>(source);
+        ReadOnlyListAdapter<int> adapter = new(source);
         Assert.IsTrue(adapter.Contains(20));
     }
 
@@ -45,7 +45,7 @@ public class ReadOnlyListAdapterTests
     public void Contains_MissingItem_ReturnsFalse()
     {
         List<int> source = [10, 20, 30];
-        ReadOnlyListAdapter<int> adapter = new ReadOnlyListAdapter<int>(source);
+        ReadOnlyListAdapter<int> adapter = new(source);
         Assert.IsFalse(adapter.Contains(99));
     }
 
@@ -53,7 +53,7 @@ public class ReadOnlyListAdapterTests
     public void Enumeration_ReturnsAllItems()
     {
         List<int> source = [1, 2, 3];
-        ReadOnlyListAdapter<int> adapter = new ReadOnlyListAdapter<int>(source);
+        ReadOnlyListAdapter<int> adapter = new(source);
         CollectionAssert.AreEqual(new[] { 1, 2, 3 }, adapter.ToList());
     }
 
@@ -61,7 +61,7 @@ public class ReadOnlyListAdapterTests
     public void ReflectsSourceChanges()
     {
         List<int> source = [1, 2];
-        ReadOnlyListAdapter<int> adapter = new ReadOnlyListAdapter<int>(source);
+        ReadOnlyListAdapter<int> adapter = new(source);
         source.Add(3);
         Assert.AreEqual(3, adapter.Count);
         Assert.AreEqual(3, adapter[2]);

@@ -18,7 +18,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_String_ReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsTrue(converter.CanConvertFrom(null, typeof(string)));
     }
@@ -26,7 +26,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_UnsupportedType_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsFalse(converter.CanConvertFrom(null, typeof(DateTime)));
     }
@@ -34,7 +34,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void CanConvertTo_String_ReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsTrue(converter.CanConvertTo(null, typeof(string)));
     }
@@ -43,7 +43,7 @@ public sealed class SpanBasedTypeConverterTests
     public void Constructor_ExplicitContext_UsesProvided()
     {
         ConverterContext context = ConverterContext.Default;
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, context: context);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, context: context);
 
         Assert.AreSame(context, converter.Context);
     }
@@ -51,7 +51,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void Constructor_NullContext_UsesInvariant()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, context: null);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, context: null);
 
         Assert.AreSame(ConverterContext.Invariant, converter.Context);
     }
@@ -62,13 +62,13 @@ public sealed class SpanBasedTypeConverterTests
     public void ConvertFrom_CultureParameterIsUsed()
     {
         IFormatProvider? capturedProvider = null;
-        SpanParseDelegate<int> tryParse = (ReadOnlySpan<char> span, IFormatProvider? provider, out int result) =>
+        SpanParseDelegate<int> tryParse = (span, provider, out result) =>
         {
             capturedProvider = provider;
             return int.TryParse(span, NumberStyles.Integer, provider, out result);
         };
         CultureInfo frCulture = CultureInfo.GetCultureInfo("fr-FR");
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(tryParse);
+        SpanBasedTypeConverter<int> converter = new(tryParse);
 
         converter.ConvertFrom(null, frCulture, "42");
 
@@ -78,7 +78,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertFrom_InvalidString_ThrowsFormatException()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.ThrowsExactly<FormatException>(() => converter.ConvertFrom(null, CultureInfo.InvariantCulture, "not_a_number"));
     }
@@ -87,13 +87,13 @@ public sealed class SpanBasedTypeConverterTests
     public void ConvertFrom_NullCulture_UsesContextCulture()
     {
         IFormatProvider? capturedProvider = null;
-        SpanParseDelegate<int> tryParse = (ReadOnlySpan<char> span, IFormatProvider? provider, out int result) =>
+        SpanParseDelegate<int> tryParse = (span, provider, out result) =>
         {
             capturedProvider = provider;
             return int.TryParse(span, NumberStyles.Integer, provider, out result);
         };
         ConverterContext context = ConverterContext.Invariant;
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(tryParse, context: context);
+        SpanBasedTypeConverter<int> converter = new(tryParse, context: context);
 
         converter.ConvertFrom(null, null, "42");
 
@@ -103,8 +103,8 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertFrom_StringWithWhitespace_TrimsWhenAllowed()
     {
-        ConverterContext context = new ConverterContext(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: true);
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, context: context);
+        ConverterContext context = new(CultureInfo.InvariantCulture, allowLeadingWhiteSpace: true, allowTrailingWhiteSpace: true);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, context: context);
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "  42  ");
 
@@ -114,7 +114,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertFrom_ValidString_ParsesCorrectly()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "42");
 
@@ -124,7 +124,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertTo_NullDestinationType_ThrowsArgumentNullException()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => converter.ConvertTo(null, CultureInfo.InvariantCulture, 42, null!));
     }
@@ -132,7 +132,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertTo_ValueNotOfTypeT_FallsBackToBase()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, IntTryFormat);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, IntTryFormat);
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, "hello", typeof(string));
 
@@ -142,7 +142,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertTo_WithoutTryFormat_FallsBackToToString()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, 42, typeof(string));
 
@@ -152,7 +152,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void ConvertTo_WithTryFormat_FormatsUsingSpan()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, IntTryFormat);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, IntTryFormat);
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, 42, typeof(string));
 
@@ -162,7 +162,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void IsValid_InvalidString_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsFalse(converter.IsValid(null, "xyz"));
     }
@@ -170,7 +170,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void IsValid_Null_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsFalse(converter.IsValid(null, null));
     }
@@ -178,7 +178,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void IsValid_ValidString_ReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsTrue(converter.IsValid(null, "42"));
     }
@@ -186,7 +186,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void IsValid_ValueOfTypeT_ReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         Assert.IsTrue(converter.IsValid(null, 42));
     }
@@ -194,7 +194,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryFormatSpan_InsufficientBuffer_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, IntTryFormat);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, IntTryFormat);
         Span<char> buffer = stackalloc char[1];
 
         bool result = converter.TryFormatSpan(12345, buffer, out _);
@@ -205,7 +205,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryFormatSpan_WithDelegate_WritesAndReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse, IntTryFormat);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse, IntTryFormat);
         Span<char> buffer = stackalloc char[16];
 
         bool result = converter.TryFormatSpan(42, buffer, out int charsWritten);
@@ -217,7 +217,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryFormatSpan_WithoutDelegate_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
         Span<char> buffer = stackalloc char[16];
 
         bool result = converter.TryFormatSpan(42, buffer, out int charsWritten);
@@ -229,7 +229,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryParseSpan_InvalidInput_ReturnsFalse()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         bool result = converter.TryParseSpan("abc".AsSpan(), out _);
 
@@ -239,7 +239,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryParseSpan_TrimsWhitespace()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         bool result = converter.TryParseSpan("  42  ".AsSpan(), out int value);
 
@@ -250,7 +250,7 @@ public sealed class SpanBasedTypeConverterTests
     [TestMethod]
     public void TryParseSpan_ValidInput_ReturnsTrue()
     {
-        SpanBasedTypeConverter<int> converter = new SpanBasedTypeConverter<int>(IntTryParse);
+        SpanBasedTypeConverter<int> converter = new(IntTryParse);
 
         bool result = converter.TryParseSpan("42".AsSpan(), out int value);
 

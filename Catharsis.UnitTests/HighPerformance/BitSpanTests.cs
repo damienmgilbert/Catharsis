@@ -13,7 +13,7 @@ public class BitSpanTests
     public void Clear_ClearsAllBits()
     {
         byte[] storage = new byte[2];
-        BitSpan bits = new BitSpan(storage, 16);
+        BitSpan bits = new(storage, 16);
         bits.Fill(true);
         bits.Clear();
         Assert.IsFalse(bits[0]);
@@ -23,7 +23,7 @@ public class BitSpanTests
     public void Fill_True_SetsAllBits()
     {
         byte[] storage = new byte[2];
-        BitSpan bits = new BitSpan(storage, 16);
+        BitSpan bits = new(storage, 16);
         bits.Fill(true);
         Assert.IsTrue(bits[0]);
         Assert.IsTrue(bits[15]);
@@ -41,7 +41,7 @@ public class BitSpanTests
     public void Indexer_SetAndGetBit()
     {
         byte[] storage = new byte[2];
-        BitSpan bits = new BitSpan(storage, 16);
+        BitSpan bits = new(storage, 16);
 
         bits[0] = true;
         bits[7] = true;
@@ -57,7 +57,7 @@ public class BitSpanTests
     public void Length_ReturnsCorrectBitCount()
     {
         byte[] storage = new byte[3];
-        BitSpan bits = new BitSpan(storage, 20);
+        BitSpan bits = new(storage, 20);
         Assert.AreEqual(20, bits.Length);
         Assert.AreEqual(3, bits.ByteLength);
     }
@@ -66,7 +66,7 @@ public class BitSpanTests
     public void Not_InvertsAllBits()
     {
         byte[] storage = new byte[1];
-        BitSpan bits = new BitSpan(storage, 8);
+        BitSpan bits = new(storage, 8);
         bits[0] = true;
         bits.Not();
         Assert.IsFalse(bits[0]);
@@ -77,7 +77,7 @@ public class BitSpanTests
     public void PopCount_CountsSetBits()
     {
         byte[] storage = new byte[1];
-        BitSpan bits = new BitSpan(storage, 8);
+        BitSpan bits = new(storage, 8);
         bits[0] = true;
         bits[2] = true;
         bits[4] = true;

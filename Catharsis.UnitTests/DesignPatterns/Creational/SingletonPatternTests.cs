@@ -18,10 +18,10 @@ public class SingletonPatternTests
         string obj2 = "value2";
         string key1 = "key1";
         string key2 = "key2";
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string result1 = new SingletonPattern().Singleton(obj1, key1, cache);
-        string result2 = new SingletonPattern().Singleton(obj2, key2, cache);
+        string result1 = SingletonPattern.Singleton(obj1, key1, cache);
+        string result2 = SingletonPattern.Singleton(obj2, key2, cache);
         // Assert
         Assert.AreEqual(obj1, result1);
         Assert.AreEqual(obj2, result2);
@@ -39,9 +39,9 @@ public class SingletonPatternTests
         // Arrange
         string obj = "test-value";
         string key = string.Empty;
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -56,9 +56,9 @@ public class SingletonPatternTests
         // Arrange
         string obj = "test-value";
         string key = "key1";
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -74,9 +74,9 @@ public class SingletonPatternTests
         // Arrange
         string obj = "test-value";
         Guid key = Guid.NewGuid();
-        ConcurrentDictionary<Guid, string> cache = new ConcurrentDictionary<Guid, string>();
+        ConcurrentDictionary<Guid, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -91,9 +91,9 @@ public class SingletonPatternTests
         // Arrange
         string obj = "test-value";
         int key = 123;
-        ConcurrentDictionary<int, string> cache = new ConcurrentDictionary<int, string>();
+        ConcurrentDictionary<int, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -108,9 +108,9 @@ public class SingletonPatternTests
         // Arrange
         string? obj = null;
         string key = "key1";
-        ConcurrentDictionary<string, string?> cache = new ConcurrentDictionary<string, string?>();
+        ConcurrentDictionary<string, string?> cache = new();
         // Act
-        string? result = new SingletonPattern().Singleton(obj, key, cache);
+        string? result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.IsNull(result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -127,10 +127,10 @@ public class SingletonPatternTests
         string existingValue = "existing-value";
         string newValue = "FileName-value";
         string key = "key1";
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         cache.TryAdd(key, existingValue);
         // Act
-        string result = new SingletonPattern().Singleton(newValue, key, cache);
+        string result = SingletonPattern.Singleton(newValue, key, cache);
         // Assert
         Assert.AreEqual(existingValue, result);
         Assert.AreNotEqual(newValue, result);
@@ -146,9 +146,9 @@ public class SingletonPatternTests
         // Arrange
         string obj = "test-value";
         string key = "key!@#$%^&*()_+-=[]{}|;':\",./<>?\t\n\r";
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));
@@ -165,10 +165,10 @@ public class SingletonPatternTests
         string firstObj = "first-value";
         string secondObj = "second-value";
         string key = "key1";
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string firstResult = new SingletonPattern().Singleton(firstObj, key, cache);
-        string secondResult = new SingletonPattern().Singleton(secondObj, key, cache);
+        string firstResult = SingletonPattern.Singleton(firstObj, key, cache);
+        string secondResult = SingletonPattern.Singleton(secondObj, key, cache);
         // Assert
         Assert.AreEqual(firstObj, firstResult);
         Assert.AreEqual(firstObj, secondResult);
@@ -189,10 +189,10 @@ public class SingletonPatternTests
     {
         // Arrange
         string key = "key1";
-        ConcurrentDictionary<string, int> cache = new ConcurrentDictionary<string, int>();
+        ConcurrentDictionary<string, int> cache = new();
         // Act
-        int firstResult = new SingletonPattern().Singleton(value, key, cache);
-        int secondResult = new SingletonPattern().Singleton(value + 1, key, cache);
+        int firstResult = SingletonPattern.Singleton(value, key, cache);
+        int secondResult = SingletonPattern.Singleton(value + 1, key, cache);
         // Assert
         Assert.AreEqual(value, firstResult);
         Assert.AreEqual(value, secondResult);
@@ -207,10 +207,10 @@ public class SingletonPatternTests
     {
         // Arrange
         string obj = "test-value";
-        string key = new string('a', 10000);
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        string key = new('a', 10000);
+        ConcurrentDictionary<string, string> cache = new();
         // Act
-        string result = new SingletonPattern().Singleton(obj, key, cache);
+        string result = SingletonPattern.Singleton(obj, key, cache);
         // Assert
         Assert.AreEqual(obj, result);
         Assert.IsTrue(cache.ContainsKey(key));

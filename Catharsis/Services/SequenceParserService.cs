@@ -42,9 +42,10 @@ public sealed class SequenceParserService
     ///<returns>The parse status.</returns>
     public SequenceParseStatus Parse(in ReadOnlySequence<byte> sequence, out SequencePosition consumed, out SequencePosition examined)
     {
-        _logger.LogTrace("Parsing sequence of {Length} bytes.", sequence.Length);
+        if (_logger.IsEnabled(LogLevel.Trace))
+            _logger.LogTrace("Parsing sequence of {Length} bytes.", sequence.Length);
 
-        SequenceParseStatus status = _parser.TryParse(in sequence, out consumed, out examined);
+        SequenceParseStatus status = _parser.TryParse(sequence, out consumed, out examined);
 
         switch(status)
         {
@@ -87,7 +88,8 @@ public sealed class SequenceParserService
             }
         }
 
-        _logger.LogDebug("Parsed {Count} messages total.", messageCount);
+        if (_logger.IsEnabled(LogLevel.Debug))
+            _logger.LogDebug("Parsed {Count} messages total.", messageCount);
         return messageCount;
     }
 

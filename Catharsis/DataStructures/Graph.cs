@@ -33,7 +33,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _adjacency = new Dictionary<T, HashSet<T>>(comparer);
+        _adjacency = new(comparer);
     }
     #endregion
 
@@ -69,7 +69,7 @@ public class Graph<T> : IEnumerable<T> where T : notnull
             return false;
         }
 
-        _adjacency[vertex] = new HashSet<T>(_adjacency.Comparer);
+        _adjacency[vertex] = new(_adjacency.Comparer);
         return true;
     }
 
@@ -86,8 +86,8 @@ public class Graph<T> : IEnumerable<T> where T : notnull
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
 
-        HashSet<T> visited = new HashSet<T>(_adjacency.Comparer);
-        Queue<T> queue = new Queue<T>();
+        HashSet<T> visited = new(_adjacency.Comparer);
+        Queue<T> queue = new();
         queue.Enqueue(start);
         visited.Add(start);
 
@@ -130,8 +130,8 @@ public class Graph<T> : IEnumerable<T> where T : notnull
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
 
-        HashSet<T> visited = new HashSet<T>(_adjacency.Comparer);
-        Stack<T> stack = new Stack<T>();
+        HashSet<T> visited = new(_adjacency.Comparer);
+        Stack<T> stack = new();
         stack.Push(start);
 
         while(stack.Count > 0)

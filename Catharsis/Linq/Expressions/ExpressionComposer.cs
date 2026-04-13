@@ -153,7 +153,7 @@ public static class ExpressionComposer
             result = result is null ? predicate : OrElse(result, predicate);
         }
 
-        return result ?? (static (T _) => false);
+        return result ?? (static _ => false);
     }
 
     ///<summary>

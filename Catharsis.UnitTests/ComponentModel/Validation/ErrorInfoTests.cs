@@ -12,7 +12,7 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void Constructor_AllParameters_SetsProperties()
     {
-        ErrorInfo error = new ErrorInfo("Bad value.", ValidationSeverity.Warning, "Age");
+        ErrorInfo error = new("Bad value.", ValidationSeverity.Warning, "Age");
 
         Assert.AreEqual("Bad value.", error.Message);
         Assert.AreEqual(ValidationSeverity.Warning, error.Severity);
@@ -22,7 +22,7 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void Constructor_Defaults_SeverityIsErrorAndPropertyNameIsNull()
     {
-        ErrorInfo error = new ErrorInfo("Something failed.");
+        ErrorInfo error = new("Something failed.");
 
         Assert.AreEqual("Something failed.", error.Message);
         Assert.AreEqual(ValidationSeverity.Error, error.Severity);
@@ -32,8 +32,8 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void Equality_DifferentMessage_AreNotEqual()
     {
-        ErrorInfo a = new ErrorInfo("msg1");
-        ErrorInfo b = new ErrorInfo("msg2");
+        ErrorInfo a = new("msg1");
+        ErrorInfo b = new("msg2");
 
         Assert.AreNotEqual(a, b);
     }
@@ -41,8 +41,8 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void Equality_SameValues_AreEqual()
     {
-        ErrorInfo a = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
-        ErrorInfo b = new ErrorInfo("msg", ValidationSeverity.Warning, "Prop");
+        ErrorInfo a = new("msg", ValidationSeverity.Warning, "Prop");
+        ErrorInfo b = new("msg", ValidationSeverity.Warning, "Prop");
 
         Assert.AreEqual(a, b);
     }
@@ -50,7 +50,7 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void ToString_WithoutPropertyName_OmitsPropertyName()
     {
-        ErrorInfo error = new ErrorInfo("Object invalid.", ValidationSeverity.Info);
+        ErrorInfo error = new("Object invalid.", ValidationSeverity.Info);
 
         Assert.AreEqual("[Info] Object invalid.", error.ToString());
     }
@@ -58,7 +58,7 @@ public sealed class ErrorInfoTests
     [TestMethod]
     public void ToString_WithPropertyName_IncludesPropertyName()
     {
-        ErrorInfo error = new ErrorInfo("Required.", ValidationSeverity.Error, "Name");
+        ErrorInfo error = new("Required.", ValidationSeverity.Error, "Name");
 
         Assert.AreEqual("[Error] Name: Required.", error.ToString());
     }

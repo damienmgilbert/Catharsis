@@ -12,10 +12,9 @@ public class StatePatternTests
     [TestMethod]
     public void State_AppliesBehaviorForState()
     {
-        StatePattern sp = new StatePattern();
-        List<int> list = new List<int>();
+        List<int> list = [];
 
-        sp.State(
+        StatePattern.State(
         list,
         "add",
         static state => state switch
@@ -33,21 +32,18 @@ public class StatePatternTests
     [TestMethod]
     public void State_NullBehaviorSelector_Throws()
     {
-        StatePattern sp = new StatePattern();
-        Assert.ThrowsExactly<ArgumentNullException>(() => sp.State(1, "s", null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => StatePattern.State(1, "s", (Func<string, Action<int>>)null!));
     }
 
     [TestMethod]
     public void State_WithResult_ReturnsBehaviorResult()
     {
-        StatePattern sp = new StatePattern();
-
-        int result = sp.State(
+        int result = StatePattern.State<int, string, int>(
                      10,
                      "double",
                      static state => state switch
         {
-            "double" => (Func<int, int>)(static x => x * 2),
+            "double" => static x => x * 2,
             _ => static x => x
         });
 

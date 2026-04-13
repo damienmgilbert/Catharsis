@@ -11,8 +11,8 @@ namespace Catharsis.Patterns;
 public sealed class BinaryProcessingPipeline : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly List<Func<ReadOnlySpan<byte>, PooledBuffer<byte>>> _stages = [];
+    private bool _disposed;
+    private readonly List<Func<ReadOnlySpan<byte>, PooledBuffer<byte>>> _stages = [];
     #endregion
 
     #region Public methods
@@ -34,11 +34,11 @@ public sealed class BinaryProcessingPipeline : IDisposable
     ///<returns>A stage function.</returns>
     public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateReverseStage()
     {
-        return static (ReadOnlySpan<byte> input) =>
+        return static input =>
         {
-            PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length);
+            PooledBuffer<byte> output = new(input.Length);
             Span<byte> span = output.GetSpan(input.Length);
-            for(int i = 0; i < input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 span[i] = input[input.Length - 1 - i];
             }
@@ -55,11 +55,11 @@ public sealed class BinaryProcessingPipeline : IDisposable
     ///<returns>A stage function.</returns>
     public static Func<ReadOnlySpan<byte>, PooledBuffer<byte>> CreateXorStage(byte key)
     {
-        return(ReadOnlySpan<byte> input) =>
+        return input =>
         {
-            PooledBuffer<byte> output = new PooledBuffer<byte>(input.Length);
+            PooledBuffer<byte> output = new(input.Length);
             Span<byte> span = output.GetSpan(input.Length);
-            for(int i = 0; i < input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 span[i] = (byte)(input[i] ^ key);
             }
@@ -72,7 +72,7 @@ public sealed class BinaryProcessingPipeline : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -95,7 +95,7 @@ public sealed class BinaryProcessingPipeline : IDisposable
         ValueStopwatch stopwatch = ValueStopwatch.StartNew();
         byte[] current = input.ToArray();
 
-        foreach(Func<ReadOnlySpan<byte>, PooledBuffer<byte>> stage in _stages)
+        foreach (Func<ReadOnlySpan<byte>, PooledBuffer<byte>> stage in _stages)
         {
             using PooledBuffer<byte> output = stage(current);
             current = output.WrittenSpan.ToArray();

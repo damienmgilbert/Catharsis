@@ -27,7 +27,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     #region Private methods
     private Dictionary<string, object?> CaptureSnapshot()
     {
-        Dictionary<string, object?> snapshot = new Dictionary<string, object?>(StringComparer.Ordinal);
+        Dictionary<string, object?> snapshot = new(StringComparer.Ordinal);
 
         foreach (PropertyInfo property in GetEditableProperties())
         {
@@ -184,8 +184,8 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
 
         ClearErrors(propertyName);
 
-        ValidationContext context = new ValidationContext(this) { MemberName = propertyName };
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(this) { MemberName = propertyName };
+        List<ValidationResult> results = [];
 
         Validator.TryValidateProperty(value, context, results);
 
@@ -267,8 +267,8 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     {
         ClearAllErrors();
 
-        ValidationContext context = new ValidationContext(this);
-        List<ValidationResult> results = new List<ValidationResult>();
+        ValidationContext context = new(this);
+        List<ValidationResult> results = [];
 
         Validator.TryValidateObject(this, context, results, validateAllProperties: true);
 

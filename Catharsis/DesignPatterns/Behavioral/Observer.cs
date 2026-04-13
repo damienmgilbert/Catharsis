@@ -13,7 +13,7 @@ public class Observer
     ///<param name="obj">The subject whose state is being observed.</param>
     ///<param name="observers">The observers to notify.</param>
     ///<returns>The original <paramref name="obj"/> after all observers have been notified.</returns>
-    public T Notify<T>(T obj, params Action<T>[] observers)
+    public static T Notify<T>(T obj, params Action<T>[] observers)
     {
         if(observers is null)
         {

@@ -39,7 +39,7 @@ public class QueryableProjectorTests
 
         List<string> result = dupes.ProjectDistinct(static x => x.Name).ToList();
 
-        Assert.AreEqual(2, result.Count);
+        Assert.HasCount(2, result);
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class QueryableProjectorTests
 
         List<Dictionary<string, object?>> result = Source.ProjectToDictionaries(projections).ToList();
 
-        Assert.AreEqual(3, result.Count);
+        Assert.HasCount(3, result);
         Assert.AreEqual(1, result[0]["id"]);
         Assert.AreEqual("Alpha", result[0]["name"]);
     }

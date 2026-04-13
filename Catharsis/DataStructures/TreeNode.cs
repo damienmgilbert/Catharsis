@@ -9,7 +9,7 @@ public class TreeNode
     public TreeNode(string name)
     {
         Name = name;
-        Children = new List<TreeNode>();
+        Children = [];
     }
     #endregion
 

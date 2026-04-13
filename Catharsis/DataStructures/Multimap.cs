@@ -34,7 +34,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _map = new Dictionary<TKey, List<TValue>>(comparer);
+        _map = new(comparer);
     }
     #endregion
 

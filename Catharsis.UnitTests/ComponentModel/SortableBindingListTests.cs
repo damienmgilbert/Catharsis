@@ -13,7 +13,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void ApplySort_Ascending_SortsItemsByProperty()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "Charlie", Value = 3 }, new() { Name = "Alice", Value = 1 }, new() { Name = "Bob", Value = 2 } };
+        SortableBindingList<Item> list = [new() { Name = "Charlie", Value = 3 }, new() { Name = "Alice", Value = 1 }, new() { Name = "Bob", Value = 2 }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Name)]!;
@@ -28,7 +28,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void ApplySort_Descending_SortsItemsInReverse()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "Alice", Value = 1 }, new() { Name = "Charlie", Value = 3 }, new() { Name = "Bob", Value = 2 } };
+        SortableBindingList<Item> list = [new() { Name = "Alice", Value = 1 }, new() { Name = "Charlie", Value = 3 }, new() { Name = "Bob", Value = 2 }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Value)]!;
@@ -42,7 +42,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void ApplySort_NullValues_HandlesGracefully()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "Bob" }, new() { Name = null! }, new() { Name = "Alice" } };
+        SortableBindingList<Item> list = [new() { Name = "Bob" }, new() { Name = null! }, new() { Name = "Alice" }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Name)]!;
@@ -57,9 +57,9 @@ public class SortableBindingListTests
     [TestMethod]
     public void Constructor_WithList_WrapsExistingItems()
     {
-        List<Item> items = new List<Item> { new() { Name = "One" }, new() { Name = "Two" } };
+        List<Item> items = [new() { Name = "One" }, new() { Name = "Two" }];
 
-        SortableBindingList<Item> list = new SortableBindingList<Item>(items);
+        SortableBindingList<Item> list = new(items);
 
         Assert.HasCount(2, list);
         Assert.AreEqual("One", list[0].Name);
@@ -68,7 +68,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void Find_ExistingItem_ReturnsCorrectIndex()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "Alice" }, new() { Name = "Bob" }, new() { Name = "Charlie" } };
+        SortableBindingList<Item> list = [new() { Name = "Alice" }, new() { Name = "Bob" }, new() { Name = "Charlie" }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Name)]!;
@@ -79,7 +79,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void Find_NonExistingItem_ReturnsNegativeOne()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "Alice" } };
+        SortableBindingList<Item> list = [new() { Name = "Alice" }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Name)]!;
@@ -90,7 +90,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void RemoveSort_ClearsSortState()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item> { new() { Name = "B" }, new() { Name = "A" } };
+        SortableBindingList<Item> list = [new() { Name = "B" }, new() { Name = "A" }];
 
         IBindingList bindingList = list;
         PropertyDescriptor prop = TypeDescriptor.GetProperties(typeof(Item))[nameof(Item.Name)]!;
@@ -106,7 +106,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void SupportsSearching_ReturnsTrue()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item>();
+        SortableBindingList<Item> list = [];
         IBindingList bindingList = list;
 
         Assert.IsTrue(bindingList.SupportsSearching);
@@ -115,7 +115,7 @@ public class SortableBindingListTests
     [TestMethod]
     public void SupportsSorting_ReturnsTrue()
     {
-        SortableBindingList<Item> list = new SortableBindingList<Item>();
+        SortableBindingList<Item> list = [];
         IBindingList bindingList = list;
 
         Assert.IsTrue(bindingList.SupportsSorting);

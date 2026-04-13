@@ -12,7 +12,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Constructor_Defaults()
     {
-        ComponentVerb verb = new ComponentVerb(
+        ComponentVerb verb = new(
                              "Do",
                              static () =>
         {
@@ -25,7 +25,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        ComponentVerb verb = new ComponentVerb("Reset", static () => { }, "Resets state", Enabled: true);
+        ComponentVerb verb = new("Reset", static () => { }, "Resets state", Enabled: true);
 
         Assert.AreEqual("Reset", verb.Text);
         Assert.AreEqual("Resets state", verb.Description);
@@ -38,8 +38,8 @@ public sealed class ComponentVerbTests
         Action action = static () =>
         {
         };
-        ComponentVerb a = new ComponentVerb("Do", action, "desc", true);
-        ComponentVerb b = new ComponentVerb("Do", action, "desc", true);
+        ComponentVerb a = new("Do", action, "desc", true);
+        ComponentVerb b = new("Do", action, "desc", true);
 
         Assert.AreEqual(a, b);
     }
@@ -47,7 +47,7 @@ public sealed class ComponentVerbTests
     [TestMethod]
     public void Invoke_Disabled_ThrowsInvalidOperationException()
     {
-        ComponentVerb verb = new ComponentVerb(
+        ComponentVerb verb = new(
                              "Do",
                              () =>
         {
@@ -61,7 +61,7 @@ public sealed class ComponentVerbTests
     public void Invoke_Enabled_ExecutesAction()
     {
         bool invoked = false;
-        ComponentVerb verb = new ComponentVerb("Do", () => invoked = true);
+        ComponentVerb verb = new("Do", () => invoked = true);
 
         verb.Invoke();
 

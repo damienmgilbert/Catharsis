@@ -12,7 +12,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void Clear_ResetsCount()
     {
-        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        using ObservablePooledBuffer<byte> buf = new();
         buf.Write([ 1, 2, 3 ]);
         buf.Clear();
         Assert.AreEqual(0, buf.Count);
@@ -21,7 +21,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void Constructor_Default_InitialState()
     {
-        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        using ObservablePooledBuffer<int> buf = new();
         Assert.AreEqual(0, buf.Count);
         Assert.IsGreaterThanOrEqualTo(256, buf.Capacity);
     }
@@ -29,7 +29,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void Dispose_IsIdempotent()
     {
-        ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        ObservablePooledBuffer<int> buf = new();
         buf.Dispose();
         buf.Dispose();
     }
@@ -37,8 +37,8 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void PropertyChanged_FiredOnWrite()
     {
-        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
-        List<string> changedProps = new List<string>();
+        using ObservablePooledBuffer<int> buf = new();
+        List<string> changedProps = [];
         buf.PropertyChanged += (_, e) => changedProps.Add(e.PropertyName!);
 
         buf.Write([ 42 ]);
@@ -49,7 +49,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void ToArray_ReturnsCopy()
     {
-        using ObservablePooledBuffer<int> buf = new ObservablePooledBuffer<int>();
+        using ObservablePooledBuffer<int> buf = new();
         buf.Write([ 10, 20, 30 ]);
         int[] arr = buf.ToArray();
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, arr);
@@ -58,7 +58,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void Write_GrowsBufferAutomatically()
     {
-        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>(4);
+        using ObservablePooledBuffer<byte> buf = new(4);
         byte[] data = new byte[100];
         buf.Write(data);
         Assert.AreEqual(100, buf.Count);
@@ -67,7 +67,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void Write_IncreasesCount()
     {
-        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        using ObservablePooledBuffer<byte> buf = new();
         buf.Write([ 1, 2, 3 ]);
         Assert.AreEqual(3, buf.Count);
     }
@@ -75,7 +75,7 @@ public class ObservablePooledBufferTests
     [TestMethod]
     public void WrittenMemory_ReturnsWrittenData()
     {
-        using ObservablePooledBuffer<byte> buf = new ObservablePooledBuffer<byte>();
+        using ObservablePooledBuffer<byte> buf = new();
         buf.Write([ 10, 20 ]);
         ReadOnlyMemory<byte> mem = buf.WrittenMemory;
         Assert.AreEqual(2, mem.Length);

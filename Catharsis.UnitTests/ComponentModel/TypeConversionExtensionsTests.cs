@@ -71,7 +71,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentCategory_WithAttribute_ReturnsCategory()
     {
-        DecoratedComponent component = new DecoratedComponent();
+        DecoratedComponent component = new();
 
         string category = component.GetComponentCategory();
 
@@ -81,7 +81,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentCategory_WithoutAttribute_ReturnsEmpty()
     {
-        PlainComponent component = new PlainComponent();
+        PlainComponent component = new();
 
         string category = component.GetComponentCategory();
 
@@ -91,7 +91,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentDescription_WithAttribute_ReturnsDescription()
     {
-        DecoratedComponent component = new DecoratedComponent();
+        DecoratedComponent component = new();
 
         string description = component.GetComponentDescription();
 
@@ -101,7 +101,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentDescription_WithoutAttribute_ReturnsEmpty()
     {
-        PlainComponent component = new PlainComponent();
+        PlainComponent component = new();
 
         string description = component.GetComponentDescription();
 
@@ -111,7 +111,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentDisplayName_WithAttribute_ReturnsDisplayName()
     {
-        DecoratedComponent component = new DecoratedComponent();
+        DecoratedComponent component = new();
 
         string name = component.GetComponentDisplayName();
 
@@ -121,7 +121,7 @@ public class TypeConversionExtensionsTests
     [TestMethod]
     public void GetComponentDisplayName_WithoutAttribute_ReturnsTypeName()
     {
-        PlainComponent component = new PlainComponent();
+        PlainComponent component = new();
 
         string name = component.GetComponentDisplayName();
 

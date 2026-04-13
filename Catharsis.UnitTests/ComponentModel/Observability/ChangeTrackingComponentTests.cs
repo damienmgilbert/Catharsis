@@ -12,9 +12,11 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void AcceptChanges_ClearsHistory()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
-        c.Age = 30;
+        TestComponent c = new()
+        {
+            Name = "Alice",
+            Age = 30
+        };
 
         c.AcceptChanges();
 
@@ -25,9 +27,11 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Changes_GetAll_ReturnsChronologicalOrder()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
-        c.Age = 30;
+        TestComponent c = new()
+        {
+            Name = "Alice",
+            Age = 30
+        };
 
         IReadOnlyList<ChangeEntry> all = c.Changes.GetAll();
 
@@ -39,7 +43,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Initial_State_NoChanges()
     {
-        TestComponent c = new TestComponent();
+        TestComponent c = new();
 
         Assert.IsFalse(c.IsChanged);
         Assert.IsFalse(c.CanUndo);
@@ -49,9 +53,11 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void MultipleChanges_UndoRedo_PreservesOrder()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
-        c.Age = 25;
+        TestComponent c = new()
+        {
+            Name = "Alice",
+            Age = 25
+        };
 
         c.Undo(); // undo Age
         Assert.AreEqual(0, c.Age);
@@ -67,7 +73,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Redo_NoUndone_ReturnsNull()
     {
-        TestComponent c = new TestComponent();
+        TestComponent c = new();
 
         Assert.IsNull(c.Redo());
     }
@@ -75,8 +81,10 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Redo_RestoresUndoneValue()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
+        TestComponent c = new()
+        {
+            Name = "Alice"
+        };
         c.Undo();
 
         ChangeEntry? entry = c.Redo();
@@ -88,9 +96,11 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void RejectChanges_RevertsAllChanges()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
-        c.Age = 30;
+        TestComponent c = new()
+        {
+            Name = "Alice",
+            Age = 30
+        };
 
         c.RejectChanges();
 
@@ -102,7 +112,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void SetTrackedProperty_RaisesPropertyChanged()
     {
-        TestComponent c = new TestComponent();
+        TestComponent c = new();
         string? changedProp = null;
         c.PropertyChanged += (s, e) => changedProp = e.PropertyName;
 
@@ -114,7 +124,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void SetTrackedProperty_RaisesPropertyChanging()
     {
-        TestComponent c = new TestComponent();
+        TestComponent c = new();
         string? changingProp = null;
         c.PropertyChanging += (s, e) => changingProp = e.PropertyName;
 
@@ -126,9 +136,10 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void SetTrackedProperty_RecordsChange()
     {
-        TestComponent c = new TestComponent();
-
-        c.Name = "Alice";
+        TestComponent c = new()
+        {
+            Name = "Alice"
+        };
 
         Assert.IsTrue(c.IsChanged);
         Assert.AreEqual(1, c.Changes.Count);
@@ -137,7 +148,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void SetTrackedProperty_SameValue_NoChange()
     {
-        TestComponent c = new TestComponent { Name = "Alice" };
+        TestComponent c = new() { Name = "Alice" };
         c.AcceptChanges();
 
         c.Name = "Alice";
@@ -148,7 +159,7 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Undo_NoChanges_ReturnsNull()
     {
-        TestComponent c = new TestComponent();
+        TestComponent c = new();
 
         Assert.IsNull(c.Undo());
     }
@@ -156,8 +167,10 @@ public sealed class ChangeTrackingComponentTests
     [TestMethod]
     public void Undo_RevertsToPreviousValue()
     {
-        TestComponent c = new TestComponent();
-        c.Name = "Alice";
+        TestComponent c = new()
+        {
+            Name = "Alice"
+        };
 
         ChangeEntry? entry = c.Undo();
 

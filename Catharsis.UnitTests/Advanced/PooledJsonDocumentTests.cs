@@ -38,7 +38,7 @@ public class PooledJsonDocumentTests
     [TestMethod]
     public async Task ParseAsync_Stream_ReturnsDocument()
     {
-        using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes("""{"a":1}"""));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes("""{"a":1}"""));
         using PooledJsonDocument doc = await PooledJsonDocument.ParseAsync(stream);
         Assert.AreEqual(1, doc.RootElement.GetProperty("a").GetInt32());
     }

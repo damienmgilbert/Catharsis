@@ -16,7 +16,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void CanRead_ReturnsFalse()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.IsFalse(stream.CanRead);
     }
@@ -27,7 +27,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void CanSeek_ReturnsFalse()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.IsFalse(stream.CanSeek);
     }
@@ -38,7 +38,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void CanWrite_AfterDispose_ReturnsFalse()
     {
-        BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         stream.Dispose();
 
         Assert.IsFalse(stream.CanWrite);
@@ -50,7 +50,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void CanWrite_NotDisposed_ReturnsTrue()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.IsTrue(stream.CanWrite);
     }
@@ -66,7 +66,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Flush_DoesNotThrow()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         stream.Flush();
     }
@@ -77,7 +77,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public async Task FlushAsync_CompletesSuccessfully()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         await stream.FlushAsync();
     }
@@ -88,7 +88,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Length_AfterWrite_ReflectsBytesWritten()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         byte[] data = [ 1, 2, 3, 4, 5 ];
 
         stream.Write(data, 0, data.Length);
@@ -102,7 +102,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Length_InitiallyZero()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.AreEqual(0L, stream.Length);
     }
@@ -113,7 +113,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Position_Get_ReturnsBytesWritten()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         stream.Write([ 10, 20, 30 ]);
 
         Assert.AreEqual(3L, stream.Position);
@@ -125,7 +125,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Position_Set_ThrowsNotSupportedException()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Position = 0);
     }
@@ -136,7 +136,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Read_ThrowsNotSupportedException()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Read(new byte[1], 0, 1));
     }
@@ -147,7 +147,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Seek_ThrowsNotSupportedException()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Seek(0, SeekOrigin.Begin));
     }
@@ -158,7 +158,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void SetLength_ThrowsNotSupportedException()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
         Assert.ThrowsExactly<NotSupportedException>(() => stream.SetLength(0));
     }
@@ -169,7 +169,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Write_ByteArray_AfterDispose_ThrowsObjectDisposedException()
     {
-        BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         stream.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => stream.Write([ 1 ], 0, 1));
@@ -181,8 +181,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Write_ByteArrayOffsetCount_WritesCorrectData()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
         byte[] data = [ 10, 20, 30, 40, 50 ];
 
         stream.Write(data, 1, 3);
@@ -197,9 +197,9 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Write_EmptySpan_DoesNotAdvance()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
 
-        stream.Write(ReadOnlySpan<byte>.Empty);
+        stream.Write([]);
 
         Assert.AreEqual(0L, stream.Length);
     }
@@ -210,8 +210,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Write_MultipleWrites_AccumulatesLength()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
 
         stream.Write([ 1, 2 ]);
         stream.WriteByte(3);
@@ -227,8 +227,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void Write_Span_WritesCorrectData()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
         ReadOnlySpan<byte> data = [ 1, 2, 3 ];
 
         stream.Write(data);
@@ -242,8 +242,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public async Task WriteAsync_ByteArray_WritesCorrectData()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
         byte[] data = [ 5, 6, 7 ];
 
         await stream.WriteAsync(data, 0, data.Length, CancellationToken.None);
@@ -257,11 +257,11 @@ public class BufferWriterStreamTests
     [TestMethod]
     public async Task WriteAsync_CancelledToken_ThrowsOperationCanceledException()
     {
-        using BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
-        CancellationTokenSource cts = new CancellationTokenSource();
+        using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
+        CancellationTokenSource cts = new();
         cts.Cancel();
 
-        await Assert.ThrowsExactlyAsync<OperationCanceledException>(() => stream.WriteAsync(new byte[] { 1 }, 0, 1, cts.Token));
+        await Assert.ThrowsExactlyAsync<OperationCanceledException>(() => stream.WriteAsync([1], 0, 1, cts.Token));
     }
 
     ///<summary>
@@ -270,8 +270,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public async Task WriteAsync_ReadOnlyMemory_WritesCorrectData()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
         ReadOnlyMemory<byte> data = new byte[] { 8, 9 };
 
         await stream.WriteAsync(data);
@@ -285,7 +285,7 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void WriteByte_AfterDispose_ThrowsObjectDisposedException()
     {
-        BufferWriterStream stream = new BufferWriterStream(new ArrayBufferWriter<byte>());
+        BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         stream.Dispose();
 
         Assert.ThrowsExactly<ObjectDisposedException>(() => stream.WriteByte(0x01));
@@ -297,8 +297,8 @@ public class BufferWriterStreamTests
     [TestMethod]
     public void WriteByte_WritesSingleByte()
     {
-        ArrayBufferWriter<byte> writer = new ArrayBufferWriter<byte>();
-        using BufferWriterStream stream = new BufferWriterStream(writer);
+        ArrayBufferWriter<byte> writer = new();
+        using BufferWriterStream stream = new(writer);
 
         stream.WriteByte(0xAB);
 

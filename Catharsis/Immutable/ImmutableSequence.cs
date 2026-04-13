@@ -148,7 +148,7 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     ///<summary>
     ///Gets an empty <see cref="ImmutableSequence{T}"/>.
     ///</summary>
-    public static ImmutableSequence<T> Empty { get; } = new(ImmutableArray<T>.Empty);
+    public static ImmutableSequence<T> Empty { get; } = new([]);
 
     ///<summary>
     ///Gets whether the sequence is empty.

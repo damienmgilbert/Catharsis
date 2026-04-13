@@ -98,7 +98,7 @@ public sealed class ComponentReflectionCache
             return all;
         }
 
-        List<EventDescriptor> filtered = new List<EventDescriptor>();
+        List<EventDescriptor> filtered = [];
 
         foreach(EventDescriptor evt in all)
         {
@@ -147,7 +147,7 @@ public sealed class ComponentReflectionCache
             return all;
         }
 
-        List<PropertyDescriptor> filtered = new List<PropertyDescriptor>();
+        List<PropertyDescriptor> filtered = [];
 
         foreach(PropertyDescriptor prop in all)
         {

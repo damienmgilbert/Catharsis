@@ -24,28 +24,28 @@ public sealed class ComponentModelInspector
     ///<exception cref="ArgumentNullException">
     ///<paramref name="component"/> is <c>null</c>.
     ///</exception>
-    public IReadOnlyList<string> GetComponentModelInterfaces(object component)
+    public static IReadOnlyList<string> GetComponentModelInterfaces(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         Type componentType = component.GetType();
-        Type[] relevant = new[]
-                          {
-                          typeof(IComponent),
-                          typeof(INotifyPropertyChanged),
-                          typeof(INotifyPropertyChanging),
-                          typeof(INotifyDataErrorInfo),
-                          typeof(IEditableObject),
-                          typeof(IChangeTracking),
-                          typeof(IRevertibleChangeTracking),
-                          typeof(ICustomTypeDescriptor),
-                          typeof(IDataErrorInfo),
-                          typeof(ISupportInitialize),
-                          typeof(IServiceProvider),
-                          typeof(IDisposable)
-                          };
+        Type[] relevant =
+        [
+            typeof(IComponent),
+            typeof(INotifyPropertyChanged),
+            typeof(INotifyPropertyChanging),
+            typeof(INotifyDataErrorInfo),
+            typeof(IEditableObject),
+            typeof(IChangeTracking),
+            typeof(IRevertibleChangeTracking),
+            typeof(ICustomTypeDescriptor),
+            typeof(IDataErrorInfo),
+            typeof(ISupportInitialize),
+            typeof(IServiceProvider),
+            typeof(IDisposable)
+        ];
 
-        List<string> result = new List<string>();
+        List<string> result = [];
 
         foreach(Type iface in relevant)
         {
@@ -66,16 +66,16 @@ public sealed class ComponentModelInspector
     ///<exception cref="ArgumentNullException">
     ///<paramref name="component"/> is <c>null</c>.
     ///</exception>
-    public IReadOnlyList<EventReport> GetEventReport(object component)
+    public static IReadOnlyList<EventReport> GetEventReport(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         EventDescriptorCollection events = TypeDescriptor.GetEvents(component);
-        List<EventReport> reports = new List<EventReport>(events.Count);
+        List<EventReport> reports = new(events.Count);
 
         foreach(EventDescriptor evt in events)
         {
-            List<Attribute> attributes = new List<Attribute>();
+            List<Attribute> attributes = [];
 
             foreach(Attribute attr in evt.Attributes)
             {
@@ -97,18 +97,18 @@ public sealed class ComponentModelInspector
     ///<exception cref="ArgumentNullException">
     ///<paramref name="component"/> is <c>null</c>.
     ///</exception>
-    public IReadOnlyList<PropertyReport> GetPropertyReport(object component)
+    public static IReadOnlyList<PropertyReport> GetPropertyReport(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-        List<PropertyReport> reports = new List<PropertyReport>(properties.Count);
+        List<PropertyReport> reports = new(properties.Count);
 
         foreach(PropertyDescriptor property in properties)
         {
             object? value = property.GetValue(component);
             System.ComponentModel.TypeConverter converter = property.Converter;
-            List<Attribute> attributes = new List<Attribute>();
+            List<Attribute> attributes = [];
 
             foreach(Attribute attr in property.Attributes)
             {
@@ -147,14 +147,14 @@ public sealed class ComponentModelInspector
     ///<param name="component">The component to check.</param>
     ///<param name="errors">When this method returns <c>true</c>, contains the error messages.</param>
     ///<returns><c>true</c> if the component has errors; otherwise, <c>false</c>.</returns>
-    public bool TryGetValidationErrors(object component, [NotNullWhen(true)] out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors)
+    public static bool TryGetValidationErrors(object component, [NotNullWhen(true)] out IReadOnlyDictionary<string, IReadOnlyList<string>>? errors)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         if((component is INotifyDataErrorInfo errorInfo) && errorInfo.HasErrors)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-            Dictionary<string, IReadOnlyList<string>> dict = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+            Dictionary<string, IReadOnlyList<string>> dict = new(StringComparer.Ordinal);
 
             foreach(PropertyDescriptor prop in properties)
             {

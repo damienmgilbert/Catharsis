@@ -17,9 +17,9 @@ public class DecoratorTests
         // Arrange
         string obj = "test";
         Func<string?, string?> returnsNull = static s => null;
-        Func<string?, string?> checksNull = static s => (s == null) ? "received null" : s;
+        Func<string?, string?> checksNull = static s => s ?? "received null";
         // Act
-        string? result = new Decorator().Decorate(obj, returnsNull, checksNull);
+        string? result = Decorator.Decorate(obj, returnsNull, checksNull);
         // Assert
         Assert.AreEqual("received null", result);
     }
@@ -36,8 +36,8 @@ public class DecoratorTests
         Func<int, int> addTen = static x => x + 10;
         Func<int, int> multiplyByTwo = static x => x * 2;
         // Act
-        int result1 = new Decorator().Decorate(obj, addTen, multiplyByTwo); // (5 + 10) * 2 = 30
-        int result2 = new Decorator().Decorate(obj, multiplyByTwo, addTen); // (5 * 2) + 10 = 20
+        int result1 = Decorator.Decorate(obj, addTen, multiplyByTwo); // (5 + 10) * 2 = 30
+        int result2 = Decorator.Decorate(obj, multiplyByTwo, addTen); // (5 * 2) + 10 = 20
         // Assert
         Assert.AreEqual(30, result1);
         Assert.AreEqual(20, result2);
@@ -55,7 +55,7 @@ public class DecoratorTests
         int obj = int.MaxValue;
         Func<int, int> identity = static x => x;
         // Act
-        int result = new Decorator().Decorate(obj, identity);
+        int result = Decorator.Decorate(obj, identity);
         // Assert
         Assert.AreEqual(int.MaxValue, result);
     }
@@ -71,7 +71,7 @@ public class DecoratorTests
         int obj = 100;
         Func<int, int> identity = static x => x;
         // Act
-        int result = new Decorator().Decorate(obj, identity);
+        int result = Decorator.Decorate(obj, identity);
         // Assert
         Assert.AreEqual(100, result);
     }
@@ -93,7 +93,7 @@ public class DecoratorTests
         }
 
         // Act
-        int result = new Decorator().Decorate(obj, decorators);
+        int result = Decorator.Decorate(obj, decorators);
         // Assert
         Assert.AreEqual(100, result);
     }
@@ -110,7 +110,7 @@ public class DecoratorTests
         Func<int, int> identity = static x => x;
         Func<int, int> addFive = static x => x + 5;
         // Act
-        int result = new Decorator().Decorate(obj, identity, addFive, identity, addFive, identity);
+        int result = Decorator.Decorate(obj, identity, addFive, identity, addFive, identity);
         // Assert
         Assert.AreEqual(20, result);
     }
@@ -128,7 +128,7 @@ public class DecoratorTests
         Func<int, int> multiplyByTwo = static x => x * 2; // 15 * 2 = 30
         Func<int, int> subtractThree = static x => x - 3; // 30 - 3 = 27
         // Act
-        int result = new Decorator().Decorate(obj, addTen, multiplyByTwo, subtractThree);
+        int result = Decorator.Decorate(obj, addTen, multiplyByTwo, subtractThree);
         // Assert
         Assert.AreEqual(27, result);
     }
@@ -143,7 +143,7 @@ public class DecoratorTests
         // Arrange
         int obj = 99;
         // Act
-        int result = new Decorator().Decorate(obj);
+        int result = Decorator.Decorate(obj);
         // Assert
         Assert.AreEqual(99, result);
     }
@@ -159,7 +159,7 @@ public class DecoratorTests
         string? obj = null;
         Func<string?, string?> decorator = static s => (s == null) ? "was null" : s.ToUpper();
         // Act
-        string? result = new Decorator().Decorate(obj, decorator);
+        string? result = Decorator.Decorate(obj, decorator);
         // Assert
         Assert.AreEqual("was null", result);
     }
@@ -176,7 +176,7 @@ public class DecoratorTests
         Func<string, string> toUpper = static s => s.ToUpper();
         Func<string, string> addExclamation = static s => $"{s}!";
         // Act
-        string result = new Decorator().Decorate(obj, toUpper, addExclamation);
+        string result = Decorator.Decorate(obj, toUpper, addExclamation);
         // Assert
         Assert.AreEqual("HELLO!", result);
     }

@@ -11,7 +11,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_GuardReturnsFalse_ReturnsFalse()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => false };
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing) { Guard = static () => false };
 
         Assert.IsFalse(t.CanExecute());
     }
@@ -19,7 +19,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_GuardReturnsTrue_ReturnsTrue()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing) { Guard = static () => true };
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing) { Guard = static () => true };
 
         Assert.IsTrue(t.CanExecute());
     }
@@ -27,7 +27,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void CanExecute_NoGuard_ReturnsTrue()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing);
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing);
 
         Assert.IsTrue(t.CanExecute());
     }
@@ -35,7 +35,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void Constructor_CustomName_SetsName()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Deactivated, ComponentState.Activating, "Reactivate");
+        ComponentTransition t = new(ComponentState.Deactivated, ComponentState.Activating, "Reactivate");
 
         Assert.AreEqual("Reactivate", t.Name);
     }
@@ -43,7 +43,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void Constructor_SetsProperties()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing);
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing);
 
         Assert.AreEqual(ComponentState.Created, t.From);
         Assert.AreEqual(ComponentState.Initializing, t.To);
@@ -53,7 +53,7 @@ public sealed class ComponentTransitionTests
     [TestMethod]
     public void ToString_ReturnsName()
     {
-        ComponentTransition t = new ComponentTransition(ComponentState.Created, ComponentState.Initializing, "Init");
+        ComponentTransition t = new(ComponentState.Created, ComponentState.Initializing, "Init");
 
         Assert.AreEqual("Init", t.ToString());
     }

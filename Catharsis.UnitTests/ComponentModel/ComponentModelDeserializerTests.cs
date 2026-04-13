@@ -12,8 +12,8 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_CreateNewInstance()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, string?> data = new Dictionary<string, string?> { ["Name"] = "Bob", ["Age"] = "25" };
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, string?> data = new() { ["Name"] = "Bob", ["Age"] = "25" };
 
         SimpleDto result = deserializer.Deserialize<SimpleDto>(data);
 
@@ -24,8 +24,8 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_MissingProperty_IgnoredByDefault()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, string?> data = new Dictionary<string, string?> { ["NonExistent"] = "value" };
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, string?> data = new() { ["NonExistent"] = "value" };
 
         SimpleDto result = deserializer.Deserialize(data, new SimpleDto());
 
@@ -35,8 +35,8 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_MissingProperty_StrictMode_ThrowsInvalidOperationException()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer { IgnoreMissingProperties = false };
-        Dictionary<string, string?> data = new Dictionary<string, string?> { ["NonExistent"] = "value" };
+        ComponentModelDeserializer deserializer = new() { IgnoreMissingProperties = false };
+        Dictionary<string, string?> data = new() { ["NonExistent"] = "value" };
 
         Assert.ThrowsExactly<InvalidOperationException>(() => deserializer.Deserialize(data, new SimpleDto()));
     }
@@ -44,7 +44,7 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_NullData_ThrowsArgumentNullException()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
+        ComponentModelDeserializer deserializer = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => deserializer.Deserialize<SimpleDto>(null!, new SimpleDto()));
     }
@@ -52,8 +52,8 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_NullTarget_ThrowsArgumentNullException()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, string?> data = new Dictionary<string, string?>();
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, string?> data = [];
 
         Assert.ThrowsExactly<ArgumentNullException>(() => deserializer.Deserialize(data, (SimpleDto)null!));
     }
@@ -61,9 +61,9 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_NullValue_SetsNull()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, string?> data = new Dictionary<string, string?> { ["Name"] = null };
-        SimpleDto target = new SimpleDto { Name = "Alice" };
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, string?> data = new() { ["Name"] = null };
+        SimpleDto target = new() { Name = "Alice" };
 
         deserializer.Deserialize(data, target);
 
@@ -73,9 +73,9 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void Deserialize_PopulatesTarget()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, string?> data = new Dictionary<string, string?> { ["Name"] = "Alice", ["Age"] = "30", ["IsActive"] = "True" };
-        SimpleDto target = new SimpleDto();
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, string?> data = new() { ["Name"] = "Alice", ["Age"] = "30", ["IsActive"] = "True" };
+        SimpleDto target = new();
 
         SimpleDto result = deserializer.Deserialize(data, target);
 
@@ -88,7 +88,7 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void DeserializeRaw_NullData_ThrowsArgumentNullException()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
+        ComponentModelDeserializer deserializer = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => deserializer.DeserializeRaw<SimpleDto>(null!, new SimpleDto()));
     }
@@ -96,9 +96,9 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void DeserializeRaw_PopulatesTarget()
     {
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        Dictionary<string, object?> data = new Dictionary<string, object?> { ["Name"] = "Alice", ["Age"] = 30, ["IsActive"] = true };
-        SimpleDto target = new SimpleDto();
+        ComponentModelDeserializer deserializer = new();
+        Dictionary<string, object?> data = new() { ["Name"] = "Alice", ["Age"] = 30, ["IsActive"] = true };
+        SimpleDto target = new();
 
         deserializer.DeserializeRaw(data, target);
 
@@ -110,9 +110,9 @@ public sealed class ComponentModelDeserializerTests
     [TestMethod]
     public void RoundTrip_SerializeDeserialize()
     {
-        ComponentModelSerializer serializer = new ComponentModelSerializer();
-        ComponentModelDeserializer deserializer = new ComponentModelDeserializer();
-        SimpleDto original = new SimpleDto { Name = "Alice", Age = 30, IsActive = true };
+        ComponentModelSerializer serializer = new();
+        ComponentModelDeserializer deserializer = new();
+        SimpleDto original = new() { Name = "Alice", Age = 30, IsActive = true };
 
         Dictionary<string, string?> data = serializer.Serialize(original);
         SimpleDto restored = deserializer.Deserialize<SimpleDto>(data);

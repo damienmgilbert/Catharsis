@@ -28,7 +28,7 @@ public sealed class MemoryMappedSpanAccessor : IDisposable
         Guard.IsNotNullOrWhiteSpace(filePath);
         Guard.IsGreaterThanOrEqualTo(offset, 0);
 
-        FileInfo fileInfo = new FileInfo(filePath);
+        FileInfo fileInfo = new(filePath);
         Guard.IsTrue(fileInfo.Exists);
 
         int mapLength = (length > 0) ? length : ((int)Math.Min(fileInfo.Length - offset, int.MaxValue));

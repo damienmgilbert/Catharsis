@@ -48,7 +48,7 @@ public sealed class ComponentModelSerializer
         ArgumentNullException.ThrowIfNull(component);
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-        Dictionary<string, string?> result = new Dictionary<string, string?>(properties.Count, StringComparer.Ordinal);
+        Dictionary<string, string?> result = new(properties.Count, StringComparer.Ordinal);
 
         foreach(PropertyDescriptor property in properties)
         {
@@ -84,7 +84,7 @@ public sealed class ComponentModelSerializer
         ArgumentNullException.ThrowIfNull(component);
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-        Dictionary<string, object?> result = new Dictionary<string, object?>(properties.Count, StringComparer.Ordinal);
+        Dictionary<string, object?> result = new(properties.Count, StringComparer.Ordinal);
 
         foreach(PropertyDescriptor property in properties)
         {

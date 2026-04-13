@@ -12,7 +12,7 @@ public sealed class ComponentActionListTests
     #region Private methods
     static TestActionList CreateActionList()
     {
-        ComponentDesignContext context = new ComponentDesignContext(new StubComponent());
+        ComponentDesignContext context = new(new StubComponent());
         return new TestActionList(context);
     }
     #endregion

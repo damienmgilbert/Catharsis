@@ -16,7 +16,7 @@ public class Memento
     ///<param name="memento">The memento containing the state to restore.</param>
     ///<param name="restore">An action that applies the memento state to the originator.</param>
     ///<returns>The restored <paramref name="obj"/>.</returns>
-    public T Restore<T, TMemento>(T obj, TMemento memento, Action<T, TMemento> restore)
+    public static T Restore<T, TMemento>(T obj, TMemento memento, Action<T, TMemento> restore)
     {
         if(restore is null)
         {
@@ -36,7 +36,7 @@ public class Memento
     ///<param name="obj">The originator whose state is captured.</param>
     ///<param name="capture">A delegate that produces a memento from the current state.</param>
     ///<returns>A tuple containing the original <paramref name="obj"/> and the captured <typeparamref name="TMemento"/>.</returns>
-    public (T Object, TMemento Memento) Snapshot<T, TMemento>(T obj, Func<T, TMemento> capture)
+    public static (T Object, TMemento Memento) Snapshot<T, TMemento>(T obj, Func<T, TMemento> capture)
     {
         if(capture is null)
         {

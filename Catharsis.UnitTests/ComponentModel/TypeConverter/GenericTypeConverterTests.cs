@@ -13,7 +13,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_NoConvertFromDelegate_StringReturnsFalse()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>();
+        GenericTypeConverter<int> converter = new();
 
         Assert.IsFalse(converter.CanConvertFrom(null, typeof(string)));
     }
@@ -21,7 +21,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_UnsupportedType_ReturnsFalse()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => 0);
+        GenericTypeConverter<int> converter = new(convertFrom: static (ctx, culture, value) => 0);
 
         Assert.IsFalse(converter.CanConvertFrom(null, typeof(DateTime)));
     }
@@ -29,7 +29,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertFrom_WithConvertFromDelegate_StringReturnsTrue()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
+        GenericTypeConverter<int> converter = new(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         Assert.IsTrue(converter.CanConvertFrom(null, typeof(string)));
     }
@@ -37,7 +37,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertTo_NoConvertToDelegate_FallsBackToBase()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>();
+        GenericTypeConverter<int> converter = new();
 
         Assert.IsTrue(converter.CanConvertTo(null, typeof(string)));
     }
@@ -45,7 +45,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertTo_NullDestinationType_ReturnsFalse()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
+        GenericTypeConverter<int> converter = new(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
 
         Assert.IsFalse(converter.CanConvertTo(null, null));
     }
@@ -53,7 +53,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void CanConvertTo_WithConvertToDelegate_StringReturnsTrue()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
+        GenericTypeConverter<int> converter = new(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
 
         Assert.IsTrue(converter.CanConvertTo(null, typeof(string)));
     }
@@ -61,7 +61,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void ConvertFrom_NoDelegate_ThrowsNotSupportedException()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>();
+        GenericTypeConverter<int> converter = new();
 
         Assert.ThrowsExactly<NotSupportedException>(() => converter.ConvertFrom(null, CultureInfo.InvariantCulture, "42"));
     }
@@ -70,7 +70,7 @@ public sealed class GenericTypeConverterTests
     public void ConvertFrom_NullCulture_DefaultsToCurrentCulture()
     {
         CultureInfo? capturedCulture = null;
-        GenericTypeConverter<string> converter = new GenericTypeConverter<string>(
+        GenericTypeConverter<string> converter = new(
                                                  convertFrom: (ctx, culture, value) =>
                                                  {
                                                      capturedCulture = culture;
@@ -85,7 +85,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void ConvertFrom_StringToInt_ConvertsCorrectly()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
+        GenericTypeConverter<int> converter = new(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         object? result = converter.ConvertFrom(null, CultureInfo.InvariantCulture, "42");
 
@@ -96,7 +96,7 @@ public sealed class GenericTypeConverterTests
     public void ConvertFrom_UsesCultureParameter()
     {
         CultureInfo? capturedCulture = null;
-        GenericTypeConverter<double> converter = new GenericTypeConverter<double>(
+        GenericTypeConverter<double> converter = new(
                                                  convertFrom: (ctx, culture, value) =>
                                                  {
                                                      capturedCulture = culture;
@@ -112,7 +112,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void ConvertTo_IntToString_ConvertsCorrectly()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
+        GenericTypeConverter<int> converter = new(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
 
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, 42, typeof(string));
 
@@ -123,7 +123,7 @@ public sealed class GenericTypeConverterTests
     public void ConvertTo_NullCulture_DefaultsToCurrentCulture()
     {
         CultureInfo? capturedCulture = null;
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(
+        GenericTypeConverter<int> converter = new(
                                               convertTo: (ctx, culture, value, destType) =>
                                               {
                                                   capturedCulture = culture;
@@ -138,7 +138,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void ConvertTo_NullDestinationType_ThrowsArgumentNullException()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertTo: (ctx, culture, value, destType) => value.ToString(culture));
+        GenericTypeConverter<int> converter = new(convertTo: (ctx, culture, value, destType) => value.ToString(culture));
 
         Assert.ThrowsExactly<ArgumentNullException>(() => converter.ConvertTo(null, CultureInfo.InvariantCulture, 42, null!));
     }
@@ -146,7 +146,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void ConvertTo_ValueNotOfTypeT_FallsBackToBase()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
+        GenericTypeConverter<int> converter = new(convertTo: static (ctx, culture, value, destType) => value.ToString(culture));
 
         // Passing a string instead of int should fall back to base
         object? result = converter.ConvertTo(null, CultureInfo.InvariantCulture, "hello", typeof(string));
@@ -157,7 +157,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void IsValid_ConvertibleString_ReturnsTrue()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
+        GenericTypeConverter<int> converter = new(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         Assert.IsTrue(converter.IsValid(null, "42"));
     }
@@ -165,7 +165,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void IsValid_NonConvertibleString_ReturnsFalse()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
+        GenericTypeConverter<int> converter = new(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         Assert.IsFalse(converter.IsValid(null, "not_a_number"));
     }
@@ -173,7 +173,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void IsValid_NullValue_ReturnsFalse()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>();
+        GenericTypeConverter<int> converter = new();
 
         Assert.IsFalse(converter.IsValid(null, null));
     }
@@ -181,7 +181,7 @@ public sealed class GenericTypeConverterTests
     [TestMethod]
     public void IsValid_ValueOfTypeT_ReturnsTrue()
     {
-        GenericTypeConverter<int> converter = new GenericTypeConverter<int>();
+        GenericTypeConverter<int> converter = new();
 
         Assert.IsTrue(converter.IsValid(null, 42));
     }

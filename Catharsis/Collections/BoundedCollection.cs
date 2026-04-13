@@ -26,7 +26,7 @@ public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
         }
 
         MaxCapacity = maxCapacity;
-        _items = new List<T>(maxCapacity);
+        _items = new(maxCapacity);
     }
     #endregion
 

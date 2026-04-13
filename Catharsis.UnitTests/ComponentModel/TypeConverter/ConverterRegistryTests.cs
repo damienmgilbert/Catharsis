@@ -14,7 +14,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Clear_RemovesAllRegistrations()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(new Int32Converter());
         registry.Register<double>(new DoubleConverter());
 
@@ -28,7 +28,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void ConvertFrom_NullDestinationType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(new Int32Converter());
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.ConvertFrom(42, null!, CultureInfo.InvariantCulture));
@@ -37,7 +37,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void ConvertFrom_ValidConversion_ReturnsConverted()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(convertTo: static (ctx, culture, value, dest) => value.ToString(culture));
 
         object? result = registry.ConvertFrom(42, typeof(string), CultureInfo.InvariantCulture);
@@ -48,7 +48,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void ConvertTo_UnsupportedConversion_ThrowsNotSupportedException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         // Register a converter that only converts from string
         registry.Register<int>(convertFrom: (ctx, culture, value) => int.Parse((string)value, culture));
 
@@ -58,7 +58,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void ConvertTo_ValidConversion_ReturnsConverted()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         int result = registry.ConvertTo<int>("42", CultureInfo.InvariantCulture);
@@ -69,7 +69,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Count_ReflectsRegistrations()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         Assert.AreEqual(0, registry.Count);
 
         registry.Register<int>(new Int32Converter());
@@ -96,7 +96,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void GetConverter_NullType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.GetConverter(null!));
     }
@@ -104,8 +104,8 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void GetConverter_RegisteredType_ReturnsRegisteredConverter()
     {
-        ConverterRegistry registry = new ConverterRegistry();
-        Int32Converter converter = new Int32Converter();
+        ConverterRegistry registry = new();
+        Int32Converter converter = new();
         registry.Register<int>(converter);
 
         Assert.AreSame(converter, registry.GetConverter<int>());
@@ -114,7 +114,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void GetConverter_UnregisteredType_FallsBackToTypeDescriptor()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         System.ComponentModel.TypeConverter converter = registry.GetConverter<int>();
 
@@ -126,7 +126,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void IsRegistered_Generic_NotRegistered_ReturnsFalse()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.IsFalse(registry.IsRegistered<int>());
     }
@@ -134,7 +134,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void IsRegistered_Generic_RegisteredType_ReturnsTrue()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(new Int32Converter());
 
         Assert.IsTrue(registry.IsRegistered<int>());
@@ -143,7 +143,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void IsRegistered_Type_NullType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.IsRegistered(null!));
     }
@@ -151,7 +151,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_GenericWithConverter_NullConverter_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.Register<int>((System.ComponentModel.TypeConverter)null!));
     }
@@ -159,8 +159,8 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_GenericWithConverter_StoresAndReturnsChain()
     {
-        ConverterRegistry registry = new ConverterRegistry();
-        Int32Converter converter = new Int32Converter();
+        ConverterRegistry registry = new();
+        Int32Converter converter = new();
 
         ConverterRegistry result = registry.Register<int>(converter);
 
@@ -171,9 +171,9 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_ReplacesExistingRegistration()
     {
-        ConverterRegistry registry = new ConverterRegistry();
-        Int32Converter first = new Int32Converter();
-        Int32Converter second = new Int32Converter();
+        ConverterRegistry registry = new();
+        Int32Converter first = new();
+        Int32Converter second = new();
 
         registry.Register<int>(first);
         registry.Register<int>(second);
@@ -184,7 +184,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_TypeAndConverter_NullConverter_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.Register(typeof(int), null!));
     }
@@ -192,7 +192,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_TypeAndConverter_NullType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.Register(null!, new Int32Converter()));
     }
@@ -200,8 +200,8 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_TypeAndConverter_StoresCorrectly()
     {
-        ConverterRegistry registry = new ConverterRegistry();
-        Int32Converter converter = new Int32Converter();
+        ConverterRegistry registry = new();
+        Int32Converter converter = new();
 
         ConverterRegistry result = registry.Register(typeof(int), converter);
 
@@ -212,7 +212,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Register_WithDelegates_CreatesGenericTypeConverter()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
@@ -223,7 +223,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void RegisterEnum_CreatesEnumTypeConverter()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         registry.RegisterEnum<Color>();
 
@@ -234,9 +234,9 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void RegisterSpanBased_CreatesSpanBasedConverter()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
-        registry.RegisterSpanBased<int>(static (ReadOnlySpan<char> span, IFormatProvider? provider, out int result) => int.TryParse(span, NumberStyles.Integer, provider, out result));
+        registry.RegisterSpanBased<int>(static (span, provider, out result) => int.TryParse(span, NumberStyles.Integer, provider, out result));
 
         System.ComponentModel.TypeConverter converter = registry.GetConverter<int>();
         Assert.IsInstanceOfType<SpanBasedTypeConverter<int>>(converter);
@@ -245,7 +245,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void RegisterSpanBased_NullTryParse_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.RegisterSpanBased<int>(null!));
     }
@@ -253,7 +253,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void TryConvertTo_InvalidConversion_ReturnsFalse()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         bool success = registry.TryConvertTo<int>("not_a_number", out int result, CultureInfo.InvariantCulture);
@@ -265,7 +265,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void TryConvertTo_ValidConversion_ReturnsTrueAndResult()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(convertFrom: static (ctx, culture, value) => int.Parse((string)value, culture));
 
         bool success = registry.TryConvertTo<int>("42", out int result, CultureInfo.InvariantCulture);
@@ -277,7 +277,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void TryGetConverter_NotRegistered_ReturnsFalse()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         bool found = registry.TryGetConverter(typeof(int), out System.ComponentModel.TypeConverter? result);
 
@@ -288,7 +288,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void TryGetConverter_NullType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.TryGetConverter(null!, out _));
     }
@@ -296,8 +296,8 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void TryGetConverter_Registered_ReturnsTrueAndConverter()
     {
-        ConverterRegistry registry = new ConverterRegistry();
-        Int32Converter converter = new Int32Converter();
+        ConverterRegistry registry = new();
+        Int32Converter converter = new();
         registry.Register<int>(converter);
 
         bool found = registry.TryGetConverter(typeof(int), out System.ComponentModel.TypeConverter? result);
@@ -309,7 +309,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Unregister_Generic_RegisteredType_ReturnsTrue()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
         registry.Register<int>(new Int32Converter());
 
         Assert.IsTrue(registry.Unregister<int>());
@@ -318,7 +318,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Unregister_Generic_UnregisteredType_ReturnsFalse()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.IsFalse(registry.Unregister<int>());
     }
@@ -326,7 +326,7 @@ public sealed class ConverterRegistryTests
     [TestMethod]
     public void Unregister_Type_NullType_ThrowsArgumentNullException()
     {
-        ConverterRegistry registry = new ConverterRegistry();
+        ConverterRegistry registry = new();
 
         Assert.ThrowsExactly<ArgumentNullException>(() => registry.Unregister(null!));
     }
