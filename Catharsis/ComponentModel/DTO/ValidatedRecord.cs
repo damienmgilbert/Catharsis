@@ -10,21 +10,18 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap and validate.</typeparam>
 ///<remarks>
-public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where T : class
+///<remarks>
+///Initializes a new instance of <see cref="ValidatedRecord{T}"/>.
+///</remarks>
+///<param name="value">The initial record value.</param>
+///<exception cref="ArgumentNullException">
+public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyDataErrorInfo where T : class
 {
     #region Fields
     private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
-    #endregion
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="ValidatedRecord{T}"/>.
-    ///</summary>
-    ///<param name="value">The initial record value.</param>
-    ///<exception cref="ArgumentNullException">
-    public ValidatedRecord(T value) : base(value)
-    {
-    }
     #endregion
 
     #region Events

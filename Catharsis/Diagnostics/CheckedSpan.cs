@@ -7,7 +7,7 @@ namespace Catharsis.Diagnostics;
 ///and range validation.
 ///</summary>
 ///<typeparam name="T">The element type.</typeparam>
-public ref struct CheckedSpan<T>
+public readonly ref struct CheckedSpan<T>
 {
     #region Struct fields
     readonly Span<T> _span;

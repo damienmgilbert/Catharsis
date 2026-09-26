@@ -49,15 +49,28 @@ dotnet_diagnostic.CA1720.severity = none
 # notation; renaming would break named-argument callers for no clarity gain.
 dotnet_diagnostic.CA1708.severity = none
 
-# --- Behavior-affecting: deferred to a behavior-change workflow ---
+# --- Globalization / performance: resolved and enforced ---
 
 # CA1305: Specify IFormatProvider.
-# Supplying a culture where none is currently passed changes formatting/parsing
-# behavior (current-culture vs invariant). This is a behavior change, not a
-# refactor; left as a suggestion for a dedicated globalization pass.
-dotnet_diagnostic.CA1305.severity = suggestion
+# All formatting/parsing call sites pass an explicit culture (invariant for
+# machine-facing text); enforced to keep them explicit.
+dotnet_diagnostic.CA1305.severity = warning
 
 # CA1848: Use the LoggerMessage delegates.
-# A performance optimization that reshapes the logging call sites; tracked as a
-# suggestion for a focused performance pass rather than enforced here.
-dotnet_diagnostic.CA1848.severity = suggestion
+# Logging call sites use cached LoggerMessage delegates; enforced.
+dotnet_diagnostic.CA1848.severity = warning
+
+# --- Code-style rules resolved in source and enforced ---
+# Modernizations applied in source and kept enforced.
+dotnet_diagnostic.IDE0250.severity = warning
+dotnet_diagnostic.IDE0251.severity = warning
+dotnet_diagnostic.IDE0290.severity = warning
+dotnet_diagnostic.IDE0305.severity = warning
+
+# IDE0058: Expression value is never used.
+# Disabled by default; the library intentionally uses fluent/builder APIs and
+# ignores documented return values (bool from Set/ICollection.Remove, the
+# builder from fluent mutators). Peppering ~200 call sites with `_ =` discards
+# harms readability for no correctness gain, so this stays silent as a
+# deliberate, uniform decision (replacing the former per-member suppressions).
+dotnet_diagnostic.IDE0058.severity = silent

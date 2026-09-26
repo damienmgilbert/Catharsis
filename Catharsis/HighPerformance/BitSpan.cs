@@ -8,7 +8,7 @@ namespace Catharsis.HighPerformance;
 ///Provides bit-level access over a <see cref="Span{T}"/> of bytes, enabling compact boolean arrays and bitwise
 ///operations without extra allocation.
 ///</summary>
-public ref struct BitSpan
+public readonly ref struct BitSpan
 {
     #region Struct fields
     readonly Span<byte> _bytes;

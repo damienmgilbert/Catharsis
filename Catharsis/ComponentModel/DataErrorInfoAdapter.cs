@@ -6,20 +6,19 @@ namespace Catharsis.ComponentModel;
 ///Adapts an <see cref="INotifyDataErrorInfo"/> implementation to the legacy <see cref="IDataErrorInfo"/> interface,
 ///allowing consumers that only understand <see cref="IDataErrorInfo"/> to consume modern validation results.
 ///</summary>
-public sealed class DataErrorInfoAdapter : IDataErrorInfo
+///<remarks>
+///Initializes a FileName instance of <see cref="DataErrorInfoAdapter"/> wrapping the specified <see
+///cref="INotifyDataErrorInfo"/> source.
+///</remarks>
+///<param name="source">The validation source to adapt.</param>
+///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
+public sealed class DataErrorInfoAdapter(INotifyDataErrorInfo source) : IDataErrorInfo
 {
     #region Fields
-    readonly INotifyDataErrorInfo _source;
-    #endregion
+    readonly INotifyDataErrorInfo _source = source ?? throw new ArgumentNullException(nameof(source));
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="DataErrorInfoAdapter"/> wrapping the specified <see
-    ///cref="INotifyDataErrorInfo"/> source.
-    ///</summary>
-    ///<param name="source">The validation source to adapt.</param>
-    ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
-    public DataErrorInfoAdapter(INotifyDataErrorInfo source) { _source = source ?? throw new ArgumentNullException(nameof(source)); }
     #endregion
 
     #region Indexers

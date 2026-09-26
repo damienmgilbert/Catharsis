@@ -130,19 +130,14 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     public ComponentMetadataRegistry Registry => _registry;
     #endregion
 
-    sealed class CachedTypeDescriptor : CustomTypeDescriptor
+    sealed class CachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly ComponentReflectionCache _cache;
-        readonly Type _componentType;
-        #endregion
+        readonly ComponentReflectionCache _cache = cache;
+        readonly Type _componentType = componentType;
 
+        #endregion
         #region Constructors
-        public CachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentReflectionCache cache, Type componentType) : base(parent)
-        {
-            _cache = cache;
-            _componentType = componentType;
-        }
         #endregion
 
         #region Public methods
@@ -153,21 +148,15 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
         #endregion
     }
 
-    sealed class RegistryCachedTypeDescriptor : CustomTypeDescriptor
+    sealed class RegistryCachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly ComponentReflectionCache _cache;
-        readonly Type _componentType;
-        readonly ComponentMetadataRegistry _registry;
-        #endregion
+        readonly ComponentReflectionCache _cache = cache;
+        readonly Type _componentType = componentType;
+        readonly ComponentMetadataRegistry _registry = registry;
 
+        #endregion
         #region Constructors
-        public RegistryCachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, ComponentReflectionCache cache, Type componentType) : base(parent)
-        {
-            _registry = registry;
-            _cache = cache;
-            _componentType = componentType;
-        }
         #endregion
 
         #region Private methods

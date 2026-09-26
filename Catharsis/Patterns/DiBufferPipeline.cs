@@ -9,7 +9,7 @@ namespace Catharsis.Patterns;
 ///Demonstrates a DI-driven buffer processing pipeline that uses <see cref="IServiceProvider"/> to resolve processors,
 ///parsers, and loggers, combining multiple package capabilities into a cohesive architecture.
 ///</summary>
-public static class DiBufferPipeline
+public static partial class DiBufferPipeline
 {
     #region Public methods
     ///<summary>
@@ -33,7 +33,7 @@ public static class DiBufferPipeline
     ///A sample end-to-end pipeline runner that demonstrates resolving and using the buffer processing service from a DI
     ///container.
     ///</summary>
-    public sealed class PipelineRunner
+    public sealed partial class PipelineRunner
     {
         #region Fields
         readonly ILogger<PipelineRunner> _logger;
@@ -67,13 +67,11 @@ public static class DiBufferPipeline
         {
             Guard.IsNotNull(input);
 
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation("Starting DI pipeline with {ByteCount} bytes of input.", input.Length);
+            LogPipelineStarting(input.Length);
 
             byte[] result = await _processingService.ProcessAsync(input, cancellationToken);
 
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation("Pipeline complete. Output: {OutputBytes} bytes. Total processed: {Total} bytes.", result.Length, _processingService.TotalBytesProcessed);
+            LogPipelineComplete(result.Length, _processingService.TotalBytesProcessed);
 
             return result;
         }
@@ -85,6 +83,14 @@ public static class DiBufferPipeline
         ///<param name="cancellationToken">A cancellation token.</param>
         ///<returns>The processed output.</returns>
         public async ValueTask<byte[]> RunValueAsync(byte[] input, CancellationToken cancellationToken = default) { return await RunAsync(input, cancellationToken); }
+        #endregion
+
+        #region Log messages
+        [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Starting DI pipeline with {ByteCount} bytes of input.")]
+        partial void LogPipelineStarting(int byteCount);
+
+        [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Pipeline complete. Output: {OutputBytes} bytes. Total processed: {Total} bytes.")]
+        partial void LogPipelineComplete(int outputBytes, long total);
         #endregion
     }
 }

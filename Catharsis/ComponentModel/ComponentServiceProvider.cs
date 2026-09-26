@@ -5,23 +5,22 @@ namespace Catharsis.ComponentModel;
 ///explicit registrations with an optional parent provider fallback.
 ///</summary>
 ///<remarks>
-public sealed class ComponentServiceProvider : IServiceProvider
+///<remarks>
+///Initializes a FileName instance of <see cref="ComponentServiceProvider"/> with an optional parent provider for
+///fallback resolution.
+///</remarks>
+///<param name="parent">
+///An optional parent <see cref="IServiceProvider"/> to delegate to when a service cannot be resolved locally.
+///</param>
+public sealed class ComponentServiceProvider(IServiceProvider? parent = null) : IServiceProvider
 {
     #region Fields
     private readonly Dictionary<Type, Func<object>> _factories = [];
     private readonly Dictionary<Type, object> _instances = [];
-    private readonly IServiceProvider? _parent;
-    #endregion
+    private readonly IServiceProvider? _parent = parent;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentServiceProvider"/> with an optional parent provider for
-    ///fallback resolution.
-    ///</summary>
-    ///<param name="parent">
-    ///An optional parent <see cref="IServiceProvider"/> to delegate to when a service cannot be resolved locally.
-    ///</param>
-    public ComponentServiceProvider(IServiceProvider? parent = null) { _parent = parent; }
     #endregion
 
     #region Public methods

@@ -9,7 +9,7 @@ namespace Catharsis.Services;
 ///logging.
 ///</summary>
 ///<typeparam name="T">The type of objects to pool. Must have a parameterless constructor.</typeparam>
-public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
+public sealed partial class PooledObjectFactory<T> : IDisposable where T : class, new()
 {
     #region Fields
     bool _disposed;
@@ -52,8 +52,7 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
             (item as IDisposable)?.Dispose();
         }
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.", typeof(T).Name, _totalCreated, _totalReturned);
+        LogDisposed(typeof(T).Name, _totalCreated, _totalReturned);
     }
 
     ///<summary>
@@ -66,15 +65,13 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
 
         if(_pool.TryTake(out T? item))
         {
-            if (_logger.IsEnabled(LogLevel.Trace))
-                _logger.LogTrace("Rented pooled {TypeName} instance.", typeof(T).Name);
+            LogRented(typeof(T).Name);
             return item;
         }
 
         Interlocked.Increment(ref _totalCreated);
 
-        if (_logger.IsEnabled(LogLevel.Trace))
-            _logger.LogTrace("Created FileName {TypeName} instance (total: {Total}).", typeof(T).Name, _totalCreated);
+        LogCreated(typeof(T).Name, _totalCreated);
         return new T();
     }
 
@@ -92,12 +89,10 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
             _pool.Add(item);
             Interlocked.Increment(ref _totalReturned);
 
-            if (_logger.IsEnabled(LogLevel.Trace))
-                _logger.LogTrace("Returned {TypeName} to pool.", typeof(T).Name);
+            LogReturned(typeof(T).Name);
         } else
         {
-            if (_logger.IsEnabled(LogLevel.Trace))
-                _logger.LogTrace("Pool full; discarding {TypeName} instance.", typeof(T).Name);
+            LogPoolFull(typeof(T).Name);
             (item as IDisposable)?.Dispose();
         }
     }
@@ -118,5 +113,22 @@ public sealed class PooledObjectFactory<T> : IDisposable where T : class, new()
     ///Gets the total number of objects returned to the pool.
     ///</summary>
     public int TotalReturned => _totalReturned;
+    #endregion
+
+    #region Log messages
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.")]
+    partial void LogDisposed(string typeName, int created, int returned);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Rented pooled {TypeName} instance.")]
+    partial void LogRented(string typeName);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Trace, Message = "Created FileName {TypeName} instance (total: {Total}).")]
+    partial void LogCreated(string typeName, int total);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Returned {TypeName} to pool.")]
+    partial void LogReturned(string typeName);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Trace, Message = "Pool full; discarding {TypeName} instance.")]
+    partial void LogPoolFull(string typeName);
     #endregion
 }

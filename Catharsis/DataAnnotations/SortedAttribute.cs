@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Catharsis.DataAnnotations;
 
@@ -11,15 +12,15 @@ namespace Catharsis.DataAnnotations;
 ///A <c>null</c> value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow nulls). Collections
 ///with zero or one element are always valid.
 ///</remarks>
+///<remarks>
+///Initializes a FileName instance of <see cref="SortedAttribute"/> with the specified sort direction.
+///</remarks>
+///<param name="direction">The required sort direction.</param>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class SortedAttribute : ValidationAttribute
+public sealed class SortedAttribute(SortDirection direction = SortDirection.Ascending) : ValidationAttribute("The field {0} must be sorted in {1} order.")
 {
+
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="SortedAttribute"/> with the specified sort direction.
-    ///</summary>
-    ///<param name="direction">The required sort direction.</param>
-    public SortedAttribute(SortDirection direction = SortDirection.Ascending) : base("The field {0} must be sorted in {1} order.") { Direction = direction; }
     #endregion
 
     #region Protected methods
@@ -72,7 +73,7 @@ public sealed class SortedAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, (Direction == SortDirection.Ascending) ? "ascending" : "descending"); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, (Direction == SortDirection.Ascending) ? "ascending" : "descending"); }
     #endregion
 
     #region Public properties
@@ -84,6 +85,6 @@ public sealed class SortedAttribute : ValidationAttribute
     ///<summary>
     ///Gets the required sort direction.
     ///</summary>
-    public SortDirection Direction { get; }
+    public SortDirection Direction { get; } = direction;
     #endregion
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Catharsis.DataAnnotations;
@@ -81,7 +82,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
         if(populated.Count > 1)
         {
             string group = GroupName ?? string.Join(", ", PropertyNames);
-            return new ValidationResult(string.Format(ErrorMessageString, group), populated);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, group), populated);
         }
 
         return ValidationResult.Success;
@@ -90,7 +91,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, GroupName ?? string.Join(", ", PropertyNames)); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, GroupName ?? string.Join(", ", PropertyNames)); }
     #endregion
 
     #region Public properties

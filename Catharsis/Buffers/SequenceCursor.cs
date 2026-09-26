@@ -7,27 +7,20 @@ namespace Catharsis.Buffers;
 ///Provides a cursor-based reader over a <see cref="ReadOnlySequence{T}"/>, enabling segment-aware sequential access.
 ///</summary>
 ///<typeparam name="T">The type of elements in the sequence.</typeparam>
-public ref struct SequenceCursor<T> where T : IEquatable<T>
+///<remarks>
+///Initializes a FileName <see cref="SequenceCursor{T}"/> over the specified sequence.
+///</remarks>
+///<param name="sequence">The sequence to read from.</param>
+public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : IEquatable<T>
 {
     #region Struct fields
-    ReadOnlySequence<T> _sequence;
-    SequencePosition _position;
-    ReadOnlySpan<T> _currentSpan;
-    int _currentIndex;
-    #endregion
+    ReadOnlySequence<T> _sequence = sequence;
+    SequencePosition _position = sequence.Start;
+    ReadOnlySpan<T> _currentSpan = sequence.FirstSpan;
+    int _currentIndex = 0;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="SequenceCursor{T}"/> over the specified sequence.
-    ///</summary>
-    ///<param name="sequence">The sequence to read from.</param>
-    public SequenceCursor(in ReadOnlySequence<T> sequence)
-    {
-        _sequence = sequence;
-        _position = sequence.Start;
-        _currentSpan = sequence.FirstSpan;
-        _currentIndex = 0;
-    }
     #endregion
 
     #region Private methods

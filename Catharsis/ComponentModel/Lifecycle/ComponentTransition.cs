@@ -9,21 +9,16 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///cref="Guard"/> predicate must return <c>true</c> for the transition to proceed; the <see cref="OnTransition"/> action
 ///is invoked after the state change.
 ///</remarks>
-public sealed class ComponentTransition
+///<remarks>
+///Initializes a new instance of <see cref="ComponentTransition"/>.
+///</remarks>
+///<param name="from">The source state.</param>
+///<param name="to">The destination state.</param>
+///<param name="name">An optional human-readable name for this transition.</param>
+public sealed class ComponentTransition(ComponentState from, ComponentState to, string? name = null)
 {
+
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="ComponentTransition"/>.
-    ///</summary>
-    ///<param name="from">The source state.</param>
-    ///<param name="to">The destination state.</param>
-    ///<param name="name">An optional human-readable name for this transition.</param>
-    public ComponentTransition(ComponentState from, ComponentState to, string? name = null)
-    {
-        From = from;
-        To = to;
-        Name = name ?? $"{from} -> {to}";
-    }
     #endregion
 
     #region Public methods
@@ -40,7 +35,7 @@ public sealed class ComponentTransition
     ///<summary>
     ///Gets the source state.
     ///</summary>
-    public ComponentState From { get; }
+    public ComponentState From { get; } = from;
 
     ///<summary>
     ///Gets or sets an optional guard predicate. The transition only proceeds if this returns <c>true</c> (or is
@@ -51,7 +46,7 @@ public sealed class ComponentTransition
     ///<summary>
     ///Gets the human-readable name for this transition.
     ///</summary>
-    public string Name { get; }
+    public string Name { get; } = name ?? $"{from} -> {to}";
 
     ///<summary>
     ///Gets or sets an optional action invoked after the state change completes.
@@ -61,6 +56,6 @@ public sealed class ComponentTransition
     ///<summary>
     ///Gets the destination state.
     ///</summary>
-    public ComponentState To { get; }
+    public ComponentState To { get; } = to;
     #endregion
 }

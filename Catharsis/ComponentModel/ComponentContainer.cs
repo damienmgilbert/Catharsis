@@ -12,30 +12,25 @@ namespace Catharsis.ComponentModel;
 ///disposed in reverse insertion order when the container is disposed, ensuring dependent components are cleaned up
 ///before their dependencies.</para>
 ///</remarks>
-public sealed class ComponentContainer : IContainer, IServiceProvider
+///<remarks>
+///Initializes a FileName instance of <see cref="ComponentContainer"/>.
+///</remarks>
+///<param name="designMode">
+///<c>true</c> to indicate components are in design mode; otherwise, <c>false</c>.
+///</param>
+///<param name="serviceProvider">
+///An optional service provider passed to <see cref="ComponentSite"/> instances for hierarchical service resolution.
+///</param>
+public sealed class ComponentContainer(bool designMode = false, IServiceProvider? serviceProvider = null) : IContainer, IServiceProvider
 {
     #region Fields
-    readonly bool _designMode;
+    readonly bool _designMode = designMode;
     bool _disposed;
-    readonly IServiceProvider? _serviceProvider;
+    readonly IServiceProvider? _serviceProvider = serviceProvider;
     readonly List<ComponentSite> _sites = [];
-    #endregion
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentContainer"/>.
-    ///</summary>
-    ///<param name="designMode">
-    ///<c>true</c> to indicate components are in design mode; otherwise, <c>false</c>.
-    ///</param>
-    ///<param name="serviceProvider">
-    ///An optional service provider passed to <see cref="ComponentSite"/> instances for hierarchical service resolution.
-    ///</param>
-    public ComponentContainer(bool designMode = false, IServiceProvider? serviceProvider = null)
-    {
-        _designMode = designMode;
-        _serviceProvider = serviceProvider;
-    }
     #endregion
 
     #region Public methods

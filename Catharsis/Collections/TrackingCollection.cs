@@ -5,19 +5,18 @@
 ///<see cref="ICollection{T}"/>.
 ///</summary>
 ///<typeparam name="T">The type of elements in the collection.</typeparam>
-public class TrackingCollection<T> : ICollection<T>
+///<remarks>
+///Initializes a new <see cref="TrackingCollection{T}"/> with the specified add callback.
+///</remarks>
+///<param name="onAdd">The action to invoke each time an item is added.</param>
+public class TrackingCollection<T>(Action<T> onAdd) : ICollection<T>
 {
     #region Fields
     readonly List<T> _items = [];
-    readonly Action<T> _onAdd;
-    #endregion
+    readonly Action<T> _onAdd = onAdd;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new <see cref="TrackingCollection{T}"/> with the specified add callback.
-    ///</summary>
-    ///<param name="onAdd">The action to invoke each time an item is added.</param>
-    public TrackingCollection(Action<T> onAdd) { _onAdd = onAdd; }
     #endregion
 
     #region Explicit interface implementations

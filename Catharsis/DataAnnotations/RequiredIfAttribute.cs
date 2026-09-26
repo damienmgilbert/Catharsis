@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Catharsis.DataAnnotations;
@@ -55,7 +56,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
 
         if((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
         {
-            return new ValidationResult(string.Format(ErrorMessageString, validationContext.DisplayName, DependentProperty, TargetValue ?? "null"), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DependentProperty, TargetValue ?? "null"), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
         }
 
         return ValidationResult.Success;
@@ -64,7 +65,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, DependentProperty, TargetValue ?? "null"); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties

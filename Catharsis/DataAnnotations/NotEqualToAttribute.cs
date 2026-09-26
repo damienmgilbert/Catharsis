@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Catharsis.DataAnnotations;
@@ -43,7 +44,7 @@ public sealed class NotEqualToAttribute : ValidationAttribute
         if(Equals(value, otherValue))
         {
             string otherDisplayName = OtherPropertyDisplayName ?? OtherProperty;
-            return new ValidationResult(string.Format(ErrorMessageString, validationContext.DisplayName, otherDisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, otherDisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
         }
 
         return ValidationResult.Success;
@@ -52,7 +53,7 @@ public sealed class NotEqualToAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, OtherPropertyDisplayName ?? OtherProperty); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, OtherPropertyDisplayName ?? OtherProperty); }
     #endregion
 
     #region Public properties

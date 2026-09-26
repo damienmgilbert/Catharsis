@@ -54,16 +54,15 @@ public sealed class ValidationResultAggregator
     ///<returns>The distinct member names.</returns>
     public IReadOnlyList<string> GetAffectedMembers()
     {
-        return _entries
+        return [.. _entries
                     .SelectMany(static e => e.Result.MemberNames)
-            .Distinct(StringComparer.Ordinal)
-            .ToList();
+            .Distinct(StringComparer.Ordinal)];
     }
     ///<summary>
     ///Gets all collected results.
     ///</summary>
     ///<returns>A read-only list of results with their severities.</returns>
-    public IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> GetAll() { return _entries.ToList(); }
+    public IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> GetAll() { return [.. _entries]; }
 
     ///<summary>
     ///Gets results that apply to the specified member.
@@ -74,10 +73,9 @@ public sealed class ValidationResultAggregator
     {
         ArgumentNullException.ThrowIfNull(memberName);
 
-        return _entries
+        return [.. _entries
             .Where(e => e.Result.MemberNames.Contains(memberName, StringComparer.Ordinal))
-            .Select(e => e.Result)
-            .ToList();
+            .Select(e => e.Result)];
     }
 
     ///<summary>
@@ -85,7 +83,7 @@ public sealed class ValidationResultAggregator
     ///</summary>
     ///<param name="severity">The severity to filter by.</param>
     ///<returns>Matching results.</returns>
-    public IReadOnlyList<ValidationResult> GetBySeverity(ValidationSeverity severity) { return _entries.Where(e => e.Severity == severity).Select(e => e.Result).ToList(); }
+    public IReadOnlyList<ValidationResult> GetBySeverity(ValidationSeverity severity) { return [.. _entries.Where(e => e.Severity == severity).Select(e => e.Result)]; }
 
     ///<summary>
     ///Converts all collected results to <see cref="ErrorInfo"/> instances.
@@ -93,7 +91,7 @@ public sealed class ValidationResultAggregator
     ///<returns>A list of <see cref="ErrorInfo"/> instances.</returns>
     public IReadOnlyList<ErrorInfo> ToErrorInfos()
     {
-        return _entries.SelectMany(
+        return [.. _entries.SelectMany(
                e =>
                {
                    List<string> members = [.. e.Result.MemberNames];
@@ -104,8 +102,7 @@ public sealed class ValidationResultAggregator
                    }
 
                    return members.Select(m => new ErrorInfo(e.Result.ErrorMessage ?? "Validation failed.", e.Severity, m));
-               })
-            .ToList();
+               })];
     }
     #endregion
 

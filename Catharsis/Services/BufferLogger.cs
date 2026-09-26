@@ -8,7 +8,7 @@ namespace Catharsis.Services;
 ///A high-performance logger that writes log entries into pooled buffers before flushing to an underlying <see
 ///cref="ILogger"/>, reducing allocation overhead in high-throughput logging scenarios.
 ///</summary>
-public sealed class BufferLogger : IDisposable
+public sealed partial class BufferLogger : IDisposable
 {
     #region Fields
     private readonly PooledStringBuilder _builder;
@@ -74,9 +74,11 @@ public sealed class BufferLogger : IDisposable
             _pendingEntries = 0;
         }
 
-        if (_innerLogger.IsEnabled(LogLevel.Information))
-            _innerLogger.LogInformation("Flushing {EntryCount} buffered log entries:\n{Content}", entries, output);
+        LogFlush(entries, output);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Flushing {EntryCount} buffered log entries:\n{Content}")]
+    partial void LogFlush(int entryCount, string content);
 
     ///<summary>
     ///Buffers a log entry at the specified level.

@@ -75,19 +75,14 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
     #endregion
 
-    sealed class RegistryTypeDescriptor : CustomTypeDescriptor
+    sealed class RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly Type _componentType;
-        readonly ComponentMetadataRegistry _registry;
-        #endregion
+        readonly Type _componentType = componentType;
+        readonly ComponentMetadataRegistry _registry = registry;
 
+        #endregion
         #region Constructors
-        public RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : base(parent)
-        {
-            _registry = registry;
-            _componentType = componentType;
-        }
         #endregion
 
         #region Private methods

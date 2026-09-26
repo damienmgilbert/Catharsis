@@ -8,25 +8,20 @@ namespace Catharsis.Patterns;
 ///Demonstrates a hybrid data structure that uses pooled buffers for mutable construction and freezes them into
 ///immutable form for thread-safe read access.
 ///</summary>
-public sealed class ImmutablePooledHybrid<T> : IDisposable
+///<remarks>
+///Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
+///</remarks>
+///<param name="initialCapacity">The initial mutable buffer capacity.</param>
+public sealed class ImmutablePooledHybrid<T>(int initialCapacity = 256) : IDisposable
 {
     #region Fields
     bool _disposed;
-    ImmutableBuffer<T> _frozen;
+    ImmutableBuffer<T> _frozen = ImmutableBuffer<T>.Empty;
     bool _isFrozen;
-    readonly PooledBuffer<T> _mutableBuffer;
-    #endregion
+    readonly PooledBuffer<T> _mutableBuffer = new PooledBuffer<T>(initialCapacity);
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
-    ///</summary>
-    ///<param name="initialCapacity">The initial mutable buffer capacity.</param>
-    public ImmutablePooledHybrid(int initialCapacity = 256)
-    {
-        _mutableBuffer = new PooledBuffer<T>(initialCapacity);
-        _frozen = ImmutableBuffer<T>.Empty;
-    }
     #endregion
 
     #region Public methods

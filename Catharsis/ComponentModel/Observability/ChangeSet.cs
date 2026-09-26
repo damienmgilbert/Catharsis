@@ -39,7 +39,7 @@ public sealed class ChangeSet
     ///Gets all uncommitted changes in chronological order (oldest first).
     ///</summary>
     ///<returns>A read-only list of change entries.</returns>
-    public IReadOnlyList<ChangeEntry> GetAll() { return _undoStack.Reverse().ToList(); }
+    public IReadOnlyList<ChangeEntry> GetAll() { return [.. _undoStack.Reverse()]; }
 
     ///<summary>
     ///Gets all uncommitted changes for the specified property.
@@ -50,10 +50,9 @@ public sealed class ChangeSet
     {
         ArgumentNullException.ThrowIfNull(propertyName);
 
-        return _undoStack
+        return [.. _undoStack
             .Where(e => string.Equals(e.PropertyName, propertyName, StringComparison.Ordinal))
-            .Reverse()
-            .ToList();
+            .Reverse()];
     }
 
     ///<summary>

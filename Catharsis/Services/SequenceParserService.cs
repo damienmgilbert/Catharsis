@@ -9,7 +9,7 @@ namespace Catharsis.Services;
 ///A DI-ready service that parses structured data from <see cref="ReadOnlySequence{T}"/> inputs using an <see
 ///cref="ISequenceParser"/> with logging support.
 ///</summary>
-public sealed class SequenceParserService
+public sealed partial class SequenceParserService
 {
     #region Fields
     readonly ILogger<SequenceParserService> _logger;
@@ -42,8 +42,7 @@ public sealed class SequenceParserService
     ///<returns>The parse status.</returns>
     public SequenceParseStatus Parse(in ReadOnlySequence<byte> sequence, out SequencePosition consumed, out SequencePosition examined)
     {
-        if (_logger.IsEnabled(LogLevel.Trace))
-            _logger.LogTrace("Parsing sequence of {Length} bytes.", sequence.Length);
+        LogParsing(sequence.Length);
 
         SequenceParseStatus status = _parser.TryParse(sequence, out consumed, out examined);
 
@@ -51,14 +50,14 @@ public sealed class SequenceParserService
         {
             case SequenceParseStatus.Success:
                 SuccessCount++;
-                _logger.LogTrace("Parse succeeded.");
+                LogParseSucceeded();
                 break;
             case SequenceParseStatus.InvalidData:
                 FailureCount++;
-                _logger.LogWarning("Parse failed: invalid data detected.");
+                LogParseInvalidData();
                 break;
             case SequenceParseStatus.NeedMoreData:
-                _logger.LogTrace("Parse needs more data.");
+                LogParseNeedsMoreData();
                 break;
         }
 
@@ -88,8 +87,7 @@ public sealed class SequenceParserService
             }
         }
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Parsed {Count} messages total.", messageCount);
+        LogParsedTotal(messageCount);
         return messageCount;
     }
 
@@ -101,7 +99,7 @@ public sealed class SequenceParserService
         _parser.Reset();
         SuccessCount = 0;
         FailureCount = 0;
-        _logger.LogDebug("Parser service reset.");
+        LogReset();
     }
     #endregion
 
@@ -115,5 +113,25 @@ public sealed class SequenceParserService
     ///Gets the total number of successful parse operations.
     ///</summary>
     public int SuccessCount { get; private set; }
+    #endregion
+
+    #region Log messages
+    [LoggerMessage(EventId = 1, Level = LogLevel.Trace, Message = "Parsing sequence of {Length} bytes.")]
+    partial void LogParsing(long length);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Parse succeeded.")]
+    partial void LogParseSucceeded();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Parse failed: invalid data detected.")]
+    partial void LogParseInvalidData();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Parse needs more data.")]
+    partial void LogParseNeedsMoreData();
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Parsed {Count} messages total.")]
+    partial void LogParsedTotal(int count);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "Parser service reset.")]
+    partial void LogReset();
     #endregion
 }

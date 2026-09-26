@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Catharsis.DataAnnotations;
 
@@ -88,7 +89,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, Minimum, Maximum); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum); }
     #endregion
 
     #region Public properties

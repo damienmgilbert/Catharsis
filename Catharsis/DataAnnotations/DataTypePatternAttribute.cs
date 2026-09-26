@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Catharsis.DataAnnotations;
@@ -83,7 +84,7 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
 
         if(!_regex.IsMatch(stringValue))
         {
-            return new ValidationResult(string.Format(ErrorMessageString, validationContext.DisplayName, DataType), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DataType), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
         }
 
         return ValidationResult.Success;
@@ -92,7 +93,7 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, DataType); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DataType); }
     #endregion
 
     #region Public properties

@@ -104,7 +104,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                return _errors.Values.SelectMany(static e => e).ToList();
+                return [.. _errors.Values.SelectMany(static e => e)];
             }
 
             return _errors.TryGetValue(propertyName, out List<ErrorInfo>? errors) ? errors.ToList() : [];

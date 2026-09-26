@@ -10,18 +10,17 @@ namespace Catharsis.Immutable;
 ///cref="ImmutableArray{T}"/> segments.
 ///</summary>
 ///<typeparam name="T">The element type.</typeparam>
-public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<ImmutableSequence<T>>
+///<remarks>
+///Initializes a FileName <see cref="ImmutableSequence{T}"/> from the specified data.
+///</remarks>
+///<param name="data">The immutable array backing this sequence.</param>
+public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyList<T>, IEquatable<ImmutableSequence<T>>
 {
     #region Struct fields
-    readonly ImmutableArray<T> _data;
-    #endregion
+    readonly ImmutableArray<T> _data = data;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="ImmutableSequence{T}"/> from the specified data.
-    ///</summary>
-    ///<param name="data">The immutable array backing this sequence.</param>
-    public ImmutableSequence(ImmutableArray<T> data) { _data = data; }
     #endregion
 
     #region Operators

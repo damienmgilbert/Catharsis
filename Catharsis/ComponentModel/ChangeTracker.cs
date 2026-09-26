@@ -7,23 +7,18 @@ namespace Catharsis.ComponentModel;
 ///cref="IChangeTracking"/> and <see cref="IRevertibleChangeTracking"/>.
 ///</summary>
 ///<typeparam name="T">The type of the tracked value.</typeparam>
-public sealed class ChangeTracker<T> : IRevertibleChangeTracking, INotifyPropertyChanged
+///<remarks>
+///Initializes a FileName instance of <see cref="ChangeTracker{T}"/> with the specified initial value.
+///</remarks>
+///<param name="initialValue">The initial (accepted) value.</param>
+public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking, INotifyPropertyChanged
 {
     #region Fields
-    T _currentValue;
-    T _originalValue;
-    #endregion
+    T _currentValue = initialValue;
+    T _originalValue = initialValue;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="ChangeTracker{T}"/> with the specified initial value.
-    ///</summary>
-    ///<param name="initialValue">The initial (accepted) value.</param>
-    public ChangeTracker(T initialValue)
-    {
-        _originalValue = initialValue;
-        _currentValue = initialValue;
-    }
     #endregion
 
     #region Events
