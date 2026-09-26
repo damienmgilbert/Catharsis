@@ -75,7 +75,8 @@ Everything lives under the `Catharsis.*` root namespace.
 | `Catharsis.Patterns` | Composed pipelines — zero-allocation, DI buffer, high-throughput logging, and hybrids. |
 | `Catharsis.Mvvm` | MVVM helpers built on `CommunityToolkit.Mvvm` for buffers and spans. |
 | `Catharsis.Services` | DI-friendly buffer-processing services and abstractions. |
-| `Catharsis.Resilience` | `RetryPolicy`. |
+| `Catharsis.Concurrency` | Async-friendly synchronization primitives: `AsyncSemaphore`, `AsyncLazy`, `AsyncManualResetEvent`, `AsyncAutoResetEvent`, `AsyncCountdownEvent`, `AsyncBarrier`, `KeyedAsyncLock`, `SingleFlightExecutor`, `AsyncProducerConsumerQueue`, `TaskDebouncer`. |
+| `Catharsis.Resilience` | Composable resilience policies implementing `IAsyncPolicy`: `RetryPolicy`, `CircuitBreaker`, `TimeoutPolicy`, `BulkheadPolicy`, `FallbackPolicy`, `PolicyWrap`, `RateLimiter`. |
 | `Catharsis.Common` | `AsyncBufferLock`, `BufferComparer`, `ValueStopwatch`, weak-reference caching. |
 | `Catharsis.Text.RegularExpressions` | Common regex patterns, a tokenizer, a replacer, and match results. |
 | `Catharsis.Mathematics` | Math constants and symbols, including the Greek alphabet. |

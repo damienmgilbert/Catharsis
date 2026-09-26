@@ -21,7 +21,7 @@ namespace Catharsis.Resilience;
 ///    cancellationToken);
 ///</code>
 ///</example>
-public sealed class RetryPolicy
+public sealed class RetryPolicy : IAsyncPolicy
 {
     #region Fields
     TimeSpan _initialDelay = TimeSpan.FromMilliseconds(200);
