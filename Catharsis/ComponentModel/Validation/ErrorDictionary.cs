@@ -11,7 +11,7 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class ErrorDictionary : INotifyDataErrorInfo
 {
     #region Fields
-    private readonly Dictionary<string, List<ErrorInfo>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<ErrorInfo>> _errors = [with(StringComparer.Ordinal)];
     private readonly Lock _lock = new();
     #endregion
 

@@ -145,7 +145,7 @@ public static class GroupingAdapter
     {
         ArgumentNullException.ThrowIfNull(groupings, nameof(groupings));
 
-        Dictionary<TKey, List<TElement>> result = new(comparer);
+        Dictionary<TKey, List<TElement>> result = [with(comparer)];
 
         foreach (IGrouping<TKey, TElement> group in groupings)
         {

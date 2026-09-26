@@ -13,7 +13,7 @@ namespace Catharsis.ComponentModel.Lifecycle;
 public sealed class ComponentActivationContext : IServiceProvider
 {
     #region Fields
-    readonly Dictionary<string, object?> _properties = new(StringComparer.Ordinal);
+    readonly Dictionary<string, object?> _properties = [with(StringComparer.Ordinal)];
     readonly IServiceProvider? _serviceProvider;
     #endregion
 

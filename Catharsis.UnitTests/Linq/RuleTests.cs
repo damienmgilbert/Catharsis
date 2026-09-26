@@ -55,7 +55,7 @@ public class RuleTests
     [TestMethod]
     public void InitProperties_SetCorrectly()
     {
-        HashSet<string> tags = new(StringComparer.Ordinal) { "validation", "security" };
+        HashSet<string> tags = [with(StringComparer.Ordinal), "validation", "security"];
 
         Rule<int> rule = new("test", static x => true)
         {

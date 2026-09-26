@@ -92,7 +92,7 @@ public static class SlidingLookup
 
     private static IEnumerable<IGrouping<int, T>> ToTumblingGroupingsIterator<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = new(windowSize);
+        List<T> buffer = [with(windowSize)];
         int windowIndex = 0;
 
         foreach (T item in source)
@@ -102,7 +102,7 @@ public static class SlidingLookup
             if (buffer.Count == windowSize)
             {
                 yield return SequenceFactory.Grouping(windowIndex, (IEnumerable<T>)buffer);
-                buffer = new(windowSize);
+                buffer = [with(windowSize)];
                 windowIndex++;
             }
         }

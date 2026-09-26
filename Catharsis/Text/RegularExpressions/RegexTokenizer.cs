@@ -70,10 +70,10 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }
 
-        return _pattern.Matches(input).Count;
+        return _pattern.Count(input);
     }
 
-        ///<inheritdoc/>
+    ///<inheritdoc/>
     public IEnumerator<MatchResult> GetEnumerator() { return Tokenize(string.Empty).GetEnumerator(); }
 
     ///<summary>
@@ -107,7 +107,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
         }
 
         MatchCollection matches = _pattern.Matches(input);
-        List<MatchResult> tokens = new(matches.Count);
+        List<MatchResult> tokens = [with(matches.Count)];
 
         foreach(Match match in matches)
         {

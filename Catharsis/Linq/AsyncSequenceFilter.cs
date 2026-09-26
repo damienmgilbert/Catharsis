@@ -11,7 +11,7 @@ public static class AsyncSequenceFilter
     #region Private methods
     private static async IAsyncEnumerable<T> DistinctByIterator<T, TKey>(IAsyncEnumerable<T> source, Func<T, TKey> keySelector, IEqualityComparer<TKey> comparer, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        HashSet<TKey> seen = new(comparer);
+        HashSet<TKey> seen = [with(comparer)];
 
         await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {

@@ -42,7 +42,7 @@ public static class AsyncSequenceBuffer
 
     private static async IAsyncEnumerable<IReadOnlyList<T>> BufferIterator<T>(IAsyncEnumerable<T> source, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        List<T> buffer = new(size);
+        List<T> buffer = [with(size)];
 
         await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
@@ -51,7 +51,7 @@ public static class AsyncSequenceBuffer
             if (buffer.Count == size)
             {
                 yield return buffer.AsReadOnly();
-                buffer = new(size);
+                buffer = [with(size)];
             }
         }
 

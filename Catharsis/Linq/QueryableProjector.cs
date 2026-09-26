@@ -116,7 +116,7 @@ public static class QueryableProjector
 
         foreach (T item in source)
         {
-            Dictionary<string, object?> row = new(compiled.Count);
+            Dictionary<string, object?> row = [with(compiled.Count)];
 
             foreach (KeyValuePair<string, Func<T, object?>> kvp in compiled)
             {

@@ -140,7 +140,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
 
         static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
         {
-            Dictionary<string, EventDescriptor> merged = new(StringComparer.Ordinal);
+            Dictionary<string, EventDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(EventDescriptor evt in baseEvents)
             {
@@ -157,7 +157,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
 
         static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
-            Dictionary<string, PropertyDescriptor> merged = new(StringComparer.Ordinal);
+            Dictionary<string, PropertyDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(PropertyDescriptor prop in baseProperties)
             {

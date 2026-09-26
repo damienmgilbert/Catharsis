@@ -34,7 +34,7 @@ public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _set = new(comparer);
+        _set = [with(comparer)];
     }
     #endregion
 

@@ -73,9 +73,16 @@ public static class ControlFlow
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully && conditionTask.Result)
+        if(conditionTask.IsCompletedSuccessfully)
         {
-            return ValueTask.FromResult(obj);
+            // Consume the completed ValueTask exactly once; hand the slow path a fresh
+            // instance rather than re-awaiting the one already read here.
+            if(conditionTask.Result)
+            {
+                return ValueTask.FromResult(obj);
+            }
+
+            return SlowPath(obj, new ValueTask<bool>(false), condition, action, cancellation);
         }
 
         return SlowPath(obj, conditionTask, condition, action, cancellation);
@@ -161,9 +168,16 @@ public static class ControlFlow
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully && !conditionTask.Result)
+        if(conditionTask.IsCompletedSuccessfully)
         {
-            return ValueTask.FromResult(obj);
+            // Consume the completed ValueTask exactly once; hand the slow path a fresh
+            // instance rather than re-awaiting the one already read here.
+            if(!conditionTask.Result)
+            {
+                return ValueTask.FromResult(obj);
+            }
+
+            return SlowPath(obj, new ValueTask<bool>(true), condition, action, cancellation);
         }
 
         return SlowPath(obj, conditionTask, condition, action, cancellation);

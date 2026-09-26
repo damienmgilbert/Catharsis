@@ -19,7 +19,7 @@ public sealed class PropertyChangeBatcher : IDisposable
     #region Fields
     int _batchDepth;
     bool _disposed;
-    readonly HashSet<string> _pending = new(StringComparer.Ordinal);
+    readonly HashSet<string> _pending = [with(StringComparer.Ordinal)];
     readonly Action<string> _raisePropertyChanged;
     readonly INotifyPropertyChanged _source;
     #endregion

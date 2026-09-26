@@ -11,7 +11,7 @@ public class CircularBufferTests
     [TestMethod]
     public void Constructor_ValidCapacity_CreatesBuffer()
     {
-        CircularBuffer<int> buffer = new(5);
+        CircularBuffer<int> buffer = [with(5)];
         Assert.AreEqual(5, buffer.Capacity);
         Assert.IsEmpty(buffer);
         Assert.IsFalse(buffer.IsFull);
@@ -26,7 +26,7 @@ public class CircularBufferTests
     [TestMethod]
     public void Add_BelowCapacity_IncreasesCount()
     {
-        CircularBuffer<int> buffer = new(3) { 1, 2 };
+        CircularBuffer<int> buffer = [with(3), 1, 2];
         Assert.HasCount(2, buffer);
         Assert.IsFalse(buffer.IsFull);
     }
@@ -49,14 +49,14 @@ public class CircularBufferTests
     [TestMethod]
     public void Peek_ReturnsOldestItem()
     {
-        CircularBuffer<int> buffer = new(3) { 10, 20 };
+        CircularBuffer<int> buffer = [with(3), 10, 20];
         Assert.AreEqual(10, buffer.Peek());
     }
 
     [TestMethod]
     public void Peek_EmptyBuffer_Throws()
     {
-        CircularBuffer<int> buffer = new(3);
+        CircularBuffer<int> buffer = [with(3)];
         Assert.ThrowsExactly<InvalidOperationException>(() => buffer.Peek());
     }
 
@@ -77,14 +77,14 @@ public class CircularBufferTests
     [TestMethod]
     public void Remove_EmptyBuffer_Throws()
     {
-        CircularBuffer<int> buffer = new(3);
+        CircularBuffer<int> buffer = [with(3)];
         Assert.ThrowsExactly<InvalidOperationException>(() => buffer.Remove());
     }
 
     [TestMethod]
     public void Clear_ResetsBuffer()
     {
-        CircularBuffer<int> buffer = new(3) { 1, 2 };
+        CircularBuffer<int> buffer = [with(3), 1, 2];
         buffer.Clear();
         Assert.IsEmpty(buffer);
         Assert.IsFalse(buffer.IsFull);
@@ -107,14 +107,14 @@ public class CircularBufferTests
     [TestMethod]
     public void Indexer_OutOfRange_Throws()
     {
-        CircularBuffer<int> buffer = new(3) { 1 };
+        CircularBuffer<int> buffer = [with(3), 1];
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = buffer[5]);
     }
 
     [TestMethod]
     public void Enumeration_ReturnsItemsInOrder()
     {
-        CircularBuffer<int> buffer = new(3) { 1, 2, 3, 4 };
+        CircularBuffer<int> buffer = [with(3), 1, 2, 3, 4];
         CollectionAssert.AreEqual(new[] { 2, 3, 4 }, buffer.ToList());
     }
 }

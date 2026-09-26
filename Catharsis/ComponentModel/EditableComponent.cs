@@ -21,7 +21,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     #region Private methods
     Dictionary<string, object?> CaptureSnapshot()
     {
-        Dictionary<string, object?> snapshot = new(StringComparer.Ordinal);
+        Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
 
         foreach(PropertyInfo property in GetEditableProperties())
         {

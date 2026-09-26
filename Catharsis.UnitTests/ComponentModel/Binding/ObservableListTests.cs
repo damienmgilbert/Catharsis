@@ -61,7 +61,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Constructor_WithCollection_CopiesItems()
     {
-        ObservableList<int> list = new([ 1, 2, 3 ]);
+        ObservableList<int> list = [with([ 1, 2, 3 ])];
 
         Assert.HasCount(3, list);
     }
@@ -82,7 +82,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Remove_RaisesCollectionChanged()
     {
-        ObservableList<int> list = new([ 1, 2, 3 ]);
+        ObservableList<int> list = [with([ 1, 2, 3 ])];
         NotifyCollectionChangedAction? action = null;
         list.CollectionChanged += (s, e) => action = e.Action;
 
@@ -94,7 +94,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_NoMatches_ReturnsZero()
     {
-        ObservableList<int> list = new([ 1, 2, 3 ]);
+        ObservableList<int> list = [with([ 1, 2, 3 ])];
 
         int removed = list.RemoveAll(static x => x > 10);
 
@@ -112,7 +112,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_RemovesMatchingItems()
     {
-        ObservableList<int> list = new([ 1, 2, 3, 4, 5 ]);
+        ObservableList<int> list = [with([ 1, 2, 3, 4, 5 ])];
 
         int removed = list.RemoveAll(static x => x > 3);
 
@@ -131,7 +131,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void ReplaceAll_ReplacesContent()
     {
-        ObservableList<int> list = new([ 1, 2, 3 ]);
+        ObservableList<int> list = [with([ 1, 2, 3 ])];
 
         list.ReplaceAll([ 10, 20 ]);
 

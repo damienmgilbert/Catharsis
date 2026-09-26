@@ -27,7 +27,7 @@ public class RuleSetTests
             new("B", static x => x < 10)
         ];
 
-        RuleSet<int> set = new(rules);
+        RuleSet<int> set = [with(rules)];
 
         Assert.AreEqual(2, set.Count);
     }
@@ -46,7 +46,7 @@ public class RuleSetTests
     public void Indexer_ReturnsCorrectRule()
     {
         Rule<int> rule = new("A", static x => true);
-        RuleSet<int> set = new([rule]);
+        RuleSet<int> set = [with([rule])];
 
         Assert.AreSame(rule, set[0]);
     }
@@ -54,7 +54,7 @@ public class RuleSetTests
     [TestMethod]
     public void GetEnumerator_EnumeratesAllRules()
     {
-        RuleSet<int> set = new([new("A", static x => true), new("B", static x => true)]);
+        RuleSet<int> set = [with([new("A", static x => true), new("B", static x => true)])];
 
         List<Rule<int>> list = set.ToList();
 

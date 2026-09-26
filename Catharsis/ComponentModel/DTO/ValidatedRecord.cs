@@ -13,7 +13,7 @@ namespace Catharsis.ComponentModel.DTO;
 public class ValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo where T : class
 {
     #region Fields
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     #endregion
 
     #region Constructors

@@ -9,7 +9,7 @@ public static class SequenceChunkMap
     #region Private methods
     private static IEnumerable<TResult> ChunkAggregateIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<IReadOnlyList<T>, TResult> mapper)
     {
-        List<T> chunk = new(chunkSize);
+        List<T> chunk = [with(chunkSize)];
 
         foreach (T item in source)
         {
@@ -18,7 +18,7 @@ public static class SequenceChunkMap
             if (chunk.Count == chunkSize)
             {
                 yield return mapper(chunk.AsReadOnly());
-                chunk = new(chunkSize);
+                chunk = [with(chunkSize)];
             }
         }
 
@@ -70,7 +70,7 @@ public static class SequenceChunkMap
     {
         foreach (IGrouping<TKey, TElement> group in source)
         {
-            List<TElement> chunk = new(chunkSize);
+            List<TElement> chunk = [with(chunkSize)];
 
             foreach (TElement element in group)
             {
@@ -83,7 +83,7 @@ public static class SequenceChunkMap
                         yield return result;
                     }
 
-                    chunk = new(chunkSize);
+                    chunk = [with(chunkSize)];
                 }
             }
 
@@ -99,7 +99,7 @@ public static class SequenceChunkMap
 
     private static IEnumerable<TResult> ChunkMapIndexedIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<int, IReadOnlyList<T>, IEnumerable<TResult>> mapper)
     {
-        List<T> chunk = new(chunkSize);
+        List<T> chunk = [with(chunkSize)];
         int chunkIndex = 0;
 
         foreach (T item in source)
@@ -113,7 +113,7 @@ public static class SequenceChunkMap
                     yield return result;
                 }
 
-                chunk = new(chunkSize);
+                chunk = [with(chunkSize)];
                 chunkIndex++;
             }
         }
@@ -129,7 +129,7 @@ public static class SequenceChunkMap
 
     private static IEnumerable<TResult> ChunkMapIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<IReadOnlyList<T>, IEnumerable<TResult>> mapper)
     {
-        List<T> chunk = new(chunkSize);
+        List<T> chunk = [with(chunkSize)];
 
         foreach (T item in source)
         {
@@ -142,7 +142,7 @@ public static class SequenceChunkMap
                     yield return result;
                 }
 
-                chunk = new(chunkSize);
+                chunk = [with(chunkSize)];
             }
         }
 

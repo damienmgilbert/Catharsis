@@ -15,7 +15,7 @@ public sealed class FileNameAttribute : ValidationAttribute
 {
     #region Fields
     static readonly HashSet<char> InvalidChars =
-        new(Path.GetInvalidFileNameChars());
+        [with(Path.GetInvalidFileNameChars())];
     #endregion
 
     #region Constructors

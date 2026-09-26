@@ -121,7 +121,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(count);
+        List<T> result = [with(count)];
         for(int i = 0; (i < count) && source.TryDequeue(out T? item); i++)
         {
             result.Add(item);
@@ -212,7 +212,7 @@ public static class ConcurrentCollectionExtensions
 
         T[] buffer = new T[count];
         int popped = source.TryPopRange(buffer);
-        return new(buffer[..popped]);
+        return [with(buffer[..popped])];
     }
 
     // ── ConcurrentStack<T> ──────────────────────────────────────────────
@@ -331,7 +331,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(count);
+        List<T> result = [with(count)];
         for(int i = 0; (i < count) && source.TryTake(out T? item); i++)
         {
             result.Add(item);

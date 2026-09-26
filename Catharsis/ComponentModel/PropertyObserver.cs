@@ -10,7 +10,7 @@ public sealed class PropertyObserver : IDisposable
 {
     #region Fields
     bool _disposed;
-    readonly Dictionary<string, List<Action>> _handlers = new(StringComparer.Ordinal);
+    readonly Dictionary<string, List<Action>> _handlers = [with(StringComparer.Ordinal)];
     readonly INotifyPropertyChanged _source;
     #endregion
 

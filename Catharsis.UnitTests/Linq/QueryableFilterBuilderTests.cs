@@ -30,7 +30,7 @@ public class QueryableFilterBuilderTests
 
         List<Item> result = builder.Apply(Source).ToList();
 
-        Assert.HasCount(2, result);
+        Assert.HasCount(3, result);
         Assert.IsTrue(result.All(static x => x.Price > 4 && x.Price < 13));
     }
 

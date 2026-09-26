@@ -20,7 +20,7 @@ public sealed class ComponentGraph
     #region Private methods
     List<ComponentGraphNode> TopologicalSort(bool reverse)
     {
-        List<ComponentGraphNode> sorted = new(_nodes.Count);
+        List<ComponentGraphNode> sorted = [with(_nodes.Count)];
         HashSet<ComponentGraphNode> visited = [];
         HashSet<ComponentGraphNode> visiting = [];
 

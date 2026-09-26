@@ -166,7 +166,7 @@ public static class SequencePartition
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentOutOfRangeException.ThrowIfLessThan(groupCount, 1, nameof(groupCount));
 
-        List<List<T>> partitions = new(groupCount);
+        List<List<T>> partitions = [with(groupCount)];
 
         for (int i = 0; i < groupCount; i++)
         {

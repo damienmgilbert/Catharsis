@@ -33,7 +33,7 @@ public class MetadataAnnotatedRecord<T> : BindableRecord<T> where T : class
     static List<PropertyMetadataEntry> BuildMetadata()
     {
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
-        List<PropertyMetadataEntry> entries = new(properties.Count);
+        List<PropertyMetadataEntry> entries = [with(properties.Count)];
 
         foreach(PropertyDescriptor prop in properties)
         {

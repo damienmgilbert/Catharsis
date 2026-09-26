@@ -86,7 +86,7 @@ public class SortedListTests
     [TestMethod]
     public void Constructor_CustomComparer_RespectsSortOrder()
     {
-        SortedList<int> list = new(Comparer<int>.Create(static (a, b) => b.CompareTo(a))) { 1, 3, 2 };
+        SortedList<int> list = [with(Comparer<int>.Create(static (a, b) => b.CompareTo(a))), 1, 3, 2];
         CollectionAssert.AreEqual(new[] { 3, 2, 1 }, list.ToList());
     }
 

@@ -1,0 +1,63 @@
+root = true
+
+# All files
+[*]
+indent_style = space
+end_of_line = crlf
+insert_final_newline = true
+charset = utf-8
+
+[*.{csproj,props,targets,slnx}]
+indent_size = 2
+
+[*.cs]
+indent_size = 4
+
+# ---------------------------------------------------------------------------
+# .NET analyzer severities
+#
+# The library builds clean at AnalysisMode=Recommended EXCEPT for the rules
+# configured below. Each remaining category is either a deliberate public-API
+# design decision or a change that would alter observable behavior, so it is
+# intentionally down-graded here rather than "fixed" in a way that would break
+# the API or change behavior. Genuinely behavior-preserving findings (e.g.
+# CA2012 ValueTask double-consumption, CA1875 Regex.Count) are fixed in code
+# and remain enforced as warnings.
+# ---------------------------------------------------------------------------
+
+# --- Deliberate public-API design (a "fix" would be a breaking API change) ---
+
+# CA1000: Do not declare static members on generic types.
+# The library deliberately exposes generic factory/helper types with static
+# members (a standard modern pattern); changing this is an API redesign.
+dotnet_diagnostic.CA1000.severity = none
+
+# CA1710: Identifiers should have correct suffix (e.g. end in "Collection").
+# Domain type names such as Multimap, OrderedSet and Graph are intentional.
+dotnet_diagnostic.CA1710.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix (Queue/Stack/etc.).
+# Names such as QueueStackExtensions describe intent and are intentional.
+dotnet_diagnostic.CA1711.severity = none
+
+# CA1720: Identifier contains type name (e.g. "Object").
+# The affected public names are intentional and descriptive.
+dotnet_diagnostic.CA1720.severity = none
+
+# CA1708: Names should differ by more than case.
+# Geometry APIs use the conventional R/r (major/minor radius) mathematical
+# notation; renaming would break named-argument callers for no clarity gain.
+dotnet_diagnostic.CA1708.severity = none
+
+# --- Behavior-affecting: deferred to a behavior-change workflow ---
+
+# CA1305: Specify IFormatProvider.
+# Supplying a culture where none is currently passed changes formatting/parsing
+# behavior (current-culture vs invariant). This is a behavior change, not a
+# refactor; left as a suggestion for a dedicated globalization pass.
+dotnet_diagnostic.CA1305.severity = suggestion
+
+# CA1848: Use the LoggerMessage delegates.
+# A performance optimization that reshapes the logging call sites; tracked as a
+# suggestion for a focused performance pass rather than enforced here.
+dotnet_diagnostic.CA1848.severity = suggestion

@@ -16,7 +16,7 @@ public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInf
 {
     #region Fields
     private T? _acceptedValue;
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     private bool _isEditing;
     private T? _snapshot;
     #endregion

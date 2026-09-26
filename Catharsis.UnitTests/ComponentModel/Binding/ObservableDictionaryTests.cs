@@ -72,7 +72,7 @@ public sealed class ObservableDictionaryTests
     [TestMethod]
     public void Constructor_WithComparer_UsesComparer()
     {
-        ObservableDictionary<string, int> dict = new(StringComparer.OrdinalIgnoreCase);
+        ObservableDictionary<string, int> dict = [with(StringComparer.OrdinalIgnoreCase)];
 
         dict.Add("key", 1);
         Assert.IsTrue(dict.ContainsKey("KEY"));
@@ -82,7 +82,7 @@ public sealed class ObservableDictionaryTests
     public void Constructor_WithDictionary_CopiesEntries()
     {
         Dictionary<string, int> source = new() { ["a"] = 1, ["b"] = 2 };
-        ObservableDictionary<string, int> dict = new(source);
+        ObservableDictionary<string, int> dict = [with(source)];
 
         Assert.HasCount(2, dict);
         Assert.AreEqual(1, dict["a"]);

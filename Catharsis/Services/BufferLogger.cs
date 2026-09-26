@@ -45,9 +45,9 @@ public sealed class BufferLogger : IDisposable
             return;
         }
 
-        _disposed = true;
-
         Flush();
+
+        _disposed = true;
         _builder.Dispose();
     }
 

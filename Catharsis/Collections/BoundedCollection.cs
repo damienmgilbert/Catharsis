@@ -20,13 +20,13 @@ public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxCapacity"/> is less than or equal to zero.</exception>
     public BoundedCollection(int maxCapacity)
     {
-        if(maxCapacity <= 0)
+        if (maxCapacity <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(maxCapacity), "Maximum capacity must be greater than zero.");
         }
 
         MaxCapacity = maxCapacity;
-        _items = new(maxCapacity);
+        _items = [with(maxCapacity)];
     }
     #endregion
 
@@ -43,7 +43,7 @@ public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the collection is already at maximum capacity.</exception>
     public void Add(T item)
     {
-        if(IsFull)
+        if (IsFull)
         {
             throw new InvalidOperationException($"The collection has reached its maximum capacity of {MaxCapacity}.");
         }
@@ -69,7 +69,7 @@ public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<returns><c>true</c> if the item was added; <c>false</c> if the collection is full.</returns>
     public bool TryAdd(T item)
     {
-        if(IsFull)
+        if (IsFull)
         {
             return false;
         }
