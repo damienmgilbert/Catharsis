@@ -25,7 +25,8 @@ application or library.
 | Project | Description |
 | --- | --- |
 | [`Catharsis/`](Catharsis/README.md) | The library itself — the shippable NuGet package. |
-| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~2,800 tests). |
+| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~3,960 tests). |
+| [`CatharsisBenchmarkSuite/`](CatharsisBenchmarkSuite/README.md) | BenchmarkDotNet suite measuring key types against BCL baselines. |
 
 The solution is defined by [`Catharsis.slnx`](Catharsis.slnx) (the XML-based
 solution format).
@@ -73,16 +74,24 @@ Catharsis is organized into focused namespaces under the `Catharsis.*` root:
   `SpanReader`/`SpanWriter`, pooled UTF-8 strings and JSON documents,
   memory-backed channels, and zero-allocation helpers.
 - **Linq** — async sequence operators, queryable builders, expression helpers,
-  windowing/partitioning, and a small rule engine.
+  windowing/partitioning, memoization, top-N selection, and a small rule engine.
 - **ComponentModel** — components, containers, dynamic type descriptors, DTO
-  records, lifecycle management, change tracking, type converters, and validation.
+  records, lifecycle management, change tracking, type converters, async
+  validation, property-path resolution, and snapshot/restore.
 - **DataAnnotations** — additional validation attributes (`UniqueElements`,
-  `MutuallyExclusive`, `RequiredIf`, `NotEqualTo`, `CollectionCount`, …).
-- **DesignPatterns / Patterns** — reusable Gang-of-Four implementations and
-  composed pipelines.
+  `MutuallyExclusive`, `RequiredIf`/`RequiredWhen`, `NotEqualTo`, `CollectionCount`,
+  `FutureDate`/`PastDate`, `CreditCardLuhn`, `EnumRange`, …).
+- **DesignPatterns / Patterns** — reusable Gang-of-Four and enterprise-pattern
+  implementations, plus composed pipelines.
 - **Text.RegularExpressions / Extensions / Diagnostics / Resilience / Services** —
   everyday helpers, safety-checked buffer parsing, retry policies, and
-  DI-friendly services.
+  DI-friendly services (background queues, pooled-object policies, throttling).
+- **Time / Security / Events / Configuration** — date/time ranges and
+  holiday-aware business-day math, constant-time comparison and secure token
+  generation, a lightweight event bus, and options/feature-flag validation.
+- **Serialization / IO / Networking** — delimited and fixed-layout binary
+  record (de)serialization, atomic file writes, debounced directory watching,
+  and retry-aware HTTP handling.
 - **Mathematics / Physics / Units / Geometry** — curated constants, SI units,
   metric prefixes, and conversion factors.
 
