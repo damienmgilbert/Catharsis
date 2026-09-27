@@ -61,7 +61,7 @@ Everything lives under the `Catharsis.*` root namespace.
 | Namespace | What it provides |
 | --- | --- |
 | `Catharsis.Collections` | `Deque`, `CircularBuffer`, `OrderedSet`, `BoundedCollection`, `EventCollection`, `HistoryStack`, `SortedList`, `TrackingCollection`, `ValidatingCollection`, `ReadOnlyListAdapter`, `WeightedList`, `MultiValueDictionary`, `BiDictionary`, `FrequencyCounter`. |
-| `Catharsis.DataStructures` | `Graph`, `Trie`, `LruCache`, `Multimap`, `Interval`, `PriorityBucket`, `TreeNode`, `BloomFilter`, `DisjointSet`, `IntervalTree`. |
+| `Catharsis.DataStructures` | `Graph`, `Trie`, `LruCache`, `Multimap`, `Interval`, `PriorityBucket`, `TreeNode`, `BloomFilter`, `DisjointSet`, `IntervalTree`, `MinMaxHeap`, `SkipList`. |
 | `Catharsis.Buffers` | Pooled buffers and builders, `SpanReader`/`SpanWriter`, `BufferWriterStream`, `MemoryPoolManager`, growth strategies, sequence segments. |
 | `Catharsis.HighPerformance` | `BitSpan`, `ImageBuffer`, `MemoryMappedSpanAccessor`, `PooledDictionary`, `PooledList`, `SpanTokenizer`, memory-owner extensions. |
 | `Catharsis.Advanced` | Pooled UTF-8 strings and JSON documents, memory-backed channels, streaming sequence readers, sequence slices, a high-performance serializer. |
