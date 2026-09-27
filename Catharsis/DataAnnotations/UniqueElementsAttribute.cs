@@ -16,7 +16,7 @@ public sealed class UniqueElementsAttribute : ValidationAttribute
 {
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="UniqueElementsAttribute"/> with the default error message.
+    ///Initializes a new instance of <see cref="UniqueElementsAttribute"/> with the default error message.
     ///</summary>
     public UniqueElementsAttribute() : base("The field {0} must contain only unique elements.")
     {

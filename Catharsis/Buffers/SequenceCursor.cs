@@ -8,7 +8,7 @@ namespace Catharsis.Buffers;
 ///</summary>
 ///<typeparam name="T">The type of elements in the sequence.</typeparam>
 ///<remarks>
-///Initializes a FileName <see cref="SequenceCursor{T}"/> over the specified sequence.
+///Initializes a new <see cref="SequenceCursor{T}"/> over the specified sequence.
 ///</remarks>
 ///<param name="sequence">The sequence to read from.</param>
 public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : IEquatable<T>

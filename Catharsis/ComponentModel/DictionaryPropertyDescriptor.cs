@@ -7,7 +7,7 @@ namespace Catharsis.ComponentModel;
 ///cref="DynamicTypeDescriptor"/>.
 ///</summary>
 ///<remarks>
-///Initializes a FileName instance of <see cref="DictionaryPropertyDescriptor"/>.
+///Initializes a new instance of <see cref="DictionaryPropertyDescriptor"/>.
 ///</remarks>
 ///<param name="name">The property name.</param>
 ///<param name="propertyType">The type of the property value.</param>

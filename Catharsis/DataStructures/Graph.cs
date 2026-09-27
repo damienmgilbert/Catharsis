@@ -15,14 +15,14 @@ public class Graph<T> : IEnumerable<T> where T : notnull
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName empty <see cref="Graph{T}"/> using the default equality comparer.
+    ///Initializes a new empty <see cref="Graph{T}"/> using the default equality comparer.
     ///</summary>
     public Graph() : this(EqualityComparer<T>.Default)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName empty <see cref="Graph{T}"/> with the specified equality comparer.
+    ///Initializes a new empty <see cref="Graph{T}"/> with the specified equality comparer.
     ///</summary>
     ///<param name="comparer">The comparer used to determine vertex equality.</param>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>

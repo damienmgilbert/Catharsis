@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Catharsis.DataStructures;
 
 ///<summary>
-///A fixed-capacity cache that evicts the least-recently-used (LRU) entry when a FileName entry is added and the cache
+///A fixed-capacity cache that evicts the least-recently-used (LRU) entry when a new entry is added and the cache
 ///is at capacity.
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
@@ -19,7 +19,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="LruCache{TKey, TValue}"/> with the specified capacity.
+    ///Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity.
     ///</summary>
     ///<param name="capacity">The maximum number of entries. Must be greater than zero.</param>
     ///<exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is less than or equal to zero.</exception>
@@ -28,7 +28,7 @@ public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> wh
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="LruCache{TKey, TValue}"/> with the specified capacity and key equality
+    ///Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity and key equality
     ///comparer.
     ///</summary>
     ///<param name="capacity">The maximum number of entries. Must be greater than zero.</param>

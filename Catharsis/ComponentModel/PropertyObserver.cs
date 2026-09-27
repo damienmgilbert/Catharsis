@@ -16,7 +16,7 @@ public sealed class PropertyObserver : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="PropertyObserver"/> that listens to the specified source.
+    ///Initializes a new <see cref="PropertyObserver"/> that listens to the specified source.
     ///</summary>
     ///<param name="source">The object whose property changes to observe.</param>
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>

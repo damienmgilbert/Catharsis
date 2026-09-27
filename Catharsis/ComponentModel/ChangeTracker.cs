@@ -8,7 +8,7 @@ namespace Catharsis.ComponentModel;
 ///</summary>
 ///<typeparam name="T">The type of the tracked value.</typeparam>
 ///<remarks>
-///Initializes a FileName instance of <see cref="ChangeTracker{T}"/> with the specified initial value.
+///Initializes a new instance of <see cref="ChangeTracker{T}"/> with the specified initial value.
 ///</remarks>
 ///<param name="initialValue">The initial (accepted) value.</param>
 public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking, INotifyPropertyChanged
@@ -34,7 +34,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
 
     #region Public methods
     ///<summary>
-    ///Accepts the current value as the FileName baseline, resetting <see cref="IsChanged"/> to <c>false</c>.
+    ///Accepts the current value as the new baseline, resetting <see cref="IsChanged"/> to <c>false</c>.
     ///</summary>
     public void AcceptChanges()
     {
@@ -74,7 +74,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
     public T OriginalValue => _originalValue;
 
     ///<summary>
-    ///Gets or sets the current value. Setting this marks the tracker as changed if the FileName value differs from the
+    ///Gets or sets the current value. Setting this marks the tracker as changed if the new value differs from the
     ///original.
     ///</summary>
     public T Value

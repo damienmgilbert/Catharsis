@@ -19,7 +19,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="PooledBuffer{T}"/> with the specified initial capacity and growth strategy.
+    ///Initializes a new <see cref="PooledBuffer{T}"/> with the specified initial capacity and growth strategy.
     ///</summary>
     ///<param name="initialCapacity">The initial buffer capacity.</param>
     ///<param name="growthStrategy">The strategy used to grow the buffer.</param>
@@ -28,7 +28,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="PooledBuffer{T}"/> with a custom pool, capacity, and growth strategy.
+    ///Initializes a new <see cref="PooledBuffer{T}"/> with a custom pool, capacity, and growth strategy.
     ///</summary>
     ///<param name="pool">The array pool to rent from.</param>
     ///<param name="initialCapacity">The initial buffer capacity.</param>

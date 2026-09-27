@@ -17,7 +17,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
 {
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="CollectionCountAttribute"/> with the specified minimum and maximum
+    ///Initializes a new instance of <see cref="CollectionCountAttribute"/> with the specified minimum and maximum
     ///element counts.
     ///</summary>
     ///<param name="minimum">The minimum number of elements (inclusive).</param>

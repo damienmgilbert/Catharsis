@@ -13,7 +13,7 @@ namespace Catharsis.ComponentModel;
 ///before their dependencies.</para>
 ///</remarks>
 ///<remarks>
-///Initializes a FileName instance of <see cref="ComponentContainer"/>.
+///Initializes a new instance of <see cref="ComponentContainer"/>.
 ///</remarks>
 ///<param name="designMode">
 ///<c>true</c> to indicate components are in design mode; otherwise, <c>false</c>.

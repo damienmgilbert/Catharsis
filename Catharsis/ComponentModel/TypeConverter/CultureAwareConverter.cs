@@ -19,7 +19,7 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///cref="IFormattable.ToString"/> with the configured format and culture.</para>
 ///</remarks>
 ///<remarks>
-///Initializes a FileName instance of <see cref="CultureAwareConverter{T}"/> using the specified context.
+///Initializes a new instance of <see cref="CultureAwareConverter{T}"/> using the specified context.
 ///</remarks>
 ///<param name="context">
 ///The converter context providing culture and format settings. If <c>null</c>, <see

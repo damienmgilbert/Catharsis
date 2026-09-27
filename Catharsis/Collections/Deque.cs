@@ -20,14 +20,14 @@ public class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName empty <see cref="Deque{T}"/> with the default initial capacity.
+    ///Initializes a new empty <see cref="Deque{T}"/> with the default initial capacity.
     ///</summary>
     public Deque() : this(DefaultCapacity)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName empty <see cref="Deque{T}"/> with the specified initial capacity.
+    ///Initializes a new empty <see cref="Deque{T}"/> with the specified initial capacity.
     ///</summary>
     ///<param name="capacity">The initial capacity. Must be greater than or equal to zero.</param>
     ///<exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is negative.</exception>

@@ -8,7 +8,7 @@ namespace Catharsis.DataStructures;
 ///</summary>
 ///<typeparam name="T">The type of value stored in the node.</typeparam>
 ///<remarks>
-///Initializes a FileName <see cref="TreeNode{T}"/> with the specified value.
+///Initializes a new <see cref="TreeNode{T}"/> with the specified value.
 ///</remarks>
 ///<param name="value">The value stored in this node.</param>
 public class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
@@ -27,9 +27,9 @@ public class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
 
     #region Public methods
     ///<summary>
-    ///Adds a child node with the specified value and returns the FileName child.
+    ///Adds a child node with the specified value and returns the new child.
     ///</summary>
-    ///<param name="value">The value for the FileName child node.</param>
+    ///<param name="value">The value for the new child node.</param>
     ///<returns>The newly created child <see cref="TreeNode{T}"/>.</returns>
     public TreeNode<T> AddChild(T value)
     {

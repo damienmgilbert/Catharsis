@@ -17,7 +17,7 @@ public sealed class NotEqualToAttribute : ValidationAttribute
 {
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="NotEqualToAttribute"/> with the name of the property to compare
+    ///Initializes a new instance of <see cref="NotEqualToAttribute"/> with the name of the property to compare
     ///against.
     ///</summary>
     ///<param name="otherProperty">The name of the property whose value must differ.</param>

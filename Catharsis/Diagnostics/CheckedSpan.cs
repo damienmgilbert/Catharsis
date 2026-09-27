@@ -15,7 +15,7 @@ public readonly ref struct CheckedSpan<T>
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="CheckedSpan{T}"/> over the specified span.
+    ///Initializes a new <see cref="CheckedSpan{T}"/> over the specified span.
     ///</summary>
     ///<param name="span">The span to wrap with bounds checks.</param>
     ///<param name="mode">The validation mode to apply.</param>
@@ -81,7 +81,7 @@ public readonly ref struct CheckedSpan<T>
     ///</summary>
     ///<param name="start">The start index.</param>
     ///<param name="length">The length of the slice.</param>
-    ///<returns>A FileName <see cref="CheckedSpan{T}"/> over the slice.</returns>
+    ///<returns>A new <see cref="CheckedSpan{T}"/> over the slice.</returns>
     public CheckedSpan<T> Slice(int start, int length)
     {
         if(Mode >= ValidationMode.BoundsOnly)

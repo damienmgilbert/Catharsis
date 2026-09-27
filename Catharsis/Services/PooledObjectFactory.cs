@@ -22,7 +22,7 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
+    ///Initializes a new <see cref="PooledObjectFactory{T}"/> with the specified logger and pool size.
     ///</summary>
     ///<param name="logger">The logger for diagnostic output.</param>
     ///<param name="maxPoolSize">The maximum number of objects to keep in the pool.</param>
@@ -56,7 +56,7 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
     }
 
     ///<summary>
-    ///Rents an object from the pool, or creates a FileName one if the pool is empty.
+    ///Rents an object from the pool, or creates a new one if the pool is empty.
     ///</summary>
     ///<returns>A pooled or newly created object.</returns>
     public T Rent()

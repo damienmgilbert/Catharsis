@@ -7,7 +7,7 @@ namespace Catharsis.ComponentModel;
 ///allowing consumers that only understand <see cref="IDataErrorInfo"/> to consume modern validation results.
 ///</summary>
 ///<remarks>
-///Initializes a FileName instance of <see cref="DataErrorInfoAdapter"/> wrapping the specified <see
+///Initializes a new instance of <see cref="DataErrorInfoAdapter"/> wrapping the specified <see
 ///cref="INotifyDataErrorInfo"/> source.
 ///</remarks>
 ///<param name="source">The validation source to adapt.</param>

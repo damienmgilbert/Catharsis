@@ -18,7 +18,7 @@ public sealed partial class SequenceParserService
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="SequenceParserService"/> with the specified parser and logger.
+    ///Initializes a new <see cref="SequenceParserService"/> with the specified parser and logger.
     ///</summary>
     ///<param name="parser">The sequence parser implementation.</param>
     ///<param name="logger">The logger for diagnostic output.</param>

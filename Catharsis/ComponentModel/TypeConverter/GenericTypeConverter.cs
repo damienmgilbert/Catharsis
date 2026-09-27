@@ -19,7 +19,7 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///set.</para>
 ///</remarks>
 ///<remarks>
-///Initializes a FileName instance of <see cref="GenericTypeConverter{T}"/>.
+///Initializes a new instance of <see cref="GenericTypeConverter{T}"/>.
 ///</remarks>
 ///<param name="convertFrom">
 ///A delegate that converts a source value to <typeparamref name="T"/>. May be <c>null</c> if conversion from other

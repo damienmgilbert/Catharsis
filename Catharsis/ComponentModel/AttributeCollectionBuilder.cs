@@ -19,14 +19,14 @@ public sealed class AttributeCollectionBuilder
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName, empty <see cref="AttributeCollectionBuilder"/>.
+    ///Initializes a new, empty <see cref="AttributeCollectionBuilder"/>.
     ///</summary>
     public AttributeCollectionBuilder()
     {
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="AttributeCollectionBuilder"/> seeded with the attributes from the specified
+    ///Initializes a new <see cref="AttributeCollectionBuilder"/> seeded with the attributes from the specified
     ///collection.
     ///</summary>
     ///<param name="existing">The collection to seed from.</param>
@@ -83,7 +83,7 @@ public sealed class AttributeCollectionBuilder
     ///<summary>
     ///Builds an immutable <see cref="AttributeCollection"/> from the current set of attributes.
     ///</summary>
-    ///<returns>A FileName <see cref="AttributeCollection"/>.</returns>
+    ///<returns>A new <see cref="AttributeCollection"/>.</returns>
     public AttributeCollection Build()
     {
         if(_attributes.Count == 0)

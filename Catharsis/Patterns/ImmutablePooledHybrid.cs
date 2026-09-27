@@ -9,7 +9,7 @@ namespace Catharsis.Patterns;
 ///immutable form for thread-safe read access.
 ///</summary>
 ///<remarks>
-///Initializes a FileName <see cref="ImmutablePooledHybrid{T}"/>.
+///Initializes a new <see cref="ImmutablePooledHybrid{T}"/>.
 ///</remarks>
 ///<param name="initialCapacity">The initial mutable buffer capacity.</param>
 public sealed class ImmutablePooledHybrid<T>(int initialCapacity = 256) : IDisposable

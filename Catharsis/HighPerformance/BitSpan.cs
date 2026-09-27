@@ -17,7 +17,7 @@ public readonly ref struct BitSpan
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="BitSpan"/> over the specified byte span.
+    ///Initializes a new <see cref="BitSpan"/> over the specified byte span.
     ///</summary>
     ///<param name="storage">The underlying byte storage.</param>
     ///<param name="bitCount">The number of bits to expose (must be ≤ storage.Length * 8).</param>

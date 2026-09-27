@@ -14,7 +14,7 @@ public sealed class CompositeValidationResult
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="CompositeValidationResult"/> with the collected validation results.
+    ///Initializes a new instance of <see cref="CompositeValidationResult"/> with the collected validation results.
     ///</summary>
     ///<param name="results">The validation results.</param>
     internal CompositeValidationResult(IReadOnlyList<ValidationResult> results) { _results = results; }

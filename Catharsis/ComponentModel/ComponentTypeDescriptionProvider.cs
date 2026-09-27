@@ -11,7 +11,7 @@ namespace Catharsis.ComponentModel;
 ///<remarks>
 ///<para> This provider builds on <see cref="ComponentDescriptorProvider"/> by adding a <see
 ///cref="ComponentReflectionCache"/> for performance and exposing the full <see cref="MetadataProvider"/> for
-///programmatic metadata queries.</para> <para> Typical usage:<code> var provider = FileName
+///programmatic metadata queries.</para> <para> Typical usage:<code> var provider = new
 ///ComponentTypeDescriptionProvider(); provider.Registry.RegisterProperty(typeof(MyComponent), myPropertyMetadata);
 ///TypeDescriptor.AddProvider(provider, typeof(MyComponent));</code></para>
 ///</remarks>
@@ -25,7 +25,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/> with FileName registry and
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with new registry and
     ///cache instances.
     ///</summary>
     public ComponentTypeDescriptionProvider()
@@ -36,7 +36,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/> that chains to the specified
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> that chains to the specified
     ///parent provider.
     ///</summary>
     ///<param name="parent">The parent provider to chain to.</param>
@@ -48,7 +48,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry and
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry and
     ///cache.
     ///</summary>
     ///<param name="registry">The metadata registry.</param>
@@ -67,7 +67,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry,
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry,
     ///cache, and parent provider.
     ///</summary>
     ///<param name="registry">The metadata registry.</param>

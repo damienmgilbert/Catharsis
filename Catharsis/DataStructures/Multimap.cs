@@ -16,14 +16,14 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/> using the default key equality comparer.
+    ///Initializes a new empty <see cref="Multimap{TKey, TValue}"/> using the default key equality comparer.
     ///</summary>
     public Multimap() : this(EqualityComparer<TKey>.Default)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/> with the specified key equality comparer.
+    ///Initializes a new empty <see cref="Multimap{TKey, TValue}"/> with the specified key equality comparer.
     ///</summary>
     ///<param name="comparer">The comparer used for key equality.</param>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>

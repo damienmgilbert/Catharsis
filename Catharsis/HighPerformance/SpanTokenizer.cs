@@ -14,7 +14,7 @@ public ref struct SpanTokenizer
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="SpanTokenizer"/> over the specified span with the given separator.
+    ///Initializes a new <see cref="SpanTokenizer"/> over the specified span with the given separator.
     ///</summary>
     ///<param name="span">The span to tokenize.</param>
     ///<param name="separator">The character used to separate tokens.</param>
@@ -52,9 +52,9 @@ public ref struct SpanTokenizer
     }
 
     ///<summary>
-    ///Resets the tokenizer to operate on a FileName span.
+    ///Resets the tokenizer to operate on a new span.
     ///</summary>
-    ///<param name="span">The FileName span to tokenize.</param>
+    ///<param name="span">The new span to tokenize.</param>
     public void Reset(ReadOnlySpan<char> span)
     {
         _remaining = span;

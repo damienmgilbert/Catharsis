@@ -10,7 +10,7 @@ namespace Catharsis.Patterns;
 ///flushes them in batches to reduce I/O overhead and allocation pressure.
 ///</summary>
 ///<remarks>
-///Initializes a FileName <see cref="HighThroughputLoggingPipeline"/>.
+///Initializes a new <see cref="HighThroughputLoggingPipeline"/>.
 ///</remarks>
 ///<param name="logger">The underlying logger to flush to.</param>
 ///<param name="flushThreshold">The number of entries before auto-flushing.</param>

@@ -20,7 +20,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="PooledList{T}"/> with the specified initial capacity.
+    ///Initializes a new <see cref="PooledList{T}"/> with the specified initial capacity.
     ///</summary>
     ///<param name="initialCapacity">The initial capacity of the list.</param>
     public PooledList(int initialCapacity = 16) : this(ArrayPool<T>.Shared, initialCapacity)
@@ -28,7 +28,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="PooledList{T}"/> with the specified pool and capacity.
+    ///Initializes a new <see cref="PooledList{T}"/> with the specified pool and capacity.
     ///</summary>
     ///<param name="pool">The array pool to rent from.</param>
     ///<param name="initialCapacity">The initial capacity.</param>

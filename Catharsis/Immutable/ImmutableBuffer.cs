@@ -17,12 +17,12 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="ImmutableBuffer{T}"/> from the specified immutable array.
+    ///Initializes a new <see cref="ImmutableBuffer{T}"/> from the specified immutable array.
     ///</summary>
     ///<param name="data">The immutable array backing this buffer.</param>
     public ImmutableBuffer(ImmutableArray<T> data) { _data = data; }
     ///<summary>
-    ///Initializes a FileName <see cref="ImmutableBuffer{T}"/> from the specified span by copying the data.
+    ///Initializes a new <see cref="ImmutableBuffer{T}"/> from the specified span by copying the data.
     ///</summary>
     ///<param name="data">The source span to copy from.</param>
     public ImmutableBuffer(ReadOnlySpan<T> data) { _data = [ .. data ]; }
@@ -63,7 +63,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     ///Creates an <see cref="ImmutableBuffer{T}"/> from a span.
     ///</summary>
     ///<param name="data">The source data.</param>
-    ///<returns>A FileName immutable buffer.</returns>
+    ///<returns>A new immutable buffer.</returns>
     public static ImmutableBuffer<T> Create(ReadOnlySpan<T> data) { return new(data); }
     ///<inheritdoc/>
     public bool Equals(ImmutableBuffer<T> other) { return _data.SequenceEqual(other._data); }
@@ -85,11 +85,11 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     }
 
     ///<summary>
-    ///Returns a FileName buffer containing a slice of this buffer.
+    ///Returns a new buffer containing a slice of this buffer.
     ///</summary>
     ///<param name="start">The start index.</param>
     ///<param name="length">The number of elements.</param>
-    ///<returns>A FileName immutable buffer with the sliced data.</returns>
+    ///<returns>A new immutable buffer with the sliced data.</returns>
     public ImmutableBuffer<T> Slice(int start, int length)
     {
         Guard.IsGreaterThanOrEqualTo(start, 0);

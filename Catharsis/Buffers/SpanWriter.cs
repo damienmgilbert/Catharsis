@@ -19,7 +19,7 @@ public ref struct SpanWriter
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="SpanWriter"/> over the specified span.
+    ///Initializes a new <see cref="SpanWriter"/> over the specified span.
     ///</summary>
     ///<param name="span">The span to write to.</param>
     public SpanWriter(Span<byte> span)

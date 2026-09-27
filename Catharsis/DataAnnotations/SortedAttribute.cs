@@ -13,7 +13,7 @@ namespace Catharsis.DataAnnotations;
 ///with zero or one element are always valid.
 ///</remarks>
 ///<remarks>
-///Initializes a FileName instance of <see cref="SortedAttribute"/> with the specified sort direction.
+///Initializes a new instance of <see cref="SortedAttribute"/> with the specified sort direction.
 ///</remarks>
 ///<param name="direction">The required sort direction.</param>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]

@@ -18,14 +18,14 @@ public sealed class MemoryPoolManager : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="MemoryPoolManager"/> with the shared pools.
+    ///Initializes a new <see cref="MemoryPoolManager"/> with the shared pools.
     ///</summary>
     public MemoryPoolManager() : this(ArrayPool<byte>.Shared, MemoryPool<byte>.Shared)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="MemoryPoolManager"/> with the specified pools.
+    ///Initializes a new <see cref="MemoryPoolManager"/> with the specified pools.
     ///</summary>
     ///<param name="arrayPool">The array pool to use for renting arrays.</param>
     ///<param name="memoryPool">The memory pool to use for renting memory blocks.</param>

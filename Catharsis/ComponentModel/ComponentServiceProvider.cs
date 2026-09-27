@@ -6,7 +6,7 @@ namespace Catharsis.ComponentModel;
 ///</summary>
 ///<remarks>
 ///<remarks>
-///Initializes a FileName instance of <see cref="ComponentServiceProvider"/> with an optional parent provider for
+///Initializes a new instance of <see cref="ComponentServiceProvider"/> with an optional parent provider for
 ///fallback resolution.
 ///</remarks>
 ///<param name="parent">

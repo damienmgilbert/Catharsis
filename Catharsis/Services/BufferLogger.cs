@@ -20,7 +20,7 @@ public sealed partial class BufferLogger : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="BufferLogger"/> wrapping the specified logger.
+    ///Initializes a new <see cref="BufferLogger"/> wrapping the specified logger.
     ///</summary>
     ///<param name="logger">The underlying logger to flush entries to.</param>
     ///<param name="bufferCapacity">The initial buffer capacity for log message assembly.</param>

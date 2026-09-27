@@ -20,7 +20,7 @@ public sealed class FileNameAttribute : ValidationAttribute
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="FileNameAttribute"/> with the default error message.
+    ///Initializes a new instance of <see cref="FileNameAttribute"/> with the default error message.
     ///</summary>
     public FileNameAttribute() : base("The field {0} must be a valid file name.")
     {

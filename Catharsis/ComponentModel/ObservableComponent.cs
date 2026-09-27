@@ -56,12 +56,12 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///</summary>
     ///<typeparam name="T">The type of the property.</typeparam>
     ///<param name="field">A reference to the backing field.</param>
-    ///<param name="value">The FileName value.</param>
+    ///<param name="value">The new value.</param>
     ///<param name="propertyName">
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the FileName value.
+    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
     ///</returns>
     protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
@@ -82,7 +82,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///</summary>
     ///<typeparam name="T">The type of the property.</typeparam>
     ///<param name="field">A reference to the backing field.</param>
-    ///<param name="value">The FileName value.</param>
+    ///<param name="value">The new value.</param>
     ///<param name="onChanged">
     ///An action invoked after the value has changed and notifications have been raised. Receives the old value.
     ///</param>
@@ -90,7 +90,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the FileName value.
+    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
     ///</returns>
     protected bool SetProperty<T>(ref T field, T value, Action<T> onChanged, [CallerMemberName] string? propertyName = null)
     {
