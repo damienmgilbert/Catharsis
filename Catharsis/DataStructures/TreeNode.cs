@@ -3,7 +3,7 @@
 ///<summary>
 ///Helper class representing a tree node for testing purposes.
 ///</summary>
-public class TreeNode(string name)
+public sealed class TreeNode(string name)
 {
 
     #region Constructors

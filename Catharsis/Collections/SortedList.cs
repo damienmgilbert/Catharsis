@@ -8,7 +8,7 @@ namespace Catharsis.Collections;
 ///insertion.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the list.</typeparam>
-public class SortedList<T> : ICollection<T>, IReadOnlyList<T>
+public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
 {
     #region Fields
     readonly IComparer<T> _comparer;

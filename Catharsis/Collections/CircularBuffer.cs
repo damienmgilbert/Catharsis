@@ -7,7 +7,7 @@ namespace Catharsis.Collections;
 ///is already full.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the buffer.</typeparam>
-public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
+public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly T[] _buffer;

@@ -7,7 +7,7 @@ namespace Catharsis.DataStructures;
 ///first / depth-first traversals.
 ///</summary>
 ///<typeparam name="T">The type of the vertex value. Must be non-null and equatable.</typeparam>
-public class Graph<T> : IEnumerable<T> where T : notnull
+public sealed class Graph<T> : IEnumerable<T> where T : notnull
 {
     #region Fields
     readonly Dictionary<T, HashSet<T>> _adjacency;

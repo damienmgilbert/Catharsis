@@ -72,7 +72,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     public async ValueTask<OwnedSegment> ReadAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        return await _channel.Reader.ReadAsync(cancellationToken);
+        return await _channel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
     }
 
     ///<summary>
@@ -89,7 +89,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
         data.CopyTo(owner.Memory);
 
         OwnedSegment segment = new(owner, data.Length);
-        await _channel.Writer.WriteAsync(segment, cancellationToken);
+        await _channel.Writer.WriteAsync(segment, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 

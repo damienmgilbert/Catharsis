@@ -7,7 +7,7 @@ namespace Catharsis.Collections;
 ///<see cref="Collection{T}"/> and overrides the insert and set operations to enforce the validation rule.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the collection.</typeparam>
-public class ValidatingCollection<T> : Collection<T>
+public sealed class ValidatingCollection<T> : Collection<T>
 {
     #region Fields
     readonly Predicate<T> _validator;

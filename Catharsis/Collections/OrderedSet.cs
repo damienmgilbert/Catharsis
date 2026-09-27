@@ -7,7 +7,7 @@ namespace Catharsis.Collections;
 ///additions are silently ignored.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the set.</typeparam>
-public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
+public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly List<T> _items = [];

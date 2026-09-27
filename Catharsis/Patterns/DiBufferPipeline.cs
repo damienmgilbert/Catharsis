@@ -69,7 +69,7 @@ public static partial class DiBufferPipeline
 
             LogPipelineStarting(input.Length);
 
-            byte[] result = await _processingService.ProcessAsync(input, cancellationToken);
+            byte[] result = await _processingService.ProcessAsync(input, cancellationToken).ConfigureAwait(false);
 
             LogPipelineComplete(result.Length, _processingService.TotalBytesProcessed);
 
@@ -82,7 +82,7 @@ public static partial class DiBufferPipeline
         ///<param name="input">The raw input data.</param>
         ///<param name="cancellationToken">A cancellation token.</param>
         ///<returns>The processed output.</returns>
-        public async ValueTask<byte[]> RunValueAsync(byte[] input, CancellationToken cancellationToken = default) { return await RunAsync(input, cancellationToken); }
+        public async ValueTask<byte[]> RunValueAsync(byte[] input, CancellationToken cancellationToken = default) { return await RunAsync(input, cancellationToken).ConfigureAwait(false); }
         #endregion
 
         #region Log messages

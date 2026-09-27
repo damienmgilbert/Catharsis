@@ -9,7 +9,7 @@ namespace Catharsis.DataStructures;
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
 ///<typeparam name="TValue">The type of the cached values.</typeparam>
-public class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : notnull
+public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : notnull
 {
     #region Fields
     readonly int _capacity;

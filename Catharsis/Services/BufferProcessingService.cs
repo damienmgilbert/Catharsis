@@ -92,7 +92,7 @@ public sealed partial class BufferProcessingService : IDisposable
         LogProcessingAsync(input.Length);
 
         using PooledBuffer<byte> output = new(input.Length * 2);
-        await _processor.ProcessAsync(input, output, cancellationToken);
+        await _processor.ProcessAsync(input, output, cancellationToken).ConfigureAwait(false);
         TotalBytesProcessed += input.Length;
 
         LogAsyncProcessingComplete(output.WrittenCount);
@@ -117,10 +117,10 @@ public sealed partial class BufferProcessingService : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken)) > 0)
+            while((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
-                byte[] result = await ProcessAsync(readBuffer.AsMemory(0, bytesRead), cancellationToken);
-                await outputStream.WriteAsync(result, cancellationToken);
+                byte[] result = await ProcessAsync(readBuffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+                await outputStream.WriteAsync(result, cancellationToken).ConfigureAwait(false);
             }
         } finally
         {
@@ -141,7 +141,7 @@ public sealed partial class BufferProcessingService : IDisposable
         LogProcessingValueTask(input.Length);
 
         using PooledBuffer<byte> output = new(input.Length * 2);
-        await _processor.ProcessValueAsync(input, output, cancellationToken);
+        await _processor.ProcessValueAsync(input, output, cancellationToken).ConfigureAwait(false);
         TotalBytesProcessed += input.Length;
 
         return output.WrittenSpan.ToArray();

@@ -6,7 +6,7 @@ namespace Catharsis.Collections;
 ///A collection with a fixed maximum capacity that rejects additions once the limit is reached.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the collection.</typeparam>
-public class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
+public sealed class BoundedCollection<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly List<T> _items;

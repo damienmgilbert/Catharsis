@@ -8,7 +8,7 @@ namespace Catharsis.Collections;
 ///the generic and non-generic <see cref="System.Collections"/> worlds.
 ///</summary>
 ///<typeparam name="T">The type of elements in the underlying list.</typeparam>
-public class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
+public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
 {
     #region Fields
     readonly IList<T> _source;

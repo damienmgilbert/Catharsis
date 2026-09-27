@@ -9,7 +9,7 @@
 ///Initializes a new <see cref="TrackingCollection{T}"/> with the specified add callback.
 ///</remarks>
 ///<param name="onAdd">The action to invoke each time an item is added.</param>
-public class TrackingCollection<T>(Action<T> onAdd) : ICollection<T>
+public sealed class TrackingCollection<T>(Action<T> onAdd) : ICollection<T>
 {
     #region Fields
     readonly List<T> _items = [];

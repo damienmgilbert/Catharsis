@@ -8,7 +8,7 @@ namespace Catharsis.DataStructures;
 ///</summary>
 ///<typeparam name="TKey">The type of the keys.</typeparam>
 ///<typeparam name="TValue">The type of the values.</typeparam>
-public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
+public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
 {
     #region Fields
     readonly Dictionary<TKey, List<TValue>> _map;

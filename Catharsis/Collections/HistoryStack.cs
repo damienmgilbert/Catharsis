@@ -7,7 +7,7 @@ namespace Catharsis.Collections;
 ///cref="Undo"/> and replayed with <see cref="Redo"/>.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the stack.</typeparam>
-public class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
+public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly Stack<T> _stack = new();

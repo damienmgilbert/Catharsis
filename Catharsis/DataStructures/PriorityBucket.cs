@@ -9,7 +9,7 @@ namespace Catharsis.DataStructures;
 ///</summary>
 ///<typeparam name="TElement">The type of elements in the queue.</typeparam>
 ///<typeparam name="TPriority">The type used to determine element priority.</typeparam>
-public class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>, IReadOnlyCollection<TElement>
+public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>, IReadOnlyCollection<TElement>
 {
     #region Fields
     readonly HashSet<TElement> _elements;

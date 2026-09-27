@@ -95,7 +95,7 @@ public sealed class BufferWriterStream : Stream
 
         cancellationToken.ThrowIfCancellationRequested();
         Write(buffer, offset, count);
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     ///<inheritdoc/>

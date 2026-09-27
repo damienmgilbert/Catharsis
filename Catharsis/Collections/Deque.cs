@@ -6,7 +6,7 @@ namespace Catharsis.Collections;
 ///A double-ended queue (deque) that supports efficient insertion and removal at both the front and back.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the deque.</typeparam>
-public class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
+public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Constants
     const int DefaultCapacity = 4;

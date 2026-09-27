@@ -71,7 +71,7 @@ public sealed class StreamingSequenceReader : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken)) > 0)
+            while((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
                 Span<byte> span = _builder.GetSpan(bytesRead);
                 readBuffer.AsSpan(0, bytesRead).CopyTo(span);
@@ -92,7 +92,7 @@ public sealed class StreamingSequenceReader : IDisposable
     ///<param name="stream">The source stream.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A <see cref="ReadOnlySequence{T}"/> over the read data.</returns>
-    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) { return await ReadAllAsync(stream, cancellationToken); }
+    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) { return await ReadAllAsync(stream, cancellationToken).ConfigureAwait(false); }
 
     ///<summary>
     ///Resets the reader for reuse.

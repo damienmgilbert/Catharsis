@@ -11,7 +11,7 @@ namespace Catharsis.DataStructures;
 ///Initializes a new <see cref="TreeNode{T}"/> with the specified value.
 ///</remarks>
 ///<param name="value">The value stored in this node.</param>
-public class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
+public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
 {
     #region Fields
     readonly List<TreeNode<T>> _children = [];
