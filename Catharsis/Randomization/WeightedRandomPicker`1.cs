@@ -40,7 +40,8 @@ public sealed class WeightedRandomPicker<T>
     }
 
     ///<summary>
-    ///Picks a random item, proportionally weighted.
+    ///Picks a random item, proportionally weighted, in O(log n) via a binary search over the cumulative weights
+    ///recorded at <see cref="Add"/> time.
     ///</summary>
     ///<param name="random">The random source to use, or <c>null</c> to use <see cref="Random.Shared"/>.</param>
     ///<returns>The picked item.</returns>
@@ -54,15 +55,23 @@ public sealed class WeightedRandomPicker<T>
 
         double roll = (random ?? Random.Shared).NextDouble() * _totalWeight;
 
-        foreach((T item, double cumulativeWeight) in _entries)
+        int low = 0;
+        int high = _entries.Count - 1;
+
+        while(low < high)
         {
-            if(roll < cumulativeWeight)
+            int mid = low + ((high - low) / 2);
+
+            if(_entries[mid].CumulativeWeight <= roll)
             {
-                return item;
+                low = mid + 1;
+            } else
+            {
+                high = mid;
             }
         }
 
-        return _entries[^1].Item;
+        return _entries[low].Item;
     }
     #endregion
 

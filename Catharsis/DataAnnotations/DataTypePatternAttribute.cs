@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -29,7 +30,7 @@ namespace Catharsis.DataAnnotations;
 public sealed class DataTypePatternAttribute : ValidationAttribute
 {
     #region Fields
-    static readonly Dictionary<DataType, string> Patterns = new()
+    static readonly FrozenDictionary<DataType, string> Patterns = new Dictionary<DataType, string>
     {
         [DataType.EmailAddress] = @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
         [DataType.PhoneNumber] = @"^\+?[\d\s\-\(\)\.]{7,20}$",
@@ -42,7 +43,7 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
         [DataType.DateTime] = @"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?",
         [DataType.Duration] = @"^P(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$",
         [DataType.ImageUrl] = @"^https?://[^\s]+\.(jpg|jpeg|png|gif|bmp|svg|webp|ico)(\?[^\s]*)?$",
-    };
+    }.ToFrozenDictionary();
     readonly Regex _regex;
     #endregion
 
