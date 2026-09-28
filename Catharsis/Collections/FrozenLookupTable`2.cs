@@ -1,4 +1,5 @@
 using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Catharsis.Collections;
 
@@ -62,10 +63,10 @@ public sealed class FrozenLookupTable<TKey, TValue>(IEqualityComparer<TKey>? com
     ///<returns><c>true</c> if the key was found; otherwise <c>false</c>.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     ///<exception cref="InvalidOperationException"><see cref="Build"/> has not been called yet.</exception>
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         ArgumentNullException.ThrowIfNull(key);
-        return RequireBuilt().TryGetValue(key, out value!);
+        return RequireBuilt().TryGetValue(key, out value);
     }
     #endregion
 
