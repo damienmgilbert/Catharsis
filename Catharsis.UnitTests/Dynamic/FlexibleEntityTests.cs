@@ -70,6 +70,27 @@ public class FlexibleEntityTests
     }
 
     [TestMethod]
+    public void Get_MissingNestedPath_DoesNotCreateIntermediateEntityOrRecordChange()
+    {
+        FlexibleEntity entity = new();
+
+        object? result = entity.Get<object?>("Address.City");
+
+        Assert.IsNull(result);
+        Assert.IsFalse(entity.IsChanged);
+        Assert.IsFalse(entity.PropertyNames.Contains("Address"));
+    }
+
+    [TestMethod]
+    public void Get_NestedPathThroughNonEntityValue_ReturnsDefaultInsteadOfThrowing()
+    {
+        FlexibleEntity entity = new();
+        entity.Set("Address", "not an entity");
+
+        Assert.IsNull(entity.Get<object?>("Address.City"));
+    }
+
+    [TestMethod]
     public void Indexer_GetAndSet_RoundTrips()
     {
         FlexibleEntity entity = new()
@@ -212,6 +233,52 @@ public class FlexibleEntityTests
 
         Assert.IsNull(entity.Get<string>("Name"));
         Assert.IsFalse(entity.CanUndo);
+    }
+
+    [TestMethod]
+    public void Set_NestedPathOnExistingIntermediateEntity_IsTrackedByOuterEntity()
+    {
+        FlexibleEntity entity = new();
+        entity.Set("Address.City", "Seattle");
+        entity.AcceptChanges();
+
+        entity.Set("Address.City", "Portland");
+
+        Assert.IsTrue(entity.IsChanged);
+        Assert.AreEqual("Portland", entity.Get<string>("Address.City"));
+    }
+
+    [TestMethod]
+    public void Undo_NestedPathOnExistingIntermediateEntity_RevertsThroughOuterEntity()
+    {
+        FlexibleEntity entity = new();
+        entity.Set("Address.City", "Seattle");
+        entity.AcceptChanges();
+        entity.Set("Address.City", "Portland");
+
+        ChangeEntry? undone = entity.Undo();
+
+        Assert.IsNotNull(undone);
+        Assert.AreEqual("Seattle", entity.Get<string>("Address.City"));
+    }
+
+    [TestMethod]
+    public void Undo_OnNestedEntityItself_AffectsTheSharedRootHistory()
+    {
+        FlexibleEntity entity = new();
+        entity.Set("Address.City", "Seattle");
+        FlexibleEntity nested = entity.Get<FlexibleEntity>("Address")!;
+
+        // Set("Address.City", ...) recorded two changes in the shared history: auto-creating "Address", then
+        // setting "Address.City". Undo called on the nested entity acts on that same shared, LIFO history, so the
+        // first Undo reverts the more recent change (the leaf write)...
+        nested.Undo();
+        Assert.IsNull(entity.Get<string>("Address.City"));
+        Assert.IsTrue(entity.PropertyNames.Contains("Address"));
+
+        // ...and a second Undo reverts the older change: the auto-created "Address" property itself.
+        nested.Undo();
+        Assert.IsFalse(entity.PropertyNames.Contains("Address"));
     }
 
     #endregion

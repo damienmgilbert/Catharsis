@@ -38,18 +38,32 @@ public class NetworkMonitorTests
     [TestMethod]
     public void Constructor_ZeroOrNegativePollInterval_Throws() { Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new NetworkMonitor([Loopback], TimeSpan.Zero, new EventBus())); }
 
+    [TestMethod]
+    public async Task Constructor_DuplicateEndpoints_DeduplicatesInsteadOfThrowing()
+    {
+        await using NetworkMonitor monitor = CreateIdleMonitor([Loopback, new Uri(Loopback.ToString())]);
+        Assert.HasCount(1, monitor.GetSnapshot());
+    }
+
     #endregion
 
-    #region FromCircuitState
+    #region DetermineStatus
 
     [TestMethod]
-    public void FromCircuitState_Closed_ReturnsHealthy() { Assert.AreEqual(EndpointStatus.Healthy, NetworkMonitor.FromCircuitState(CircuitState.Closed)); }
+    public void DetermineStatus_OpenRegardlessOfRatio_ReturnsDown()
+    {
+        Assert.AreEqual(EndpointStatus.Down, NetworkMonitor.DetermineStatus(CircuitState.Open, successRatio: 1.0));
+        Assert.AreEqual(EndpointStatus.Down, NetworkMonitor.DetermineStatus(CircuitState.Open, successRatio: 0.0));
+    }
 
     [TestMethod]
-    public void FromCircuitState_HalfOpen_ReturnsDegraded() { Assert.AreEqual(EndpointStatus.Degraded, NetworkMonitor.FromCircuitState(CircuitState.HalfOpen)); }
+    public void DetermineStatus_ClosedPerfectRatio_ReturnsHealthy() { Assert.AreEqual(EndpointStatus.Healthy, NetworkMonitor.DetermineStatus(CircuitState.Closed, successRatio: 1.0)); }
 
     [TestMethod]
-    public void FromCircuitState_Open_ReturnsDown() { Assert.AreEqual(EndpointStatus.Down, NetworkMonitor.FromCircuitState(CircuitState.Open)); }
+    public void DetermineStatus_ClosedImperfectRatio_ReturnsDegraded() { Assert.AreEqual(EndpointStatus.Degraded, NetworkMonitor.DetermineStatus(CircuitState.Closed, successRatio: 0.5)); }
+
+    [TestMethod]
+    public void DetermineStatus_HalfOpenImperfectRatio_ReturnsDegraded() { Assert.AreEqual(EndpointStatus.Degraded, NetworkMonitor.DetermineStatus(CircuitState.HalfOpen, successRatio: 0.9)); }
 
     #endregion
 

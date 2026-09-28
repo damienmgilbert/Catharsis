@@ -43,6 +43,28 @@ public sealed class StepWorkflowOrchestrator
         return (node.Dependencies.Count == 0) ? 0 : (node.Dependencies.Max(dependency => waveByNode[dependency]) + 1);
     }
 
+    ///<summary>
+    ///Unwraps an <see cref="AggregateException"/> (as thrown by <see cref="RetryPolicy"/> on exhaustion) down to its
+    ///single inner exception, when there is exactly one distinct cause. <see cref="RetryPolicy"/> records one entry
+    ///per attempt, so a persistent failure that throws the same exception instance on every attempt still produces
+    ///one entry per attempt; comparing by reference (rather than by count) correctly collapses that common case. A
+    ///genuinely multi-cause aggregate is returned as-is, since collapsing it to one exception would lose information.
+    ///</summary>
+    static Exception UnwrapSingleFailure(Exception exception)
+    {
+        if(exception is AggregateException aggregate)
+        {
+            Exception[] distinctCauses = [.. aggregate.Flatten().InnerExceptions.Distinct()];
+
+            if(distinctCauses.Length == 1)
+            {
+                return distinctCauses[0];
+            }
+        }
+
+        return exception;
+    }
+
     async Task ExecuteNodeAsync(ComponentGraphNode node, ConcurrentDictionary<ComponentGraphNode, bool> faulted, CancellationToken cancellationToken)
     {
         WorkflowStepComponent step = (WorkflowStepComponent)node.Component;
@@ -78,7 +100,7 @@ public sealed class StepWorkflowOrchestrator
         {
             node.State = ComponentState.Faulted;
             faulted[node] = true;
-            await _eventBus.PublishAsync(new WorkflowStepEvent(step.Name, ComponentState.Faulted, ex, DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);
+            await _eventBus.PublishAsync(new WorkflowStepEvent(step.Name, ComponentState.Faulted, UnwrapSingleFailure(ex), DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);
         }
     }
     #endregion
@@ -109,17 +131,26 @@ public sealed class StepWorkflowOrchestrator
             throw new InvalidOperationException($"A step named '{name}' is already registered.");
         }
 
+        // Resolve every dependency before registering anything, so a failed lookup leaves the orchestrator
+        // completely untouched instead of registering the step with only some of its dependency edges.
+        WorkflowStepComponent[] dependencySteps = new WorkflowStepComponent[dependsOn.Length];
+
+        for(int index = 0; index < dependsOn.Length; index++)
+        {
+            if(!_steps.TryGetValue(dependsOn[index], out WorkflowStepComponent? dependencyStep))
+            {
+                throw new InvalidOperationException($"Step '{name}' depends on '{dependsOn[index]}', which is not registered. Register dependencies before the steps that depend on them.");
+            }
+
+            dependencySteps[index] = dependencyStep;
+        }
+
         WorkflowStepComponent step = new(name, action, retryPolicy);
         _steps.Add(name, step);
         _builder.AddComponent(step, name);
 
-        foreach(string dependencyName in dependsOn)
+        foreach(WorkflowStepComponent dependencyStep in dependencySteps)
         {
-            if(!_steps.TryGetValue(dependencyName, out WorkflowStepComponent? dependencyStep))
-            {
-                throw new InvalidOperationException($"Step '{name}' depends on '{dependencyName}', which is not registered. Register dependencies before the steps that depend on them.");
-            }
-
             _builder.AddDependency(step, dependencyStep);
         }
 

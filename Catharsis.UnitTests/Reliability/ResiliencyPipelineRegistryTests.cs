@@ -1,6 +1,7 @@
 using Catharsis.Events;
 using Catharsis.Reliability;
 using Catharsis.Resilience;
+using System.Collections.Concurrent;
 
 namespace Catharsis.UnitTests.Reliability;
 
@@ -161,6 +162,73 @@ public class ResiliencyPipelineRegistryTests
         await registry.ExecuteAsync("payments", static _ => Task.FromResult(1));
 
         Assert.AreEqual(0, publishCount);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_FailureAfterPriorNullSuccess_ReturnsCachedNull()
+    {
+        ResiliencyPipelineRegistry registry = new(new EventBus());
+        registry.Register("lookup", new DirectPolicy());
+
+        string? firstResult = await registry.ExecuteAsync<string?>("lookup", static _ => Task.FromResult<string?>(null));
+        Assert.IsNull(firstResult);
+
+        string? fallbackResult = await registry.ExecuteAsync<string?>("lookup", static _ => throw new InvalidOperationException("downstream failure"));
+
+        Assert.IsNull(fallbackResult);
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_CanceledOperation_PropagatesCancellationWithoutSwallowing()
+    {
+        ResiliencyPipelineRegistry registry = new(new EventBus());
+        registry.Register("payments", new DirectPolicy());
+
+        using CancellationTokenSource cts = new();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsExactlyAsync<OperationCanceledException>(() => registry.ExecuteAsync<int>("payments", static ct =>
+        {
+            ct.ThrowIfCancellationRequested();
+            return Task.FromResult(1);
+        }, cts.Token));
+    }
+
+    [TestMethod]
+    public async Task ExecuteAsync_ConcurrentFailuresSharingBreaker_PublishesEventExactlyOnce()
+    {
+        EventBus eventBus = new();
+        CircuitBreaker breaker = new(failureThreshold: 1, breakDuration: TimeSpan.FromMinutes(10));
+        ResiliencyPipelineRegistry registry = new(eventBus);
+        registry.Register("payments", breaker, breaker);
+
+        ConcurrentQueue<CircuitStateChangedEvent> published = new();
+        using IDisposable subscription = eventBus.Subscribe<CircuitStateChangedEvent>(evt =>
+        {
+            published.Enqueue(evt);
+            return Task.CompletedTask;
+        });
+
+        async Task InvokeFailingAsync()
+        {
+            try
+            {
+                await registry.ExecuteAsync<int>("payments", async ct =>
+                {
+                    await Task.Delay(10, ct).ConfigureAwait(false);
+                    throw new InvalidOperationException("downstream failure");
+                }).ConfigureAwait(false);
+            } catch(InvalidOperationException)
+            {
+                // Expected: no cached fallback exists yet.
+            }
+        }
+
+        await Task.WhenAll(InvokeFailingAsync(), InvokeFailingAsync());
+
+        Assert.HasCount(1, published);
+        Assert.AreEqual(CircuitState.Closed, published.Single().Previous);
+        Assert.AreEqual(CircuitState.Open, published.Single().Current);
     }
 
     #endregion

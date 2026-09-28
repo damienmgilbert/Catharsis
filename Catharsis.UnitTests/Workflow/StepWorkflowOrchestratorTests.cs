@@ -52,6 +52,20 @@ public class StepWorkflowOrchestratorTests
     }
 
     [TestMethod]
+    public void AddStep_UnregisteredDependency_LeavesOrchestratorUntouchedForRetry()
+    {
+        StepWorkflowOrchestrator workflow = new(new EventBus());
+        Assert.ThrowsExactly<InvalidOperationException>(() => workflow.AddStep("b", static _ => Task.CompletedTask, dependsOn: ["a"]));
+
+        CollectionAssert.DoesNotContain(workflow.StepNames.ToList(), "b");
+
+        workflow.AddStep("a", static _ => Task.CompletedTask);
+        workflow.AddStep("b", static _ => Task.CompletedTask, dependsOn: ["a"]);
+
+        CollectionAssert.Contains(workflow.StepNames.ToList(), "b");
+    }
+
+    [TestMethod]
     public void AddStep_NewStep_AddsToStepNames()
     {
         StepWorkflowOrchestrator workflow = new(new EventBus());
@@ -203,6 +217,30 @@ public class StepWorkflowOrchestratorTests
         await workflow.RunAsync();
 
         Assert.AreEqual(2, attempts);
+    }
+
+    [TestMethod]
+    public async Task RunAsync_RetryPolicyExhaustedWithSingleCause_PublishesUnwrappedException()
+    {
+        EventBus eventBus = new();
+        StepWorkflowOrchestrator workflow = new(eventBus);
+        InvalidOperationException failure = new("persistent failure");
+
+        RetryPolicy retry = new RetryPolicy().MaxAttempts(2).InitialDelay(TimeSpan.FromMilliseconds(1));
+        workflow.AddStep("always-fails", _ => throw failure, retryPolicy: retry);
+
+        List<WorkflowStepEvent> published = [];
+        using IDisposable subscription = eventBus.Subscribe<WorkflowStepEvent>(evt =>
+        {
+            published.Add(evt);
+            return Task.CompletedTask;
+        });
+
+        await workflow.RunAsync();
+
+        WorkflowStepEvent faultedEvent = published.Single(static e => e.State == ComponentState.Faulted);
+        Assert.IsNotInstanceOfType<AggregateException>(faultedEvent.Error);
+        Assert.AreSame(failure, faultedEvent.Error);
     }
 
     #endregion

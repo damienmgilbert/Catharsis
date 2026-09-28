@@ -12,12 +12,14 @@ namespace Catharsis.Monitoring;
 ///sweep's outcome, and publishes an <see cref="EndpointStatusChangedEvent"/> on an <see cref="EventBus"/> whenever
 ///an endpoint's aggregate <see cref="EndpointStatus"/> changes. The underlying <see cref="EndpointHealthTracker"/>'s
 ///success-ratio bookkeeping and <see cref="PingSweepHealthTracker"/>'s ICMP checks are passive recorders; this type
-///is what turns them into something actively watching for change.
+///is what turns them into something actively watching for change. Endpoints are compared by <see cref="Uri"/>
+///value equality; duplicate endpoints in the constructor's list are treated as one.
 ///</summary>
 public sealed class NetworkMonitor : IAsyncDisposable
 {
     #region Fields
     readonly IReadOnlyList<Uri> _endpoints;
+    readonly EndpointHealthTracker _healthTracker;
     readonly PingSweepHealthTracker _pingSweep;
     readonly EventBus _eventBus;
     readonly ConcurrentDictionary<Uri, CircuitBreaker> _breakers;
@@ -29,7 +31,7 @@ public sealed class NetworkMonitor : IAsyncDisposable
     ///<summary>
     ///Creates and starts a network monitor that sweeps the specified endpoints on the given interval.
     ///</summary>
-    ///<param name="endpoints">The endpoints to watch. Must contain at least one endpoint.</param>
+    ///<param name="endpoints">The endpoints to watch. Must contain at least one distinct endpoint.</param>
     ///<param name="pollInterval">How often to sweep every endpoint. Must be greater than zero.</param>
     ///<param name="eventBus">The event bus that <see cref="EndpointStatusChangedEvent"/> notifications are published to.</param>
     ///<param name="healthTracker">
@@ -38,22 +40,23 @@ public sealed class NetworkMonitor : IAsyncDisposable
     ///<param name="failureThreshold">The number of consecutive failed sweeps that trips an endpoint's circuit. Defaults to 3.</param>
     ///<param name="breakDuration">How long a tripped endpoint's circuit stays open before a trial sweep. Defaults to 30 seconds.</param>
     ///<exception cref="ArgumentNullException"><paramref name="endpoints"/> or <paramref name="eventBus"/> is <c>null</c>.</exception>
-    ///<exception cref="ArgumentException"><paramref name="endpoints"/> is empty.</exception>
+    ///<exception cref="ArgumentException"><paramref name="endpoints"/> contains no distinct endpoints.</exception>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="pollInterval"/> is not greater than zero.</exception>
     public NetworkMonitor(IEnumerable<Uri> endpoints, TimeSpan pollInterval, EventBus eventBus, EndpointHealthTracker? healthTracker = null, int failureThreshold = 3, TimeSpan? breakDuration = null)
     {
         ArgumentNullException.ThrowIfNull(endpoints);
         ArgumentNullException.ThrowIfNull(eventBus);
 
-        _endpoints = [.. endpoints];
+        _endpoints = [.. endpoints.Distinct()];
 
         if(_endpoints.Count == 0)
         {
-            throw new ArgumentException("At least one endpoint must be supplied.", nameof(endpoints));
+            throw new ArgumentException("At least one distinct endpoint must be supplied.", nameof(endpoints));
         }
 
         _eventBus = eventBus;
-        _pingSweep = new PingSweepHealthTracker(healthTracker ?? new EndpointHealthTracker());
+        _healthTracker = healthTracker ?? new EndpointHealthTracker();
+        _pingSweep = new PingSweepHealthTracker(_healthTracker);
         _breakers = new ConcurrentDictionary<Uri, CircuitBreaker>(_endpoints.ToDictionary(static endpoint => endpoint, _ => new CircuitBreaker(failureThreshold, breakDuration ?? TimeSpan.FromSeconds(30))));
         _lastStatus = new ConcurrentDictionary<Uri, EndpointStatus>(_endpoints.ToDictionary(static endpoint => endpoint, static _ => EndpointStatus.Healthy));
         _timer = new RecurringTimer(pollInterval, PollOnceAsync);
@@ -62,20 +65,22 @@ public sealed class NetworkMonitor : IAsyncDisposable
 
     #region Public methods
     ///<summary>
-    ///Maps a <see cref="CircuitState"/> to the <see cref="EndpointStatus"/> it represents: closed is healthy,
-    ///half-open is degraded, and open is down.
+    ///Determines an endpoint's aggregate status from its circuit breaker state and recent success ratio: an open
+    ///circuit is always <see cref="EndpointStatus.Down"/>; otherwise, a success ratio below 1.0 (recent sweeps have
+    ///not all succeeded, even though the circuit hasn't tripped) is <see cref="EndpointStatus.Degraded"/>, and a
+    ///perfect ratio is <see cref="EndpointStatus.Healthy"/>.
     ///</summary>
-    ///<param name="circuitState">The circuit state to map.</param>
+    ///<param name="circuitState">The endpoint's current circuit breaker state.</param>
+    ///<param name="successRatio">The endpoint's recent success ratio, e.g. from <see cref="EndpointHealthTracker.GetSuccessRatio"/>.</param>
     ///<returns>The corresponding endpoint status.</returns>
-    public static EndpointStatus FromCircuitState(CircuitState circuitState)
+    public static EndpointStatus DetermineStatus(CircuitState circuitState, double successRatio)
     {
-        return circuitState switch
+        if(circuitState == CircuitState.Open)
         {
-            CircuitState.Closed => EndpointStatus.Healthy,
-            CircuitState.HalfOpen => EndpointStatus.Degraded,
-            CircuitState.Open => EndpointStatus.Down,
-            _ => EndpointStatus.Down
-        };
+            return EndpointStatus.Down;
+        }
+
+        return (successRatio < 1.0) ? EndpointStatus.Degraded : EndpointStatus.Healthy;
     }
 
     ///<summary>
@@ -113,14 +118,16 @@ public sealed class NetworkMonitor : IAsyncDisposable
                         throw new PingSweepFailedSignal();
                     }
                 }, cancellationToken).ConfigureAwait(false);
-            } catch(Exception ex) when(ex is not OperationCanceledException)
+            } catch(PingSweepFailedSignal)
             {
-                // The failure has already been recorded by the circuit breaker; its resulting State drives the
-                // status transition below.
+                // Expected: the ping failed; the circuit breaker has already recorded the failure.
+            } catch(CircuitBreakerOpenException)
+            {
+                // Expected: the circuit is already open for this endpoint, so no ping was attempted.
             }
 
             EndpointStatus previous = _lastStatus[endpoint];
-            EndpointStatus current = FromCircuitState(breaker.State);
+            EndpointStatus current = DetermineStatus(breaker.State, _healthTracker.GetSuccessRatio(endpoint));
 
             if(current != previous)
             {
@@ -134,7 +141,8 @@ public sealed class NetworkMonitor : IAsyncDisposable
     #region Public properties
     ///<summary>
     ///Gets a task that completes when the background sweep loop stops, either because the monitor was disposed or
-    ///because a sweep threw. Awaiting this surfaces a sweep failure without needing to dispose first.
+    ///because a sweep threw an exception other than a ping failure or an open circuit (both handled internally).
+    ///Awaiting this surfaces such a failure without needing to dispose first.
     ///</summary>
     public Task Completion => _timer.Completion;
     #endregion
