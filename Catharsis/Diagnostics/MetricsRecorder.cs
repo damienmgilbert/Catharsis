@@ -83,4 +83,11 @@ public sealed class MetricsRecorder(string meterName, string? version = null) : 
         _meter.Dispose();
     }
     #endregion
+
+    #region Public properties
+    ///<summary>
+    ///The name of the underlying <see cref="Meter"/>.
+    ///</summary>
+    public string Name => _meter.Name;
+    #endregion
 }
