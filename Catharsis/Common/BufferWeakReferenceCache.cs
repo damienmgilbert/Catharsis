@@ -21,10 +21,10 @@ public sealed class BufferWeakReferenceCache<T> where T : class
     public void Clear() { _cache.Clear(); }
 
     ///<summary>
-    ///Gets an existing cached value or creates and caches a FileName one using the factory.
+    ///Gets an existing cached value or creates and caches a new one using the factory.
     ///</summary>
     ///<param name="key">The cache key.</param>
-    ///<param name="factory">The factory to create a FileName value if not cached.</param>
+    ///<param name="factory">The factory to create a new value if not cached.</param>
     ///<returns>The cached or newly created value.</returns>
     public T GetOrCreate(string key, Func<T> factory)
     {

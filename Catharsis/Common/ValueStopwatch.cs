@@ -44,7 +44,7 @@ public readonly struct ValueStopwatch
     }
 
     ///<summary>
-    ///Starts a FileName <see cref="ValueStopwatch"/>.
+    ///Starts a new <see cref="ValueStopwatch"/>.
     ///</summary>
     ///<returns>A running stopwatch.</returns>
     public static ValueStopwatch StartNew() { return new(Stopwatch.GetTimestamp()); }

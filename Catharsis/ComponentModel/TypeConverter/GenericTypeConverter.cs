@@ -18,30 +18,25 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///<see cref="GetSupportedSourceTypes"/> or<see cref="GetSupportedDestinationTypes"/> to extend the supported type
 ///set.</para>
 ///</remarks>
-public class GenericTypeConverter<T> : System.ComponentModel.TypeConverter
+///<remarks>
+///Initializes a new instance of <see cref="GenericTypeConverter{T}"/>.
+///</remarks>
+///<param name="convertFrom">
+///A delegate that converts a source value to <typeparamref name="T"/>. May be <c>null</c> if conversion from other
+///types is not supported.
+///</param>
+///<param name="convertTo">
+///A delegate that converts a <typeparamref name="T"/> value to a destination type. May be <c>null</c> if conversion
+///to other types is not supported.
+///</param>
+public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? convertFrom = null, Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? convertTo = null) : System.ComponentModel.TypeConverter
 {
     #region Fields
-    readonly Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? _convertFrom;
-    readonly Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? _convertTo;
-    #endregion
+    readonly Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? _convertFrom = convertFrom;
+    readonly Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? _convertTo = convertTo;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="GenericTypeConverter{T}"/>.
-    ///</summary>
-    ///<param name="convertFrom">
-    ///A delegate that converts a source value to <typeparamref name="T"/>. May be <c>null</c> if conversion from other
-    ///types is not supported.
-    ///</param>
-    ///<param name="convertTo">
-    ///A delegate that converts a <typeparamref name="T"/> value to a destination type. May be <c>null</c> if conversion
-    ///to other types is not supported.
-    ///</param>
-    public GenericTypeConverter(Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? convertFrom = null, Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? convertTo = null)
-    {
-        _convertFrom = convertFrom;
-        _convertTo = convertTo;
-    }
     #endregion
 
     #region Protected methods

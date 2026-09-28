@@ -14,7 +14,7 @@ public sealed class PropertyMetadata
 {
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="PropertyMetadata"/>.
+    ///Initializes a new instance of <see cref="PropertyMetadata"/>.
     ///</summary>
     ///<param name="name">The property name.</param>
     ///<param name="propertyType">The CLR type of the property value.</param>

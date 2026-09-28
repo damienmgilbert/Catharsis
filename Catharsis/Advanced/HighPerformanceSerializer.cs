@@ -18,14 +18,14 @@ public sealed class HighPerformanceSerializer : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="HighPerformanceSerializer"/> using the shared pool.
+    ///Initializes a new <see cref="HighPerformanceSerializer"/> using the shared pool.
     ///</summary>
     public HighPerformanceSerializer() : this(ArrayPool<byte>.Shared)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="HighPerformanceSerializer"/> with a specified pool.
+    ///Initializes a new <see cref="HighPerformanceSerializer"/> with a specified pool.
     ///</summary>
     ///<param name="pool">The array pool for allocations.</param>
     public HighPerformanceSerializer(ArrayPool<byte> pool)

@@ -22,7 +22,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata
+    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata
     ///registry.
     ///</summary>
     ///<param name="registry">The registry containing property and event metadata.</param>
@@ -36,7 +36,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry
+    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry
     ///and parent provider.
     ///</summary>
     ///<param name="registry">The registry containing property and event metadata.</param>
@@ -75,19 +75,14 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
     #endregion
 
-    sealed class RegistryTypeDescriptor : CustomTypeDescriptor
+    sealed class RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly Type _componentType;
-        readonly ComponentMetadataRegistry _registry;
-        #endregion
+        readonly Type _componentType = componentType;
+        readonly ComponentMetadataRegistry _registry = registry;
 
+        #endregion
         #region Constructors
-        public RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : base(parent)
-        {
-            _registry = registry;
-            _componentType = componentType;
-        }
         #endregion
 
         #region Private methods
@@ -140,7 +135,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
 
         static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
         {
-            Dictionary<string, EventDescriptor> merged = new(StringComparer.Ordinal);
+            Dictionary<string, EventDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(EventDescriptor evt in baseEvents)
             {
@@ -157,7 +152,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
 
         static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
-            Dictionary<string, PropertyDescriptor> merged = new(StringComparer.Ordinal);
+            Dictionary<string, PropertyDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(PropertyDescriptor prop in baseProperties)
             {

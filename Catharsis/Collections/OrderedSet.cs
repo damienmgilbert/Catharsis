@@ -7,7 +7,7 @@ namespace Catharsis.Collections;
 ///additions are silently ignored.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the set.</typeparam>
-public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
+public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly List<T> _items = [];
@@ -16,14 +16,14 @@ public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="OrderedSet{T}"/> using the default equality comparer.
+    ///Initializes a new <see cref="OrderedSet{T}"/> using the default equality comparer.
     ///</summary>
     public OrderedSet() : this(EqualityComparer<T>.Default)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="OrderedSet{T}"/> with the specified equality comparer.
+    ///Initializes a new <see cref="OrderedSet{T}"/> with the specified equality comparer.
     ///</summary>
     ///<param name="comparer">The comparer used to determine element equality.</param>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
@@ -34,7 +34,7 @@ public class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _set = new(comparer);
+        _set = [with(comparer)];
     }
     #endregion
 

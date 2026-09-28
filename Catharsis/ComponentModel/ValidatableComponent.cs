@@ -12,7 +12,7 @@ namespace Catharsis.ComponentModel;
 public abstract class ValidatableComponent : ObservableComponent, INotifyDataErrorInfo
 {
     #region Fields
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     #endregion
 
     #region Events
@@ -138,7 +138,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///</summary>
     ///<typeparam name="T">The type of the property.</typeparam>
     ///<param name="field">A reference to the backing field.</param>
-    ///<param name="value">The FileName value.</param>
+    ///<param name="value">The new value.</param>
     ///<param name="propertyName">
     ///The name of the property. Automatically provided by the compiler.
     ///</param>

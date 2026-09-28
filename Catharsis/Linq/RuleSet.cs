@@ -136,7 +136,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet<T> Merge(RuleSet<T> other)
     {
         ArgumentNullException.ThrowIfNull(other, nameof(other));
-        return new RuleSet<T>(_rules.Concat(other._rules));
+        return [with(_rules.Concat(other._rules))];
     }
 
     ///<summary>
@@ -162,7 +162,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet<T> Where(Func<Rule<T>, bool> ruleFilter)
     {
         ArgumentNullException.ThrowIfNull(ruleFilter, nameof(ruleFilter));
-        return new RuleSet<T>(_rules.Where(ruleFilter));
+        return [with(_rules.Where(ruleFilter))];
     }
 
     ///<summary>

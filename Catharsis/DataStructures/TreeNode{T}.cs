@@ -7,18 +7,17 @@ namespace Catharsis.DataStructures;
 ///traversal helpers.
 ///</summary>
 ///<typeparam name="T">The type of value stored in the node.</typeparam>
-public class TreeNode<T> : IEnumerable<TreeNode<T>>
+///<remarks>
+///Initializes a new <see cref="TreeNode{T}"/> with the specified value.
+///</remarks>
+///<param name="value">The value stored in this node.</param>
+public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
 {
     #region Fields
     readonly List<TreeNode<T>> _children = [];
-    #endregion
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="TreeNode{T}"/> with the specified value.
-    ///</summary>
-    ///<param name="value">The value stored in this node.</param>
-    public TreeNode(T value) { Value = value; }
     #endregion
 
     #region Explicit interface implementations
@@ -28,9 +27,9 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
 
     #region Public methods
     ///<summary>
-    ///Adds a child node with the specified value and returns the FileName child.
+    ///Adds a child node with the specified value and returns the new child.
     ///</summary>
-    ///<param name="value">The value for the FileName child node.</param>
+    ///<param name="value">The value for the new child node.</param>
     ///<returns>The newly created child <see cref="TreeNode{T}"/>.</returns>
     public TreeNode<T> AddChild(T value)
     {
@@ -209,6 +208,6 @@ public class TreeNode<T> : IEnumerable<TreeNode<T>>
     ///<summary>
     ///Gets or sets the value stored in this node.
     ///</summary>
-    public T Value { get; set; }
+    public T Value { get; set; } = value;
     #endregion
 }

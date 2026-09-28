@@ -10,7 +10,7 @@ public sealed class RuleContext<T>
 {
     #region Fields
     private readonly List<Rule<T>> _matchedRules = [];
-    private readonly Dictionary<string, object?> _properties = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, object?> _properties = [with(StringComparer.Ordinal)];
     #endregion
 
     #region Constructors

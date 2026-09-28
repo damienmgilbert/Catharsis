@@ -10,18 +10,17 @@ namespace Catharsis.Immutable;
 ///cref="ImmutableArray{T}"/> segments.
 ///</summary>
 ///<typeparam name="T">The element type.</typeparam>
-public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<ImmutableSequence<T>>
+///<remarks>
+///Initializes a new <see cref="ImmutableSequence{T}"/> from the specified data.
+///</remarks>
+///<param name="data">The immutable array backing this sequence.</param>
+public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyList<T>, IEquatable<ImmutableSequence<T>>
 {
     #region Struct fields
-    readonly ImmutableArray<T> _data;
-    #endregion
+    readonly ImmutableArray<T> _data = data;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="ImmutableSequence{T}"/> from the specified data.
-    ///</summary>
-    ///<param name="data">The immutable array backing this sequence.</param>
-    public ImmutableSequence(ImmutableArray<T> data) { _data = data; }
     #endregion
 
     #region Operators
@@ -56,17 +55,17 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
 
     #region Public methods
     ///<summary>
-    ///Returns a FileName sequence with the specified element appended.
+    ///Returns a new sequence with the specified element appended.
     ///</summary>
     ///<param name="item">The item to append.</param>
-    ///<returns>A FileName immutable sequence with the item appended.</returns>
+    ///<returns>A new immutable sequence with the item appended.</returns>
     public ImmutableSequence<T> Add(T item) { return new(_data.Add(item)); }
 
     ///<summary>
     ///Creates an <see cref="ImmutableSequence{T}"/> from a span.
     ///</summary>
     ///<param name="data">The source data.</param>
-    ///<returns>A FileName immutable sequence.</returns>
+    ///<returns>A new immutable sequence.</returns>
     public static ImmutableSequence<T> Create(ReadOnlySpan<T> data)
     {
         if(data.IsEmpty)
@@ -82,7 +81,7 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     ///an immutable array.
     ///</summary>
     ///<param name="sequence">The source sequence.</param>
-    ///<returns>A FileName immutable sequence.</returns>
+    ///<returns>A new immutable sequence.</returns>
     public static ImmutableSequence<T> CreateFrom(in ReadOnlySequence<T> sequence)
     {
         if(sequence.IsEmpty)
@@ -124,11 +123,11 @@ public readonly struct ImmutableSequence<T> : IReadOnlyList<T>, IEquatable<Immut
     }
 
     ///<summary>
-    ///Returns a FileName sequence containing a slice of this sequence.
+    ///Returns a new sequence containing a slice of this sequence.
     ///</summary>
     ///<param name="start">The start index.</param>
     ///<param name="length">The number of elements.</param>
-    ///<returns>A FileName immutable sequence.</returns>
+    ///<returns>A new immutable sequence.</returns>
     public ImmutableSequence<T> Slice(int start, int length)
     {
         Guard.IsGreaterThanOrEqualTo(start, 0);

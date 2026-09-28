@@ -6,7 +6,7 @@ namespace Catharsis.Collections;
 ///A collection that raises events when items are added or removed.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the collection.</typeparam>
-public class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
+public sealed class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
     readonly List<T> _items = [];

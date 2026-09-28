@@ -15,12 +15,12 @@ public sealed class FileNameAttribute : ValidationAttribute
 {
     #region Fields
     static readonly HashSet<char> InvalidChars =
-        new(Path.GetInvalidFileNameChars());
+        [with(Path.GetInvalidFileNameChars())];
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="FileNameAttribute"/> with the default error message.
+    ///Initializes a new instance of <see cref="FileNameAttribute"/> with the default error message.
     ///</summary>
     public FileNameAttribute() : base("The field {0} must be a valid file name.")
     {

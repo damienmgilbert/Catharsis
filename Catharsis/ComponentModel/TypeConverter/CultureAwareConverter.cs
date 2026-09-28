@@ -18,21 +18,20 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///method provides a zero-allocation alternative.</para> <para> Conversion to <see cref="string"/> uses <see
 ///cref="IFormattable.ToString"/> with the configured format and culture.</para>
 ///</remarks>
-public class CultureAwareConverter<T> : System.ComponentModel.TypeConverter where T : IParsable<T>, IFormattable
+///<remarks>
+///Initializes a new instance of <see cref="CultureAwareConverter{T}"/> using the specified context.
+///</remarks>
+///<param name="context">
+///The converter context providing culture and format settings. If <c>null</c>, <see
+///cref="ConverterContext.Default"/> is used.
+///</param>
+public class CultureAwareConverter<T>(ConverterContext? context = null) : System.ComponentModel.TypeConverter where T : IParsable<T>, IFormattable
 {
     #region Fields
-    readonly ConverterContext _context;
-    #endregion
+    readonly ConverterContext _context = context ?? ConverterContext.Default;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="CultureAwareConverter{T}"/> using the specified context.
-    ///</summary>
-    ///<param name="context">
-    ///The converter context providing culture and format settings. If <c>null</c>, <see
-    ///cref="ConverterContext.Default"/> is used.
-    ///</param>
-    public CultureAwareConverter(ConverterContext? context = null) { _context = context ?? ConverterContext.Default; }
     #endregion
 
     #region Private methods

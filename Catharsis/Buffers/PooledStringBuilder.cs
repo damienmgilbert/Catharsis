@@ -19,7 +19,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="PooledStringBuilder"/> with the specified initial capacity.
+    ///Initializes a new <see cref="PooledStringBuilder"/> with the specified initial capacity.
     ///</summary>
     ///<param name="initialCapacity">The initial buffer capacity.</param>
     public PooledStringBuilder(int initialCapacity = 256) : this(ArrayPool<char>.Shared, initialCapacity)
@@ -27,7 +27,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="PooledStringBuilder"/> with the specified pool and capacity.
+    ///Initializes a new <see cref="PooledStringBuilder"/> with the specified pool and capacity.
     ///</summary>
     ///<param name="pool">The array pool to rent from.</param>
     ///<param name="initialCapacity">The initial buffer capacity.</param>

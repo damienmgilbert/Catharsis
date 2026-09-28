@@ -19,7 +19,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="MemoryBackedChannel{T}"/> with the specified capacity.
+    ///Initializes a new <see cref="MemoryBackedChannel{T}"/> with the specified capacity.
     ///</summary>
     ///<param name="capacity">The maximum number of segments that can be buffered. Use 0 for unbounded.</param>
     public MemoryBackedChannel(int capacity = 0) : this(MemoryPool<T>.Shared, capacity)
@@ -27,7 +27,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="MemoryBackedChannel{T}"/> with a specified pool and capacity.
+    ///Initializes a new <see cref="MemoryBackedChannel{T}"/> with a specified pool and capacity.
     ///</summary>
     ///<param name="pool">The memory pool to rent from.</param>
     ///<param name="capacity">The channel capacity. Use 0 for unbounded.</param>
@@ -72,7 +72,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     public async ValueTask<OwnedSegment> ReadAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        return await _channel.Reader.ReadAsync(cancellationToken);
+        return await _channel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
     }
 
     ///<summary>
@@ -89,7 +89,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
         data.CopyTo(owner.Memory);
 
         OwnedSegment segment = new(owner, data.Length);
-        await _channel.Writer.WriteAsync(segment, cancellationToken);
+        await _channel.Writer.WriteAsync(segment, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 

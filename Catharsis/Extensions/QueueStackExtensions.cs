@@ -89,7 +89,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(Math.Min(count, source.Count));
+        List<T> result = [with(Math.Min(count, source.Count))];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -120,7 +120,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<TElement> result = new(Math.Min(count, source.Count));
+        List<TElement> result = [with(Math.Min(count, source.Count))];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -192,7 +192,7 @@ public static class QueueStackExtensions
     ///<typeparam name="TKey">The key type.</typeparam>
     ///<typeparam name="TValue">The value type.</typeparam>
     ///<param name="source">The target sorted list.</param>
-    ///<param name="modifier">A function that produces a FileName value given the key and current value.</param>
+    ///<param name="modifier">A function that produces a new value given the key and current value.</param>
     ///<returns>The original <paramref name="source"/> for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static SortedList<TKey, TValue> ModifyAll<TKey, TValue>(this SortedList<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
@@ -222,7 +222,7 @@ public static class QueueStackExtensions
     ///<typeparam name="TKey">The key type.</typeparam>
     ///<typeparam name="TValue">The value type.</typeparam>
     ///<param name="source">The target sorted dictionary.</param>
-    ///<param name="modifier">A function that produces a FileName value given the key and current value.</param>
+    ///<param name="modifier">A function that produces a new value given the key and current value.</param>
     ///<returns>The original <paramref name="source"/> for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static SortedDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this SortedDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
@@ -267,7 +267,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(Math.Min(count, source.Count));
+        List<T> result = [with(Math.Min(count, source.Count))];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Pop());

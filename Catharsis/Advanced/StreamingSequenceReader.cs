@@ -19,7 +19,7 @@ public sealed class StreamingSequenceReader : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="StreamingSequenceReader"/> with the specified buffer size.
+    ///Initializes a new <see cref="StreamingSequenceReader"/> with the specified buffer size.
     ///</summary>
     ///<param name="readBufferSize">The size of each read chunk.</param>
     public StreamingSequenceReader(int readBufferSize = 4096) : this(ArrayPool<byte>.Shared, readBufferSize)
@@ -27,7 +27,7 @@ public sealed class StreamingSequenceReader : IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="StreamingSequenceReader"/> with a specified pool and buffer size.
+    ///Initializes a new <see cref="StreamingSequenceReader"/> with a specified pool and buffer size.
     ///</summary>
     ///<param name="pool">The array pool to use.</param>
     ///<param name="readBufferSize">The size of each read chunk.</param>
@@ -71,7 +71,7 @@ public sealed class StreamingSequenceReader : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken)) > 0)
+            while((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
                 Span<byte> span = _builder.GetSpan(bytesRead);
                 readBuffer.AsSpan(0, bytesRead).CopyTo(span);
@@ -92,7 +92,7 @@ public sealed class StreamingSequenceReader : IDisposable
     ///<param name="stream">The source stream.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A <see cref="ReadOnlySequence{T}"/> over the read data.</returns>
-    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) { return await ReadAllAsync(stream, cancellationToken); }
+    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) { return await ReadAllAsync(stream, cancellationToken).ConfigureAwait(false); }
 
     ///<summary>
     ///Resets the reader for reuse.

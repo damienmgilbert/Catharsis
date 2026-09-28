@@ -21,7 +21,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="ObservablePooledBuffer{T}"/> with the specified initial capacity.
+    ///Initializes a new <see cref="ObservablePooledBuffer{T}"/> with the specified initial capacity.
     ///</summary>
     ///<param name="initialCapacity">The initial buffer capacity.</param>
     public ObservablePooledBuffer(int initialCapacity = 256) : this(ArrayPool<T>.Shared, initialCapacity)
@@ -29,7 +29,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="ObservablePooledBuffer{T}"/> with a specified pool and capacity.
+    ///Initializes a new <see cref="ObservablePooledBuffer{T}"/> with a specified pool and capacity.
     ///</summary>
     ///<param name="pool">The array pool to rent from.</param>
     ///<param name="initialCapacity">The initial capacity.</param>
@@ -89,7 +89,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
     }
 
     ///<summary>
-    ///Copies the written data to a FileName array.
+    ///Copies the written data to a new array.
     ///</summary>
     ///<returns>An array containing the written data.</returns>
     public T[] ToArray()

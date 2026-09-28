@@ -1,0 +1,76 @@
+root = true
+
+# All files
+[*]
+indent_style = space
+end_of_line = crlf
+insert_final_newline = true
+charset = utf-8
+
+[*.{csproj,props,targets,slnx}]
+indent_size = 2
+
+[*.cs]
+indent_size = 4
+
+# ---------------------------------------------------------------------------
+# .NET analyzer severities
+#
+# The library builds clean at AnalysisMode=Recommended EXCEPT for the rules
+# configured below. Each remaining category is either a deliberate public-API
+# design decision or a change that would alter observable behavior, so it is
+# intentionally down-graded here rather than "fixed" in a way that would break
+# the API or change behavior. Genuinely behavior-preserving findings (e.g.
+# CA2012 ValueTask double-consumption, CA1875 Regex.Count) are fixed in code
+# and remain enforced as warnings.
+# ---------------------------------------------------------------------------
+
+# --- Deliberate public-API design (a "fix" would be a breaking API change) ---
+
+# CA1000: Do not declare static members on generic types.
+# The library deliberately exposes generic factory/helper types with static
+# members (a standard modern pattern); changing this is an API redesign.
+dotnet_diagnostic.CA1000.severity = none
+
+# CA1710: Identifiers should have correct suffix (e.g. end in "Collection").
+# Domain type names such as Multimap, OrderedSet and Graph are intentional.
+dotnet_diagnostic.CA1710.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix (Queue/Stack/etc.).
+# Names such as QueueStackExtensions describe intent and are intentional.
+dotnet_diagnostic.CA1711.severity = none
+
+# CA1720: Identifier contains type name (e.g. "Object").
+# The affected public names are intentional and descriptive.
+dotnet_diagnostic.CA1720.severity = none
+
+# CA1708: Names should differ by more than case.
+# Geometry APIs use the conventional R/r (major/minor radius) mathematical
+# notation; renaming would break named-argument callers for no clarity gain.
+dotnet_diagnostic.CA1708.severity = none
+
+# --- Globalization / performance: resolved and enforced ---
+
+# CA1305: Specify IFormatProvider.
+# All formatting/parsing call sites pass an explicit culture (invariant for
+# machine-facing text); enforced to keep them explicit.
+dotnet_diagnostic.CA1305.severity = warning
+
+# CA1848: Use the LoggerMessage delegates.
+# Logging call sites use cached LoggerMessage delegates; enforced.
+dotnet_diagnostic.CA1848.severity = warning
+
+# --- Code-style rules resolved in source and enforced ---
+# Modernizations applied in source and kept enforced.
+dotnet_diagnostic.IDE0250.severity = warning
+dotnet_diagnostic.IDE0251.severity = warning
+dotnet_diagnostic.IDE0290.severity = warning
+dotnet_diagnostic.IDE0305.severity = warning
+
+# IDE0058: Expression value is never used.
+# Disabled by default; the library intentionally uses fluent/builder APIs and
+# ignores documented return values (bool from Set/ICollection.Remove, the
+# builder from fluent mutators). Peppering ~200 call sites with `_ =` discards
+# harms readability for no correctness gain, so this stays silent as a
+# deliberate, uniform decision (replacing the former per-member suppressions).
+dotnet_diagnostic.IDE0058.severity = silent

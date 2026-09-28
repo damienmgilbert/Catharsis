@@ -20,7 +20,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="ObservableSpan{T}"/> with the specified initial size.
+    ///Initializes a new <see cref="ObservableSpan{T}"/> with the specified initial size.
     ///</summary>
     ///<param name="initialSize">The initial buffer size.</param>
     public ObservableSpan(int initialSize = 64) : this(ArrayPool<T>.Shared, initialSize)
@@ -28,7 +28,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="ObservableSpan{T}"/> with a specified pool and size.
+    ///Initializes a new <see cref="ObservableSpan{T}"/> with a specified pool and size.
     ///</summary>
     ///<param name="pool">The array pool to use.</param>
     ///<param name="initialSize">The initial buffer size.</param>
@@ -70,7 +70,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
     }
 
     ///<summary>
-    ///Copies the current data to a FileName array.
+    ///Copies the current data to a new array.
     ///</summary>
     ///<returns>An array containing the current data.</returns>
     public T[] ToArray()
@@ -82,7 +82,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
     ///<summary>
     ///Replaces the current data with the specified span and raises change notifications.
     ///</summary>
-    ///<param name="data">The FileName data.</param>
+    ///<param name="data">The new data.</param>
     public void Update(ReadOnlySpan<T> data)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);

@@ -3,14 +3,10 @@
 ///<summary>
 ///Helper class representing a tree node for testing purposes.
 ///</summary>
-public class TreeNode
+public sealed class TreeNode(string name)
 {
+
     #region Constructors
-    public TreeNode(string name)
-    {
-        Name = name;
-        Children = [];
-    }
     #endregion
 
     #region Public methods
@@ -18,8 +14,8 @@ public class TreeNode
     #endregion
 
     #region Public properties
-    public List<TreeNode> Children { get; }
+    public List<TreeNode> Children { get; } = [];
 
-    public string Name { get; set; }
+    public string Name { get; set; } = name;
     #endregion
 }

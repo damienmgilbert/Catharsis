@@ -21,7 +21,7 @@ namespace Catharsis.Resilience;
 ///    cancellationToken);
 ///</code>
 ///</example>
-public sealed class RetryPolicy
+public sealed class RetryPolicy : IAsyncPolicy
 {
     #region Fields
     TimeSpan _initialDelay = TimeSpan.FromMilliseconds(200);
@@ -45,8 +45,6 @@ public sealed class RetryPolicy
 
         return TimeSpan.FromMilliseconds(delayMs);
     }
-
-    bool ShouldRetry(Exception exception, int attempt) { return attempt < _maxAttempts - 1 && _retryPredicate(exception); }
     #endregion
 
     #region Public methods
@@ -75,16 +73,21 @@ public sealed class RetryPolicy
             {
                 return operation();
             }
-            catch(Exception ex) when(ShouldRetry(ex, attempt))
+            catch(Exception ex) when(attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
-                exceptions ??= new(_maxAttempts);
+                exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 Thread.Sleep(ComputeDelay(attempt));
             }
+            catch(Exception ex) when(exceptions is not null && _retryPredicate(ex))
+            {
+                exceptions.Add(ex);
+                throw new AggregateException("All retry attempts have been exhausted.", exceptions);
+            }
         }
 
-        throw new AggregateException("All retry attempts have been exhausted.", exceptions!);
+        throw new UnreachableException();
     }
 
     ///<summary>
@@ -137,16 +140,21 @@ public sealed class RetryPolicy
             {
                 return await operation(cancellationToken).ConfigureAwait(false);
             }
-            catch(Exception ex) when(ex is not OperationCanceledException && ShouldRetry(ex, attempt))
+            catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
-                exceptions ??= new(_maxAttempts);
+                exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 await Task.Delay(ComputeDelay(attempt), cancellationToken).ConfigureAwait(false);
             }
+            catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+            {
+                exceptions.Add(ex);
+                throw new AggregateException("All retry attempts have been exhausted.", exceptions);
+            }
         }
 
-        throw new AggregateException("All retry attempts have been exhausted.", exceptions!);
+        throw new UnreachableException();
     }
 
     ///<summary>
@@ -184,33 +192,43 @@ public sealed class RetryPolicy
     ///<exception cref="AggregateException">
     ///Thrown when all retry attempts are exhausted. Contains all exceptions from each failed attempt.
     ///</exception>
-    public async ValueTask<TResult> ExecuteValueAsync<TResult>(Func<CancellationToken, ValueTask<TResult>> operation, CancellationToken cancellationToken = default)
+    public ValueTask<TResult> ExecuteValueAsync<TResult>(Func<CancellationToken, ValueTask<TResult>> operation, CancellationToken cancellationToken = default)
     {
         if(operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
-        List<Exception>? exceptions = null;
+        return Core(operation, cancellationToken);
 
-        for(int attempt = 0; attempt < _maxAttempts; attempt++)
+        async ValueTask<TResult> Core(Func<CancellationToken, ValueTask<TResult>> op, CancellationToken ct)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            List<Exception>? exceptions = null;
 
-            try
+            for(int attempt = 0; attempt < _maxAttempts; attempt++)
             {
-                return await operation(cancellationToken).ConfigureAwait(false);
-            }
-            catch(Exception ex) when(ex is not OperationCanceledException && ShouldRetry(ex, attempt))
-            {
-                exceptions ??= new(_maxAttempts);
-                exceptions.Add(ex);
+                ct.ThrowIfCancellationRequested();
 
-                await Task.Delay(ComputeDelay(attempt), cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    return await op(ct).ConfigureAwait(false);
+                }
+                catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
+                {
+                    exceptions ??= [with(_maxAttempts)];
+                    exceptions.Add(ex);
+
+                    await Task.Delay(ComputeDelay(attempt), ct).ConfigureAwait(false);
+                }
+                catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+                {
+                    exceptions.Add(ex);
+                    throw new AggregateException("All retry attempts have been exhausted.", exceptions);
+                }
             }
+
+            throw new UnreachableException();
         }
-
-        throw new AggregateException("All retry attempts have been exhausted.", exceptions!);
     }
 
     ///<summary>
@@ -223,18 +241,23 @@ public sealed class RetryPolicy
     ///<exception cref="AggregateException">
     ///Thrown when all retry attempts are exhausted. Contains all exceptions from each failed attempt.
     ///</exception>
-    public async ValueTask ExecuteValueAsync(Func<CancellationToken, ValueTask> operation, CancellationToken cancellationToken = default)
+    public ValueTask ExecuteValueAsync(Func<CancellationToken, ValueTask> operation, CancellationToken cancellationToken = default)
     {
         if(operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
-        await ExecuteValueAsync<object?>(async ct =>
+        return Core(operation, cancellationToken);
+
+        async ValueTask Core(Func<CancellationToken, ValueTask> op, CancellationToken ct)
         {
-            await operation(ct).ConfigureAwait(false);
-            return null;
-        }, cancellationToken).ConfigureAwait(false);
+            await ExecuteValueAsync<object?>(async token =>
+            {
+                await op(token).ConfigureAwait(false);
+                return null;
+            }, ct).ConfigureAwait(false);
+        }
     }
 
     ///<summary>

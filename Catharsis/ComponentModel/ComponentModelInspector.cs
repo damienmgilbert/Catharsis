@@ -71,7 +71,7 @@ public sealed class ComponentModelInspector
         ArgumentNullException.ThrowIfNull(component);
 
         EventDescriptorCollection events = TypeDescriptor.GetEvents(component);
-        List<EventReport> reports = new(events.Count);
+        List<EventReport> reports = [with(events.Count)];
 
         foreach(EventDescriptor evt in events)
         {
@@ -102,7 +102,7 @@ public sealed class ComponentModelInspector
         ArgumentNullException.ThrowIfNull(component);
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-        List<PropertyReport> reports = new(properties.Count);
+        List<PropertyReport> reports = [with(properties.Count)];
 
         foreach(PropertyDescriptor property in properties)
         {
@@ -154,7 +154,7 @@ public sealed class ComponentModelInspector
         if((component is INotifyDataErrorInfo errorInfo) && errorInfo.HasErrors)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-            Dictionary<string, IReadOnlyList<string>> dict = new(StringComparer.Ordinal);
+            Dictionary<string, IReadOnlyList<string>> dict = [with(StringComparer.Ordinal)];
 
             foreach(PropertyDescriptor prop in properties)
             {

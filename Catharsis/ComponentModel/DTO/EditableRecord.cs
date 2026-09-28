@@ -12,23 +12,22 @@ namespace Catharsis.ComponentModel.DTO;
 ///the snapshot, or <see cref="EndEdit"/> to commit the changes. <see cref="AcceptChanges"/> and<see
 ///cref="RejectChanges"/> provide <see cref="IRevertibleChangeTracking"/> semantics.</para>
 ///</remarks>
-public class EditableRecord<T> : BindableRecord<T>, IEditableObject, IRevertibleChangeTracking where T : class
+///<remarks>
+///Initializes a new instance of <see cref="EditableRecord{T}"/>.
+///</remarks>
+///<param name="value">The initial record value.</param>
+///<exception cref="ArgumentNullException">
+///<paramref name="value"/> is <c>null</c>.
+///</exception>
+public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObject, IRevertibleChangeTracking where T : class
 {
     #region Fields
-    T? _acceptedValue;
+    T? _acceptedValue = value;
     bool _isEditing;
     T? _snapshot;
-    #endregion
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="EditableRecord{T}"/>.
-    ///</summary>
-    ///<param name="value">The initial record value.</param>
-    ///<exception cref="ArgumentNullException">
-    ///<paramref name="value"/> is <c>null</c>.
-    ///</exception>
-    public EditableRecord(T value) : base(value) { _acceptedValue = value; }
     #endregion
 
     #region Public methods

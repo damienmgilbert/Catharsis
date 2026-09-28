@@ -6,29 +6,24 @@ namespace Catharsis.ComponentModel;
 ///A simple <see cref="PropertyDescriptor"/> backed by a dictionary of values, intended for use with <see
 ///cref="DynamicTypeDescriptor"/>.
 ///</summary>
-public sealed class DictionaryPropertyDescriptor : PropertyDescriptor
+///<remarks>
+///Initializes a new instance of <see cref="DictionaryPropertyDescriptor"/>.
+///</remarks>
+///<param name="name">The property name.</param>
+///<param name="propertyType">The type of the property value.</param>
+///<param name="store">The backing dictionary for get/set operations.</param>
+///<param name="attributes">Optional attributes for the property.</param>
+///<exception cref="ArgumentNullException">
+///<paramref name="store"/> or <paramref name="propertyType"/> is <c>null</c>.
+///</exception>
+public sealed class DictionaryPropertyDescriptor(string name, Type propertyType, IDictionary<string, object?> store, params Attribute[] attributes) : PropertyDescriptor(name, attributes)
 {
     #region Fields
-    readonly Type _propertyType;
-    readonly IDictionary<string, object?> _store;
-    #endregion
+    readonly Type _propertyType = propertyType ?? throw new ArgumentNullException(nameof(propertyType));
+    readonly IDictionary<string, object?> _store = store ?? throw new ArgumentNullException(nameof(store));
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName instance of <see cref="DictionaryPropertyDescriptor"/>.
-    ///</summary>
-    ///<param name="name">The property name.</param>
-    ///<param name="propertyType">The type of the property value.</param>
-    ///<param name="store">The backing dictionary for get/set operations.</param>
-    ///<param name="attributes">Optional attributes for the property.</param>
-    ///<exception cref="ArgumentNullException">
-    ///<paramref name="store"/> or <paramref name="propertyType"/> is <c>null</c>.
-    ///</exception>
-    public DictionaryPropertyDescriptor(string name, Type propertyType, IDictionary<string, object?> store, params Attribute[] attributes) : base(name, attributes)
-    {
-        _propertyType = propertyType ?? throw new ArgumentNullException(nameof(propertyType));
-        _store = store ?? throw new ArgumentNullException(nameof(store));
-    }
     #endregion
 
     #region Public methods

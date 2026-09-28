@@ -39,7 +39,7 @@ public static class SequenceWindow
 
     private static IEnumerable<List<T>> BufferIterator<T>(IEnumerable<T> source, int size)
     {
-        List<T> buffer = new(size);
+        List<T> buffer = [with(size)];
 
         foreach (T item in source)
         {
@@ -48,7 +48,7 @@ public static class SequenceWindow
             if (buffer.Count == size)
             {
                 yield return buffer;
-                buffer = new(size);
+                buffer = [with(size)];
             }
         }
 
@@ -96,7 +96,7 @@ public static class SequenceWindow
 
     private static IEnumerable<IReadOnlyList<T>> SlidingIterator<T>(IEnumerable<T> source, int size, int step)
     {
-        List<T> buffer = new(size);
+        List<T> buffer = [with(size)];
         int skip = 0;
 
         foreach (T item in source)
@@ -145,7 +145,7 @@ public static class SequenceWindow
 
     private static IEnumerable<IReadOnlyList<T>> TumblingIterator<T>(IEnumerable<T> source, int size)
     {
-        List<T> buffer = new(size);
+        List<T> buffer = [with(size)];
 
         foreach (T item in source)
         {
@@ -154,7 +154,7 @@ public static class SequenceWindow
             if (buffer.Count == size)
             {
                 yield return buffer.AsReadOnly();
-                buffer = new(size);
+                buffer = [with(size)];
             }
         }
 

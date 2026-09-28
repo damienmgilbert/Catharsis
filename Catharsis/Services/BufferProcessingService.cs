@@ -9,7 +9,7 @@ namespace Catharsis.Services;
 ///A DI-ready service that orchestrates buffer processing using an <see cref="IBufferProcessor"/> pipeline with
 ///integrated logging and pooled memory.
 ///</summary>
-public sealed class BufferProcessingService : IDisposable
+public sealed partial class BufferProcessingService : IDisposable
 {
     #region Fields
     bool _disposed;
@@ -20,7 +20,7 @@ public sealed class BufferProcessingService : IDisposable
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="BufferProcessingService"/> with the specified processor and logger.
+    ///Initializes a new <see cref="BufferProcessingService"/> with the specified processor and logger.
     ///</summary>
     ///<param name="processor">The buffer processor to delegate work to.</param>
     ///<param name="logger">The logger for diagnostic output.</param>
@@ -29,7 +29,7 @@ public sealed class BufferProcessingService : IDisposable
     }
 
     ///<summary>
-    ///Initializes a FileName <see cref="BufferProcessingService"/> with a custom pool.
+    ///Initializes a new <see cref="BufferProcessingService"/> with a custom pool.
     ///</summary>
     ///<param name="processor">The buffer processor to delegate work to.</param>
     ///<param name="logger">The logger for diagnostic output.</param>
@@ -57,8 +57,7 @@ public sealed class BufferProcessingService : IDisposable
 
         _disposed = true;
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("BufferProcessingService disposed. Total bytes processed: {Total}.", TotalBytesProcessed);
+        LogDisposed(TotalBytesProcessed);
     }
 
     ///<summary>
@@ -70,15 +69,13 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Processing {ByteCount} bytes synchronously.", input.Length);
+        LogProcessingSync(input.Length);
 
         using PooledBuffer<byte> output = new(input.Length * 2);
         _processor.Process(input, output);
         TotalBytesProcessed += input.Length;
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
+        LogProcessingComplete(output.WrittenCount);
         return output.WrittenSpan.ToArray();
     }
 
@@ -92,15 +89,13 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Processing {ByteCount} bytes asynchronously.", input.Length);
+        LogProcessingAsync(input.Length);
 
         using PooledBuffer<byte> output = new(input.Length * 2);
-        await _processor.ProcessAsync(input, output, cancellationToken);
+        await _processor.ProcessAsync(input, output, cancellationToken).ConfigureAwait(false);
         TotalBytesProcessed += input.Length;
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Async processing complete. Output: {OutputBytes} bytes.", output.WrittenCount);
+        LogAsyncProcessingComplete(output.WrittenCount);
         return output.WrittenSpan.ToArray();
     }
 
@@ -122,10 +117,10 @@ public sealed class BufferProcessingService : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken)) > 0)
+            while((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
-                byte[] result = await ProcessAsync(readBuffer.AsMemory(0, bytesRead), cancellationToken);
-                await outputStream.WriteAsync(result, cancellationToken);
+                byte[] result = await ProcessAsync(readBuffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+                await outputStream.WriteAsync(result, cancellationToken).ConfigureAwait(false);
             }
         } finally
         {
@@ -143,11 +138,10 @@ public sealed class BufferProcessingService : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Processing {ByteCount} bytes (ValueTask).", input.Length);
+        LogProcessingValueTask(input.Length);
 
         using PooledBuffer<byte> output = new(input.Length * 2);
-        await _processor.ProcessValueAsync(input, output, cancellationToken);
+        await _processor.ProcessValueAsync(input, output, cancellationToken).ConfigureAwait(false);
         TotalBytesProcessed += input.Length;
 
         return output.WrittenSpan.ToArray();
@@ -159,5 +153,25 @@ public sealed class BufferProcessingService : IDisposable
     ///Gets the total number of bytes processed.
     ///</summary>
     public long TotalBytesProcessed { get; private set; }
+    #endregion
+
+    #region Log messages
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes synchronously.")]
+    partial void LogProcessingSync(int byteCount);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "Processing complete. Output: {OutputBytes} bytes.")]
+    partial void LogProcessingComplete(int outputBytes);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes asynchronously.")]
+    partial void LogProcessingAsync(int byteCount);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Async processing complete. Output: {OutputBytes} bytes.")]
+    partial void LogAsyncProcessingComplete(int outputBytes);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes (ValueTask).")]
+    partial void LogProcessingValueTask(int byteCount);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "BufferProcessingService disposed. Total bytes processed: {Total}.")]
+    partial void LogDisposed(long total);
     #endregion
 }

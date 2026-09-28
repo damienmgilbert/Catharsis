@@ -12,28 +12,27 @@ namespace Catharsis.ComponentModel.DTO;
 ///<para> Property metadata is read once at construction time and cached. Use<see cref="GetPropertyMetadata"/> to query
 ///attributes for a specific property, or <see cref="AllPropertyMetadata"/> for the full set.</para>
 ///</remarks>
-public class MetadataAnnotatedRecord<T> : BindableRecord<T> where T : class
+///<remarks>
+///Initializes a new instance of <see cref="MetadataAnnotatedRecord{T}"/>.
+///</remarks>
+///<param name="value">The initial record value.</param>
+///<exception cref="ArgumentNullException">
+///<paramref name="value"/> is <c>null</c>.
+///</exception>
+public class MetadataAnnotatedRecord<T>(T value) : BindableRecord<T>(value) where T : class
 {
     #region Fields
-    readonly List<PropertyMetadataEntry> _metadata;
-    #endregion
+    readonly List<PropertyMetadataEntry> _metadata = BuildMetadata();
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="MetadataAnnotatedRecord{T}"/>.
-    ///</summary>
-    ///<param name="value">The initial record value.</param>
-    ///<exception cref="ArgumentNullException">
-    ///<paramref name="value"/> is <c>null</c>.
-    ///</exception>
-    public MetadataAnnotatedRecord(T value) : base(value) { _metadata = BuildMetadata(); }
     #endregion
 
     #region Private methods
     static List<PropertyMetadataEntry> BuildMetadata()
     {
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
-        List<PropertyMetadataEntry> entries = new(properties.Count);
+        List<PropertyMetadataEntry> entries = [with(properties.Count)];
 
         foreach(PropertyDescriptor prop in properties)
         {
@@ -49,7 +48,7 @@ public class MetadataAnnotatedRecord<T> : BindableRecord<T> where T : class
             IsReadOnly: prop.IsReadOnly,
             IsRequired: requiredAttr is not null,
             Category: prop.Category,
-            Attributes: prop.Attributes.Cast<Attribute>().ToArray()));
+            Attributes: [.. prop.Attributes.Cast<Attribute>()]));
         }
 
         return entries;

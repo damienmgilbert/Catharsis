@@ -71,7 +71,7 @@ public class IteratorTests
     public void Iterate_LargeCollection_WorksCorrectly()
     {
         // Arrange
-        List<int> obj = new(1000);
+        List<int> obj = [with(1000)];
         for(int i = 0; i < 1000; i++)
         {
             obj.Add(i);

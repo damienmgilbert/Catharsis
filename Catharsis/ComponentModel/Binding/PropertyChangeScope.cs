@@ -15,7 +15,7 @@ public sealed class PropertyChangeScope : IDisposable
 {
     #region Fields
     bool _disposed;
-    readonly HashSet<string> _pendingProperties = new(StringComparer.Ordinal);
+    readonly HashSet<string> _pendingProperties = [with(StringComparer.Ordinal)];
     readonly Action<string> _raisePropertyChanged;
     #endregion
 

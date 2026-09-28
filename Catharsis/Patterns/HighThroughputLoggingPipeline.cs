@@ -9,26 +9,21 @@ namespace Catharsis.Patterns;
 ///Demonstrates a high-throughput logging pipeline that buffers log entries using <see cref="PooledStringBuilder"/> and
 ///flushes them in batches to reduce I/O overhead and allocation pressure.
 ///</summary>
-public sealed class HighThroughputLoggingPipeline : IDisposable
+///<remarks>
+///Initializes a new <see cref="HighThroughputLoggingPipeline"/>.
+///</remarks>
+///<param name="logger">The underlying logger to flush to.</param>
+///<param name="flushThreshold">The number of entries before auto-flushing.</param>
+public sealed class HighThroughputLoggingPipeline(ILogger logger, int flushThreshold = 100) : IDisposable
 {
     #region Fields
-    readonly BufferLogger _bufferLogger;
+    readonly BufferLogger _bufferLogger = new BufferLogger(logger, flushThreshold * 128);
     bool _disposed;
     int _entryCount;
-    readonly int _flushThreshold;
-    #endregion
+    readonly int _flushThreshold = flushThreshold;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a FileName <see cref="HighThroughputLoggingPipeline"/>.
-    ///</summary>
-    ///<param name="logger">The underlying logger to flush to.</param>
-    ///<param name="flushThreshold">The number of entries before auto-flushing.</param>
-    public HighThroughputLoggingPipeline(ILogger logger, int flushThreshold = 100)
-    {
-        _bufferLogger = new BufferLogger(logger, flushThreshold * 128);
-        _flushThreshold = flushThreshold;
-    }
     #endregion
 
     #region Public methods

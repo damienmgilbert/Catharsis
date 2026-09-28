@@ -19,7 +19,7 @@ public sealed class ComponentSite : ISite
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="ComponentSite"/> binding the specified component to the given
+    ///Initializes a new instance of <see cref="ComponentSite"/> binding the specified component to the given
     ///container.
     ///</summary>
     ///<param name="container">The container hosting the component.</param>

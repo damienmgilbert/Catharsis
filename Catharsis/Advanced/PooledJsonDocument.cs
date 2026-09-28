@@ -81,7 +81,7 @@ public sealed class PooledJsonDocument : IDisposable
     public static async Task<PooledJsonDocument> ParseAsync(Stream stream, JsonDocumentOptions options = default, CancellationToken cancellationToken = default)
     {
         Guard.IsNotNull(stream);
-        JsonDocument doc = await JsonDocument.ParseAsync(stream, options, cancellationToken);
+        JsonDocument doc = await JsonDocument.ParseAsync(stream, options, cancellationToken).ConfigureAwait(false);
         return new PooledJsonDocument(doc, null, ArrayPool<byte>.Shared);
     }
 
@@ -92,7 +92,7 @@ public sealed class PooledJsonDocument : IDisposable
     ///<param name="options">Optional JSON document options.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A <see cref="PooledJsonDocument"/>.</returns>
-    public static async ValueTask<PooledJsonDocument> ParseValueAsync(Stream stream, JsonDocumentOptions options = default, CancellationToken cancellationToken = default) { return await ParseAsync(stream, options, cancellationToken); }
+    public static async ValueTask<PooledJsonDocument> ParseValueAsync(Stream stream, JsonDocumentOptions options = default, CancellationToken cancellationToken = default) { return await ParseAsync(stream, options, cancellationToken).ConfigureAwait(false); }
     #endregion
 
     #region Public properties

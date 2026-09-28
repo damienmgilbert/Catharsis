@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Catharsis.ComponentModel.Validation;
@@ -93,7 +94,7 @@ public sealed class RangeIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, Minimum, Maximum, DependentProperty, TargetValue ?? "null"); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties

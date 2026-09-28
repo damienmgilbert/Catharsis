@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Catharsis.DataAnnotations;
@@ -18,7 +19,7 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
 {
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="PredicateValidationAttribute"/>.
+    ///Initializes a new instance of <see cref="PredicateValidationAttribute"/>.
     ///</summary>
     ///<param name="validatorType">The type containing the predicate method.</param>
     ///<param name="methodName">The name of the <c>public static bool</c> method.</param>
@@ -64,7 +65,7 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
 
         if(!result)
         {
-            return new ValidationResult(string.Format(ErrorMessageString, validationContext.DisplayName, ValidatorType.Name, MethodName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, ValidatorType.Name, MethodName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
         }
 
         return ValidationResult.Success;
@@ -73,7 +74,7 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, ValidatorType.Name, MethodName); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, ValidatorType.Name, MethodName); }
     #endregion
 
     #region Public properties

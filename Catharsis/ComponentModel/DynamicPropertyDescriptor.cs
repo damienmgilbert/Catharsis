@@ -9,7 +9,7 @@ namespace Catharsis.ComponentModel;
 ///<remarks>
 ///<para> The getter and setter delegates receive the component instance and operate on it directly. If no setter is
 ///provided, the property is treated as read-only.</para> <para> Use <see cref="WithMergedAttributes"/> to produce a
-///FileName descriptor with additional attributes merged onto the existing set.</para>
+///new descriptor with additional attributes merged onto the existing set.</para>
 ///</remarks>
 public sealed class DynamicPropertyDescriptor : PropertyDescriptor
 {
@@ -23,7 +23,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="DynamicPropertyDescriptor"/> from <see cref="PropertyMetadata"/>
+    ///Initializes a new instance of <see cref="DynamicPropertyDescriptor"/> from <see cref="PropertyMetadata"/>
     ///and delegate accessors.
     ///</summary>
     ///<param name="metadata">The property metadata.</param>
@@ -46,7 +46,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="DynamicPropertyDescriptor"/>.
+    ///Initializes a new instance of <see cref="DynamicPropertyDescriptor"/>.
     ///</summary>
     ///<param name="name">The property name.</param>
     ///<param name="propertyType">The CLR type of the property value.</param>
@@ -135,11 +135,11 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     }
 
     ///<summary>
-    ///Creates a FileName <see cref="DynamicPropertyDescriptor"/> with the specified attributes merged onto the existing
+    ///Creates a new <see cref="DynamicPropertyDescriptor"/> with the specified attributes merged onto the existing
     ///attribute set.
     ///</summary>
     ///<param name="additionalAttributes">The attributes to merge.</param>
-    ///<returns>A FileName descriptor with the merged attributes.</returns>
+    ///<returns>A new descriptor with the merged attributes.</returns>
     public DynamicPropertyDescriptor WithMergedAttributes(params Attribute[] additionalAttributes)
     {
         AttributeCollectionBuilder builder = new AttributeCollectionBuilder(Attributes)

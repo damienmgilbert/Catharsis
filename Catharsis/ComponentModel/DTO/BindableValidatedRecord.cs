@@ -12,22 +12,21 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap, validate, and edit.</typeparam>
 ///<remarks>
-public class BindableValidatedRecord<T> : BindableRecord<T>, INotifyDataErrorInfo, IEditableObject, IRevertibleChangeTracking where T : class
+///<remarks>
+///Initializes a new instance of <see cref="BindableValidatedRecord{T}"/>.
+///</remarks>
+///<param name="value">The initial record value.</param>
+///<exception cref="ArgumentNullException">
+public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyDataErrorInfo, IEditableObject, IRevertibleChangeTracking where T : class
 {
     #region Fields
-    private T? _acceptedValue;
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private T? _acceptedValue = value;
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     private bool _isEditing;
     private T? _snapshot;
-    #endregion
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="BindableValidatedRecord{T}"/>.
-    ///</summary>
-    ///<param name="value">The initial record value.</param>
-    ///<exception cref="ArgumentNullException">
-    public BindableValidatedRecord(T value) : base(value) { _acceptedValue = value; }
     #endregion
 
     #region Events

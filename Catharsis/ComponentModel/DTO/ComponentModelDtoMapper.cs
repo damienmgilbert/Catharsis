@@ -14,20 +14,19 @@ namespace Catharsis.ComponentModel.DTO;
 ///TTarget)"/> to copy into an existing target, or <see cref="Map{TSource, TTarget}(TSource)"/> to create a new instance
 ///(requires a parameterless constructor).</para>
 ///</remarks>
-public sealed class ComponentModelDtoMapper
+///<remarks>
+///Initializes a new instance of <see cref="ComponentModelDtoMapper"/> with the specified options.
+///</remarks>
+///<param name="options">
+///Mapping options. If <c>null</c>, <see cref="ComponentModelDtoOptions.Default"/> is used.
+///</param>
+public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = null)
 {
     #region Fields
-    readonly ComponentModelDtoOptions _options;
-    #endregion
+    readonly ComponentModelDtoOptions _options = options ?? ComponentModelDtoOptions.Default;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="ComponentModelDtoMapper"/> with the specified options.
-    ///</summary>
-    ///<param name="options">
-    ///Mapping options. If <c>null</c>, <see cref="ComponentModelDtoOptions.Default"/> is used.
-    ///</param>
-    public ComponentModelDtoMapper(ComponentModelDtoOptions? options = null) { _options = options ?? ComponentModelDtoOptions.Default; }
     #endregion
 
     #region Private methods

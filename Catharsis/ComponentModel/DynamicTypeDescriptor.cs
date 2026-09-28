@@ -15,13 +15,13 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="DynamicTypeDescriptor"/>.
+    ///Initializes a new instance of <see cref="DynamicTypeDescriptor"/>.
     ///</summary>
     public DynamicTypeDescriptor()
     {
     }
     ///<summary>
-    ///Initializes a FileName instance of <see cref="DynamicTypeDescriptor"/> that delegates to the specified parent
+    ///Initializes a new instance of <see cref="DynamicTypeDescriptor"/> that delegates to the specified parent
     ///descriptor for defaults.
     ///</summary>
     ///<param name="parent">The parent type descriptor.</param>

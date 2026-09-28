@@ -40,7 +40,7 @@ public sealed class ComponentMetadataRegistry
         {
             lock (list)
             {
-                return list.ToArray();
+                return [.. list];
             }
         }
 
@@ -62,7 +62,7 @@ public sealed class ComponentMetadataRegistry
         {
             lock (list)
             {
-                return list.ToArray();
+                return [.. list];
             }
         }
 

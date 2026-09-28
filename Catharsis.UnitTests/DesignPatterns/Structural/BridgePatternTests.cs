@@ -72,7 +72,7 @@ public class BridgePatternTests
                      set,
                      static (l, s) =>
                      {
-                         HashSet<int> combined = new(l);
+                         HashSet<int> combined = [with(l)];
                          combined.UnionWith(s);
                          return combined.Count;
                      });

@@ -4,7 +4,7 @@ namespace Catharsis.Extensions;
 
 ///<summary>
 ///Provides extension methods for types in <see cref="System.Collections.Immutable"/> to add, remove, and modify
-///elements or ranges, returning FileName immutable instances.
+///elements or ranges, returning new immutable instances.
 ///</summary>
 public static class ImmutableCollectionExtensions
 {
@@ -12,7 +12,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableDictionary<TKey, TValue> ───────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries from <paramref name="items"/>
+    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries from <paramref name="items"/>
     ///added or updated.
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> AddRange<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> items) where TKey : notnull
@@ -45,7 +45,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(count);
+        List<T> result = [with(count)];
         ImmutableQueue<T> queue = source;
         for(int i = 0; (i < count) && !queue.IsEmpty; i++)
         {
@@ -58,7 +58,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableQueue<T> ───────────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableQueue{T}"/> with all elements from <paramref name="items"/> enqueued.
+    ///Returns a new <see cref="ImmutableQueue{T}"/> with all elements from <paramref name="items"/> enqueued.
     ///</summary>
     public static ImmutableQueue<T> EnqueueRange<T>(this ImmutableQueue<T> source, IEnumerable<T> items)
     {
@@ -78,13 +78,13 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableArray<T> ───────────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableArray{T}"/> with <paramref name="item"/> inserted at <paramref
+    ///Returns a new <see cref="ImmutableArray{T}"/> with <paramref name="item"/> inserted at <paramref
     ///name="index"/>.
     ///</summary>
     public static ImmutableArray<T> InsertAt<T>(this ImmutableArray<T> source, int index, T item) { return source.Insert(index, item); }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableArray{T}"/> with all elements transformed by <paramref name="modifier"/>.
+    ///Returns a new <see cref="ImmutableArray{T}"/> with all elements transformed by <paramref name="modifier"/>.
     ///</summary>
     public static ImmutableArray<T> ModifyAll<T>(this ImmutableArray<T> source, Func<T, T> modifier)
     {
@@ -103,7 +103,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableList{T}"/> with all elements transformed by <paramref name="modifier"/>.
+    ///Returns a new <see cref="ImmutableList{T}"/> with all elements transformed by <paramref name="modifier"/>.
     ///</summary>
     public static ImmutableList<T> ModifyAll<T>(this ImmutableList<T> source, Func<T, T> modifier)
     {
@@ -127,7 +127,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableDictionary{TKey,TValue}"/> with all values transformed by <paramref
+    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all values transformed by <paramref
     ///name="modifier"/>.
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
@@ -152,7 +152,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableHashSet{T}"/> with elements transformed by <paramref name="modifier"/>.
+    ///Returns a new <see cref="ImmutableHashSet{T}"/> with elements transformed by <paramref name="modifier"/>.
     ///</summary>
     public static ImmutableHashSet<T> ModifyAll<T>(this ImmutableHashSet<T> source, Func<T, T> modifier)
     {
@@ -177,7 +177,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableSortedDictionary{TKey,TValue}"/> with all values transformed by <paramref
+    ///Returns a new <see cref="ImmutableSortedDictionary{TKey,TValue}"/> with all values transformed by <paramref
     ///name="modifier"/>.
     ///</summary>
     public static ImmutableSortedDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
@@ -202,7 +202,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableArray{T}"/> with matching elements transformed by <paramref
+    ///Returns a new <see cref="ImmutableArray{T}"/> with matching elements transformed by <paramref
     ///name="modifier"/>.
     ///</summary>
     public static ImmutableArray<T> ModifyWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate, Func<T, T> modifier)
@@ -230,7 +230,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableList{T}"/> with matching elements transformed by <paramref
+    ///Returns a new <see cref="ImmutableList{T}"/> with matching elements transformed by <paramref
     ///name="modifier"/>.
     ///</summary>
     public static ImmutableList<T> ModifyWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate, Func<T, T> modifier)
@@ -271,7 +271,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = new(count);
+        List<T> result = [with(count)];
         ImmutableStack<T> stack = source;
         for(int i = 0; (i < count) && !stack.IsEmpty; i++)
         {
@@ -284,7 +284,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableStack<T> ───────────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableStack{T}"/> with all elements from <paramref name="items"/> pushed.
+    ///Returns a new <see cref="ImmutableStack{T}"/> with all elements from <paramref name="items"/> pushed.
     ///</summary>
     public static ImmutableStack<T> PushRange<T>(this ImmutableStack<T> source, IEnumerable<T> items)
     {
@@ -303,7 +303,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries whose keys are in <paramref
+    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries whose keys are in <paramref
     ///name="keys"/> removed.
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> RemoveRange<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> keys) where TKey : notnull
@@ -322,7 +322,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableArray{T}"/> with all elements matching <paramref name="predicate"/>
+    ///Returns a new <see cref="ImmutableArray{T}"/> with all elements matching <paramref name="predicate"/>
     ///removed.
     ///</summary>
     public static ImmutableArray<T> RemoveWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate)
@@ -337,7 +337,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableList<T> ────────────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableList{T}"/> with all elements matching <paramref name="predicate"/>
+    ///Returns a new <see cref="ImmutableList{T}"/> with all elements matching <paramref name="predicate"/>
     ///removed.
     ///</summary>
     public static ImmutableList<T> RemoveWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate)
@@ -356,7 +356,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries matching <paramref
+    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries matching <paramref
     ///name="predicate"/> removed.
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> RemoveWhere<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate) where TKey : notnull
@@ -377,7 +377,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableHashSet<T> ─────────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableHashSet{T}"/> with all elements matching <paramref name="predicate"/>
+    ///Returns a new <see cref="ImmutableHashSet{T}"/> with all elements matching <paramref name="predicate"/>
     ///removed.
     ///</summary>
     public static ImmutableHashSet<T> RemoveWhere<T>(this ImmutableHashSet<T> source, Func<T, bool> predicate)
@@ -398,7 +398,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableSortedSet<T> ───────────────────────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableSortedSet{T}"/> with all elements matching <paramref name="predicate"/>
+    ///Returns a new <see cref="ImmutableSortedSet{T}"/> with all elements matching <paramref name="predicate"/>
     ///removed.
     ///</summary>
     public static ImmutableSortedSet<T> RemoveWhere<T>(this ImmutableSortedSet<T> source, Func<T, bool> predicate)
@@ -419,7 +419,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableSortedDictionary<TKey, TValue> ─────────────────────────
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableSortedDictionary{TKey,TValue}"/> with all entries matching <paramref
+    ///Returns a new <see cref="ImmutableSortedDictionary{TKey,TValue}"/> with all entries matching <paramref
     ///name="predicate"/> removed.
     ///</summary>
     public static ImmutableSortedDictionary<TKey, TValue> RemoveWhere<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate) where TKey : notnull
@@ -439,7 +439,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableArray{T}"/> with the element at <paramref name="index"/> replaced by
+    ///Returns a new <see cref="ImmutableArray{T}"/> with the element at <paramref name="index"/> replaced by
     public static ImmutableArray<T> ReplaceAt<T>(this ImmutableArray<T> source, int index, T item)
     {
         if((index < 0) || (index >= source.Length))
@@ -451,7 +451,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a FileName <see cref="ImmutableList{T}"/> with the element at <paramref name="index"/> replaced by
+    ///Returns a new <see cref="ImmutableList{T}"/> with the element at <paramref name="index"/> replaced by
     public static ImmutableList<T> ReplaceAt<T>(this ImmutableList<T> source, int index, T item)
     {
         if(source is null)

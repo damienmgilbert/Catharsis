@@ -10,7 +10,7 @@ public static class SequenceDistinct
     #region Private methods
     private static IEnumerable<T> DistinctByKeyIterator<T, TKey>(IEnumerable<T> source, Func<T, TKey> keySelector, IEqualityComparer<TKey> comparer)
     {
-        HashSet<TKey> seen = new(comparer);
+        HashSet<TKey> seen = [with(comparer)];
 
         foreach (T item in source)
         {
@@ -47,7 +47,7 @@ public static class SequenceDistinct
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
 
-        Dictionary<TKey, int> counts = new(comparer ?? EqualityComparer<TKey>.Default);
+        Dictionary<TKey, int> counts = [with(comparer ?? EqualityComparer<TKey>.Default)];
 
         foreach (T item in source)
         {
@@ -121,7 +121,7 @@ public static class SequenceDistinct
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
         ArgumentNullException.ThrowIfNull(duplicateResolver, nameof(duplicateResolver));
 
-        Dictionary<TKey, T> seen = new(comparer ?? EqualityComparer<TKey>.Default);
+        Dictionary<TKey, T> seen = [with(comparer ?? EqualityComparer<TKey>.Default)];
 
         foreach (T item in source)
         {

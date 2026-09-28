@@ -73,7 +73,7 @@ public sealed class DesignTimeComponentInitializer
 
         if (!_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
         {
-            props = new(StringComparer.Ordinal);
+            props = [with(StringComparer.Ordinal)];
             _defaults[type] = props;
         }
 

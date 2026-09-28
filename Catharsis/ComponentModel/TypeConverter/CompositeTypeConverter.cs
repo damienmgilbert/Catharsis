@@ -22,7 +22,7 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
+    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
     ///in order.
     ///</summary>
     ///<param name="converters">The converters to chain.</param>
@@ -45,7 +45,7 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     }
 
     ///<summary>
-    ///Initializes a FileName instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
+    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
     ///in order.
     ///</summary>
     ///<param name="converters">The converters to chain.</param>

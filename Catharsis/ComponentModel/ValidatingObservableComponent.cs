@@ -15,7 +15,7 @@ namespace Catharsis.ComponentModel;
 public abstract class ValidatingObservableComponent : ObservableComponent, INotifyDataErrorInfo, IEditableObject
 {
     #region Fields
-    private readonly Dictionary<string, List<string>> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     private Dictionary<string, object?>? _snapshot;
     #endregion
 
@@ -27,7 +27,7 @@ public abstract class ValidatingObservableComponent : ObservableComponent, INoti
     #region Private methods
     private Dictionary<string, object?> CaptureSnapshot()
     {
-        Dictionary<string, object?> snapshot = new(StringComparer.Ordinal);
+        Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
 
         foreach (PropertyInfo property in GetEditableProperties())
         {

@@ -43,7 +43,7 @@ public sealed class AsyncBufferLock : IDisposable
     public async Task<IDisposable> LockAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        await _semaphore.WaitAsync(cancellationToken);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         return new LockHandle(_semaphore);
     }
 
@@ -55,7 +55,7 @@ public sealed class AsyncBufferLock : IDisposable
     public async ValueTask<IDisposable> LockValueAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        await _semaphore.WaitAsync(cancellationToken);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         return new LockHandle(_semaphore);
     }
 

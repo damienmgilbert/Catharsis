@@ -3,7 +3,7 @@ namespace Catharsis.DataStructures;
 ///<summary>
 ///A prefix tree (trie) optimized for string key lookup, prefix matching, and auto-complete scenarios.
 ///</summary>
-public class Trie
+public sealed class Trie
 {
     #region Fields
     readonly TrieNode _root = new();

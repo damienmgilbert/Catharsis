@@ -16,13 +16,13 @@ public class SortableBindingList<T> : BindingList<T>
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName instance of <see cref="SortableBindingList{T}"/> with an empty list.
+    ///Initializes a new instance of <see cref="SortableBindingList{T}"/> with an empty list.
     ///</summary>
     public SortableBindingList()
     {
     }
     ///<summary>
-    ///Initializes a FileName instance of <see cref="SortableBindingList{T}"/> wrapping the specified list.
+    ///Initializes a new instance of <see cref="SortableBindingList{T}"/> wrapping the specified list.
     ///</summary>
     ///<param name="list">The list to wrap.</param>
     public SortableBindingList(IList<T> list) : base(list)

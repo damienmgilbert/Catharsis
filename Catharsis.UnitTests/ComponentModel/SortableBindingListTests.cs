@@ -59,7 +59,7 @@ public class SortableBindingListTests
     {
         List<Item> items = [new() { Name = "One" }, new() { Name = "Two" }];
 
-        SortableBindingList<Item> list = new(items);
+        SortableBindingList<Item> list = [with(items)];
 
         Assert.HasCount(2, list);
         Assert.AreEqual("One", list[0].Name);

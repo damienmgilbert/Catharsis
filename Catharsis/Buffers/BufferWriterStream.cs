@@ -17,7 +17,7 @@ public sealed class BufferWriterStream : Stream
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="BufferWriterStream"/> that writes to the specified buffer writer.
+    ///Initializes a new <see cref="BufferWriterStream"/> that writes to the specified buffer writer.
     ///</summary>
     ///<param name="writer">The buffer writer to write to.</param>
     public BufferWriterStream(IBufferWriter<byte> writer)
@@ -95,7 +95,7 @@ public sealed class BufferWriterStream : Stream
 
         cancellationToken.ThrowIfCancellationRequested();
         Write(buffer, offset, count);
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     ///<inheritdoc/>

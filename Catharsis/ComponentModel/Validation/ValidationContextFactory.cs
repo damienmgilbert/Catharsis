@@ -6,28 +6,23 @@ namespace Catharsis.ComponentModel.Validation;
 ///Factory for creating <see cref="ValidationContext"/> instances with consistent service provider and member name
 ///configuration.
 ///</summary>
-public sealed class ValidationContextFactory
+///<remarks>
+///Initializes a new instance of <see cref="ValidationContextFactory"/>.
+///</remarks>
+///<param name="serviceProvider">
+///An optional service provider to attach to created contexts.
+///</param>
+///<param name="items">
+///Optional items dictionary to attach to created contexts.
+///</param>
+public sealed class ValidationContextFactory(IServiceProvider? serviceProvider = null, IDictionary<object, object?>? items = null)
 {
     #region Fields
-    readonly IDictionary<object, object?>? _items;
-    readonly IServiceProvider? _serviceProvider;
-    #endregion
+    readonly IDictionary<object, object?>? _items = items;
+    readonly IServiceProvider? _serviceProvider = serviceProvider;
 
+    #endregion
     #region Constructors
-    ///<summary>
-    ///Initializes a new instance of <see cref="ValidationContextFactory"/>.
-    ///</summary>
-    ///<param name="serviceProvider">
-    ///An optional service provider to attach to created contexts.
-    ///</param>
-    ///<param name="items">
-    ///Optional items dictionary to attach to created contexts.
-    ///</param>
-    public ValidationContextFactory(IServiceProvider? serviceProvider = null, IDictionary<object, object?>? items = null)
-    {
-        _serviceProvider = serviceProvider;
-        _items = items;
-    }
     #endregion
 
     #region Private methods

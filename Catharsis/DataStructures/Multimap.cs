@@ -8,7 +8,7 @@ namespace Catharsis.DataStructures;
 ///</summary>
 ///<typeparam name="TKey">The type of the keys.</typeparam>
 ///<typeparam name="TValue">The type of the values.</typeparam>
-public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
+public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
 {
     #region Fields
     readonly Dictionary<TKey, List<TValue>> _map;
@@ -16,14 +16,14 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/> using the default key equality comparer.
+    ///Initializes a new empty <see cref="Multimap{TKey, TValue}"/> using the default key equality comparer.
     ///</summary>
     public Multimap() : this(EqualityComparer<TKey>.Default)
     {
     }
 
     ///<summary>
-    ///Initializes a FileName empty <see cref="Multimap{TKey, TValue}"/> with the specified key equality comparer.
+    ///Initializes a new empty <see cref="Multimap{TKey, TValue}"/> with the specified key equality comparer.
     ///</summary>
     ///<param name="comparer">The comparer used for key equality.</param>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
@@ -34,7 +34,7 @@ public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCo
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _map = new(comparer);
+        _map = [with(comparer)];
     }
     #endregion
 

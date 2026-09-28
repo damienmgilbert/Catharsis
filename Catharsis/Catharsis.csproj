@@ -9,7 +9,12 @@
 		<LangVersion>preview</LangVersion>
 		<Nullable>enable</Nullable>
 		<Authors>Damien M Gilbert</Authors>
-		
+
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>Recommended</AnalysisMode>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,6 +39,13 @@
 	
 	<ItemGroup>
 	  <InternalsVisibleTo Include="Catharsis.UnitTests" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>

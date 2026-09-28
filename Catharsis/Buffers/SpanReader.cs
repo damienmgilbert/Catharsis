@@ -19,7 +19,7 @@ public ref struct SpanReader
 
     #region Constructors
     ///<summary>
-    ///Initializes a FileName <see cref="SpanReader"/> over the specified span.
+    ///Initializes a new <see cref="SpanReader"/> over the specified span.
     ///</summary>
     ///<param name="span">The span to read from.</param>
     public SpanReader(ReadOnlySpan<byte> span)

@@ -25,14 +25,14 @@ public static class MemoryOwnerExtensions
     public static void Fill<T>(this MemoryOwner<T> owner, T value) { owner.Span.Fill(value); }
 
     ///<summary>
-    ///Slices a <see cref="MemoryOwner{T}"/> and returns a FileName owner with the specified range. The caller is
-    ///responsible for disposing both the original and the FileName owner.
+    ///Slices a <see cref="MemoryOwner{T}"/> and returns a new owner with the specified range. The caller is
+    ///responsible for disposing both the original and the new owner.
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="owner">The source memory owner.</param>
     ///<param name="start">The start index.</param>
     ///<param name="length">The number of elements.</param>
-    ///<returns>A FileName <see cref="MemoryOwner{T}"/> containing the sliced data.</returns>
+    ///<returns>A new <see cref="MemoryOwner{T}"/> containing the sliced data.</returns>
     public static MemoryOwner<T> SliceCopy<T>(this MemoryOwner<T> owner, int start, int length)
     {
         ReadOnlySpan<T> source = owner.Span.Slice(start, length);
@@ -46,7 +46,7 @@ public static class MemoryOwnerExtensions
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="span">The source span to copy from.</param>
-    ///<returns>A FileName <see cref="MemoryOwner{T}"/> containing a copy of the data.</returns>
+    ///<returns>A new <see cref="MemoryOwner{T}"/> containing a copy of the data.</returns>
     public static MemoryOwner<T> ToMemoryOwner<T>(this ReadOnlySpan<T> span)
     {
         MemoryOwner<T> owner = MemoryOwner<T>.Allocate(span.Length);
@@ -59,7 +59,7 @@ public static class MemoryOwnerExtensions
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="memory">The source memory to copy from.</param>
-    ///<returns>A FileName <see cref="MemoryOwner{T}"/> containing a copy of the data.</returns>
+    ///<returns>A new <see cref="MemoryOwner{T}"/> containing a copy of the data.</returns>
     public static MemoryOwner<T> ToMemoryOwner<T>(this ReadOnlyMemory<T> memory)
     {
         MemoryOwner<T> owner = MemoryOwner<T>.Allocate(memory.Length);

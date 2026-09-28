@@ -29,7 +29,7 @@ public abstract class PooledComponent : ComponentBase
     }
 
     ///<summary>
-    ///Called when the component is activated for a FileName lease. Override to perform initialization logic.
+    ///Called when the component is activated for a new lease. Override to perform initialization logic.
     ///</summary>
     protected virtual void OnActivate()
     {

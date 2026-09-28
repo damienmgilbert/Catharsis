@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -85,7 +86,7 @@ public sealed class RegexIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(ErrorMessageString, name, Pattern, DependentProperty, TargetValue ?? "null"); }
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Pattern, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties
