@@ -25,7 +25,7 @@ application or library.
 | Project | Description |
 | --- | --- |
 | [`Catharsis/`](Catharsis/README.md) | The library itself — the shippable NuGet package. |
-| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~3,960 tests). |
+| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~4,320 tests). |
 | [`CatharsisBenchmarkSuite/`](CatharsisBenchmarkSuite/README.md) | BenchmarkDotNet suite measuring key types against BCL baselines. |
 
 The solution is defined by [`Catharsis.slnx`](Catharsis.slnx) (the XML-based
@@ -69,31 +69,47 @@ See the [library README](Catharsis/README.md) for the full feature map.
 Catharsis is organized into focused namespaces under the `Catharsis.*` root:
 
 - **Collections / DataStructures** — `Deque`, `CircularBuffer`, `OrderedSet`,
-  `Trie`, `Graph`, `LruCache`, `Multimap`, `Interval`, and more.
+  `Trie`, `Graph`, `LruCache`, `Multimap`, `Interval`, a `KeyedCollection`-based
+  `NamedItemCollection`, a freezable `ReadOnlyObservableView`, a fluent
+  `FrozenLookupTable` builder, an insertion-ordered `OrderedNameValueCollection`,
+  and more.
 - **Buffers / HighPerformance / Advanced** — pooled buffers and builders,
-  `SpanReader`/`SpanWriter`, pooled UTF-8 strings and JSON documents,
-  memory-backed channels, and zero-allocation helpers.
+  `SpanReader`/`SpanWriter`, UTF-8 span number parsing/formatting, pooled UTF-8
+  strings and JSON documents, memory-backed channels, `System.IO.Pipelines`
+  adapters and pipe-to-channel bridging, and zero-allocation helpers.
 - **Linq** — async sequence operators, queryable builders, expression helpers,
   windowing/partitioning, memoization, top-N selection, and a small rule engine.
-- **ComponentModel** — components, containers, dynamic type descriptors, DTO
-  records, lifecycle management, change tracking, type converters, async
-  validation, property-path resolution, and snapshot/restore.
+- **ComponentModel** — components, containers, dynamic type descriptors and
+  proxies, an `ExpandoObject`-backed typed property bag, DTO records, lifecycle
+  management, change tracking, type converters, async validation,
+  property-path resolution, and snapshot/restore.
 - **DataAnnotations** — additional validation attributes (`UniqueElements`,
   `MutuallyExclusive`, `RequiredIf`/`RequiredWhen`, `NotEqualTo`, `CollectionCount`,
   `FutureDate`/`PastDate`, `CreditCardLuhn`, `EnumRange`, …).
 - **DesignPatterns / Patterns** — reusable Gang-of-Four and enterprise-pattern
   implementations, plus composed pipelines.
-- **Text.RegularExpressions / Extensions / Diagnostics / Resilience / Services** —
-  everyday helpers, safety-checked buffer parsing, retry policies, and
-  DI-friendly services (background queues, pooled-object policies, throttling).
+- **Text / Text.RegularExpressions / Extensions / Diagnostics / Resilience /
+  Services** — grapheme-cluster-aware string handling and HTML/JS encoding,
+  everyday regex helpers, `Meter`/`Activity`/`EventSource`-based observability,
+  retry policies, and DI-friendly services (background queues, pooled-object
+  policies, throttling).
+- **Concurrency** — async synchronization primitives plus a fluent
+  `System.Threading.Tasks.Dataflow` pipeline builder and a bounded
+  `TransformBlock` factory tuned for CPU- vs. I/O-bound work.
 - **Time / Security / Events / Configuration** — date/time ranges and
-  holiday-aware business-day math, constant-time comparison and secure token
-  generation, a lightweight event bus, and options/feature-flag validation.
-- **Serialization / IO / Networking** — delimited and fixed-layout binary
-  record (de)serialization, atomic file writes, debounced directory watching,
-  and retry-aware HTTP handling.
-- **Mathematics / Physics / Units / Geometry** — curated constants, SI units,
-  metric prefixes, and conversion factors.
+  holiday-aware business-day math, constant-time comparison, secure token
+  generation, HMAC signing, AES-GCM envelope encryption, certificate-thumbprint
+  pinning, a fluent `ClaimsPrincipal` builder, a lightweight event bus, and
+  options/feature-flag validation.
+- **Serialization / IO / Networking** — delimited/binary/XML record
+  (de)serialization, atomic and compressing file writes, a directory-subtree-
+  pruning file enumerator, a named-pipe request/response channel, retry-aware
+  HTTP handling, ICMP health checks, a resilient `WebSocket` client, and
+  server-sent-event streaming.
+- **Numerics / Mathematics / Physics / Units / Geometry** — generic-math
+  extensions, an exact `BigInteger`-backed `Rational` type, portable-SIMD
+  aggregation, curated constants, SI units, metric prefixes, and conversion
+  factors.
 
 ## Contributing
 
