@@ -96,6 +96,11 @@ Everything lives under the `Catharsis.*` root namespace.
 | `Catharsis.Physics` | Fundamental physical constants and reference data. |
 | `Catharsis.Units` | SI units, metric prefixes, and unit-conversion factors. |
 | `Catharsis.Geometry` | Geometry formulas. |
+| `Catharsis.RuleEngine` | `ManagedRuleEngine<T>` — a stateful, observable orchestrator around `Linq`'s `Rule<T>`/`RuleSet<T>`/`RuleEvaluator`: a live, runtime-updatable registry of named rule sets, per-rule-set evaluation metrics via a `MetricsRecorder`, per-match notifications via an `EventBus`, and optional `FeatureFlagEvaluator`-gated gradual rollout of a rule set. |
+| `Catharsis.Monitoring` | `NetworkMonitor` — a background service that sweeps a fixed set of endpoints on an interval via `Networking.PingSweepHealthTracker`, drives a per-endpoint `Resilience.CircuitBreaker` from each sweep, and publishes an `EndpointStatusChangedEvent` on an `EventBus` whenever an endpoint's `EndpointStatus` (Healthy/Degraded/Down) changes. |
+| `Catharsis.Reliability` | `ResiliencyPipelineRegistry` — a name-keyed registry of `Resilience.IAsyncPolicy` pipelines with a stale-value fallback (serves the last successful result if every policy in a named pipeline fails) and `CircuitStateChangedEvent` notifications on an `EventBus` when an associated `CircuitBreaker` trips or recovers. |
+| `Catharsis.Dynamic` | `FlexibleEntity` — a schema-less, self-validating, undoable dynamic object combining an `ExpandoBackedBag<T>`, per-property `ValidationPipeline` rules, `ChangeSet`-based undo/redo, dotted nested-path access (`"Address.City"`), snapshot/restore, and `DynamicTypeDescriptor`/`DynamicPropertyDescriptor`-based exposure for WinForms/WPF-style binding. |
+| `Catharsis.Workflow` | `StepWorkflowOrchestrator` — executes named async steps in dependency order using `ComponentModel.Lifecycle`'s `ComponentGraph`/`ComponentGraphBuilder`, running independent steps concurrently in dependency-depth waves, with optional per-step retry via an `IAsyncPolicy` and `WorkflowStepEvent` progress notifications on an `EventBus`; a faulted step fails only its (transitive) dependents. |
 
 ## Documentation
 

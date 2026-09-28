@@ -25,7 +25,7 @@ application or library.
 | Project | Description |
 | --- | --- |
 | [`Catharsis/`](Catharsis/README.md) | The library itself — the shippable NuGet package. |
-| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~4,320 tests). |
+| [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~4,396 tests). |
 | [`CatharsisBenchmarkSuite/`](CatharsisBenchmarkSuite/README.md) | BenchmarkDotNet suite measuring key types against BCL baselines. |
 
 The solution is defined by [`Catharsis.slnx`](Catharsis.slnx) (the XML-based
@@ -110,6 +110,13 @@ Catharsis is organized into focused namespaces under the `Catharsis.*` root:
   extensions, an exact `BigInteger`-backed `Rational` type, portable-SIMD
   aggregation, curated constants, SI units, metric prefixes, and conversion
   factors.
+- **RuleEngine / Monitoring / Reliability / Dynamic / Workflow** — composite,
+  applied subsystems that orchestrate the primitives above into ready-to-use
+  services: a runtime-updatable, observable `ManagedRuleEngine`; a background
+  `NetworkMonitor` that raises events on endpoint status changes; a
+  `ResiliencyPipelineRegistry` of named resilience pipelines with stale-value
+  fallback; a schema-less, validated, undoable `FlexibleEntity`; and a
+  `StepWorkflowOrchestrator` that runs dependency-ordered steps concurrently.
 
 ## Contributing
 

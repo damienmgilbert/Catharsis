@@ -8,12 +8,13 @@ The unit-test suite for the [Catharsis](../Catharsis/README.md) library.
 - **Target framework:** `net10.0`
 - **Execution:** parallelized at the assembly level
   (`[assembly: Parallelize]`)
-- **Scope:** ~4,320 tests mirroring the library's public surface — the test
+- **Scope:** ~4,396 tests mirroring the library's public surface — the test
   folder structure follows the source layout (`Collections/`, `Buffers/`,
   `Advanced/`, `Linq/`, `ComponentModel/`, `DataAnnotations/`, `Concurrency/`,
   `Time/`, `Security/`, `Events/`, `Configuration/`, `Serialization/`, `IO/`,
-  `Networking/`, `Text/`, `Numerics/`, `Xml/`, …), so a source file's tests
-  live at the matching path.
+  `Networking/`, `Text/`, `Numerics/`, `Xml/`, `RuleEngine/`, `Monitoring/`,
+  `Reliability/`, `Dynamic/`, `Workflow/`, …), so a source file's tests live
+  at the matching path.
 
 The test project references `Catharsis` directly and has access to its `internal`
 members via `[InternalsVisibleTo("Catharsis.UnitTests")]`, so both public and
