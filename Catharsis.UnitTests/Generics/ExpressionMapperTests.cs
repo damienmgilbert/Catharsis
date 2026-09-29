@@ -72,6 +72,14 @@ public class ExpressionMapperTests
     }
 
     [TestMethod]
+    public void Map_SourceExpressionIsInlined_NotInvoked()
+    {
+        Func<Person, PersonDto> map = new ExpressionMapper<Person, PersonDto>().Map(static d => d.Age, static s => s.Age * 2).Build();
+
+        Assert.AreEqual(72, map(Sample).Age);
+    }
+
+    [TestMethod]
     public void Ignore_KeepsConstructorDefault()
     {
         Func<Person, PersonDto> map = new ExpressionMapper<Person, PersonDto>().Ignore(static d => d.Secret).Build();

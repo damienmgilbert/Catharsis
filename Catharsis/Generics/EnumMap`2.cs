@@ -1,10 +1,12 @@
+using Catharsis.Common;
 using System.Collections;
 
 namespace Catharsis.Generics;
 
 ///<summary>
 ///A dictionary keyed by every member of an enum, stored as a dense array so lookups are an index calculation rather
-///than a hash. Every member always has a slot (initially <c>default</c>), so a missing key is impossible.
+///than a hash. The members come from <see cref="EnumCache{TEnum}"/>, so they are enumerated by reflection only once
+///per enum type. Every member always has a slot (initially <c>default</c>), so a missing key is impossible.
 ///</summary>
 ///<typeparam name="TEnum">The enum type.</typeparam>
 ///<typeparam name="TValue">The value stored for each member.</typeparam>
@@ -12,7 +14,7 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     where TEnum : struct, Enum
 {
     #region Fields
-    static readonly TEnum[] Members = [.. Enum.GetValues<TEnum>().Distinct().Order()];
+    static readonly TEnum[] Members = [.. EnumCache<TEnum>.Values.Distinct().Order()];
     readonly TValue[] _values = new TValue[Members.Length];
     #endregion
 

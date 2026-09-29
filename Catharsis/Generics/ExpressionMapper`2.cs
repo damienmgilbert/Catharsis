@@ -1,3 +1,4 @@
+using Catharsis.Linq.Expressions;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -5,7 +6,10 @@ namespace Catharsis.Generics;
 
 ///<summary>
 ///Builds a fast <c>TSource -&gt; TDest</c> mapping function by assembling an expression tree and compiling it once, so
-///every later call runs as ordinary compiled code with no reflection. Properties with the same name and an assignable
+///every later call runs as ordinary compiled code with no reflection. The tree is assembled with
+///<see cref="ExpressionFactory"/>, and each source expression is inlined into it with
+///<see cref="ExpressionComposer.RebindParameters(Expression, IReadOnlyList{ParameterExpression}, IReadOnlyList{Expression})"/>
+///rather than called through an <c>Invoke</c> node. Properties with the same name and an assignable
 ///type are mapped automatically; <see cref="Map{TProperty}"/> overrides or adds a mapping and
 ///<see cref="Ignore{TProperty}"/> removes one.
 ///</summary>
@@ -56,7 +60,7 @@ public sealed class ExpressionMapper<TSource, TDest>
     ///<returns>A delegate that creates a new <typeparamref name="TDest"/> from a <typeparamref name="TSource"/>.</returns>
     public Func<TSource, TDest> Build()
     {
-        ParameterExpression sourceParameter = Expression.Parameter(typeof(TSource), "source");
+        ParameterExpression sourceParameter = ExpressionFactory.Parameter(typeof(TSource), "source");
         List<MemberBinding> bindings = [];
 
         foreach(PropertyInfo destination in typeof(TDest).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.SetMethod?.IsPublic == true))
@@ -67,7 +71,7 @@ public sealed class ExpressionMapper<TSource, TDest>
             {
                 if(mapping is not null)
                 {
-                    value = Expression.Invoke(mapping, sourceParameter);
+                    value = ExpressionComposer.RebindParameters(mapping.Body, mapping.Parameters, [sourceParameter]);
                 }
             }
             else
@@ -76,17 +80,17 @@ public sealed class ExpressionMapper<TSource, TDest>
 
                 if(match?.GetMethod?.IsPublic == true && destination.PropertyType.IsAssignableFrom(match.PropertyType))
                 {
-                    value = Expression.Convert(Expression.Property(sourceParameter, match), destination.PropertyType);
+                    value = ExpressionFactory.Convert(ExpressionFactory.Property(sourceParameter, match), destination.PropertyType);
                 }
             }
 
             if(value is not null)
             {
-                bindings.Add(Expression.Bind(destination, value));
+                bindings.Add(ExpressionFactory.Bind(destination, value));
             }
         }
 
-        return Expression.Lambda<Func<TSource, TDest>>(Expression.MemberInit(Expression.New(typeof(TDest)), bindings), sourceParameter).Compile();
+        return ExpressionFactory.Lambda<Func<TSource, TDest>>(ExpressionFactory.MemberInit(ExpressionFactory.New(typeof(TDest)), [.. bindings]), sourceParameter).Compile();
     }
     #endregion
 

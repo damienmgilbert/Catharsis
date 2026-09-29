@@ -1,10 +1,13 @@
+using Catharsis.Common;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 
 namespace Catharsis.Events;
 
 ///<summary>
 ///An event that holds its instance-method subscribers weakly, so subscribing does not keep the subscriber alive. This
-///avoids the classic "forgotten subscription" memory leak. Static handlers are held normally.
+///avoids the classic "forgotten subscription" memory leak. Each subscription is a
+///<see cref="WeakEventHandler{TEventArgs}"/>; static handlers are held normally.
 ///</summary>
 ///<remarks>
 ///Because the subscriber is only weakly referenced, a lambda that captures variables (whose closure object nothing
@@ -35,9 +38,7 @@ public sealed class WeakEvent<TArgs>
             throw new ArgumentException("Multicast delegates are not supported; subscribe each handler separately.", nameof(handler));
         }
 
-        Entry entry = handler.Target is null
-            ? new Entry(null, handler.Method, handler)
-            : new Entry(new WeakReference(handler.Target), handler.Method, null);
+        Entry entry = new(new WeakEventHandler<TArgs>(handler), handler.Method, handler.Target is null ? null : new WeakReference(handler.Target));
 
         lock(_gate)
         {
@@ -57,7 +58,7 @@ public sealed class WeakEvent<TArgs>
 
         lock(_gate)
         {
-            int index = _entries.FindIndex(entry => entry.Method == handler.Method && ReferenceEquals(entry.GetTarget(), handler.Target));
+            int index = _entries.FindIndex(entry => entry.Method == handler.Method && ReferenceEquals(entry.Target?.Target, handler.Target));
 
             if(index < 0)
             {
@@ -70,36 +71,43 @@ public sealed class WeakEvent<TArgs>
     }
 
     ///<summary>
-    ///Raises the event, invoking every handler whose subscriber is still alive and discarding those that are not.
+    ///Raises the event, invoking every handler whose subscriber is still alive and discarding those that are not. An
+    ///exception thrown by a handler propagates unwrapped to the caller.
     ///</summary>
     ///<param name="sender">The source of the event.</param>
     ///<param name="args">The event data.</param>
     public void Invoke(object? sender, TArgs args)
     {
-        List<EventHandler<TArgs>> live = [];
+        Entry[] snapshot;
 
         lock(_gate)
         {
-            _entries.RemoveAll(static entry => entry.IsDead);
+            snapshot = [.. _entries];
+        }
 
-            foreach(Entry entry in _entries)
+        List<Entry> dead = [];
+
+        foreach(Entry entry in snapshot)
+        {
+            try
             {
-                object? target = entry.GetTarget();
-
-                if(entry.Strong is not null)
+                if(!entry.Handler.Invoke(sender, args))
                 {
-                    live.Add((EventHandler<TArgs>)entry.Strong);
+                    dead.Add(entry);
                 }
-                else if(target is not null)
-                {
-                    live.Add((EventHandler<TArgs>)Delegate.CreateDelegate(typeof(EventHandler<TArgs>), target, entry.Method));
-                }
+            }
+            catch(TargetInvocationException ex) when(ex.InnerException is not null)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
             }
         }
 
-        foreach(EventHandler<TArgs> handler in live)
+        if(dead.Count > 0)
         {
-            handler(sender, args);
+            lock(_gate)
+            {
+                _entries.RemoveAll(dead.Contains);
+            }
         }
     }
     #endregion
@@ -112,18 +120,13 @@ public sealed class WeakEvent<TArgs>
         {
             lock(_gate)
             {
-                return _entries.Count(static entry => !entry.IsDead);
+                return _entries.Count(static entry => entry.Handler.IsTargetAlive);
             }
         }
     }
     #endregion
 
     #region Nested types
-    sealed record Entry(WeakReference? Weak, MethodInfo Method, Delegate? Strong)
-    {
-        public bool IsDead => Strong is null && Weak?.Target is null;
-
-        public object? GetTarget() => Strong is not null ? Strong.Target : Weak?.Target;
-    }
+    sealed record Entry(WeakEventHandler<TArgs> Handler, MethodInfo Method, WeakReference? Target);
     #endregion
 }
