@@ -94,7 +94,7 @@ public class ShapeTests
         Assert.IsTrue(small < large);
         Assert.IsTrue(small <= large);
         Assert.IsTrue(large > small);
-        Assert.IsTrue(large >= large);
+        Assert.IsTrue(large >= new Square(2));
         Assert.IsFalse(small > large);
     }
 
