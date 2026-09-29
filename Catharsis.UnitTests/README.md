@@ -13,7 +13,8 @@ The unit-test suite for the [Catharsis](../Catharsis/README.md) library.
   `Advanced/`, `Linq/`, `ComponentModel/`, `DataAnnotations/`, `Concurrency/`,
   `Time/`, `Security/`, `Events/`, `Configuration/`, `Serialization/`, `IO/`,
   `Networking/`, `Text/`, `Numerics/`, `Xml/`, `RuleEngine/`, `Monitoring/`,
-  `Reliability/`, `Dynamic/`, `Workflow/`, …), so a source file's tests live
+  `Reliability/`, `Dynamic/`, `Workflow/`, `Operators/`, `Contracts/`,
+  `Generics/`, `Patterns/Composed/`, `Domain/`, …), so a source file's tests live
   at the matching path.
 
 The test project references `Catharsis` directly and has access to its `internal`

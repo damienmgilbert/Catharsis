@@ -39,8 +39,13 @@ implementation:
 | `CachingBenchmarks.cs` | `MemoCache<TKey, TValue>` vs. `ConcurrentDictionary<TKey, TValue>` |
 | `CollectionsBenchmarks.cs` | `Deque<T>` / `CircularBuffer<T>` vs. the closest BCL equivalents |
 | `DataStructuresBenchmarks.cs` | `LruCache<TKey, TValue>` vs. `Dictionary<TKey, TValue>`; `MinMaxHeap<T>` vs. a naive `List<T>` baseline |
+| `DynamicBenchmarks.cs` | `FlexibleEntity` set-then-get access vs. a plain `Dictionary<TKey, TValue>` |
+| `GenericsBenchmarks.cs` | `ExpressionMapper` vs. a hand-written and a reflection mapper; `ExpressionCache` getter vs. `PropertyInfo.GetValue`; `EnumMap` vs. `Dictionary<TEnum, T>` |
+| `OperatorsBenchmarks.cs` | `Money` arithmetic vs. plain `decimal`; `Matrix` multiply vs. a `double[,]` loop |
 | `RandomizationBenchmarks.cs` | `WeightedRandomPicker<T>` vs. `WeightedList<T>` |
+| `ReliabilityBenchmarks.cs` | `ResiliencyPipelineRegistry`'s happy-path overhead vs. calling the wrapped `RetryPolicy` directly |
 | `ResilienceBenchmarks.cs` | `RetryPolicy`'s happy-path overhead vs. calling the delegate directly |
+| `RuleEngineBenchmarks.cs` | `ManagedRuleEngine<T>` vs. evaluating the raw `RuleSet<T>` with a `RuleEvaluator` |
 
 ## Contributing a benchmark
 
