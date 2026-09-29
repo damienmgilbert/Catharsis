@@ -35,5 +35,22 @@ public class PercentageTests
     public void Compare_Orders() { Assert.IsTrue(Percentage.FromPercent(10m) < Percentage.FromPercent(20m)); }
 
     [TestMethod]
+    public void ToString_WithFormat_AppliesToWholePercentValue()
+    {
+        Percentage value = Percentage.FromFraction(0.125m);
+
+        Assert.AreEqual("12.5%", value.ToString("%", null));
+        Assert.AreEqual("12.5%", value.ToString("F1", null));
+        Assert.AreEqual("13%", value.ToString("F0", null));
+        Assert.AreEqual("12.50%", value.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [TestMethod]
+    public void ToString_PFormat_UsesCultureFormatting() { Assert.AreEqual(0.125m.ToString("P", System.Globalization.CultureInfo.InvariantCulture), Percentage.FromFraction(0.125m).ToString("P", System.Globalization.CultureInfo.InvariantCulture)); }
+
+    [TestMethod]
+    public void Interpolation_UsesFormatter() { Assert.AreEqual("rate 12.5%", string.Create(System.Globalization.CultureInfo.InvariantCulture, $"rate {Percentage.FromFraction(0.125m):F1}")); }
+
+    [TestMethod]
     public void ToString_AppendsPercentSign() { Assert.AreEqual("12.5%", Percentage.FromPercent(12.5m).ToString()); }
 }

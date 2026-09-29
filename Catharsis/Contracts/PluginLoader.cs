@@ -86,6 +86,47 @@ public static class PluginLoader
     }
     #endregion
 
+    ///<summary>
+    ///Creates every plugin in <paramref name="descriptors"/> as an <see cref="IPlugin"/> and initializes each in turn.
+    ///</summary>
+    ///<param name="descriptors">The plugins to start, typically from <c>Discover&lt;IPlugin&gt;</c>.</param>
+    ///<param name="services">Supplies constructor arguments and is passed to each plugin's initializer.</param>
+    ///<param name="cancellationToken">A token that can abandon startup between plugins.</param>
+    ///<returns>The started plugins, in the order of <paramref name="descriptors"/>.</returns>
+    ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
+    ///<exception cref="InvalidCastException">A descriptor's type does not implement <see cref="IPlugin"/>.</exception>
+    public static async Task<IReadOnlyList<IPlugin>> InitializeAllAsync(IEnumerable<PluginDescriptor> descriptors, IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(descriptors);
+        ArgumentNullException.ThrowIfNull(services);
+
+        List<IPlugin> started = [];
+
+        foreach(PluginDescriptor descriptor in descriptors)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            IPlugin plugin = Create<IPlugin>(descriptor, services);
+            await plugin.InitializeAsync(services, cancellationToken).ConfigureAwait(false);
+            started.Add(plugin);
+        }
+
+        return started;
+    }
+
+    ///<summary>
+    ///Starts plugins like <see cref="InitializeAllAsync"/>, returning a <see cref="ValueTask{TResult}"/>.
+    ///</summary>
+    ///<param name="descriptors">The plugins to start.</param>
+    ///<param name="services">Supplies constructor arguments and is passed to each plugin's initializer.</param>
+    ///<param name="cancellationToken">A token that can abandon startup between plugins.</param>
+    ///<returns>The started plugins, in the order of <paramref name="descriptors"/>.</returns>
+    ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
+    public static ValueTask<IReadOnlyList<IPlugin>> InitializeAllValueAsync(IEnumerable<PluginDescriptor> descriptors, IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        return new ValueTask<IReadOnlyList<IPlugin>>(InitializeAllAsync(descriptors, services, cancellationToken));
+    }
+
     #region Private methods
     static Type[] SafeGetTypes(Assembly assembly)
     {

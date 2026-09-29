@@ -179,6 +179,32 @@ public class ValueObjectAndEntityTests
     }
 
     [TestMethod]
+    public async Task AggregateRoot_DispatchValue_DeliversAndClears()
+    {
+        DomainEventDispatcher dispatcher = new();
+        int seen = 0;
+        dispatcher.Subscribe<Something>(_ => { seen++; return Task.CompletedTask; });
+        Basket basket = new(1);
+        basket.Do("a");
+
+        await basket.DispatchEventsValueAsync(dispatcher);
+
+        Assert.AreEqual(1, seen);
+        Assert.AreEqual(0, basket.DomainEvents.Count);
+    }
+
+    [TestMethod]
+    public void AggregateRoot_DispatchValue_NothingPending_IsCompletedSynchronously()
+    {
+        ValueTask pending = new Basket(1).DispatchEventsValueAsync(new DomainEventDispatcher());
+
+        Assert.IsTrue(pending.IsCompletedSuccessfully);
+    }
+
+    [TestMethod]
+    public async Task AggregateRoot_DispatchValue_NullDispatcher_Throws() { await Assert.ThrowsExactlyAsync<ArgumentNullException>(async () => await new Basket(1).DispatchEventsValueAsync(null!)); }
+
+    [TestMethod]
     public async Task AggregateRoot_NullDispatcher_Throws() { await Assert.ThrowsExactlyAsync<ArgumentNullException>(async () => await new Basket(1).DispatchEventsAsync(null!)); }
 
     [TestMethod]

@@ -6,7 +6,7 @@ namespace Catharsis.Operators;
 ///A monetary amount tagged with an ISO 4217 currency code. Arithmetic between two amounts is only defined when both
 ///share a currency, so mixing currencies fails loudly instead of silently producing a meaningless number.
 ///</summary>
-public readonly struct Money : IEquatable<Money>, IComparable<Money>
+public readonly record struct Money : IComparable<Money>, IParsable<Money>
 {
     #region Constructors
     ///<summary>
@@ -59,12 +59,6 @@ public readonly struct Money : IEquatable<Money>, IComparable<Money>
     ///<exception cref="DivideByZeroException"><paramref name="divisor"/> is zero.</exception>
     public static Money operator /(Money value, decimal divisor) => new(value.Amount / divisor, value.Currency);
 
-    ///<summary>Determines whether two amounts are equal.</summary>
-    public static bool operator ==(Money left, Money right) => left.Equals(right);
-
-    ///<summary>Determines whether two amounts differ.</summary>
-    public static bool operator !=(Money left, Money right) => !left.Equals(right);
-
     ///<summary>Determines whether one amount is less than another of the same currency.</summary>
     public static bool operator <(Money left, Money right) => left.CompareTo(right) < 0;
 
@@ -79,6 +73,9 @@ public readonly struct Money : IEquatable<Money>, IComparable<Money>
 
     ///<summary>Extracts the numeric amount, discarding the currency.</summary>
     public static explicit operator decimal(Money value) => value.Amount;
+
+    ///<summary>Builds a <see cref="Money"/> from an <c>(amount, currency)</c> tuple, so <c>Money m = (5m, "USD");</c> works.</summary>
+    public static implicit operator Money((decimal Amount, string Currency) value) => new(value.Amount, value.Currency);
     #endregion
 
     #region Public methods
@@ -92,14 +89,50 @@ public readonly struct Money : IEquatable<Money>, IComparable<Money>
         return Amount.CompareTo(other.Amount);
     }
 
-    ///<inheritdoc/>
-    public bool Equals(Money other) => (Amount == other.Amount) && string.Equals(Currency, other.Currency, StringComparison.Ordinal);
+    ///<summary>
+    ///Parses text in the form produced by <see cref="ToString"/>: an amount, whitespace, then a three-letter currency
+    ///code, for example <c>12.50 USD</c>.
+    ///</summary>
+    ///<param name="s">The text to parse.</param>
+    ///<param name="provider">Supplies number formatting; defaults to the invariant culture.</param>
+    ///<exception cref="ArgumentNullException"><paramref name="s"/> is <c>null</c>.</exception>
+    ///<exception cref="FormatException"><paramref name="s"/> is not a valid amount and currency.</exception>
+    public static Money Parse(string s, IFormatProvider? provider = null)
+    {
+        ArgumentNullException.ThrowIfNull(s);
 
-    ///<inheritdoc/>
-    public override bool Equals(object? obj) => (obj is Money other) && Equals(other);
+        return TryParse(s, provider, out Money result) ? result : throw new FormatException($"'{s}' is not a valid money value such as '12.50 USD'.");
+    }
 
-    ///<inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Amount, Currency);
+    ///<summary>
+    ///Attempts to parse text such as <c>12.50 USD</c>.
+    ///</summary>
+    ///<param name="s">The text to parse.</param>
+    ///<param name="provider">Supplies number formatting; defaults to the invariant culture.</param>
+    ///<param name="result">The parsed value when the method returns <c>true</c>.</param>
+    ///<returns><c>true</c> if <paramref name="s"/> was valid.</returns>
+    public static bool TryParse([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] string? s, IFormatProvider? provider, out Money result)
+    {
+        result = default;
+
+        if(s is null)
+        {
+            return false;
+        }
+
+        string[] parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if(parts.Length != 2
+            || parts[1].Length != 3
+            || !parts[1].All(char.IsAsciiLetter)
+            || !decimal.TryParse(parts[0], NumberStyles.Number, provider ?? CultureInfo.InvariantCulture, out decimal amount))
+        {
+            return false;
+        }
+
+        result = new Money(amount, parts[1]);
+        return true;
+    }
 
     ///<summary>
     ///Rounds the amount to <paramref name="decimals"/> places using banker's rounding.

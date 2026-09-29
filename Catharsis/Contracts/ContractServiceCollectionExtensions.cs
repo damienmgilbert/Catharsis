@@ -23,20 +23,31 @@ public static class ContractServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(assemblies);
 
-        foreach(Assembly assembly in assemblies)
-        {
-            foreach(ServiceRegistration registration in AttributeServiceScanner.ScanServices(assembly))
-            {
-                services.Add(new ServiceDescriptor(registration.ServiceType, registration.ImplementationType, registration.Lifetime));
-            }
-        }
+        return Register(
+            services,
+            assemblies.SelectMany(static a => AttributeServiceScanner.ScanServices(a)),
+            assemblies.SelectMany(static a => AttributeServiceScanner.ScanDecorators(a)));
+    }
 
-        foreach(DecoratorRegistration decorator in assemblies.SelectMany(static a => AttributeServiceScanner.ScanDecorators(a)).OrderBy(static d => d.Order))
-        {
-            services.AddDecorator(decorator.ServiceType, decorator.DecoratorType);
-        }
+    ///<summary>
+    ///Registers every <see cref="ServiceAttribute"/> class among <paramref name="types"/>, then decorates services with
+    ///every <see cref="DecoratorForAttribute"/> class among them. Services with an
+    ///<see cref="OptionalDependencyAttribute"/> constructor parameter are created through
+    ///<see cref="OptionalDependencyResolver"/>.
+    ///</summary>
+    ///<param name="services">The service collection.</param>
+    ///<param name="types">The candidate types.</param>
+    ///<returns>The service collection for chaining.</returns>
+    ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
+    ///<exception cref="InvalidOperationException">A decorator targets a service that has no registration.</exception>
+    public static IServiceCollection AddAttributedServices(this IServiceCollection services, IEnumerable<Type> types)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(types);
 
-        return services;
+        Type[] candidates = [.. types];
+
+        return Register(services, AttributeServiceScanner.ScanServices(candidates), AttributeServiceScanner.ScanDecorators(candidates));
     }
 
     ///<summary>
@@ -131,6 +142,25 @@ public static class ContractServiceCollectionExtensions
     #endregion
 
     #region Private methods
+    static IServiceCollection Register(IServiceCollection services, IEnumerable<ServiceRegistration> registrations, IEnumerable<DecoratorRegistration> decorators)
+    {
+        foreach(ServiceRegistration registration in registrations)
+        {
+            Type implementation = registration.ImplementationType;
+
+            services.Add(OptionalDependencyResolver.HasOptionalDependencies(implementation)
+                ? new ServiceDescriptor(registration.ServiceType, provider => OptionalDependencyResolver.Create(provider, implementation), registration.Lifetime)
+                : new ServiceDescriptor(registration.ServiceType, implementation, registration.Lifetime));
+        }
+
+        foreach(DecoratorRegistration decorator in decorators.OrderBy(static d => d.Order))
+        {
+            services.AddDecorator(decorator.ServiceType, decorator.DecoratorType);
+        }
+
+        return services;
+    }
+
     static object CreateInner(IServiceProvider provider, ServiceDescriptor original)
     {
         if(original.ImplementationInstance is not null)

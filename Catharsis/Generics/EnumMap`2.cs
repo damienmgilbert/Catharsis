@@ -1,10 +1,15 @@
+using Catharsis.Common;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Catharsis.Generics;
 
 ///<summary>
 ///A dictionary keyed by every member of an enum, stored as a dense array so lookups are an index calculation rather
-///than a hash. Every member always has a slot (initially <c>default</c>), so a missing key is impossible.
+///than a hash. When the enum's values are contiguous (the common case) a lookup is a subtraction and a bounds check;
+///otherwise it is a binary search over the underlying integer values, which needs no boxing or enum comparer. The
+///members come from <see cref="EnumCache{TEnum}"/>, so they are enumerated by reflection only once
+///per enum type. Every member always has a slot (initially <c>default</c>), so a missing key is impossible.
 ///</summary>
 ///<typeparam name="TEnum">The enum type.</typeparam>
 ///<typeparam name="TValue">The value stored for each member.</typeparam>
@@ -12,7 +17,15 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     where TEnum : struct, Enum
 {
     #region Fields
-    static readonly TEnum[] Members = [.. Enum.GetValues<TEnum>().Distinct().Order()];
+    static readonly bool IsSigned = Enum.GetUnderlyingType(typeof(TEnum)) == typeof(sbyte)
+        || Enum.GetUnderlyingType(typeof(TEnum)) == typeof(short)
+        || Enum.GetUnderlyingType(typeof(TEnum)) == typeof(int)
+        || Enum.GetUnderlyingType(typeof(TEnum)) == typeof(long);
+
+    static readonly TEnum[] Members = [.. EnumCache<TEnum>.Values.Distinct().OrderBy(ToLong)];
+    static readonly long[] Keys = [.. Members.Select(ToLong)];
+    static readonly long MinKey = Keys.Length == 0 ? 0 : Keys[0];
+    static readonly bool Dense = Keys.Length > 0 && Keys[^1] - Keys[0] == Keys.Length - 1;
     readonly TValue[] _values = new TValue[Members.Length];
     #endregion
 
@@ -63,9 +76,40 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     #region Private methods
     static int IndexOf(TEnum key)
     {
-        int index = Array.BinarySearch(Members, key);
+        long value = ToLong(key);
 
-        return index >= 0 ? index : throw new ArgumentOutOfRangeException(nameof(key), key, "Not a defined member of the enum.");
+        if(Dense)
+        {
+            long offset = value - MinKey;
+
+            if((ulong)offset < (ulong)Keys.Length)
+            {
+                return (int)offset;
+            }
+        }
+        else
+        {
+            int index = Array.BinarySearch(Keys, value);
+
+            if(index >= 0)
+            {
+                return index;
+            }
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(key), key, "Not a defined member of the enum.");
+    }
+
+    // Reads the enum's underlying integer without boxing; the JIT folds the size and signedness checks per enum type.
+    static long ToLong(TEnum value)
+    {
+        return Unsafe.SizeOf<TEnum>() switch
+        {
+            1 => IsSigned ? Unsafe.As<TEnum, sbyte>(ref value) : Unsafe.As<TEnum, byte>(ref value),
+            2 => IsSigned ? Unsafe.As<TEnum, short>(ref value) : Unsafe.As<TEnum, ushort>(ref value),
+            4 => IsSigned ? Unsafe.As<TEnum, int>(ref value) : Unsafe.As<TEnum, uint>(ref value),
+            _ => Unsafe.As<TEnum, long>(ref value)
+        };
     }
     #endregion
 }

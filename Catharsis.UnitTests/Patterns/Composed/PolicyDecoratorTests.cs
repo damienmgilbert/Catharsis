@@ -97,6 +97,26 @@ public class PolicyDecoratorTests
         await Assert.ThrowsExactlyAsync<ArgumentNullException>(async () => await policy.ExecuteAsync<int>(null!));
     }
 
+    [TestMethod]
+    public async Task Logging_ExecuteValueAsync_RunsOperationThroughPolicy()
+    {
+        ListLogger logger = new();
+        LoggingPolicyDecorator policy = new(new PassThrough(), logger);
+
+        int result = await policy.ExecuteValueAsync(static _ => ValueTask.FromResult(9));
+
+        Assert.AreEqual(9, result);
+        Assert.AreEqual(2, logger.Entries.Count);
+    }
+
+    [TestMethod]
+    public async Task Logging_ExecuteValueAsync_NullOperation_Throws()
+    {
+        LoggingPolicyDecorator policy = new(new PassThrough(), new ListLogger());
+
+        await Assert.ThrowsExactlyAsync<ArgumentNullException>(async () => await policy.ExecuteValueAsync<int>(null!));
+    }
+
     #endregion
 
     #region MetricsPolicyDecorator
@@ -141,6 +161,19 @@ public class PolicyDecoratorTests
         PolicyMetrics metrics = policy.GetSnapshot();
         Assert.AreEqual(TimeSpan.FromSeconds(6), metrics.TotalDuration);
         Assert.AreEqual(TimeSpan.FromSeconds(3), metrics.AverageDuration);
+    }
+
+    [TestMethod]
+    public async Task Metrics_ExecuteValueAsync_IsCounted()
+    {
+        MetricsPolicyDecorator policy = new(new PassThrough());
+
+        Assert.AreEqual(3, await policy.ExecuteValueAsync(static _ => ValueTask.FromResult(3)));
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(async () => await policy.ExecuteValueAsync<int>(static _ => throw new InvalidOperationException()));
+
+        PolicyMetrics metrics = policy.GetSnapshot();
+        Assert.AreEqual(2, metrics.Executions);
+        Assert.AreEqual(1, metrics.Failures);
     }
 
     [TestMethod]

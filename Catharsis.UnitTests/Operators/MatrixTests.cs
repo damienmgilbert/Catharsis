@@ -96,6 +96,30 @@ public class MatrixTests
 
     #endregion
 
+    #region Span access
+
+    [TestMethod]
+    public void AsSpan_ExposesRowMajorValuesWithoutCopying()
+    {
+        Matrix matrix = new(2, 2, new double[] { 1, 2, 3, 4 });
+
+        Assert.IsTrue(matrix.AsSpan().SequenceEqual(new double[] { 1, 2, 3, 4 }));
+    }
+
+    [TestMethod]
+    public void CopyTo_FillsDestination_AndRejectsShortOnes()
+    {
+        Matrix matrix = new(1, 3, new double[] { 7, 8, 9 });
+        double[] target = new double[3];
+
+        matrix.CopyTo(target);
+
+        CollectionAssert.AreEqual(new double[] { 7, 8, 9 }, target);
+        Assert.ThrowsExactly<ArgumentException>(() => matrix.CopyTo(new double[2]));
+    }
+
+    #endregion
+
     #region Transpose / Row
 
     [TestMethod]

@@ -60,6 +60,24 @@ public class WeakEventTests
         Assert.AreEqual(before + 5, Volatile.Read(ref StaticCalls));
     }
 
+    sealed class Thrower
+    {
+        public void OnEvent(object? sender, int args) => throw new InvalidOperationException("boom");
+    }
+
+    [TestMethod]
+    public void Invoke_HandlerThrows_PropagatesOriginalExceptionUnwrapped()
+    {
+        WeakEvent<int> evt = new();
+        Thrower thrower = new();
+        evt.Subscribe(thrower.OnEvent);
+
+        InvalidOperationException ex = Assert.ThrowsExactly<InvalidOperationException>(() => evt.Invoke(null, 1));
+
+        Assert.AreEqual("boom", ex.Message);
+        GC.KeepAlive(thrower);
+    }
+
     [TestMethod]
     public void Unsubscribe_RemovesHandler()
     {
