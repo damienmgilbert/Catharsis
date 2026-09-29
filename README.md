@@ -27,6 +27,8 @@ application or library.
 | [`Catharsis/`](Catharsis/README.md) | The library itself — the shippable NuGet package. |
 | [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~4,396 tests). |
 | [`CatharsisBenchmarkSuite/`](CatharsisBenchmarkSuite/README.md) | BenchmarkDotNet suite measuring key types against BCL baselines. |
+| [`Catharsis.Generators/`](Catharsis.Generators/README.md) | Roslyn incremental source generators (`[AutoNotify]`, `[EnumExtensions]`) — an analyzer, not referenced by the library. |
+| `Catharsis.Generators.UnitTests/` | MSTest suite that runs each generator in a real compilation, then compiles and executes the output. |
 
 The solution is defined by [`Catharsis.slnx`](Catharsis.slnx) (the XML-based
 solution format).
@@ -117,6 +119,18 @@ Catharsis is organized into focused namespaces under the `Catharsis.*` root:
   `ResiliencyPipelineRegistry` of named resilience pipelines with stale-value
   fallback; a schema-less, validated, undoable `FlexibleEntity`; and a
   `StepWorkflowOrchestrator` that runs dependency-ordered steps concurrently.
+- **Operators / Generics / Contracts / Domain** — language-feature showcases
+  built as usable types: currency-safe `Money`, `Vector2D`/`Vector3D`,
+  `Percentage`, `SemanticVersion` and `Matrix` with operator overloads and
+  indexers; `Result<T, TError>`, `Maybe<T>`, `NumericRange<T>`, `TypedRegistry`,
+  `EnumMap` and an expression-tree compiled `ExpressionMapper`; attribute-driven
+  DI registration, decorators and plugin discovery; and `Entity`, `ValueObject`,
+  `AggregateRoot`, a `Shape` hierarchy and an `Order`/`Inventory` sample domain.
+- **Events / Patterns.Composed** — `AsyncEvent<TArgs>` with `+=`/`-=`,
+  `WeakEvent<TArgs>`, `EventThrottler<T>` and `DelegateChain<T>`; plus working
+  adapter, decorator, strategy, factory and iterator types (clock adapters,
+  logging/metrics policy decorators, pricing strategies, `KeyedFactory`,
+  `PolicyFactory`, `TreeIterator`, `RoundRobinIterator`).
 
 ## Contributing
 

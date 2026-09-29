@@ -2,6 +2,8 @@
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
   </Folder>
+  <Project Path="Catharsis.Generators.UnitTests/Catharsis.Generators.UnitTests.csproj" />
+  <Project Path="Catharsis.Generators/Catharsis.Generators.csproj" />
   <Project Path="Catharsis.UnitTests/Catharsis.UnitTests.csproj" />
   <Project Path="Catharsis/Catharsis.csproj" />
   <Project Path="CatharsisBenchmarkSuite/CatharsisBenchmarkSuite.csproj" Id="d63f0a7a-ec31-4c15-a280-d9cb3ccbf0ef" />
