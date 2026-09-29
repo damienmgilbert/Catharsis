@@ -63,7 +63,11 @@ returns the first declared name.
 
 `Catharsis.Generators.UnitTests` runs each generator in a real Roslyn
 compilation, asserts on the diagnostics and generated text, confirms the result
-compiles, and loads the compiled assembly to call the generated code.
+compiles, and loads the compiled assembly to call the generated code. Generated
+text is also compared with checked-in snapshots in `Snapshots/` (set
+`UPDATE_SNAPSHOTS=1` to accept new output), and a second run over unchanged input
+is asserted to be fully cached, which is what keeps the generators cheap in the
+IDE.
 
 ## License & authorship
 

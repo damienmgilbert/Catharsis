@@ -125,12 +125,13 @@ Catharsis is organized into focused namespaces under the `Catharsis.*` root:
   indexers; `Result<T, TError>`, `Maybe<T>`, `NumericRange<T>`, `TypedRegistry`,
   `EnumMap` and an expression-tree compiled `ExpressionMapper`; attribute-driven
   DI registration, decorators and plugin discovery; and `Entity`, `ValueObject`,
-  `AggregateRoot`, a `Shape` hierarchy and an `Order`/`Inventory` sample domain.
+  `AggregateRoot`, a `Shape` hierarchy and a `Customer`/`Order`/`Inventory` sample domain.
 - **Events / Patterns.Composed** — `AsyncEvent<TArgs>` with `+=`/`-=`,
   `WeakEvent<TArgs>`, `EventThrottler<T>` and `DelegateChain<T>`; plus working
-  adapter, decorator, strategy, factory and iterator types (clock adapters,
-  logging/metrics policy decorators, pricing strategies, `KeyedFactory`,
-  `PolicyFactory`, `TreeIterator`, `RoundRobinIterator`).
+  adapter, decorator, strategy, factory and iterator types (clock and async-enumerable
+  adapters, logging/metrics/caching decorators, pricing and retry strategies,
+  `KeyedFactory`, `PolicyFactory`, `TreeIterator`, `RoundRobinIterator`,
+  `WindowedIterator`).
 
 ## Contributing
 

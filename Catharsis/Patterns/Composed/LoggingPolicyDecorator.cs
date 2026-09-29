@@ -61,6 +61,21 @@ public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
             throw;
         }
     }
+
+    ///<summary>
+    ///Executes an operation that returns a <see cref="ValueTask{TResult}"/> through this policy.
+    ///</summary>
+    ///<typeparam name="TResult">The type of the operation's result.</typeparam>
+    ///<param name="operation">The operation to run under the policy.</param>
+    ///<param name="cancellationToken">A token passed to the operation.</param>
+    ///<returns>The operation's result.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="operation"/> is <c>null</c>.</exception>
+    public ValueTask<TResult> ExecuteValueAsync<TResult>(Func<CancellationToken, ValueTask<TResult>> operation, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        return new ValueTask<TResult>(ExecuteAsync(ct => operation(ct).AsTask(), cancellationToken));
+    }
     #endregion
 
     #region Private methods

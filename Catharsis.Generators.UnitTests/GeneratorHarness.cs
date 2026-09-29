@@ -37,6 +37,33 @@ internal static class GeneratorHarness
         }
     }
 
+    ///<summary>
+    ///Runs the generator twice over identical input and returns how every tracked output step was satisfied the second
+    ///time. A generator whose pipeline models are value-equatable reports only <c>Cached</c> or <c>Unchanged</c> here,
+    ///which is what lets Roslyn skip work while typing in the IDE.
+    ///</summary>
+    internal static IncrementalStepRunReason[] SecondRunReasons(string source, IIncrementalGenerator generator)
+    {
+        CSharpParseOptions parseOptions = new(LanguageVersion.Preview);
+        CSharpCompilation compilation = CSharpCompilation.Create(
+            "Incremental" + Guid.NewGuid().ToString("N"),
+            [CSharpSyntaxTree.ParseText(source, parseOptions)],
+            References,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
+
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(
+            [generator.AsSourceGenerator()],
+            additionalTexts: null,
+            parseOptions,
+            optionsProvider: null,
+            new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, trackIncrementalGeneratorSteps: true));
+
+        driver = driver.RunGenerators(compilation);
+        driver = driver.RunGenerators(compilation.Clone());
+
+        return [.. driver.GetRunResult().Results[0].TrackedOutputSteps.SelectMany(static step => step.Value).SelectMany(static run => run.Outputs).Select(static output => output.Reason)];
+    }
+
     internal static Result Run(string source, IIncrementalGenerator generator)
     {
         CSharpParseOptions parseOptions = new(LanguageVersion.Preview);

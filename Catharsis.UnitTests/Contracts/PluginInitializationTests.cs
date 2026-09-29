@@ -51,6 +51,17 @@ public class PluginInitializationTests
     }
 
     [TestMethod]
+    public async Task InitializeAllValueAsync_StartsPlugins()
+    {
+        Log log = new();
+
+        IReadOnlyList<IPlugin> started = await PluginLoader.InitializeAllValueAsync(PluginLoader.Discover<IPlugin>([typeof(FirstPlugin)]), Services(log));
+
+        Assert.AreEqual(1, started.Count);
+        CollectionAssert.AreEqual(new[] { "a" }, log.Lines);
+    }
+
+    [TestMethod]
     public async Task InitializeAllAsync_Cancelled_StopsBeforeStarting()
     {
         Log log = new();

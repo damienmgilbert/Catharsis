@@ -114,6 +114,19 @@ public static class PluginLoader
         return started;
     }
 
+    ///<summary>
+    ///Starts plugins like <see cref="InitializeAllAsync"/>, returning a <see cref="ValueTask{TResult}"/>.
+    ///</summary>
+    ///<param name="descriptors">The plugins to start.</param>
+    ///<param name="services">Supplies constructor arguments and is passed to each plugin's initializer.</param>
+    ///<param name="cancellationToken">A token that can abandon startup between plugins.</param>
+    ///<returns>The started plugins, in the order of <paramref name="descriptors"/>.</returns>
+    ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
+    public static ValueTask<IReadOnlyList<IPlugin>> InitializeAllValueAsync(IEnumerable<PluginDescriptor> descriptors, IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        return new ValueTask<IReadOnlyList<IPlugin>>(InitializeAllAsync(descriptors, services, cancellationToken));
+    }
+
     #region Private methods
     static Type[] SafeGetTypes(Assembly assembly)
     {

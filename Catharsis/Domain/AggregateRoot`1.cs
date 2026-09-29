@@ -43,6 +43,21 @@ public abstract class AggregateRoot<TId>(TId id) : Entity<TId>(id)
     }
 
     ///<summary>
+    ///Publishes every recorded event like <see cref="DispatchEventsAsync"/>, returning a <see cref="ValueTask"/> that is
+    ///already complete, and allocates nothing, when there is nothing to publish.
+    ///</summary>
+    ///<param name="dispatcher">The dispatcher that delivers events to subscribers.</param>
+    ///<param name="cancellationToken">A token that can stop dispatching between events.</param>
+    ///<returns>A task that completes when every event has been handled.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="dispatcher"/> is <c>null</c>.</exception>
+    public ValueTask DispatchEventsValueAsync(DomainEventDispatcher dispatcher, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(dispatcher);
+
+        return _events.Count == 0 ? ValueTask.CompletedTask : new ValueTask(DispatchEventsAsync(dispatcher, cancellationToken));
+    }
+
+    ///<summary>
     ///Discards every recorded event without publishing it.
     ///</summary>
     public void ClearEvents() => _events.Clear();
