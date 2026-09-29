@@ -2,8 +2,7 @@
 
 Roslyn [incremental source generators](https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/source-generators-overview)
 that ship separately from the [Catharsis](../Catharsis/README.md) library. The
-library itself does not reference this project; a consumer adds it as an
-analyzer and gets the generators' attributes emitted straight into their own
+library references it as a build-time analyzer only (see `OrderStatus` and`OrderDraftViewModel` in `Catharsis.Domain`); any consumer can add it the same wayand and gets the generators' attributes emitted straight into their own
 compilation, so no runtime dependency is introduced.
 
 The project targets `netstandard2.0` (as analyzers must) and depends on
