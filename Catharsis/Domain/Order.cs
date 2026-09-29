@@ -7,21 +7,13 @@ namespace Catharsis.Domain;
 ///<c>partial</c> and split by concern: this file holds the data and how it is read and extended, while
 ///<c>Order.Lifecycle.cs</c> holds the state transitions that raise domain events.
 ///</summary>
-public sealed partial class Order : AggregateRoot<Guid>
+///<param name="id">The order identity.</param>
+///<param name="currency">The three-letter currency every line must use.</param>
+///<exception cref="ArgumentException"><paramref name="currency"/> is not a three-letter code.</exception>
+public sealed partial class Order(Guid id, string currency) : AggregateRoot<Guid>(id)
 {
     #region Fields
     readonly List<OrderLine> _lines = [];
-    #endregion
-
-    #region Constructors
-    ///<summary>Initializes a new, empty order in the <see cref="OrderStatus.Draft"/> state.</summary>
-    ///<param name="id">The order identity.</param>
-    ///<param name="currency">The three-letter currency every line must use.</param>
-    ///<exception cref="ArgumentException"><paramref name="currency"/> is not a three-letter code.</exception>
-    public Order(Guid id, string currency) : base(id)
-    {
-        Currency = new Money(0m, currency).Currency;
-    }
     #endregion
 
     #region Public methods
@@ -63,7 +55,7 @@ public sealed partial class Order : AggregateRoot<Guid>
 
     #region Public properties
     ///<summary>Gets the currency every line must use.</summary>
-    public string Currency { get; }
+    public string Currency { get; } = new Money(0m, currency).Currency;
 
     ///<summary>Gets where the order is in its life.</summary>
     public OrderStatus Status { get; private set; } = OrderStatus.Draft;

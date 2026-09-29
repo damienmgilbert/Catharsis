@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Catharsis.Domain;
@@ -7,6 +8,7 @@ namespace Catharsis.Domain;
 ///<see cref="Area"/> and <see cref="Perimeter"/> through polymorphism, without knowing which concrete shape they hold.
 ///Shapes order by area.
 ///</summary>
+[SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "Ordering is by area, so two different shapes can compare as equal in size; equality deliberately stays reference identity rather than area equality.")]
 public abstract class Shape : IComparable<Shape>
 {
     #region Operators

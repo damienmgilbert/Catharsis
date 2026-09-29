@@ -8,18 +8,13 @@ namespace Catharsis.Domain;
 ///published afterwards with <see cref="DispatchEventsAsync"/>, so nothing is announced until the change is complete.
 ///</summary>
 ///<typeparam name="TId">The identity type.</typeparam>
-public abstract class AggregateRoot<TId> : Entity<TId>
+///<param name="id">The identity. Must not be <c>null</c>.</param>
+///<exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
+public abstract class AggregateRoot<TId>(TId id) : Entity<TId>(id)
     where TId : notnull, IEquatable<TId>
 {
     #region Fields
     readonly List<DomainEvent> _events = [];
-    #endregion
-
-    #region Constructors
-    ///<summary>Initializes a new aggregate root.</summary>
-    ///<param name="id">The identity. Must not be <c>null</c>.</param>
-    ///<exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
-    protected AggregateRoot(TId id) : base(id) { }
     #endregion
 
     #region Public methods
