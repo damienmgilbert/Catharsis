@@ -12,7 +12,7 @@ public sealed partial class Order
     {
         if(Status != OrderStatus.Draft)
         {
-            throw new InvalidOperationException($"Only a draft order can be confirmed, but this one is {Status}.");
+            throw new InvalidOperationException($"Only a draft order can be confirmed, but this one is {Status.ToStringFast()}.");
         }
 
         if(_lines.Count == 0)

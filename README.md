@@ -27,7 +27,7 @@ application or library.
 | [`Catharsis/`](Catharsis/README.md) | The library itself — the shippable NuGet package. |
 | [`Catharsis.UnitTests/`](Catharsis.UnitTests/README.md) | MSTest suite covering the public surface (~4,396 tests). |
 | [`CatharsisBenchmarkSuite/`](CatharsisBenchmarkSuite/README.md) | BenchmarkDotNet suite measuring key types against BCL baselines. |
-| [`Catharsis.Generators/`](Catharsis.Generators/README.md) | Roslyn incremental source generators (`[AutoNotify]`, `[EnumExtensions]`) — an analyzer, not referenced by the library. |
+| [`Catharsis.Generators/`](Catharsis.Generators/README.md) | Roslyn incremental source generators (`[AutoNotify]`, `[EnumExtensions]`) — an analyzer the library references at build time (`OrderStatus` and `OrderDraftViewModel` use it); no runtime dependency. |
 | `Catharsis.Generators.UnitTests/` | MSTest suite that runs each generator in a real compilation, then compiles and executes the output. |
 
 The solution is defined by [`Catharsis.slnx`](Catharsis.slnx) (the XML-based

@@ -1,8 +1,11 @@
+using Catharsis.Generators;
+
 namespace Catharsis.Domain;
 
 ///<summary>
 ///Where an <see cref="Order"/> is in its life.
 ///</summary>
+[EnumExtensions]
 public enum OrderStatus
 {
     ///<summary>Lines can still be added.</summary>
