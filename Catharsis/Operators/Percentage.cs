@@ -6,7 +6,7 @@ namespace Catharsis.Operators;
 ///A ratio expressed as a percentage. Stores the underlying fraction (<c>0.25</c> for 25%), and lets a percentage be
 ///applied to a number or a <see cref="Money"/> with the <c>*</c> operator.
 ///</summary>
-public readonly struct Percentage : IEquatable<Percentage>, IComparable<Percentage>
+public readonly struct Percentage : IEquatable<Percentage>, IComparable<Percentage>, IFormattable
 {
     #region Constructors
     private Percentage(decimal fraction) { Fraction = fraction; }
@@ -67,7 +67,26 @@ public readonly struct Percentage : IEquatable<Percentage>, IComparable<Percenta
     public override int GetHashCode() => Fraction.GetHashCode();
 
     ///<summary>Returns the value followed by a percent sign, for example <c>25%</c>.</summary>
-    public override string ToString() => string.Create(CultureInfo.InvariantCulture, $"{Value:0.##}%");
+    public override string ToString() => ToString(null, CultureInfo.InvariantCulture);
+
+    ///<summary>
+    ///Formats the percentage. The <paramref name="format"/> is a standard or custom <see cref="decimal"/> format applied
+    ///to the whole-percent value (so <c>"F1"</c> gives <c>12.5%</c>). <c>null</c>, empty or <c>"%"</c> gives up to two
+    ///decimals, and <c>"P"</c> uses the culture's own percent formatting of the fraction.
+    ///</summary>
+    ///<param name="format">The format, as described above.</param>
+    ///<param name="formatProvider">Supplies culture-specific symbols; defaults to the invariant culture.</param>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        formatProvider ??= CultureInfo.InvariantCulture;
+
+        return format switch
+        {
+            null or "" or "%" => Value.ToString("0.##", formatProvider) + "%",
+            "P" or "p" => Fraction.ToString("P", formatProvider),
+            _ => Value.ToString(format, formatProvider) + "%"
+        };
+    }
     #endregion
 
     #region Public properties

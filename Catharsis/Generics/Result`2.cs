@@ -7,7 +7,7 @@ namespace Catharsis.Generics;
 ///</summary>
 ///<typeparam name="T">The type of the success value.</typeparam>
 ///<typeparam name="TError">The type of the failure value.</typeparam>
-public readonly struct Result<T, TError> : IEquatable<Result<T, TError>>
+public readonly record struct Result<T, TError>
 {
     #region Fields
     readonly T? _value;
@@ -24,12 +24,6 @@ public readonly struct Result<T, TError> : IEquatable<Result<T, TError>>
     #endregion
 
     #region Operators
-    ///<summary>Determines whether two results are equal.</summary>
-    public static bool operator ==(Result<T, TError> left, Result<T, TError> right) => left.Equals(right);
-
-    ///<summary>Determines whether two results differ.</summary>
-    public static bool operator !=(Result<T, TError> left, Result<T, TError> right) => !left.Equals(right);
-
     ///<summary>Wraps a value as a successful result.</summary>
     public static implicit operator Result<T, TError>(T value) => Ok(value);
     #endregion
@@ -107,15 +101,6 @@ public readonly struct Result<T, TError> : IEquatable<Result<T, TError>>
         error = _error!;
         return !IsSuccess;
     }
-
-    ///<inheritdoc/>
-    public bool Equals(Result<T, TError> other) => IsSuccess == other.IsSuccess && EqualityComparer<T?>.Default.Equals(_value, other._value) && EqualityComparer<TError?>.Default.Equals(_error, other._error);
-
-    ///<inheritdoc/>
-    public override bool Equals(object? obj) => (obj is Result<T, TError> other) && Equals(other);
-
-    ///<inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(IsSuccess, _value, _error);
 
     ///<inheritdoc/>
     public override string ToString() => IsSuccess ? $"Ok({_value})" : $"Fail({_error})";

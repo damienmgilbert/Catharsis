@@ -92,6 +92,40 @@ public class MoneyTests
 
     #endregion
 
+    #region Parse / conversion
+
+    [TestMethod]
+    public void Parse_RoundTripsToString() { Assert.AreEqual(new Money(12.5m, "USD"), Money.Parse(new Money(12.5m, "USD").ToString(), System.Globalization.CultureInfo.InvariantCulture)); }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("12.50")]
+    [DataRow("abc USD")]
+    [DataRow("12.50 US")]
+    [DataRow("12.50 USD extra")]
+    public void TryParse_Invalid_ReturnsFalse(string text) { Assert.IsFalse(Money.TryParse(text, null, out _)); }
+
+    [TestMethod]
+    public void TryParse_Null_ReturnsFalse() { Assert.IsFalse(Money.TryParse(null, null, out _)); }
+
+    [TestMethod]
+    public void Parse_Invalid_Throws() { Assert.ThrowsExactly<FormatException>(static () => Money.Parse("nope", System.Globalization.CultureInfo.InvariantCulture)); }
+
+    [TestMethod]
+    public void ImplicitConversion_FromTuple_Works()
+    {
+        Money money = (5m, "eur");
+        Assert.AreEqual(new Money(5m, "EUR"), money);
+    }
+
+    [TestMethod]
+    public void GenericParse_ViaIParsable_Works() { Assert.AreEqual(new Money(1m, "USD"), ParseGeneric<Money>("1 USD")); }
+
+    static T ParseGeneric<T>(string text)
+        where T : IParsable<T> => T.Parse(text, null);
+
+    #endregion
+
     #region Round / ToString
 
     [TestMethod]

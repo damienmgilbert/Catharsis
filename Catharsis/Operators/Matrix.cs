@@ -81,13 +81,17 @@ public sealed class Matrix : IEquatable<Matrix>
 
         for(int r = 0; r < left.Rows; r++)
         {
+            ReadOnlySpan<double> leftRow = left.Row(r);
+            Span<double> resultRow = result._values.AsSpan(r * result.Columns, result.Columns);
+
             for(int k = 0; k < left.Columns; k++)
             {
-                double factor = left._values[(r * left.Columns) + k];
+                double factor = leftRow[k];
+                ReadOnlySpan<double> rightRow = right.Row(k);
 
-                for(int c = 0; c < right.Columns; c++)
+                for(int c = 0; c < resultRow.Length; c++)
                 {
-                    result._values[(r * result.Columns) + c] += factor * right._values[(k * right.Columns) + c];
+                    resultRow[c] += factor * rightRow[c];
                 }
             }
         }
@@ -132,6 +136,13 @@ public sealed class Matrix : IEquatable<Matrix>
 
         return result;
     }
+
+    ///<summary>Returns a read-only view of every element in row-major order, without copying.</summary>
+    public ReadOnlySpan<double> AsSpan() => _values;
+
+    ///<summary>Copies every element, in row-major order, into <paramref name="destination"/>.</summary>
+    ///<exception cref="ArgumentException"><paramref name="destination"/> is shorter than <c>Rows * Columns</c>.</exception>
+    public void CopyTo(Span<double> destination) => _values.CopyTo(destination);
 
     ///<summary>Returns a read-only view of one row without copying.</summary>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="row"/> is out of range.</exception>
