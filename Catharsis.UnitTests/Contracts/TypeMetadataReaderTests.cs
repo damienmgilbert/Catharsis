@@ -58,6 +58,44 @@ public class TypeMetadataReaderTests
     }
 
     [TestMethod]
+    public void GetAnnotatedDescriptors_UsesSharedComponentCache()
+    {
+        Catharsis.ComponentModel.ComponentReflectionCache shared = new();
+        TypeMetadataReader reader = new(shared);
+
+        System.ComponentModel.PropertyDescriptor property = reader.GetAnnotatedDescriptors<TagAttribute>(typeof(Sample))
+            .Where(static d => d.Attribute.Name == "one").Select(static d => d.Property).Single();
+
+        Assert.AreEqual(nameof(Sample.First), property.Name);
+        Assert.AreEqual(1, shared.PropertyCacheCount);
+    }
+
+    [TestMethod]
+    public void GetAnnotatedDescriptors_SkipsUntaggedProperties()
+    {
+        IReadOnlyList<(System.ComponentModel.PropertyDescriptor Property, TagAttribute Attribute)> found = new TypeMetadataReader().GetAnnotatedDescriptors<TagAttribute>(typeof(Sample));
+
+        // TypeDescriptor collapses the repeated [Tag] on Multi into one attribute, so First + Multi = 2.
+        Assert.AreEqual(2, found.Count);
+        Assert.IsFalse(found.Any(static f => f.Property.Name == nameof(Sample.Untagged)));
+    }
+
+    [TestMethod]
+    public void GetAnnotatedDescriptors_NullType_Throws() { Assert.ThrowsExactly<ArgumentNullException>(static () => new TypeMetadataReader().GetAnnotatedDescriptors<TagAttribute>(null!)); }
+
+    [TestMethod]
+    public void Clear_AlsoClearsSharedComponentCache()
+    {
+        Catharsis.ComponentModel.ComponentReflectionCache shared = new();
+        TypeMetadataReader reader = new(shared);
+        reader.GetAnnotatedDescriptors<TagAttribute>(typeof(Sample));
+
+        reader.Clear();
+
+        Assert.AreEqual(0, shared.PropertyCacheCount);
+    }
+
+    [TestMethod]
     public void Lookups_AreCached_AndClearResets()
     {
         TypeMetadataReader reader = new();

@@ -1,18 +1,25 @@
+using Catharsis.ComponentModel;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Catharsis.Contracts;
 
 ///<summary>
 ///Reads custom attributes through reflection and caches the result per member, so hot paths that repeatedly ask the
-///same question ("which properties carry this attribute?") pay for reflection once. Complements
-///<see cref="Catharsis.ComponentModel.ComponentReflectionCache"/>, which caches <c>TypeDescriptor</c> data rather than
-///raw attributes.
+///same question ("which properties carry this attribute?") pay for reflection once. Raw attribute reads are cached
+///here; <c>TypeDescriptor</c> property data (which includes attributes added through type descriptors) is delegated to
+///a shared <see cref="ComponentReflectionCache"/>.
 ///</summary>
-public sealed class TypeMetadataReader
+///<param name="componentCache">
+///The cache used for <c>TypeDescriptor</c>-based lookups. Pass a shared instance so the same descriptors are not
+///reflected twice; a private one is created when <c>null</c>.
+///</param>
+public sealed class TypeMetadataReader(ComponentReflectionCache? componentCache = null)
 {
     #region Fields
     readonly ConcurrentDictionary<(MemberInfo Member, Type Attribute, bool Inherit), Attribute[]> _cache = new();
+    readonly ComponentReflectionCache _componentCache = componentCache ?? new ComponentReflectionCache();
     #endregion
 
     #region Public methods
@@ -83,9 +90,46 @@ public sealed class TypeMetadataReader
     }
 
     ///<summary>
-    ///Discards every cached result.
+    ///Gets every property of <paramref name="type"/> whose <see cref="TypeDescriptor"/> metadata carries
+    ///<typeparamref name="TAttribute"/>, paired with that attribute. Unlike
+    ///<see cref="GetAnnotatedProperties{TAttribute}(Type)"/> this sees attributes added through type descriptors, and
+    ///the descriptors come from the shared <see cref="ComponentReflectionCache"/>.
     ///</summary>
-    public void Clear() => _cache.Clear();
+    ///<remarks>
+    ///<see cref="TypeDescriptor"/> keeps only one attribute per <see cref="Attribute.TypeId"/>, so a repeated
+    ///<c>AllowMultiple</c> attribute collapses to a single instance here unless it overrides <c>TypeId</c>. Use
+    ///<see cref="GetAnnotatedProperties{TAttribute}(Type)"/> when every repetition matters.
+    ///</remarks>
+    ///<typeparam name="TAttribute">The attribute type.</typeparam>
+    ///<param name="type">The type whose properties are inspected.</param>
+    ///<returns>The annotated property descriptors.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="type"/> is <c>null</c>.</exception>
+    public IReadOnlyList<(PropertyDescriptor Property, TAttribute Attribute)> GetAnnotatedDescriptors<TAttribute>(Type type)
+        where TAttribute : Attribute
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        List<(PropertyDescriptor, TAttribute)> result = [];
+
+        foreach(PropertyDescriptor descriptor in _componentCache.GetProperties(type))
+        {
+            foreach(TAttribute attribute in descriptor.Attributes.OfType<TAttribute>())
+            {
+                result.Add((descriptor, attribute));
+            }
+        }
+
+        return result;
+    }
+
+    ///<summary>
+    ///Discards every cached result, including the shared component cache's.
+    ///</summary>
+    public void Clear()
+    {
+        _cache.Clear();
+        _componentCache.Clear();
+    }
     #endregion
 
     #region Public properties

@@ -134,7 +134,8 @@ public class AttributeServiceScannerTests
     public void AddAttributedServices_NullArguments_Throw()
     {
         Assert.ThrowsExactly<ArgumentNullException>(static () => ((IServiceCollection)null!).AddAttributedServices());
-        Assert.ThrowsExactly<ArgumentNullException>(static () => new ServiceCollection().AddAttributedServices(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(static () => new ServiceCollection().AddAttributedServices((System.Reflection.Assembly[])null!));
+        Assert.ThrowsExactly<ArgumentNullException>(static () => new ServiceCollection().AddAttributedServices((IEnumerable<Type>)null!));
     }
 
     [TestMethod]
