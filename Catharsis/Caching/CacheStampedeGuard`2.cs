@@ -23,12 +23,11 @@ namespace Catharsis.Caching;
 public sealed class CacheStampedeGuard<TKey, TValue>(IEqualityComparer<TKey>? comparer = null) where TKey : notnull
 {
     #region Fields
-    readonly ConcurrentDictionary<TKey, TValue> _cache = new(comparer);
-    readonly SingleFlightExecutor<TKey, TValue> _singleFlight = new(comparer);
+    private readonly ConcurrentDictionary<TKey, TValue> _cache = new(comparer);
+    private readonly SingleFlightExecutor<TKey, TValue> _singleFlight = new(comparer);
     #endregion
 
     #region Public methods
-
     ///<summary>
     ///Removes all entries from the cache.
     ///</summary>
@@ -52,17 +51,20 @@ public sealed class CacheStampedeGuard<TKey, TValue>(IEqualityComparer<TKey>? co
             return cached;
         }
 
-        return await _singleFlight.ExecuteAsync(key, async () =>
-        {
-            if(_cache.TryGetValue(key, out TValue? existing))
-            {
-                return existing;
-            }
+        return await _singleFlight.ExecuteAsync(
+                     key,
+                     async () =>
+                     {
+                         if(_cache.TryGetValue(key, out TValue? existing))
+                         {
+                             return existing;
+                         }
 
-            TValue fresh = await valueFactory().ConfigureAwait(false);
-            _cache[key] = fresh;
-            return fresh;
-        }).ConfigureAwait(false);
+                         TValue fresh = await valueFactory().ConfigureAwait(false);
+                         _cache[key] = fresh;
+                         return fresh;
+                     })
+            .ConfigureAwait(false);
     }
 
     ///<summary>

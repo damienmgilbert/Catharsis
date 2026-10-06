@@ -4,31 +4,21 @@ using System.Diagnostics.CodeAnalysis;
 namespace Catharsis.Caching;
 
 ///<summary>
-///A thread-safe cache whose entries expire a fixed duration after they are set. Expired entries are removed lazily
-///on lookup, and <see cref="RemoveExpired"/> can be called to purge them proactively.
+///A thread-safe cache whose entries expire a fixed duration after they are set. Expired entries are removed lazily on
+///lookup, and <see cref="RemoveExpired"/> can be called to purge them proactively.
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
 ///<typeparam name="TValue">The type of the cached values.</typeparam>
 ///<example>
-///<code>
-///TtlCache&lt;string, Session&gt; sessions = new(defaultTtl: TimeSpan.FromMinutes(20));
-///sessions.Set(sessionId, session);
-///
-///if(sessions.TryGetValue(sessionId, out Session? session))
-///{
-///    // Still within its 20-minute window.
-///}
-///</code>
-///</example>
 public sealed class TtlCache<TKey, TValue> where TKey : notnull
 {
     #region Fields
-    readonly ConcurrentDictionary<TKey, Entry> _entries;
-    readonly TimeSpan _defaultTtl;
-    readonly TimeProvider _timeProvider;
+    private readonly TimeSpan _defaultTtl;
+    private readonly ConcurrentDictionary<TKey, Entry> _entries;
+    private readonly TimeProvider _timeProvider;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates a cache with the specified default entry lifetime.
     ///</summary>
@@ -57,7 +47,9 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
         _timeProvider = timeProvider ?? TimeProvider.System;
         _entries = new ConcurrentDictionary<TKey, Entry>(comparer);
     }
+    #endregion
 
+    #region Public methods
     ///<summary>
     ///Removes all entries from the cache.
     ///</summary>
@@ -112,17 +104,6 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
     }
 
     ///<summary>
-    ///Removes the entry with the specified key.
-    ///</summary>
-    ///<param name="key">The key to remove.</param>
-    ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
-    public bool TryRemove(TKey key)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-        return _entries.TryRemove(key, out _);
-    }
-
-    ///<summary>
     ///Attempts to retrieve the value for the specified key, treating an expired entry as absent.
     ///</summary>
     ///<param name="key">The key to look up.</param>
@@ -146,6 +127,17 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
         value = default;
         return false;
     }
+
+    ///<summary>
+    ///Removes the entry with the specified key.
+    ///</summary>
+    ///<param name="key">The key to remove.</param>
+    ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
+    public bool TryRemove(TKey key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        return _entries.TryRemove(key, out _);
+    }
     #endregion
 
     #region Public properties
@@ -155,5 +147,5 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
     public int Count => _entries.Count;
     #endregion
 
-    readonly record struct Entry(TValue Value, DateTimeOffset ExpiresAt);
+    private readonly record struct Entry(TValue Value, DateTimeOffset ExpiresAt);
 }

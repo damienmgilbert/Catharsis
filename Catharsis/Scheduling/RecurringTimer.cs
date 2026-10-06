@@ -8,13 +8,13 @@ namespace Catharsis.Scheduling;
 public sealed class RecurringTimer : IAsyncDisposable
 {
     #region Fields
-    readonly PeriodicTimer _timer;
-    readonly CancellationTokenSource _stop = new();
-    readonly Task _loop;
-    bool _disposed;
+    private bool _disposed;
+    private readonly Task _loop;
+    private readonly CancellationTokenSource _stop = new();
+    private readonly PeriodicTimer _timer;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates and starts a recurring timer with the specified period and callback.
     ///</summary>
@@ -34,10 +34,22 @@ public sealed class RecurringTimer : IAsyncDisposable
         _timer = new PeriodicTimer(period);
         _loop = RunAsync(callback, _stop.Token);
     }
+    #endregion
 
+    #region Private methods
+    private async Task RunAsync(Func<CancellationToken, Task> callback, CancellationToken cancellationToken)
+    {
+        while(await _timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
+        {
+            await callback(cancellationToken).ConfigureAwait(false);
+        }
+    }
+    #endregion
+
+    #region Public methods
     ///<summary>
-    ///Stops the timer, cancels the running callback (if any), and waits for the background loop to complete.
-    ///Disposal never throws; a callback failure remains observable via <see cref="Completion"/>.
+    ///Stops the timer, cancels the running callback (if any), and waits for the background loop to complete. Disposal
+    ///never throws; a callback failure remains observable via <see cref="Completion"/>.
     ///</summary>
     public async ValueTask DisposeAsync()
     {
@@ -54,28 +66,19 @@ public sealed class RecurringTimer : IAsyncDisposable
         try
         {
             await _loop.ConfigureAwait(false);
-        }
-        catch
+        } catch
         {
             // A canceled or failed callback is observable via Completion; disposal itself must not throw.
         }
 
         _stop.Dispose();
     }
-
-    async Task RunAsync(Func<CancellationToken, Task> callback, CancellationToken cancellationToken)
-    {
-        while(await _timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
-        {
-            await callback(cancellationToken).ConfigureAwait(false);
-        }
-    }
     #endregion
 
     #region Public properties
     ///<summary>
-    ///Gets a task that completes when the callback loop stops, either because it was disposed or because the
-    ///callback threw. Awaiting this surfaces a callback failure without needing to dispose first.
+    ///Gets a task that completes when the callback loop stops, either because it was disposed or because the callback
+    ///threw. Awaiting this surfaces a callback failure without needing to dispose first.
     ///</summary>
     public Task Completion => _loop;
     #endregion

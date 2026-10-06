@@ -10,8 +10,8 @@ namespace Catharsis.Patterns.Composed;
 public sealed class DiscountPricingStrategy<TItem> : IPricingStrategy<TItem>
 {
     #region Fields
-    readonly IPricingStrategy<TItem> _inner;
-    readonly Percentage _remaining;
+    private readonly IPricingStrategy<TItem> _inner;
+    private readonly Percentage _remaining;
     #endregion
 
     #region Constructors

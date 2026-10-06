@@ -5,13 +5,46 @@ namespace Catharsis.Collections;
 
 ///<summary>
 ///A strongly-typed, insertion-order-preserving string-to-string collection, backed by <see cref="OrderedDictionary"/>
-///rather than <see cref="Dictionary{TKey,TValue}"/> (whose enumeration order is not guaranteed) or
-///<see cref="NameValueCollection"/> (which has no indexed access by position).
+///rather than <see cref="Dictionary{TKey,TValue}"/> (whose enumeration order is not guaranteed) or ///<see
+///cref="NameValueCollection"/> (which has no indexed access by position).
 ///</summary>
 public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string, string>>
 {
     #region Fields
-    readonly OrderedDictionary _inner = new();
+    private readonly OrderedDictionary _inner = new();
+    #endregion
+
+    #region Indexers
+    ///<summary>
+    ///Gets or sets the value associated with the specified key. Setting a key that does not exist yet appends it at the
+    ///end, in insertion order.
+    ///</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="key"/> or, on set, the value is <c>null</c>.</exception>
+    ///<exception cref="KeyNotFoundException">On get, the key was not found.</exception>
+    public string this[string key]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(key);
+
+            if(!_inner.Contains(key))
+            {
+                throw new KeyNotFoundException($"The key '{key}' was not found.");
+            }
+
+            return (string)_inner[key]!;
+        }
+        set
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(value);
+            _inner[key] = value;
+        }
+    }
+    #endregion
+
+    #region Explicit interface implementations
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -65,15 +98,6 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
         }
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    ///<summary>
-    ///Removes the entry at the specified position in insertion order.
-    ///</summary>
-    ///<param name="index">The zero-based position.</param>
-    ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is out of range.</exception>
-    public void RemoveAt(int index) => _inner.RemoveAt(index);
-
     ///<summary>
     ///Removes the entry with the specified key, if present.
     ///</summary>
@@ -92,6 +116,13 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
         _inner.Remove(key);
         return true;
     }
+
+    ///<summary>
+    ///Removes the entry at the specified position in insertion order.
+    ///</summary>
+    ///<param name="index">The zero-based position.</param>
+    ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is out of range.</exception>
+    public void RemoveAt(int index) => _inner.RemoveAt(index);
     #endregion
 
     #region Public properties
@@ -99,32 +130,5 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
     ///The number of entries.
     ///</summary>
     public int Count => _inner.Count;
-
-    ///<summary>
-    ///Gets or sets the value associated with the specified key. Setting a key that does not exist yet appends it at
-    ///the end, in insertion order.
-    ///</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="key"/> or, on set, the value is <c>null</c>.</exception>
-    ///<exception cref="KeyNotFoundException">On get, the key was not found.</exception>
-    public string this[string key]
-    {
-        get
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            if(!_inner.Contains(key))
-            {
-                throw new KeyNotFoundException($"The key '{key}' was not found.");
-            }
-
-            return (string)_inner[key]!;
-        }
-        set
-        {
-            ArgumentNullException.ThrowIfNull(key);
-            ArgumentNullException.ThrowIfNull(value);
-            _inner[key] = value;
-        }
-    }
     #endregion
 }

@@ -10,23 +10,25 @@ namespace Catharsis.HighPerformance;
 public static class MemoryOwnerExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Clears all elements in the <see cref="MemoryOwner{T}"/> to their default values.
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="owner">The memory owner to clear.</param>
-    public static void Clear<T>(this MemoryOwner<T> owner) { owner.Span.Clear(); }
+    public static void Clear<T>(this MemoryOwner<T> owner) => owner.Span.Clear();
+
     ///<summary>
     ///Fills the entire <see cref="MemoryOwner{T}"/> with the specified value.
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="owner">The memory owner to fill.</param>
     ///<param name="value">The value to fill with.</param>
-    public static void Fill<T>(this MemoryOwner<T> owner, T value) { owner.Span.Fill(value); }
+    public static void Fill<T>(this MemoryOwner<T> owner, T value) => owner.Span.Fill(value);
 
     ///<summary>
-    ///Slices a <see cref="MemoryOwner{T}"/> and returns a new owner with the specified range. The caller is
-    ///responsible for disposing both the original and the new owner.
+    ///Slices a <see cref="MemoryOwner{T}"/> and returns a new owner with the specified range. The caller is responsible
+    ///for disposing both the original and the new owner.
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="owner">The source memory owner.</param>

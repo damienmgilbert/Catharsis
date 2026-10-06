@@ -15,10 +15,7 @@ namespace Catharsis.ComponentModel;
 public sealed class DataErrorInfoAdapter(INotifyDataErrorInfo source) : IDataErrorInfo
 {
     #region Fields
-    readonly INotifyDataErrorInfo _source = source ?? throw new ArgumentNullException(nameof(source));
-
-    #endregion
-    #region Constructors
+    private readonly INotifyDataErrorInfo _source = source ?? throw new ArgumentNullException(nameof(source));
     #endregion
 
     #region Indexers

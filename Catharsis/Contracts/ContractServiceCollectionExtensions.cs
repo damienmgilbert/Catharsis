@@ -1,13 +1,48 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catharsis.Contracts;
 
 ///<summary>
-///<see cref="IServiceCollection"/> extensions for attribute-driven registration, decoration and factory delegates.
-///</summary>
 public static class ContractServiceCollectionExtensions
 {
+    #region Private methods
+    private static object CreateInner(IServiceProvider provider, ServiceDescriptor original)
+    {
+        if(original.ImplementationInstance is not null)
+        {
+            return original.ImplementationInstance;
+        }
+
+        if(original.ImplementationFactory is not null)
+        {
+            return original.ImplementationFactory(provider);
+        }
+
+        return ActivatorUtilities.CreateInstance(provider, original.ImplementationType!);
+    }
+
+    private static IServiceCollection Register(IServiceCollection services, IEnumerable<ServiceRegistration> registrations, IEnumerable<DecoratorRegistration> decorators)
+    {
+        foreach(ServiceRegistration registration in registrations)
+        {
+            Type implementation = registration.ImplementationType;
+
+            services.Add(
+            OptionalDependencyResolver.HasOptionalDependencies(implementation)
+            ? new ServiceDescriptor(registration.ServiceType, provider => OptionalDependencyResolver.Create(provider, implementation), registration.Lifetime)
+            : new ServiceDescriptor(registration.ServiceType, implementation, registration.Lifetime));
+        }
+
+        foreach(DecoratorRegistration decorator in decorators.OrderBy(static d => d.Order))
+        {
+            services.AddDecorator(decorator.ServiceType, decorator.DecoratorType);
+        }
+
+        return services;
+    }
+    #endregion
+
     #region Public methods
     ///<summary>
     ///Registers every <see cref="ServiceAttribute"/> class in <paramref name="assemblies"/>, then wraps services with
@@ -23,17 +58,14 @@ public static class ContractServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(assemblies);
 
-        return Register(
-            services,
-            assemblies.SelectMany(static a => AttributeServiceScanner.ScanServices(a)),
-            assemblies.SelectMany(static a => AttributeServiceScanner.ScanDecorators(a)));
+        return Register(services, assemblies.SelectMany(static a => AttributeServiceScanner.ScanServices(a)), assemblies.SelectMany(static a => AttributeServiceScanner.ScanDecorators(a)));
     }
 
     ///<summary>
     ///Registers every <see cref="ServiceAttribute"/> class among <paramref name="types"/>, then decorates services with
-    ///every <see cref="DecoratorForAttribute"/> class among them. Services with an
-    ///<see cref="OptionalDependencyAttribute"/> constructor parameter are created through
-    ///<see cref="OptionalDependencyResolver"/>.
+    ///every <see cref="DecoratorForAttribute"/> class among them. Services with an ///<see
+    ///cref="OptionalDependencyAttribute"/> constructor parameter are created through ///<see
+    ///cref="OptionalDependencyResolver"/>.
     ///</summary>
     ///<param name="services">The service collection.</param>
     ///<param name="types">The candidate types.</param>
@@ -45,7 +77,7 @@ public static class ContractServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(types);
 
-        Type[] candidates = [.. types];
+        Type[] candidates = [ .. types ];
 
         return Register(services, AttributeServiceScanner.ScanServices(candidates), AttributeServiceScanner.ScanDecorators(candidates));
     }
@@ -58,12 +90,7 @@ public static class ContractServiceCollectionExtensions
     ///<param name="services">The service collection.</param>
     ///<returns>The service collection for chaining.</returns>
     ///<inheritdoc cref="AddDecorator(IServiceCollection, Type, Type)"/>
-    public static IServiceCollection AddDecorator<TService, TDecorator>(this IServiceCollection services)
-        where TService : class
-        where TDecorator : class, TService
-    {
-        return services.AddDecorator(typeof(TService), typeof(TDecorator));
-    }
+    public static IServiceCollection AddDecorator<TService, TDecorator>(this IServiceCollection services) where TService : class where TDecorator : class, TService { return services.AddDecorator(typeof(TService), typeof(TDecorator)); }
 
     ///<summary>
     ///Wraps the most recent registration of <paramref name="serviceType"/> with <paramref name="decoratorType"/>. The
@@ -115,10 +142,7 @@ public static class ContractServiceCollectionExtensions
             throw new InvalidOperationException("Keyed services cannot be decorated.");
         }
 
-        services[index] = new ServiceDescriptor(
-            serviceType,
-            provider => ActivatorUtilities.CreateInstance(provider, decoratorType, CreateInner(provider, original)),
-            original.Lifetime);
+        services[index] = new ServiceDescriptor(serviceType, provider => ActivatorUtilities.CreateInstance(provider, decoratorType, CreateInner(provider, original)), original.Lifetime);
 
         return services;
     }
@@ -131,49 +155,12 @@ public static class ContractServiceCollectionExtensions
     ///<param name="services">The service collection.</param>
     ///<returns>The service collection for chaining.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="services"/> is <c>null</c>.</exception>
-    public static IServiceCollection AddFactory<T>(this IServiceCollection services)
-        where T : notnull
+    public static IServiceCollection AddFactory<T>(this IServiceCollection services) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddSingleton<Func<T>>(static provider => () => provider.GetRequiredService<T>());
         return services;
-    }
-    #endregion
-
-    #region Private methods
-    static IServiceCollection Register(IServiceCollection services, IEnumerable<ServiceRegistration> registrations, IEnumerable<DecoratorRegistration> decorators)
-    {
-        foreach(ServiceRegistration registration in registrations)
-        {
-            Type implementation = registration.ImplementationType;
-
-            services.Add(OptionalDependencyResolver.HasOptionalDependencies(implementation)
-                ? new ServiceDescriptor(registration.ServiceType, provider => OptionalDependencyResolver.Create(provider, implementation), registration.Lifetime)
-                : new ServiceDescriptor(registration.ServiceType, implementation, registration.Lifetime));
-        }
-
-        foreach(DecoratorRegistration decorator in decorators.OrderBy(static d => d.Order))
-        {
-            services.AddDecorator(decorator.ServiceType, decorator.DecoratorType);
-        }
-
-        return services;
-    }
-
-    static object CreateInner(IServiceProvider provider, ServiceDescriptor original)
-    {
-        if(original.ImplementationInstance is not null)
-        {
-            return original.ImplementationInstance;
-        }
-
-        if(original.ImplementationFactory is not null)
-        {
-            return original.ImplementationFactory(provider);
-        }
-
-        return ActivatorUtilities.CreateInstance(provider, original.ImplementationType!);
     }
     #endregion
 }

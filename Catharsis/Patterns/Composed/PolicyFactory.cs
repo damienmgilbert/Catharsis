@@ -10,6 +10,7 @@ namespace Catharsis.Patterns.Composed;
 public static class PolicyFactory
 {
     #region Public methods
+
     ///<summary>
     ///Creates a policy for <paramref name="options"/>.
     ///</summary>
@@ -43,22 +44,24 @@ public static class PolicyFactory
         {
             0 => PassThroughPolicy.Instance,
             1 => layers[0],
-            _ => new PolicyWrap([.. layers])
+            _ => new PolicyWrap([ .. layers ])
         };
     }
     #endregion
 
-    #region Nested types
-    sealed class PassThroughPolicy : IAsyncPolicy
+    private sealed class PassThroughPolicy : IAsyncPolicy
     {
+        #region Fields
         public static readonly PassThroughPolicy Instance = new();
+        #endregion
 
+        #region Public methods
         public Task<TResult> ExecuteAsync<TResult>(Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(operation);
 
             return operation(cancellationToken);
         }
+        #endregion
     }
-    #endregion
 }

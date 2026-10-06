@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class TemplateMethod
 {
     #region Public methods
+
     ///<summary>
     ///Template Method — executes an invariant algorithm skeleton of <paramref name="setup"/> → <paramref name="hook"/>
     ///→ <paramref name="teardown"/> on <paramref name="obj"/>, where <paramref name="hook"/> is the customizable step.

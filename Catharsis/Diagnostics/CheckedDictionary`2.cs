@@ -1,18 +1,19 @@
-using CommunityToolkit.Diagnostics;
 using System.Collections;
+using CommunityToolkit.Diagnostics;
 
 namespace Catharsis.Diagnostics;
 
 ///<summary>
-///A capacity-checked wrapper around <see cref="Dictionary{TKey, TValue}"/> that uses CommunityToolkit <see cref="Guard"/>
-///for key and capacity validation, analogous to how <see cref="CheckedSpan{T}"/> bounds-checks index access.
+///A capacity-checked wrapper around <see cref="Dictionary{TKey, TValue}"/> that uses CommunityToolkit <see
+///cref="Guard"/> for key and capacity validation, analogous to how <see cref="CheckedSpan{T}"/> bounds-checks index
+///access.
 ///</summary>
 ///<typeparam name="TKey">The type of the keys.</typeparam>
 ///<typeparam name="TValue">The type of the values.</typeparam>
 public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> where TKey : notnull
 {
     #region Fields
-    readonly Dictionary<TKey, TValue> _inner;
+    private readonly Dictionary<TKey, TValue> _inner;
     #endregion
 
     #region Constructors
@@ -36,20 +37,44 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     }
     #endregion
 
-    #region Private methods
-    void CheckCapacityForNewKey()
+    #region Indexers
+    ///<summary>
+    ///Gets or sets the value associated with the specified key. Setting a new key validates the configured capacity
+    ///limit first.
+    ///</summary>
+    ///<param name="key">The key of the value to get or set.</param>
+    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
+    ///<exception cref="KeyNotFoundException">The key was not found when getting the value.</exception>
+    ///<exception cref="InvalidOperationException">Setting a new key would exceed <see cref="MaxCapacity"/>.</exception>
+    public TValue this[TKey key]
     {
-        if((Mode == ValidationMode.Full) && MaxCapacity.HasValue && (_inner.Count >= MaxCapacity.Value))
+        get
         {
-            throw new InvalidOperationException($"Adding this key would exceed the maximum capacity of {MaxCapacity.Value}.");
+            if(Mode >= ValidationMode.BoundsOnly)
+            {
+                Guard.IsNotNull(key);
+            }
+
+            return _inner[key];
+        }
+        set
+        {
+            if(Mode >= ValidationMode.BoundsOnly)
+            {
+                Guard.IsNotNull(key);
+            }
+
+            if(!_inner.ContainsKey(key))
+            {
+                CheckCapacityForNewKey();
+            }
+
+            _inner[key] = value;
         }
     }
     #endregion
 
     #region Explicit interface implementations
-    ///<inheritdoc/>
-    bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
-
     ///<inheritdoc/>
     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
@@ -62,8 +87,21 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     ///<inheritdoc/>
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_inner).Remove(item);
 
+        ///<inheritdoc/>
+    bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+
     ///<inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    #endregion
+
+    #region Private methods
+    private void CheckCapacityForNewKey()
+    {
+        if((Mode == ValidationMode.Full) && MaxCapacity.HasValue && (_inner.Count >= MaxCapacity.Value))
+        {
+            throw new InvalidOperationException($"Adding this key would exceed the maximum capacity of {MaxCapacity.Value}.");
+        }
+    }
     #endregion
 
     #region Public methods
@@ -115,43 +153,6 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     ///<param name="value">The associated value, if found.</param>
     ///<returns><c>true</c> if the key was found; otherwise <c>false</c>.</returns>
     public bool TryGetValue(TKey key, out TValue value) => _inner.TryGetValue(key, out value!);
-    #endregion
-
-    #region Indexers
-    ///<summary>
-    ///Gets or sets the value associated with the specified key. Setting a new key validates the configured capacity
-    ///limit first.
-    ///</summary>
-    ///<param name="key">The key of the value to get or set.</param>
-    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
-    ///<exception cref="KeyNotFoundException">The key was not found when getting the value.</exception>
-    ///<exception cref="InvalidOperationException">Setting a new key would exceed <see cref="MaxCapacity"/>.</exception>
-    public TValue this[TKey key]
-    {
-        get
-        {
-            if(Mode >= ValidationMode.BoundsOnly)
-            {
-                Guard.IsNotNull(key);
-            }
-
-            return _inner[key];
-        }
-        set
-        {
-            if(Mode >= ValidationMode.BoundsOnly)
-            {
-                Guard.IsNotNull(key);
-            }
-
-            if(!_inner.ContainsKey(key))
-            {
-                CheckCapacityForNewKey();
-            }
-
-            _inner[key] = value;
-        }
-    }
     #endregion
 
     #region Public properties

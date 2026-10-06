@@ -6,16 +6,11 @@ namespace Catharsis.DataAnnotations;
 
 ///<summary>
 ///Validates that the number of elements in an <see cref="IEnumerable"/> falls within a specified range, analogous to
-///<see cref="RangeAttribute"/> but operating on collection counts instead of scalar values.
-///</summary>
-///<remarks>
-///A <c>null</c> value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow nulls). If the
-///value does not implement <see cref="IEnumerable"/>, validation fails.
-///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 public sealed class CollectionCountAttribute : ValidationAttribute
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new instance of <see cref="CollectionCountAttribute"/> with the specified minimum and maximum
     ///element counts.
@@ -23,8 +18,6 @@ public sealed class CollectionCountAttribute : ValidationAttribute
     ///<param name="minimum">The minimum number of elements (inclusive).</param>
     ///<param name="maximum">The maximum number of elements (inclusive).</param>
     ///<exception cref="ArgumentOutOfRangeException">
-    ///<paramref name="minimum"/> is negative, or <paramref name="maximum"/> is less than <paramref name="minimum"/>.
-    ///</exception>
     public CollectionCountAttribute(int minimum, int maximum = int.MaxValue) : base("The field {0} must contain between {1} and {2} elements.")
     {
         ArgumentOutOfRangeException.ThrowIfNegative(minimum);
@@ -36,7 +29,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
     #endregion
 
     #region Private methods
-    static int CountElements(IEnumerable enumerable)
+    private static int CountElements(IEnumerable enumerable)
     {
         if(enumerable is ICollection collection)
         {
@@ -89,7 +82,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum); }
+    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum);
     #endregion
 
     #region Public properties

@@ -12,11 +12,11 @@ namespace Catharsis.Serialization;
 public sealed class DelimitedRecordWriter<T>(char delimiter = ',')
 {
     #region Fields
-    static readonly PropertyInfo[] _properties = [.. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead)];
+    private static readonly PropertyInfo[] _properties = [ .. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead) ];
     #endregion
 
     #region Private methods
-    string FormatField(object? value)
+    private string FormatField(object? value)
     {
         string text = Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty;
         bool needsQuoting = text.Contains(delimiter) || text.Contains('"') || text.Contains('\n') || text.Contains('\r');

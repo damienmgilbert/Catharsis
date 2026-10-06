@@ -4,13 +4,14 @@ using System.Text;
 namespace Catharsis.Security;
 
 ///<summary>
-///Compares byte sequences or strings in time that does not depend on where the first difference occurs, preventing
-///a timing side-channel from leaking information such as a secret's length or content (e.g. when comparing a
-///submitted token against a stored one).
+///Compares byte sequences or strings in time that does not depend on where the first difference occurs, preventing a
+///timing side-channel from leaking information such as a secret's length or content (e.g. when comparing a submitted
+///token against a stored one).
 ///</summary>
 public static class ConstantTimeComparer
 {
     #region Public methods
+
     ///<summary>
     ///Determines whether two byte sequences are equal, in constant time relative to their length.
     ///</summary>

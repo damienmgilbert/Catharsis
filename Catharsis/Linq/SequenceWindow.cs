@@ -9,28 +9,27 @@ public static class SequenceWindow
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         EqualityComparer<TKey> comparer = EqualityComparer<TKey>.Default;
         TKey currentKey = keySelector(enumerator.Current);
-        List<T> currentBucket = [enumerator.Current];
+        List<T> currentBucket = [ enumerator.Current ];
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             TKey key = keySelector(enumerator.Current);
 
-            if (comparer.Equals(key, currentKey))
+            if(comparer.Equals(key, currentKey))
             {
                 currentBucket.Add(enumerator.Current);
-            }
-            else
+            } else
             {
                 yield return SequenceFactory.Grouping(currentKey, (IEnumerable<T>)currentBucket);
                 currentKey = key;
-                currentBucket = [enumerator.Current];
+                currentBucket = [ enumerator.Current ];
             }
         }
 
@@ -39,20 +38,20 @@ public static class SequenceWindow
 
     private static IEnumerable<List<T>> BufferIterator<T>(IEnumerable<T> source, int size)
     {
-        List<T> buffer = [with(size)];
+        List<T> buffer = [ with(size) ];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             buffer.Add(item);
 
-            if (buffer.Count == size)
+            if(buffer.Count == size)
             {
                 yield return buffer;
-                buffer = [with(size)];
+                buffer = [ with(size) ];
             }
         }
 
-        if (buffer.Count > 0)
+        if(buffer.Count > 0)
         {
             yield return buffer;
         }
@@ -62,14 +61,14 @@ public static class SequenceWindow
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         T previous = enumerator.Current;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             yield return (previous, enumerator.Current);
             previous = enumerator.Current;
@@ -80,14 +79,14 @@ public static class SequenceWindow
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         T previous = enumerator.Current;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             yield return resultSelector(previous, enumerator.Current);
             previous = enumerator.Current;
@@ -96,16 +95,16 @@ public static class SequenceWindow
 
     private static IEnumerable<IReadOnlyList<T>> SlidingIterator<T>(IEnumerable<T> source, int size, int step)
     {
-        List<T> buffer = [with(size)];
+        List<T> buffer = [ with(size) ];
         int skip = 0;
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (skip > 0)
+            if(skip > 0)
             {
                 skip--;
 
-                if (buffer.Count > 0)
+                if(buffer.Count > 0)
                 {
                     int remove = Math.Min(1, buffer.Count);
                     buffer.RemoveRange(0, remove);
@@ -117,16 +116,15 @@ public static class SequenceWindow
 
             buffer.Add(item);
 
-            if (buffer.Count == size)
+            if(buffer.Count == size)
             {
                 yield return buffer.ToList().AsReadOnly();
                 skip = step - 1;
 
-                if (step < size)
+                if(step < size)
                 {
                     buffer.RemoveRange(0, step);
-                }
-                else
+                } else
                 {
                     buffer.Clear();
                 }
@@ -136,7 +134,7 @@ public static class SequenceWindow
 
     private static IEnumerable<IGrouping<TKey, IReadOnlyList<TElement>>> SlidingPerGroupIterator<TKey, TElement>(IEnumerable<IGrouping<TKey, TElement>> source, int size)
     {
-        foreach (IGrouping<TKey, TElement> group in source)
+        foreach(IGrouping<TKey, TElement> group in source)
         {
             IEnumerable<IReadOnlyList<TElement>> windows = SlidingIterator(group, size, step: 1);
             yield return SequenceFactory.Grouping(group.Key, windows);
@@ -145,20 +143,20 @@ public static class SequenceWindow
 
     private static IEnumerable<IReadOnlyList<T>> TumblingIterator<T>(IEnumerable<T> source, int size)
     {
-        List<T> buffer = [with(size)];
+        List<T> buffer = [ with(size) ];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             buffer.Add(item);
 
-            if (buffer.Count == size)
+            if(buffer.Count == size)
             {
                 yield return buffer.AsReadOnly();
-                buffer = [with(size)];
+                buffer = [ with(size) ];
             }
         }
 
-        if (buffer.Count > 0)
+        if(buffer.Count > 0)
         {
             yield return buffer.AsReadOnly();
         }

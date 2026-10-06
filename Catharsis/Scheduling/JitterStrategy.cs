@@ -17,7 +17,8 @@ public enum JitterStrategy
     Full,
 
     ///<summary>
-    ///Equal jitter: the delay is half the capped exponential value, plus a uniformly random amount up to the other half.
+    ///Equal jitter: the delay is half the capped exponential value, plus a uniformly random amount up to the other
+    ///half.
     ///</summary>
     Equal
 }

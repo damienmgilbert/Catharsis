@@ -4,40 +4,23 @@ namespace Catharsis.Security;
 
 ///<summary>
 ///Authenticated symmetric encryption over <see cref="AesGcm"/>, framing a random per-message nonce and the
-///authentication tag together with the ciphertext into a single self-contained byte array (<c>nonce || ciphertext
-///|| tag</c>), so callers don't need to manage nonce generation or storage themselves.
+///authentication tag together with the ciphertext into a single self-contained byte array (<c>nonce || ciphertext ||
+///tag</c>), so callers don't need to manage nonce generation or storage themselves.
 ///</summary>
 ///<param name="key">The 128, 192, or 256-bit AES key.</param>
 ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
 public sealed class AesGcmEnvelope(byte[] key) : IDisposable
 {
-    #region Fields
-    const int NonceSize = 12;
-    const int TagSize = 16;
+    #region Constants
+    private const int NonceSize = 12;
+    private const int TagSize = 16;
+    #endregion
 
-    readonly AesGcm _aes = new(key ?? throw new ArgumentNullException(nameof(key)), TagSize);
+    #region Fields
+    private readonly AesGcm _aes = new(key ?? throw new ArgumentNullException(nameof(key)), TagSize);
     #endregion
 
     #region Public methods
-    ///<summary>
-    ///Encrypts <paramref name="plaintext"/> into a self-contained envelope.
-    ///</summary>
-    ///<param name="plaintext">The data to encrypt.</param>
-    ///<returns>A byte array containing the nonce, ciphertext, and authentication tag.</returns>
-    public byte[] Encrypt(ReadOnlySpan<byte> plaintext)
-    {
-        byte[] envelope = new byte[NonceSize + plaintext.Length + TagSize];
-
-        Span<byte> nonce = envelope.AsSpan(0, NonceSize);
-        Span<byte> ciphertext = envelope.AsSpan(NonceSize, plaintext.Length);
-        Span<byte> tag = envelope.AsSpan(NonceSize + plaintext.Length, TagSize);
-
-        RandomNumberGenerator.Fill(nonce);
-        _aes.Encrypt(nonce, plaintext, ciphertext, tag);
-
-        return envelope;
-    }
-
     ///<summary>
     ///Decrypts an envelope produced by <see cref="Encrypt"/>.
     ///</summary>
@@ -64,5 +47,24 @@ public sealed class AesGcmEnvelope(byte[] key) : IDisposable
 
     ///<inheritdoc/>
     public void Dispose() => _aes.Dispose();
+
+        ///<summary>
+///Encrypts <paramref name="plaintext"/> into a self-contained envelope.
+///</summary>
+    ///<param name="plaintext">The data to encrypt.</param>
+    ///<returns>A byte array containing the nonce, ciphertext, and authentication tag.</returns>
+    public byte[] Encrypt(ReadOnlySpan<byte> plaintext)
+    {
+        byte[] envelope = new byte[NonceSize + plaintext.Length + TagSize];
+
+        Span<byte> nonce = envelope.AsSpan(0, NonceSize);
+        Span<byte> ciphertext = envelope.AsSpan(NonceSize, plaintext.Length);
+        Span<byte> tag = envelope.AsSpan(NonceSize + plaintext.Length, TagSize);
+
+        RandomNumberGenerator.Fill(nonce);
+        _aes.Encrypt(nonce, plaintext, ciphertext, tag);
+
+        return envelope;
+    }
     #endregion
 }

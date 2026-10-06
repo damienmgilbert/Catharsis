@@ -9,8 +9,8 @@ namespace Catharsis.ComponentModel;
 public abstract class InitializableObject : ISupportInitializeNotification
 {
     #region Fields
-    bool _isInitialized;
-    bool _isInitializing;
+    private bool _isInitialized;
+    private bool _isInitializing;
     #endregion
 
     #region Events
@@ -39,8 +39,6 @@ public abstract class InitializableObject : ISupportInitializeNotification
     ///Signals the object that initialization is starting.
     ///</summary>
     ///<exception cref="InvalidOperationException">
-    ///<see cref="BeginInit"/> was called while already initializing.
-    ///</exception>
     public void BeginInit()
     {
         if(_isInitializing)
@@ -57,8 +55,6 @@ public abstract class InitializableObject : ISupportInitializeNotification
     ///Signals the object that initialization is complete. Raises the <see cref="Initialized"/> event.
     ///</summary>
     ///<exception cref="InvalidOperationException">
-    ///<see cref="EndInit"/> was called without a matching <see cref="BeginInit"/>.
-    ///</exception>
     public void EndInit()
     {
         if(!_isInitializing)
@@ -79,8 +75,6 @@ public abstract class InitializableObject : ISupportInitializeNotification
 
     ///<summary>
     ///Gets a value indicating whether the object is currently being initialized (between <see cref="BeginInit"/> and
-    ///<see cref="EndInit"/>).
-    ///</summary>
     public bool IsInitializing => _isInitializing;
     #endregion
 }

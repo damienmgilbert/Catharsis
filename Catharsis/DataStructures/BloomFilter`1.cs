@@ -3,39 +3,27 @@ using System.Collections;
 namespace Catharsis.DataStructures;
 
 ///<summary>
-///A probabilistic set-membership structure: <see cref="MightContain"/> never returns a false negative, but may
-///return a false positive at a rate close to the configured target. Uses a fixed-size bit array sized from the
-///expected item count and target false-positive rate, with the required number of hash functions derived from two
-///independent hashes (the Kirsch-Mitzenmacher technique).
+///A probabilistic set-membership structure: <see cref="MightContain"/> never returns a false negative, but may return a
+///false positive at a rate close to the configured target. Uses a fixed-size bit array sized from the expected item
+///count and target false-positive rate, with the required number of hash functions derived from two independent hashes
+///(the Kirsch-Mitzenmacher technique).
 ///</summary>
 ///<typeparam name="T">The type of item to test for membership.</typeparam>
 ///<example>
-///<code>
-///BloomFilter&lt;string&gt; seen = new(expectedItemCount: 10_000, falsePositiveRate: 0.01);
-///seen.Add(url);
-///
-///if(!seen.MightContain(url))
-///{
-///    // Definitely not seen before.
-///}
-///</code>
-///</example>
 public sealed class BloomFilter<T>
 {
     #region Fields
-    readonly BitArray _bits;
-    readonly int _hashFunctionCount;
+    private readonly BitArray _bits;
+    private readonly int _hashFunctionCount;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates a filter sized for the expected number of items and target false-positive rate.
     ///</summary>
     ///<param name="expectedItemCount">The number of items the filter is expected to hold.</param>
     ///<param name="falsePositiveRate">The target false-positive rate, strictly between 0 and 1. Defaults to 0.01 (1%).</param>
     ///<exception cref="ArgumentOutOfRangeException">
-    ///<paramref name="expectedItemCount"/> is less than 1, or <paramref name="falsePositiveRate"/> is not strictly between 0 and 1.
-    ///</exception>
     public BloomFilter(int expectedItemCount, double falsePositiveRate = 0.01)
     {
         if(expectedItemCount < 1)
@@ -54,7 +42,35 @@ public sealed class BloomFilter<T>
         _hashFunctionCount = Math.Max(1, (int)Math.Round((bitCount / (double)expectedItemCount) * Math.Log(2)));
         _bits = new BitArray(bitCount);
     }
+    #endregion
 
+    #region Private methods
+    private IEnumerable<int> GetIndices(T item)
+    {
+        int h1 = item?.GetHashCode() ?? 0;
+        int h2 = unchecked((int)(h1 * 0x9E3779B9));
+
+        if(h2 == 0)
+        {
+            h2 = 1;
+        }
+
+        for(int i = 0; i < _hashFunctionCount; i++)
+        {
+            int combined = unchecked(h1 + (i * h2));
+            int index = combined % _bits.Count;
+
+            if(index < 0)
+            {
+                index += _bits.Count;
+            }
+
+            yield return index;
+        }
+    }
+    #endregion
+
+    #region Public methods
     ///<summary>
     ///Adds an item to the filter.
     ///</summary>
@@ -88,30 +104,6 @@ public sealed class BloomFilter<T>
         }
 
         return true;
-    }
-
-    IEnumerable<int> GetIndices(T item)
-    {
-        int h1 = item?.GetHashCode() ?? 0;
-        int h2 = unchecked((int)(h1 * 0x9E3779B9));
-
-        if(h2 == 0)
-        {
-            h2 = 1;
-        }
-
-        for(int i = 0; i < _hashFunctionCount; i++)
-        {
-            int combined = unchecked(h1 + (i * h2));
-            int index = combined % _bits.Count;
-
-            if(index < 0)
-            {
-                index += _bits.Count;
-            }
-
-            yield return index;
-        }
     }
     #endregion
 

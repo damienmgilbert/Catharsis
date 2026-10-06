@@ -13,8 +13,8 @@ namespace Catharsis.ComponentModel.Lifecycle;
 public sealed class ComponentGraphNode
 {
     #region Fields
-    readonly List<ComponentGraphNode> _dependencies = [];
-    readonly List<ComponentGraphNode> _dependents = [];
+    private readonly List<ComponentGraphNode> _dependencies = [];
+    private readonly List<ComponentGraphNode> _dependents = [];
     #endregion
 
     #region Constructors
@@ -24,8 +24,6 @@ public sealed class ComponentGraphNode
     ///<param name="component">The component this node represents.</param>
     ///<param name="name">An optional name for the node.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="component"/> is <c>null</c>.
-    ///</exception>
     public ComponentGraphNode(IComponent component, string? name = null)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -35,7 +33,7 @@ public sealed class ComponentGraphNode
     #endregion
 
     #region Private methods
-    static bool HasPathTo(ComponentGraphNode from, ComponentGraphNode to, HashSet<ComponentGraphNode> visited)
+    private static bool HasPathTo(ComponentGraphNode from, ComponentGraphNode to, HashSet<ComponentGraphNode> visited)
     {
         if(ReferenceEquals(from, to))
         {
@@ -58,7 +56,7 @@ public sealed class ComponentGraphNode
         return false;
     }
 
-    bool WouldCreateCycle(ComponentGraphNode target)
+    private bool WouldCreateCycle(ComponentGraphNode target)
     {
         HashSet<ComponentGraphNode> visited = [];
         return HasPathTo(target, this, visited);
@@ -71,11 +69,6 @@ public sealed class ComponentGraphNode
     ///</summary>
     ///<param name="dependency">The node this node depends on.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="dependency"/> is <c>null</c>.
-    ///</exception>
-    ///<exception cref="InvalidOperationException">
-    ///Adding this dependency would create a circular reference.
-    ///</exception>
     internal void AddDependency(ComponentGraphNode dependency)
     {
         ArgumentNullException.ThrowIfNull(dependency);
@@ -118,7 +111,7 @@ public sealed class ComponentGraphNode
 
     #region Public methods
     ///<inheritdoc/>
-    public override string ToString() { return $"{Name} [{State}]"; }
+    public override string ToString() => $"{Name} [{State}]";
     #endregion
 
     #region Public properties

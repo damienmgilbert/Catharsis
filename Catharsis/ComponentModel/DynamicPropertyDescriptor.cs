@@ -7,24 +7,20 @@ namespace Catharsis.ComponentModel;
 ///property definitions without requiring compile-time property accessors.
 ///</summary>
 ///<remarks>
-///<para> The getter and setter delegates receive the component instance and operate on it directly. If no setter is
-///provided, the property is treated as read-only.</para> <para> Use <see cref="WithMergedAttributes"/> to produce a
-///new descriptor with additional attributes merged onto the existing set.</para>
-///</remarks>
 public sealed class DynamicPropertyDescriptor : PropertyDescriptor
 {
     #region Fields
-    readonly Type _componentType;
-    readonly object? _defaultValue;
-    readonly Func<object, object?> _getter;
-    readonly Type _propertyType;
-    readonly Action<object, object?>? _setter;
+    private readonly Type _componentType;
+    private readonly object? _defaultValue;
+    private readonly Func<object, object?> _getter;
+    private readonly Type _propertyType;
+    private readonly Action<object, object?>? _setter;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="DynamicPropertyDescriptor"/> from <see cref="PropertyMetadata"/>
-    ///and delegate accessors.
+    ///Initializes a new instance of <see cref="DynamicPropertyDescriptor"/> from <see cref="PropertyMetadata"/> and
+    ///delegate accessors.
     ///</summary>
     ///<param name="metadata">The property metadata.</param>
     ///<param name="getter">A delegate that retrieves the property value.</param>
@@ -32,8 +28,6 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     ///An optional delegate that sets the property value. If <c>null</c>, the property is read-only.
     ///</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="metadata"/> or <paramref name="getter"/> is <c>null</c>.
-    ///</exception>
     public DynamicPropertyDescriptor(PropertyMetadata metadata, Func<object, object?> getter, Action<object, object?>? setter = null) : base(metadata?.Name ?? throw new ArgumentNullException(nameof(metadata)), ToAttributeArray(metadata.Attributes))
     {
         ArgumentNullException.ThrowIfNull(getter);
@@ -58,8 +52,6 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     ///<param name="defaultValue">The default value for the property.</param>
     ///<param name="attributes">Optional attributes for the property.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="propertyType"/>, <paramref name="componentType"/>, or <paramref name="getter"/> is <c>null</c>.
-    ///</exception>
     public DynamicPropertyDescriptor(string name, Type propertyType, Type componentType, Func<object, object?> getter, Action<object, object?>? setter = null, object? defaultValue = null, params Attribute[] attributes) : base(name, attributes)
     {
         ArgumentNullException.ThrowIfNull(propertyType);
@@ -75,7 +67,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     #endregion
 
     #region Private methods
-    static Attribute[] ToAttributeArray(AttributeCollection collection)
+    private static Attribute[] ToAttributeArray(AttributeCollection collection)
     {
         Attribute[] result = new Attribute[collection.Count];
 
@@ -90,7 +82,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
 
     #region Public methods
     ///<inheritdoc/>
-    public override bool CanResetValue(object component) { return _defaultValue is not null; }
+    public override bool CanResetValue(object component) => _defaultValue is not null;
 
     ///<inheritdoc/>
     public override object? GetValue(object? component)

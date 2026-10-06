@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Creational;
 public class Builder
 {
     #region Public methods
+
     ///<summary>
     ///Builder — applies an ordered sequence of configuration <paramref name="steps"/> to <paramref name="obj"/>, then
     ///returns the configured object.

@@ -10,6 +10,7 @@ namespace Catharsis.Patterns.Composed;
 public sealed class FlatPricingStrategy<TItem>(Money price) : IPricingStrategy<TItem>
 {
     #region Public methods
+
     ///<inheritdoc/>
     public Money Price(TItem item) => price;
     #endregion

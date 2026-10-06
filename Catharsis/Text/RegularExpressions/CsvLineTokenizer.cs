@@ -3,15 +3,16 @@ using System.Text;
 namespace Catharsis.Text.RegularExpressions;
 
 ///<summary>
-///Splits a single CSV line into fields, honoring quoted fields that contain the delimiter, the quote character
-///itself (escaped by doubling it), or line breaks embedded within the quotes. Complements
-///<see cref="RegexTokenizer"/>, which cannot express quote-aware splitting as a single regular expression.
+///Splits a single CSV line into fields, honoring quoted fields that contain the delimiter, the quote character itself
+///(escaped by doubling it), or line breaks embedded within the quotes. Complements ///<see cref="RegexTokenizer"/>,
+///which cannot express quote-aware splitting as a single regular expression.
 ///</summary>
 ///<param name="delimiter">The field delimiter. Defaults to a comma.</param>
 ///<param name="quote">The quote character used to wrap fields containing the delimiter. Defaults to a double quote.</param>
 public sealed class CsvLineTokenizer(char delimiter = ',', char quote = '"')
 {
     #region Public methods
+
     ///<summary>
     ///Splits <paramref name="line"/> into its constituent fields.
     ///</summary>

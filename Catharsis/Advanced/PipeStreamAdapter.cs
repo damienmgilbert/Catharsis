@@ -5,15 +5,12 @@ namespace Catharsis.Advanced;
 ///<summary>
 ///Bundles a <see cref="PipeReader"/> and <see cref="PipeWriter"/> created over the same duplex <see cref="Stream"/>
 ///into a single disposable unit. The BCL's own <see cref="PipeReader.Create(Stream, StreamPipeReaderOptions)"/> and
-///<see cref="PipeWriter.Create(Stream, StreamPipeWriterOptions)"/> must otherwise be called, and their completion
-///and the underlying stream's disposal coordinated, independently by the caller.
-///</summary>
 public sealed class PipeStreamAdapter : IAsyncDisposable
 {
     #region Fields
-    readonly Stream _stream;
-    readonly bool _leaveOpen;
-    bool _disposed;
+    private bool _disposed;
+    private readonly bool _leaveOpen;
+    private readonly Stream _stream;
     #endregion
 
     #region Constructors

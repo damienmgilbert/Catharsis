@@ -1,5 +1,5 @@
-using Catharsis.Linq.Expressions;
 using System.Linq.Expressions;
+using Catharsis.Linq.Expressions;
 
 namespace Catharsis.Linq;
 

@@ -10,6 +10,7 @@ namespace Catharsis.Common;
 public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> where T : IEquatable<T>, IComparable<T>
 {
     #region Public methods
+
     ///<summary>
     ///Performs a lexicographic comparison of two spans.
     ///</summary>
@@ -62,7 +63,7 @@ public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> w
     ///<param name="x">The first span.</param>
     ///<param name="y">The second span.</param>
     ///<returns><c>true</c> if both spans have equal length and elements; otherwise <c>false</c>.</returns>
-    public static bool Equals(ReadOnlySpan<T> x, ReadOnlySpan<T> y) { return x.SequenceEqual(y); }
+    public static bool Equals(ReadOnlySpan<T> x, ReadOnlySpan<T> y) => x.SequenceEqual(y);
 
     ///<summary>
     ///Determines whether two arrays are element-wise equal.

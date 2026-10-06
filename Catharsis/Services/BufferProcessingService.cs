@@ -12,10 +12,10 @@ namespace Catharsis.Services;
 public sealed partial class BufferProcessingService : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly ILogger<BufferProcessingService> _logger;
-    readonly ArrayPool<byte> _pool;
-    readonly IBufferProcessor _processor;
+    private bool _disposed;
+    private readonly ILogger<BufferProcessingService> _logger;
+    private readonly ArrayPool<byte> _pool;
+    private readonly IBufferProcessor _processor;
     #endregion
 
     #region Constructors
@@ -44,6 +44,26 @@ public sealed partial class BufferProcessingService : IDisposable
         _logger = logger;
         _pool = pool;
     }
+    #endregion
+
+    #region Private methods
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Async processing complete. Output: {OutputBytes} bytes.")]
+    partial void LogAsyncProcessingComplete(int outputBytes);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "BufferProcessingService disposed. Total bytes processed: {Total}.")]
+    partial void LogDisposed(long total);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes asynchronously.")]
+    partial void LogProcessingAsync(int byteCount);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "Processing complete. Output: {OutputBytes} bytes.")]
+    partial void LogProcessingComplete(int outputBytes);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes synchronously.")]
+    partial void LogProcessingSync(int byteCount);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes (ValueTask).")]
+    partial void LogProcessingValueTask(int byteCount);
     #endregion
 
     #region Public methods
@@ -153,25 +173,5 @@ public sealed partial class BufferProcessingService : IDisposable
     ///Gets the total number of bytes processed.
     ///</summary>
     public long TotalBytesProcessed { get; private set; }
-    #endregion
-
-    #region Log messages
-    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes synchronously.")]
-    partial void LogProcessingSync(int byteCount);
-
-    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "Processing complete. Output: {OutputBytes} bytes.")]
-    partial void LogProcessingComplete(int outputBytes);
-
-    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes asynchronously.")]
-    partial void LogProcessingAsync(int byteCount);
-
-    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Async processing complete. Output: {OutputBytes} bytes.")]
-    partial void LogAsyncProcessingComplete(int outputBytes);
-
-    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Processing {ByteCount} bytes (ValueTask).")]
-    partial void LogProcessingValueTask(int byteCount);
-
-    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "BufferProcessingService disposed. Total bytes processed: {Total}.")]
-    partial void LogDisposed(long total);
     #endregion
 }

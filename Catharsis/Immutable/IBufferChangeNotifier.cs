@@ -8,6 +8,7 @@ namespace Catharsis.Immutable;
 public interface IBufferChangeNotifier
 {
     #region Public methods
+
     ///<summary>
     ///Gets a <see cref="IChangeToken"/> that is signaled when the buffer contents change.
     ///</summary>

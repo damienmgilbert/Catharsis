@@ -1,15 +1,15 @@
 namespace Catharsis.Collections;
 
 ///<summary>
-///A multiset that tracks how many times each item has been added, supporting increment/decrement counting and
-///top-N frequency queries.
+///A multiset that tracks how many times each item has been added, supporting increment/decrement counting and top-N
+///frequency queries.
 ///</summary>
 ///<typeparam name="T">The type of item to count.</typeparam>
 ///<param name="comparer">The equality comparer used to match items, or <c>null</c> to use the default comparer.</param>
 public sealed class FrequencyCounter<T>(IEqualityComparer<T>? comparer = null) where T : notnull
 {
     #region Fields
-    readonly Dictionary<T, int> _counts = new(comparer);
+    private readonly Dictionary<T, int> _counts = new(comparer);
     #endregion
 
     #region Public methods

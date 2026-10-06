@@ -13,9 +13,9 @@ namespace Catharsis.HighPerformance;
 public sealed class ImageBuffer<TPixel> : IDisposable where TPixel : unmanaged
 {
     #region Fields
-    TPixel[] _buffer;
-    bool _disposed;
-    readonly ArrayPool<TPixel> _pool;
+    private TPixel[] _buffer;
+    private bool _disposed;
+    private readonly ArrayPool<TPixel> _pool;
     #endregion
 
     #region Constructors

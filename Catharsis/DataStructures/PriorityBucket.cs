@@ -12,8 +12,8 @@ namespace Catharsis.DataStructures;
 public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>, IReadOnlyCollection<TElement>
 {
     #region Fields
-    readonly HashSet<TElement> _elements;
-    readonly PriorityQueue<TElement, TPriority> _queue;
+    private readonly HashSet<TElement> _elements;
+    private readonly PriorityQueue<TElement, TPriority> _queue;
     #endregion
 
     #region Constructors
@@ -25,8 +25,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     }
 
     ///<summary>
-    ///Initializes a new empty <see cref="PriorityBucket{TElement, TPriority}"/> with the specified priority
-    ///comparer.
+    ///Initializes a new empty <see cref="PriorityBucket{TElement, TPriority}"/> with the specified priority comparer.
     ///</summary>
     ///<param name="comparer">The comparer used to order priorities.</param>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
@@ -44,7 +43,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -62,7 +61,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     ///</summary>
     ///<param name="element">The element to look for.</param>
     ///<returns><c>true</c> if the element is in the queue; otherwise <c>false</c>.</returns>
-    public bool Contains(TElement element) { return _elements.Contains(element); }
+    public bool Contains(TElement element) => _elements.Contains(element);
 
     ///<summary>
     ///Removes and returns the element with the lowest priority value.
@@ -101,7 +100,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     ///</summary>
     ///<returns>The element with the lowest priority.</returns>
     ///<exception cref="InvalidOperationException">Thrown when the queue is empty.</exception>
-    public TElement Peek() { return _queue.Peek(); }
+    public TElement Peek() => _queue.Peek();
 
     ///<summary>
     ///Attempts to remove and return the element with the lowest priority value.
@@ -126,7 +125,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     ///<param name="element">The peeked element, if successful.</param>
     ///<param name="priority">The priority of the peeked element, if successful.</param>
     ///<returns><c>true</c> if the queue is non-empty; otherwise <c>false</c>.</returns>
-    public bool TryPeek([MaybeNullWhen(false)] out TElement element, [MaybeNullWhen(false)] out TPriority priority) { return _queue.TryPeek(out element, out priority); }
+    public bool TryPeek([MaybeNullWhen(false)] out TElement element, [MaybeNullWhen(false)] out TPriority priority) => _queue.TryPeek(out element, out priority);
     #endregion
 
     #region Public properties

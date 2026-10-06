@@ -3,20 +3,20 @@ using System.Collections.Concurrent;
 namespace Catharsis.Events;
 
 ///<summary>
-///Minimal scaffolding for dispatching <see cref="DomainEvent"/> instances raised by an aggregate to whichever
-///handlers are subscribed to that specific event's runtime type.
+///Minimal scaffolding for dispatching <see cref="DomainEvent"/> instances raised by an aggregate to whichever handlers
+///are subscribed to that specific event's runtime type.
 ///</summary>
 public sealed class DomainEventDispatcher
 {
     #region Fields
-    readonly Lock _gate = new();
-    readonly ConcurrentDictionary<Type, List<Func<DomainEvent, Task>>> _handlers = new();
+    private readonly Lock _gate = new();
+    private readonly ConcurrentDictionary<Type, List<Func<DomainEvent, Task>>> _handlers = new();
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Dispatches a domain event to every handler subscribed to its exact runtime type, in subscription order,
-    ///awaiting each one before invoking the next.
+    ///Dispatches a domain event to every handler subscribed to its exact runtime type, in subscription order, awaiting
+    ///each one before invoking the next.
     ///</summary>
     ///<param name="domainEvent">The event to dispatch.</param>
     ///<param name="cancellationToken">A token that can abandon dispatch before every handler has run.</param>
@@ -35,7 +35,7 @@ public sealed class DomainEventDispatcher
                 return;
             }
 
-            snapshot = [.. handlers];
+            snapshot = [ .. handlers ];
         }
 
         foreach(Func<DomainEvent, Task> handler in snapshot)

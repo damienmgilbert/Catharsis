@@ -12,12 +12,12 @@ namespace Catharsis.Services;
 public sealed partial class PooledObjectFactory<T> : IDisposable where T : class, new()
 {
     #region Fields
-    bool _disposed;
-    readonly ILogger<PooledObjectFactory<T>> _logger;
-    readonly int _maxPoolSize;
-    readonly ConcurrentBag<T> _pool = [];
-    int _totalCreated;
-    int _totalReturned;
+    private bool _disposed;
+    private readonly ILogger<PooledObjectFactory<T>> _logger;
+    private readonly int _maxPoolSize;
+    private readonly ConcurrentBag<T> _pool = [];
+    private int _totalCreated;
+    private int _totalReturned;
     #endregion
 
     #region Constructors
@@ -34,6 +34,23 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
         _logger = logger;
         _maxPoolSize = maxPoolSize;
     }
+    #endregion
+
+    #region Private methods
+    [LoggerMessage(EventId = 3, Level = LogLevel.Trace, Message = "Created FileName {TypeName} instance (total: {Total}).")]
+    partial void LogCreated(string typeName, int total);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.")]
+    partial void LogDisposed(string typeName, int created, int returned);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Trace, Message = "Pool full; discarding {TypeName} instance.")]
+    partial void LogPoolFull(string typeName);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Rented pooled {TypeName} instance.")]
+    partial void LogRented(string typeName);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Returned {TypeName} to pool.")]
+    partial void LogReturned(string typeName);
     #endregion
 
     #region Public methods
@@ -113,22 +130,5 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
     ///Gets the total number of objects returned to the pool.
     ///</summary>
     public int TotalReturned => _totalReturned;
-    #endregion
-
-    #region Log messages
-    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "PooledObjectFactory<{TypeName}> disposed. Created: {Created}, Returned: {Returned}.")]
-    partial void LogDisposed(string typeName, int created, int returned);
-
-    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Rented pooled {TypeName} instance.")]
-    partial void LogRented(string typeName);
-
-    [LoggerMessage(EventId = 3, Level = LogLevel.Trace, Message = "Created FileName {TypeName} instance (total: {Total}).")]
-    partial void LogCreated(string typeName, int total);
-
-    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Returned {TypeName} to pool.")]
-    partial void LogReturned(string typeName);
-
-    [LoggerMessage(EventId = 5, Level = LogLevel.Trace, Message = "Pool full; discarding {TypeName} instance.")]
-    partial void LogPoolFull(string typeName);
     #endregion
 }

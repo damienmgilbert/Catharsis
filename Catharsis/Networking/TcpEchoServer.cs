@@ -5,23 +5,37 @@ using System.Text;
 namespace Catharsis.Networking;
 
 ///<summary>
-///A minimal line-protocol TCP echo server for local services and tests: accepts any number of concurrent
-///connections and echoes every line it receives back to the same client, verbatim, until the client disconnects.
+///A minimal line-protocol TCP echo server for local services and tests: accepts any number of concurrent connections
+///and echoes every line it receives back to the same client, verbatim, until the client disconnects.
 ///</summary>
 ///<param name="address">The local address to bind to. Defaults to <see cref="IPAddress.Loopback"/>.</param>
 ///<param name="port">The local port to bind to. Defaults to <c>0</c>, letting the OS assign an ephemeral port.</param>
 public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAsyncDisposable
 {
     #region Fields
-    readonly TcpListener _listener = new(address ?? IPAddress.Loopback, port);
-    readonly CancellationTokenSource _stoppingSource = new();
-    Task? _acceptLoop;
-    bool _disposed;
-    bool _started;
+    private Task? _acceptLoop;
+    private bool _disposed;
+    private readonly TcpListener _listener = new(address ?? IPAddress.Loopback, port);
+    private bool _started;
+    private readonly CancellationTokenSource _stoppingSource = new();
     #endregion
 
     #region Private methods
-    static async Task HandleClientAsync(TcpClient client, CancellationToken stoppingToken)
+    private async Task AcceptLoopAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            while(!stoppingToken.IsCancellationRequested)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync(stoppingToken).ConfigureAwait(false);
+                _ = HandleClientAsync(client, stoppingToken);
+            }
+        } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or SocketException)
+        {
+        }
+    }
+
+    private static async Task HandleClientAsync(TcpClient client, CancellationToken stoppingToken)
     {
         try
         {
@@ -41,42 +55,9 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
         {
         }
     }
-
-    async Task AcceptLoopAsync(CancellationToken stoppingToken)
-    {
-        try
-        {
-            while(!stoppingToken.IsCancellationRequested)
-            {
-                TcpClient client = await _listener.AcceptTcpClientAsync(stoppingToken).ConfigureAwait(false);
-                _ = HandleClientAsync(client, stoppingToken);
-            }
-        } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or SocketException)
-        {
-        }
-    }
     #endregion
 
     #region Public methods
-    ///<summary>
-    ///Binds the listening socket and starts accepting connections in the background.
-    ///</summary>
-    ///<exception cref="ObjectDisposedException">This instance has already been disposed.</exception>
-    ///<exception cref="InvalidOperationException">The server has already been started.</exception>
-    public void Start()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-
-        if(_started)
-        {
-            throw new InvalidOperationException("The server has already been started.");
-        }
-
-        _started = true;
-        _listener.Start();
-        _acceptLoop = AcceptLoopAsync(_stoppingSource.Token);
-    }
-
     ///<summary>
     ///Stops accepting new connections and waits for the accept loop to finish.
     ///</summary>
@@ -103,6 +84,25 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
         }
 
         _stoppingSource.Dispose();
+    }
+
+        ///<summary>
+///Binds the listening socket and starts accepting connections in the background.
+///</summary>
+    ///<exception cref="ObjectDisposedException">This instance has already been disposed.</exception>
+    ///<exception cref="InvalidOperationException">The server has already been started.</exception>
+    public void Start()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if(_started)
+        {
+            throw new InvalidOperationException("The server has already been started.");
+        }
+
+        _started = true;
+        _listener.Start();
+        _acceptLoop = AcceptLoopAsync(_stoppingSource.Token);
     }
     #endregion
 

@@ -1,49 +1,42 @@
 namespace Catharsis.Randomization;
 
 ///<summary>
-///Generates random strings from a configurable character set, useful for tokens, short codes, and test data.
-///For a cryptographically secure token, supply a <see cref="Random"/> backed by a cryptographic source, or generate
-///the raw bytes separately.
+///Generates random strings from a configurable character set, useful for tokens, short codes, and test data. For a
+///cryptographically secure token, supply a <see cref="Random"/> backed by a cryptographic source, or generate the raw
+///bytes separately.
 ///</summary>
 ///<example>
-///<code>
-///RandomStringGenerator generator = new(RandomStringGenerator.AlphaUpper + RandomStringGenerator.Digits);
-///string code = generator.Generate(6); // e.g. "K3F9QZ"
-///</code>
-///</example>
 public sealed class RandomStringGenerator
 {
-    #region Fields
-    ///<summary>
-    ///Uppercase and lowercase letters plus digits.
-    ///</summary>
-    public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    ///<summary>
-    ///Uppercase letters only.
-    ///</summary>
-    public const string AlphaUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
+    #region Constants
     ///<summary>
     ///Lowercase letters only.
     ///</summary>
     public const string AlphaLower = "abcdefghijklmnopqrstuvwxyz";
-
+        ///<summary>
+///Uppercase and lowercase letters plus digits.
+///</summary>
+    public const string Alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    ///<summary>
+    ///Uppercase letters only.
+    ///</summary>
+    public const string AlphaUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ///<summary>
     ///Digits 0-9.
     ///</summary>
     public const string Digits = "0123456789";
-
     ///<summary>
     ///Lowercase hexadecimal digits.
     ///</summary>
     public const string Hexadecimal = "0123456789abcdef";
-
-    readonly string _charset;
-    readonly Random _random;
     #endregion
 
-    #region Public methods
+    #region Fields
+    private readonly string _charset;
+    private readonly Random _random;
+    #endregion
+
+    #region Constructors
     ///<summary>
     ///Creates a generator using the specified character set.
     ///</summary>
@@ -60,7 +53,9 @@ public sealed class RandomStringGenerator
         _charset = charset;
         _random = random ?? Random.Shared;
     }
+    #endregion
 
+    #region Public methods
     ///<summary>
     ///Generates a random string of the specified length, drawing from the configured character set.
     ///</summary>
@@ -74,15 +69,18 @@ public sealed class RandomStringGenerator
             throw new ArgumentOutOfRangeException(nameof(length), "Length must not be negative.");
         }
 
-        return string.Create(length, (_charset, _random), static (span, state) =>
-        {
-            (string charset, Random random) = state;
+        return string.Create(
+               length,
+               (_charset, _random),
+               static(span, state) =>
+               {
+                   (string charset, Random random) = state;
 
-            for(int i = 0; i < span.Length; i++)
-            {
-                span[i] = charset[random.Next(charset.Length)];
-            }
-        });
+                   for(int i = 0; i < span.Length; i++)
+                   {
+                       span[i] = charset[random.Next(charset.Length)];
+                   }
+               });
     }
     #endregion
 }

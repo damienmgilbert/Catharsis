@@ -3,15 +3,15 @@ using System.Collections;
 namespace Catharsis.Collections;
 
 ///<summary>
-///Provides a read-only view over an existing <see cref="IList{T}"/>. Implements both the generic
-///<see cref="IReadOnlyList{T}"/> and the non-generic <see cref="ICollection"/> interfaces, bridging
-///the generic and non-generic <see cref="System.Collections"/> worlds.
+///Provides a read-only view over an existing <see cref="IList{T}"/>. Implements both the generic ///<see
+///cref="IReadOnlyList{T}"/> and the non-generic <see cref="ICollection"/> interfaces, bridging the generic and non-
+///generic <see cref="System.Collections"/> worlds.
 ///</summary>
 ///<typeparam name="T">The type of elements in the underlying list.</typeparam>
 public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
 {
     #region Fields
-    readonly IList<T> _source;
+    private readonly IList<T> _source;
     #endregion
 
     #region Constructors
@@ -66,7 +66,13 @@ public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
     }
 
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    bool ICollection.IsSynchronized => false;
+
+    ///<inheritdoc/>
+    object ICollection.SyncRoot => this;
+
+    ///<inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -75,20 +81,14 @@ public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
     ///</summary>
     ///<param name="item">The element to locate.</param>
     ///<returns><c>true</c> if <paramref name="item"/> is found; otherwise <c>false</c>.</returns>
-    public bool Contains(T item) { return _source.Contains(item); }
+    public bool Contains(T item) => _source.Contains(item);
 
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return _source.GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
     #endregion
 
     #region Public properties
     ///<inheritdoc/>
     public int Count => _source.Count;
-
-    ///<inheritdoc/>
-    bool ICollection.IsSynchronized => false;
-
-    ///<inheritdoc/>
-    object ICollection.SyncRoot => this;
     #endregion
 }

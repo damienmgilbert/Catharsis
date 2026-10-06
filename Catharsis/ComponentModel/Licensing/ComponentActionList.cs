@@ -9,7 +9,7 @@ namespace Catharsis.ComponentModel.Licensing;
 public class ComponentActionList : IReadOnlyList<ComponentVerb>
 {
     #region Fields
-    readonly List<ComponentVerb> _verbs = [];
+    private readonly List<ComponentVerb> _verbs = [];
     #endregion
 
     #region Constructors
@@ -18,8 +18,6 @@ public class ComponentActionList : IReadOnlyList<ComponentVerb>
     ///</summary>
     ///<param name="context">The design context for the component.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="context"/> is <c>null</c>.
-    ///</exception>
     public ComponentActionList(ComponentDesignContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -38,7 +36,7 @@ public class ComponentActionList : IReadOnlyList<ComponentVerb>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Protected methods
@@ -47,8 +45,6 @@ public class ComponentActionList : IReadOnlyList<ComponentVerb>
     ///</summary>
     ///<param name="verb">The verb to add.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="verb"/> is <c>null</c>.
-    ///</exception>
     protected void AddVerb(ComponentVerb verb)
     {
         ArgumentNullException.ThrowIfNull(verb);
@@ -71,7 +67,7 @@ public class ComponentActionList : IReadOnlyList<ComponentVerb>
     ///<summary>
     ///Removes all verbs from the action list.
     ///</summary>
-    protected void ClearVerbs() { _verbs.Clear(); }
+    protected void ClearVerbs() => _verbs.Clear();
     #endregion
 
     #region Protected properties
@@ -83,7 +79,7 @@ public class ComponentActionList : IReadOnlyList<ComponentVerb>
 
     #region Public methods
     ///<inheritdoc/>
-    public IEnumerator<ComponentVerb> GetEnumerator() { return _verbs.GetEnumerator(); }
+    public IEnumerator<ComponentVerb> GetEnumerator() => _verbs.GetEnumerator();
     #endregion
 
     #region Public properties

@@ -5,16 +5,11 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///and executing associated guards and actions.
 ///</summary>
 ///<remarks>
-///<para> Register valid transitions via <see cref="AddTransition"/>. Call<see cref="TryTransitionTo"/> to attempt a
-///state change. The machine raises <see cref="StateChanged"/> after each successful transition.</para> <para> Use <see
-///cref="ConfigureDefaults"/> to register the standard lifecycle transitions (Created → Initialized → Active →
-///Deactivated → Disposed).</para>
-///</remarks>
 public sealed class ComponentStateMachine
 {
     #region Fields
-    ComponentState _currentState = ComponentState.Created;
-    readonly List<ComponentTransition> _transitions = [];
+    private ComponentState _currentState = ComponentState.Created;
+    private readonly List<ComponentTransition> _transitions = [];
     #endregion
 
     #region Events
@@ -25,7 +20,7 @@ public sealed class ComponentStateMachine
     #endregion
 
     #region Private methods
-    ComponentTransition? FindTransition(ComponentState targetState)
+    private ComponentTransition? FindTransition(ComponentState targetState)
     {
         foreach(ComponentTransition transition in _transitions)
         {
@@ -46,8 +41,6 @@ public sealed class ComponentStateMachine
     ///<param name="transition">The transition to register.</param>
     ///<returns>This machine, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="transition"/> is <c>null</c>.
-    ///</exception>
     public ComponentStateMachine AddTransition(ComponentTransition transition)
     {
         ArgumentNullException.ThrowIfNull(transition);
@@ -60,7 +53,7 @@ public sealed class ComponentStateMachine
     ///</summary>
     ///<param name="targetState">The desired target state.</param>
     ///<returns><c>true</c> if the transition is valid; otherwise, <c>false</c>.</returns>
-    public bool CanTransitionTo(ComponentState targetState) { return (FindTransition(targetState) is { } transition) && transition.CanExecute(); }
+    public bool CanTransitionTo(ComponentState targetState) => (FindTransition(targetState) is { } transition) && transition.CanExecute();
 
     ///<summary>
     ///Registers the standard lifecycle transitions.
@@ -91,7 +84,7 @@ public sealed class ComponentStateMachine
     ///<summary>
     ///Resets the machine to the <see cref="ComponentState.Created"/> state without raising events.
     ///</summary>
-    public void Reset() { _currentState = ComponentState.Created; }
+    public void Reset() => _currentState = ComponentState.Created;
 
     ///<summary>
     ///Transitions to the specified state, or throws if the transition is invalid.

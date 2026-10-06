@@ -2,13 +2,11 @@ namespace Catharsis.Common;
 
 ///<summary>
 ///An async-compatible lock that serializes access to buffer operations, preventing concurrent buffer mutations using
-///<see cref="SemaphoreSlim"/>.
-///</summary>
 public sealed class AsyncBufferLock : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly SemaphoreSlim _semaphore = new(1, 1);
+    private bool _disposed;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     #endregion
 
     #region Public methods
@@ -86,10 +84,10 @@ public sealed class AsyncBufferLock : IDisposable
     public bool IsLocked => _semaphore.CurrentCount == 0;
     #endregion
 
-    sealed class LockHandle(SemaphoreSlim semaphore) : IDisposable
+    private sealed class LockHandle(SemaphoreSlim semaphore) : IDisposable
     {
         #region Fields
-        int _released;
+        private int _released;
         #endregion
 
         #region Public methods

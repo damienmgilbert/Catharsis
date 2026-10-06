@@ -9,9 +9,9 @@ namespace Catharsis.ComponentModel;
 public sealed class PropertyObserver : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly Dictionary<string, List<Action>> _handlers = [with(StringComparer.Ordinal)];
-    readonly INotifyPropertyChanged _source;
+    private bool _disposed;
+    private readonly Dictionary<string, List<Action>> _handlers = [ with(StringComparer.Ordinal) ];
+    private readonly INotifyPropertyChanged _source;
     #endregion
 
     #region Constructors
@@ -28,7 +28,7 @@ public sealed class PropertyObserver : IDisposable
     #endregion
 
     #region Private methods
-    void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if(e.PropertyName is null)
         {

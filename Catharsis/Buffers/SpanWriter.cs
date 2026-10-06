@@ -13,8 +13,8 @@ namespace Catharsis.Buffers;
 public ref struct SpanWriter
 {
     #region Struct fields
-    readonly Span<byte> _span;
-    int _position;
+    private readonly Span<byte> _span;
+    private int _position;
     #endregion
 
     #region Constructors
@@ -33,7 +33,7 @@ public ref struct SpanWriter
     ///<summary>
     ///Resets the writer to the beginning.
     ///</summary>
-    public void Reset() { _position = 0; }
+    public void Reset() => _position = 0;
 
     ///<summary>
     ///Advances the writer position by the specified number of bytes (writing zeros).

@@ -10,18 +10,20 @@ namespace Catharsis.Events;
 public sealed class DelegateChain<T>
 {
     #region Fields
-    readonly ImmutableArray<Func<T, T>> _steps;
+    private readonly ImmutableArray<Func<T, T>> _steps;
     #endregion
 
     #region Constructors
-    ///<summary>Creates an empty chain, which returns its input unchanged.</summary>
-    public DelegateChain() : this([]) { }
-
-    DelegateChain(ImmutableArray<Func<T, T>> steps) { _steps = steps; }
+    private DelegateChain(ImmutableArray<Func<T, T>> steps) { _steps = steps; }
+    public DelegateChain() : this([])
+    {
+    }
     #endregion
 
     #region Operators
-    ///<summary>Returns a chain with <paramref name="step"/> appended.</summary>
+    ///<summary>
+    ///Returns a chain with <paramref name="step"/> appended.
+    ///</summary>
     ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
     public static DelegateChain<T> operator +(DelegateChain<T> chain, Func<T, T> step)
     {
@@ -30,8 +32,9 @@ public sealed class DelegateChain<T>
 
         return new DelegateChain<T>(chain._steps.Add(step));
     }
-
-    ///<summary>Returns a chain running <paramref name="first"/>'s steps and then <paramref name="second"/>'s.</summary>
+    ///<summary>
+    ///Returns a chain running <paramref name="first"/>'s steps and then <paramref name="second"/>'s.
+    ///</summary>
     ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
     public static DelegateChain<T> operator +(DelegateChain<T> first, DelegateChain<T> second)
     {
@@ -43,11 +46,9 @@ public sealed class DelegateChain<T>
     #endregion
 
     #region Public methods
-    ///<summary>Returns a chain with <paramref name="step"/> appended.</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="step"/> is <c>null</c>.</exception>
-    public DelegateChain<T> Then(Func<T, T> step) => this + step;
-
-    ///<summary>Runs every step in order.</summary>
+    ///<summary>
+    ///Runs every step in order.
+    ///</summary>
     ///<param name="input">The value given to the first step.</param>
     ///<returns>The result of the last step, or <paramref name="input"/> if the chain is empty.</returns>
     public T Invoke(T input)
@@ -62,12 +63,22 @@ public sealed class DelegateChain<T>
         return current;
     }
 
-    ///<summary>Collapses the chain into a single delegate.</summary>
+        ///<summary>
+///Returns a chain with <paramref name="step"/> appended.
+///</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="step"/> is <c>null</c>.</exception>
+    public DelegateChain<T> Then(Func<T, T> step) => this + step;
+
+    ///<summary>
+    ///Collapses the chain into a single delegate.
+    ///</summary>
     public Func<T, T> ToDelegate() => Invoke;
     #endregion
 
     #region Public properties
-    ///<summary>Gets the number of steps.</summary>
+    ///<summary>
+    ///Gets the number of steps.
+    ///</summary>
     public int Count => _steps.Length;
     #endregion
 }

@@ -1,8 +1,8 @@
+using System.Buffers;
 using Catharsis.Buffers;
 using Catharsis.DataStructures;
 using Catharsis.Services;
 using Microsoft.Extensions.Logging;
-using System.Buffers;
 
 namespace Catharsis.Patterns.Composed;
 
@@ -12,24 +12,13 @@ namespace Catharsis.Patterns.Composed;
 ///example repeated protocol headers) and the inner parser is expensive.
 ///</summary>
 ///<remarks>
-///<para>
-///This assumes the inner parser is a pure function of the bytes it is given once it has been
-///<see cref="Reset"/>: a parser whose answer depends on state carried between calls must not be cached.
-///</para>
-///<para>
-///The key is a copy of the sequence's bytes, so inputs longer than <see cref="MaxCacheableLength"/> bypass the cache,
-///and <see cref="SequenceParseStatus.Cancelled"/> results are never cached. Cache hits and misses are logged at
-///debug level through generated <see cref="LoggerMessageAttribute"/> methods when a logger is supplied. Access is
-///serialized with a lock.
-///</para>
-///</remarks>
 public sealed partial class CachingParserDecorator : ISequenceParser
 {
     #region Fields
-    readonly ISequenceParser _inner;
-    readonly ILogger? _logger;
-    readonly LruCache<ByteKey, CachedResult> _cache;
-    readonly Lock _gate = new();
+    private readonly LruCache<ByteKey, CachedResult> _cache;
+    private readonly Lock _gate = new();
+    private readonly ISequenceParser _inner;
+    private readonly ILogger? _logger;
     #endregion
 
     #region Constructors
@@ -50,6 +39,14 @@ public sealed partial class CachingParserDecorator : ISequenceParser
         _logger = logger;
         _cache = new LruCache<ByteKey, CachedResult>(capacity);
     }
+    #endregion
+
+    #region Private methods
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Parser cache hit for {Length} bytes")]
+    static partial void LogHit(ILogger logger, int length);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Parser cache miss for {Length} bytes")]
+    static partial void LogMiss(ILogger logger, int length);
     #endregion
 
     #region Public methods
@@ -113,37 +110,43 @@ public sealed partial class CachingParserDecorator : ISequenceParser
     #endregion
 
     #region Public properties
-    ///<summary>Gets the longest input, in bytes, that is eligible for caching.</summary>
-    public static int MaxCacheableLength => 4096;
-
-    ///<summary>Gets how many calls were answered from the cache.</summary>
+    ///<summary>
+    ///Gets how many calls were answered from the cache.
+    ///</summary>
     public long Hits { get; private set; }
 
-    ///<summary>Gets how many calls had to run the inner parser (excluding oversized inputs).</summary>
+        ///<summary>
+///Gets the longest input, in bytes, that is eligible for caching.
+///</summary>
+    public static int MaxCacheableLength => 4096;
+
+    ///<summary>
+    ///Gets how many calls had to run the inner parser (excluding oversized inputs).
+    ///</summary>
     public long Misses { get; private set; }
     #endregion
 
-    #region Private methods
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Parser cache hit for {Length} bytes")]
-    static partial void LogHit(ILogger logger, int length);
+    private readonly record struct CachedResult(SequenceParseStatus Status, long ConsumedOffset, long ExaminedOffset);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Parser cache miss for {Length} bytes")]
-    static partial void LogMiss(ILogger logger, int length);
-    #endregion
-
-    #region Nested types
-    readonly record struct CachedResult(SequenceParseStatus Status, long ConsumedOffset, long ExaminedOffset);
-
-    readonly struct ByteKey : IEquatable<ByteKey>
+    private readonly struct ByteKey : IEquatable<ByteKey>
     {
-        readonly byte[] _bytes;
-        readonly int _hash;
+        #region Struct fields
+        private readonly byte[] _bytes;
+        private readonly int _hash;
+        #endregion
 
-        ByteKey(byte[] bytes, int hash)
+        #region Constructors
+        private ByteKey(byte[] bytes, int hash)
         {
             _bytes = bytes;
             _hash = hash;
         }
+        #endregion
+
+        #region Public methods
+        public bool Equals(ByteKey other) => _bytes.AsSpan().SequenceEqual(other._bytes);
+
+        public override bool Equals(object? obj) => obj is ByteKey other && Equals(other);
 
         public static ByteKey From(in ReadOnlySequence<byte> sequence)
         {
@@ -154,11 +157,7 @@ public sealed partial class CachingParserDecorator : ISequenceParser
             return new ByteKey(bytes, hash.ToHashCode());
         }
 
-        public bool Equals(ByteKey other) => _bytes.AsSpan().SequenceEqual(other._bytes);
-
-        public override bool Equals(object? obj) => obj is ByteKey other && Equals(other);
-
         public override int GetHashCode() => _hash;
+        #endregion
     }
-    #endregion
 }

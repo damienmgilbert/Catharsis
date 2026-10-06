@@ -13,8 +13,8 @@ namespace Catharsis.ComponentModel;
 public abstract class ComponentBase : IComponent, IServiceProvider
 {
     #region Fields
-    EventHandler? _disposed;
-    ISite? _site;
+    private EventHandler? _disposed;
+    private ISite? _site;
     #endregion
 
     #region Events
@@ -27,8 +27,6 @@ public abstract class ComponentBase : IComponent, IServiceProvider
     ///Releases resources used by this component.
     ///</summary>
     ///<param name="disposing">
-    ///<c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
-    ///</param>
     protected virtual void Dispose(bool disposing)
     {
         if(IsDisposed)
@@ -50,7 +48,7 @@ public abstract class ComponentBase : IComponent, IServiceProvider
     ///<summary>
     ///Throws <see cref="ObjectDisposedException"/> if this component has been disposed.
     ///</summary>
-    protected void ThrowIfDisposed() { ObjectDisposedException.ThrowIf(IsDisposed, this); }
+    protected void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(IsDisposed, this);
     #endregion
 
     #region Protected properties

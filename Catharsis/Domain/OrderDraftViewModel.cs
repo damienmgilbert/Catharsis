@@ -1,5 +1,3 @@
-using Catharsis.Generators;
-
 namespace Catharsis.Domain;
 
 ///<summary>

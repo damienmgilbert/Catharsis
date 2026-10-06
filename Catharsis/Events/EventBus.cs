@@ -1,29 +1,29 @@
-using Catharsis.Common;
-using System.Collections.Immutable;
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
+using Catharsis.Common;
 
 namespace Catharsis.Events;
 
 ///<summary>
-///A lightweight, in-process publish/subscribe bus for asynchronous handlers. This differs from
-///<see cref="Catharsis.ComponentModel.ComponentEventAggregator"/>, which is synchronous and meant to be scoped to a
-///single component graph: <see cref="EventBus"/> is meant to be shared more broadly (e.g. as a singleton service)
-///and awaits each handler through <see cref="PublishAsync{TEvent}"/>.
+///A lightweight, in-process publish/subscribe bus for asynchronous handlers. This differs from ///<see
+///cref="Catharsis.ComponentModel.ComponentEventAggregator"/>, which is synchronous and meant to be scoped to a single
+///component graph: <see cref="EventBus"/> is meant to be shared more broadly (e.g. as a singleton service) and awaits
+///each handler through <see cref="PublishAsync{TEvent}"/>.
 ///</summary>
 public sealed class EventBus
 {
     #region Fields
-    readonly ConcurrentDictionary<Type, ImmutableArray<Delegate>> _handlers = new();
+    private readonly ConcurrentDictionary<Type, ImmutableArray<Delegate>> _handlers = new();
     #endregion
 
     #region Private methods
-    void Unsubscribe(Type eventType, Delegate handler) => _handlers.AddOrUpdate(eventType, static _ => ImmutableArray<Delegate>.Empty, (_, existing) => existing.Remove(handler));
+    private void Unsubscribe(Type eventType, Delegate handler) => _handlers.AddOrUpdate(eventType, static _ => ImmutableArray<Delegate>.Empty, (_, existing) => existing.Remove(handler));
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Publishes an event to every handler currently subscribed to <typeparamref name="TEvent"/>, in subscription
-    ///order, awaiting each one before invoking the next.
+    ///Publishes an event to every handler currently subscribed to <typeparamref name="TEvent"/>, in subscription order,
+    ///awaiting each one before invoking the next.
     ///</summary>
     ///<typeparam name="TEvent">The type of the event.</typeparam>
     ///<param name="event">The event instance to publish.</param>

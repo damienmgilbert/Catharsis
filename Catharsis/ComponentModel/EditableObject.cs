@@ -10,14 +10,14 @@ namespace Catharsis.ComponentModel;
 public abstract class EditableObject : IEditableObject
 {
     #region Fields
-    bool _isEditing;
-    Dictionary<string, object?>? _snapshot;
+    private bool _isEditing;
+    private Dictionary<string, object?>? _snapshot;
     #endregion
 
     #region Private methods
-    Dictionary<string, object?> CaptureSnapshot()
+    private Dictionary<string, object?> CaptureSnapshot()
     {
-        Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
+        Dictionary<string, object?> snapshot = [ with(StringComparer.Ordinal) ];
 
         foreach(PropertyInfo property in GetEditableProperties())
         {
@@ -27,7 +27,7 @@ public abstract class EditableObject : IEditableObject
         return snapshot;
     }
 
-    void RestoreSnapshot(Dictionary<string, object?> snapshot)
+    private void RestoreSnapshot(Dictionary<string, object?> snapshot)
     {
         foreach(PropertyInfo property in GetEditableProperties())
         {
@@ -44,7 +44,7 @@ public abstract class EditableObject : IEditableObject
     ///Returns the bindable properties of this object used for snapshotting. Override to customise which properties
     ///participate in edit transactions.
     ///</summary>
-    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0)); }
+    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0));
     #endregion
 
     #region Public methods

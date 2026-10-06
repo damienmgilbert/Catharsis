@@ -3,42 +3,46 @@ using System.Collections;
 namespace Catharsis.DataStructures;
 
 ///<summary>
-///A probabilistic ordered collection backed by multiple linked-list levels, giving expected O(log n) search,
-///insertion, and removal without the rebalancing logic a balanced tree requires. Duplicate values are allowed.
-///Enumeration yields items in ascending order.
+///A probabilistic ordered collection backed by multiple linked-list levels, giving expected O(log n) search, insertion,
+///and removal without the rebalancing logic a balanced tree requires. Duplicate values are allowed. Enumeration yields
+///items in ascending order.
 ///</summary>
 ///<typeparam name="T">The type of element stored in the list.</typeparam>
 ///<param name="comparer">The comparer used to order elements, or <c>null</c> to use <see cref="Comparer{T}.Default"/>.</param>
 ///<param name="random">The random source used to assign each new node's level, or <c>null</c> to use <see cref="Random.Shared"/>.</param>
 ///<example>
-///<code>
-///SkipList&lt;int&gt; list = new();
-///list.Add(5);
-///list.Add(1);
-///list.Add(3);
-///
-///foreach(int value in list)
-///{
-///    // Yielded in ascending order: 1, 3, 5.
-///}
-///</code>
-///</example>
 public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = null) : IEnumerable<T>, IReadOnlyCollection<T>
 {
-    #region Fields
-    const int MaxLevel = 32;
-    const double LevelProbability = 0.5;
+    #region Constants
+    private const double LevelProbability = 0.5;
+    private const int MaxLevel = 32;
+    #endregion
 
-    readonly Node _head = new(default!, MaxLevel);
-    readonly IComparer<T> _comparer = comparer ?? Comparer<T>.Default;
-    readonly Random _random = random ?? Random.Shared;
-    int _topLevel;
-    int _count;
+    #region Fields
+    private readonly IComparer<T> _comparer = comparer ?? Comparer<T>.Default;
+    private int _count;
+    private readonly Node _head = new(default!, MaxLevel);
+    private readonly Random _random = random ?? Random.Shared;
+    private int _topLevel;
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    #endregion
+
+    #region Private methods
+    private int RandomLevel()
+    {
+        int level = 0;
+
+        while(level < MaxLevel - 1 && _random.NextDouble() < LevelProbability)
+        {
+            level++;
+        }
+
+        return level;
+    }
     #endregion
 
     #region Public methods
@@ -172,18 +176,6 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
         _count--;
         return true;
     }
-
-    int RandomLevel()
-    {
-        int level = 0;
-
-        while(level < MaxLevel - 1 && _random.NextDouble() < LevelProbability)
-        {
-            level++;
-        }
-
-        return level;
-    }
     #endregion
 
     #region Public properties
@@ -193,10 +185,12 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
     public int Count => _count;
     #endregion
 
-    sealed class Node(T value, int levels)
+    private sealed class Node(T value, int levels)
     {
-        public T Value { get; } = value;
-
+        #region Public properties
         public Node?[] Next { get; } = new Node?[levels];
+
+        public T Value { get; } = value;
+        #endregion
     }
 }

@@ -9,11 +9,11 @@ namespace Catharsis.Mvvm;
 public abstract class BufferViewModelBase : ObservableObject, IDisposable
 {
     #region Fields
-    long _dataSize;
-    bool _disposed;
-    string? _errorMessage;
-    bool _hasData;
-    bool _isLoading;
+    private long _dataSize;
+    private bool _disposed;
+    private string? _errorMessage;
+    private bool _hasData;
+    private bool _isLoading;
     #endregion
 
     #region Protected methods

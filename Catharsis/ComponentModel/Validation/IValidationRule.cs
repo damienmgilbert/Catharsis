@@ -12,15 +12,13 @@ namespace Catharsis.ComponentModel.Validation;
 public interface IValidationRule
 {
     #region Public methods
+
     ///<summary>
     ///Validates the specified value within the given context.
     ///</summary>
     ///<param name="value">The value to validate.</param>
     ///<param name="context">The validation context providing metadata.</param>
     ///<returns>
-    ///<see cref="ValidationResult.Success"/> if the rule is satisfied; otherwise, a <see cref="ValidationResult"/>
-    ///describing the violation.
-    ///</returns>
     ValidationResult? Validate(object? value, ValidationContext context);
     #endregion
 

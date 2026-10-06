@@ -8,14 +8,10 @@ namespace Catharsis.ComponentModel;
 ///cref="TypeDescriptor"/> property descriptors and their associated <see cref="TypeConverter"/> instances.
 ///</summary>
 ///<remarks>
-///<para> Each entry in the input dictionary is matched to a writable property on the target component by name. The
-///value is converted from its source type (typically <see cref="string"/>) using the property's <see
-///cref="TypeConverter"/>.</para>
-///</remarks>
 public sealed class ComponentModelDeserializer
 {
     #region Private methods
-    void ApplyRawValue(PropertyDescriptor property, object target, object? value)
+    private void ApplyRawValue(PropertyDescriptor property, object target, object? value)
     {
         try
         {
@@ -41,7 +37,7 @@ public sealed class ComponentModelDeserializer
         }
     }
 
-    void ApplyValue(PropertyDescriptor property, object target, string? stringValue)
+    private void ApplyValue(PropertyDescriptor property, object target, string? stringValue)
     {
         try
         {
@@ -78,8 +74,6 @@ public sealed class ComponentModelDeserializer
     ///<param name="data">The serialized property data.</param>
     ///<returns>A new instance of <typeparamref name="T"/> populated from <paramref name="data"/>.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="data"/> is <c>null</c>.
-    ///</exception>
     public T Deserialize<T>(IReadOnlyDictionary<string, string?> data) where T : notnull, new()
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -94,12 +88,6 @@ public sealed class ComponentModelDeserializer
     ///<param name="target">The target component to populate.</param>
     ///<returns>The populated <paramref name="target"/>.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="data"/> or <paramref name="target"/> is <c>null</c>.
-    ///</exception>
-    ///<exception cref="InvalidOperationException">
-    ///A key in <paramref name="data"/> does not match a writable property and <see cref="IgnoreMissingProperties"/> is
-    ///<c>false</c>.
-    ///</exception>
     public T Deserialize<T>(IReadOnlyDictionary<string, string?> data, T target) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -135,8 +123,6 @@ public sealed class ComponentModelDeserializer
     ///<param name="target">The target component to populate.</param>
     ///<returns>The populated <paramref name="target"/>.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="data"/> or <paramref name="target"/> is <c>null</c>.
-    ///</exception>
     public T DeserializeRaw<T>(IReadOnlyDictionary<string, object?> data, T target) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -178,8 +164,6 @@ public sealed class ComponentModelDeserializer
 
     ///<summary>
     ///Gets or sets a value indicating whether missing properties in the target should be silently ignored. Defaults to
-    ///<c>true</c>.
-    ///</summary>
     public bool IgnoreMissingProperties { get; set; } = true;
     #endregion
 }

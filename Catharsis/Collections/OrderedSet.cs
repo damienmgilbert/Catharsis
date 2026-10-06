@@ -10,8 +10,8 @@ namespace Catharsis.Collections;
 public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
-    readonly List<T> _items = [];
-    readonly HashSet<T> _set;
+    private readonly List<T> _items = [];
+    private readonly HashSet<T> _set;
     #endregion
 
     #region Constructors
@@ -34,7 +34,7 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _set = [with(comparer)];
+        _set = [ with(comparer) ];
     }
     #endregion
 
@@ -53,9 +53,10 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     ///Adds an item to the set. Duplicates are silently ignored.
     ///</summary>
     ///<param name="item">The item to add.</param>
-    void ICollection<T>.Add(T item) { TryAdd(item); }
+    void ICollection<T>.Add(T item) => TryAdd(item);
+
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -67,11 +68,13 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     }
 
     ///<inheritdoc/>
-    public bool Contains(T item) { return _set.Contains(item); }
+    public bool Contains(T item) => _set.Contains(item);
+
     ///<inheritdoc/>
-    public void CopyTo(T[] array, int arrayIndex) { _items.CopyTo(array, arrayIndex); }
+    public void CopyTo(T[] array, int arrayIndex) => _items.CopyTo(array, arrayIndex);
+
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return _items.GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
 
     ///<inheritdoc/>
     public bool Remove(T item)

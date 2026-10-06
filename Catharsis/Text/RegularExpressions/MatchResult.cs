@@ -13,6 +13,6 @@ public readonly record struct MatchResult(string Value, int Index, int Length)
     #region Public methods
 
     ///<inheritdoc/>
-    public override string ToString() { return $"'{Value}' at {Index} (length {Length})"; }
+    public override string ToString() => $"'{Value}' at {Index} (length {Length})";
     #endregion
 }

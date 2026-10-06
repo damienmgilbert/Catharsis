@@ -12,7 +12,7 @@ public static class AsyncSequenceMerger
     #region Private methods
     private static async IAsyncEnumerable<T> AppendIterator<T>(IAsyncEnumerable<T> source, T value, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
@@ -22,12 +22,12 @@ public static class AsyncSequenceMerger
 
     private static async IAsyncEnumerable<T> ConcatIterator<T>(IAsyncEnumerable<T> first, IAsyncEnumerable<T> second, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in first.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in first.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
 
-        await foreach (T item in second.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in second.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
@@ -35,14 +35,14 @@ public static class AsyncSequenceMerger
 
     private static async IAsyncEnumerable<T> ConcatManyIterator<T>(IAsyncEnumerable<T> source, IAsyncEnumerable<T>[] others, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
 
-        foreach (IAsyncEnumerable<T> other in others)
+        foreach(IAsyncEnumerable<T> other in others)
         {
-            await foreach (T item in other.WithCancellation(cancellationToken).ConfigureAwait(false))
+            await foreach(T item in other.WithCancellation(cancellationToken).ConfigureAwait(false))
             {
                 yield return item;
             }
@@ -57,7 +57,7 @@ public static class AsyncSequenceMerger
         bool has1 = await e1.MoveNextAsync().ConfigureAwait(false);
         bool has2 = await e2.MoveNextAsync().ConfigureAwait(false);
 
-        while (has1 && has2)
+        while(has1 && has2)
         {
             yield return e1.Current;
             yield return e2.Current;
@@ -65,13 +65,13 @@ public static class AsyncSequenceMerger
             has2 = await e2.MoveNextAsync().ConfigureAwait(false);
         }
 
-        while (has1)
+        while(has1)
         {
             yield return e1.Current;
             has1 = await e1.MoveNextAsync().ConfigureAwait(false);
         }
 
-        while (has2)
+        while(has2)
         {
             yield return e2.Current;
             has2 = await e2.MoveNextAsync().ConfigureAwait(false);
@@ -82,17 +82,17 @@ public static class AsyncSequenceMerger
     {
         Channel<T> channel = Channel.CreateUnbounded<T>(new UnboundedChannelOptions { SingleReader = true, SingleWriter = false });
 
-        List<IAsyncEnumerable<T>> sourceList = sources as List<IAsyncEnumerable<T>> ?? [.. sources];
+        List<IAsyncEnumerable<T>> sourceList = sources as List<IAsyncEnumerable<T>> ?? [ .. sources ];
 
         Task[] producers = new Task[sourceList.Count];
 
-        for (int i = 0; i < sourceList.Count; i++)
+        for(int i = 0; i < sourceList.Count; i++)
         {
             IAsyncEnumerable<T> src = sourceList[i];
             producers[i] = Task.Run(
                            async () =>
                            {
-                               await foreach (T item in src.WithCancellation(cancellationToken).ConfigureAwait(false))
+                               await foreach(T item in src.WithCancellation(cancellationToken).ConfigureAwait(false))
                                {
                                    await channel.Writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
                                }
@@ -106,15 +106,14 @@ public static class AsyncSequenceMerger
                 try
                 {
                     await Task.WhenAll(producers).ConfigureAwait(false);
-                }
-                finally
+                } finally
                 {
                     channel.Writer.Complete();
                 }
             },
             cancellationToken);
 
-        await foreach (T item in channel.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in channel.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
@@ -124,7 +123,7 @@ public static class AsyncSequenceMerger
     {
         yield return value;
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
@@ -135,7 +134,7 @@ public static class AsyncSequenceMerger
         await using IAsyncEnumerator<TFirst> e1 = first.GetAsyncEnumerator(cancellationToken);
         await using IAsyncEnumerator<TSecond> e2 = second.GetAsyncEnumerator(cancellationToken);
 
-        while (await e1.MoveNextAsync().ConfigureAwait(false) && await e2.MoveNextAsync().ConfigureAwait(false))
+        while(await e1.MoveNextAsync().ConfigureAwait(false) && await e2.MoveNextAsync().ConfigureAwait(false))
         {
             yield return (e1.Current, e2.Current);
         }
@@ -149,18 +148,18 @@ public static class AsyncSequenceMerger
         bool has1 = await e1.MoveNextAsync().ConfigureAwait(false);
         bool has2 = await e2.MoveNextAsync().ConfigureAwait(false);
 
-        while (has1 || has2)
+        while(has1 || has2)
         {
             TFirst? v1 = has1 ? e1.Current : defaultFirst;
             TSecond? v2 = has2 ? e2.Current : defaultSecond;
             yield return (v1!, v2!);
 
-            if (has1)
+            if(has1)
             {
                 has1 = await e1.MoveNextAsync().ConfigureAwait(false);
             }
 
-            if (has2)
+            if(has2)
             {
                 has2 = await e2.MoveNextAsync().ConfigureAwait(false);
             }
@@ -172,7 +171,7 @@ public static class AsyncSequenceMerger
         await using IAsyncEnumerator<TFirst> e1 = first.GetAsyncEnumerator(cancellationToken);
         await using IAsyncEnumerator<TSecond> e2 = second.GetAsyncEnumerator(cancellationToken);
 
-        while (await e1.MoveNextAsync().ConfigureAwait(false) && await e2.MoveNextAsync().ConfigureAwait(false))
+        while(await e1.MoveNextAsync().ConfigureAwait(false) && await e2.MoveNextAsync().ConfigureAwait(false))
         {
             yield return resultSelector(e1.Current, e2.Current);
         }
@@ -212,14 +211,6 @@ public static class AsyncSequenceMerger
 
     ///<summary>
     ///Concatenates two async sequences, yielding all elements of <paramref name="source"/> followed by all elements of
-    ///<paramref name="second"/>.
-    ///</summary>
-    ///<typeparam name="T">The element type.</typeparam>
-    ///<param name="source">The first async sequence.</param>
-    ///<param name="second">The second async sequence.</param>
-    ///<param name="cancellationToken">A token to cancel the iteration.</param>
-    ///<returns>A concatenated async sequence.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="second"/> is <c>null</c>.</exception>
     public static IAsyncEnumerable<T> Concat<T>(this IAsyncEnumerable<T> source, IAsyncEnumerable<T> second, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
@@ -246,13 +237,6 @@ public static class AsyncSequenceMerger
 
     ///<summary>
     ///Merges multiple async sequences concurrently, yielding elements as they become available from any source. Uses
-    ///<see cref="Channel{T}"/> for safe concurrent aggregation.
-    ///</summary>
-    ///<typeparam name="T">The element type.</typeparam>
-    ///<param name="sources">The async sequences to merge.</param>
-    ///<param name="cancellationToken">A token to cancel the iteration.</param>
-    ///<returns>An async sequence containing elements from all sources in arrival order.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="sources"/> is <c>null</c>.</exception>
     public static IAsyncEnumerable<T> Merge<T>(IEnumerable<IAsyncEnumerable<T>> sources, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(sources, nameof(sources));
@@ -272,7 +256,7 @@ public static class AsyncSequenceMerger
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(second, nameof(second));
-        return MergeIterator([source, second], cancellationToken);
+        return MergeIterator([ source, second ], cancellationToken);
     }
 
     ///<summary>

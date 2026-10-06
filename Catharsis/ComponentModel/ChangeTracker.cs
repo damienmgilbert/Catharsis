@@ -14,11 +14,8 @@ namespace Catharsis.ComponentModel;
 public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking, INotifyPropertyChanged
 {
     #region Fields
-    T _currentValue = initialValue;
-    T _originalValue = initialValue;
-
-    #endregion
-    #region Constructors
+    private T _currentValue = initialValue;
+    private T _originalValue = initialValue;
     #endregion
 
     #region Events
@@ -29,7 +26,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
     #endregion
 
     #region Private methods
-    void OnPropertyChanged(string propertyName) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+    private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     #endregion
 
     #region Public methods

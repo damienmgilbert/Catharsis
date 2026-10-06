@@ -15,7 +15,7 @@ public static class SequenceComposer
         bool has1 = e1.MoveNext();
         bool has2 = e2.MoveNext();
 
-        while (has1 && has2)
+        while(has1 && has2)
         {
             yield return e1.Current;
             yield return e2.Current;
@@ -23,13 +23,13 @@ public static class SequenceComposer
             has2 = e2.MoveNext();
         }
 
-        while (has1)
+        while(has1)
         {
             yield return e1.Current;
             has1 = e1.MoveNext();
         }
 
-        while (has2)
+        while(has2)
         {
             yield return e2.Current;
             has2 = e2.MoveNext();
@@ -38,30 +38,28 @@ public static class SequenceComposer
 
     private static IEnumerable<T> InterleaveManyIterator<T>(IEnumerable<T> source, IEnumerable<T>[] others)
     {
-        List<IEnumerator<T>> enumerators = [source.GetEnumerator(), .. others.Select(static s => s.GetEnumerator())];
+        List<IEnumerator<T>> enumerators = [ source.GetEnumerator(), .. others.Select(static s => s.GetEnumerator()) ];
 
         try
         {
-            List<IEnumerator<T>> active = [.. enumerators];
+            List<IEnumerator<T>> active = [ .. enumerators ];
 
-            while (active.Count > 0)
+            while(active.Count > 0)
             {
-                for (int i = active.Count - 1; i >= 0; i--)
+                for(int i = active.Count - 1; i >= 0; i--)
                 {
-                    if (active[i].MoveNext())
+                    if(active[i].MoveNext())
                     {
                         yield return active[i].Current;
-                    }
-                    else
+                    } else
                     {
                         active.RemoveAt(i);
                     }
                 }
             }
-        }
-        finally
+        } finally
         {
-            foreach (IEnumerator<T> e in enumerators)
+            foreach(IEnumerator<T> e in enumerators)
             {
                 e.Dispose();
             }
@@ -76,27 +74,26 @@ public static class SequenceComposer
         bool has1 = e1.MoveNext();
         bool has2 = e2.MoveNext();
 
-        while (has1 && has2)
+        while(has1 && has2)
         {
-            if (comparer.Compare(e1.Current, e2.Current) <= 0)
+            if(comparer.Compare(e1.Current, e2.Current) <= 0)
             {
                 yield return e1.Current;
                 has1 = e1.MoveNext();
-            }
-            else
+            } else
             {
                 yield return e2.Current;
                 has2 = e2.MoveNext();
             }
         }
 
-        while (has1)
+        while(has1)
         {
             yield return e1.Current;
             has1 = e1.MoveNext();
         }
 
-        while (has2)
+        while(has2)
         {
             yield return e2.Current;
             has2 = e2.MoveNext();
@@ -108,7 +105,7 @@ public static class SequenceComposer
         TAccumulate current = seed;
         yield return current;
 
-        foreach (T element in source)
+        foreach(T element in source)
         {
             current = accumulator(current, element);
             yield return current;
@@ -123,18 +120,18 @@ public static class SequenceComposer
         bool has1 = e1.MoveNext();
         bool has2 = e2.MoveNext();
 
-        while (has1 || has2)
+        while(has1 || has2)
         {
             TFirst? v1 = has1 ? e1.Current : defaultFirst;
             TSecond? v2 = has2 ? e2.Current : defaultSecond;
             yield return (v1, v2);
 
-            if (has1)
+            if(has1)
             {
                 has1 = e1.MoveNext();
             }
 
-            if (has2)
+            if(has2)
             {
                 has2 = e2.MoveNext();
             }
@@ -174,7 +171,7 @@ public static class SequenceComposer
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(elements, nameof(elements));
         IGrouping<TKey, TElement> extra = SequenceFactory.Grouping(key, elements);
-        return MergeGroupings(source, [extra], comparer);
+        return MergeGroupings(source, [ extra ], comparer);
     }
 
     ///<summary>

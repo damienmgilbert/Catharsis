@@ -3,13 +3,13 @@ using System.Text;
 namespace Catharsis.Security;
 
 ///<summary>
-///Encodes and decodes RFC 4648 base32 (the variant commonly used for TOTP secrets and other tokens meant to be
-///typed or read aloud, since it avoids visually ambiguous characters like <c>0</c>/<c>O</c> and <c>1</c>/<c>I</c>).
+///Encodes and decodes RFC 4648 base32 (the variant commonly used for TOTP secrets and other tokens meant to be typed or
+///read aloud, since it avoids visually ambiguous characters like <c>0</c>/<c>O</c> and <c>1</c>/<c>I</c>).
 ///</summary>
 public static class Base32Codec
 {
-    #region Fields
-    const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    #region Constants
+    private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     #endregion
 
     #region Public methods
@@ -48,7 +48,7 @@ public static class Base32Codec
             }
         }
 
-        return [.. output];
+        return[ .. output ];
     }
 
     ///<summary>

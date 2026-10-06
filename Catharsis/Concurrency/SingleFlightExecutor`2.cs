@@ -19,14 +19,39 @@ namespace Catharsis.Concurrency;
 public sealed class SingleFlightExecutor<TKey, TResult>(IEqualityComparer<TKey>? comparer = null) where TKey : notnull
 {
     #region Fields
-    readonly Dictionary<TKey, Task<TResult>> _inFlight = new(comparer);
-    readonly Lock _gate = new();
+    private readonly Lock _gate = new();
+    private readonly Dictionary<TKey, Task<TResult>> _inFlight = new(comparer);
+    #endregion
+
+    #region Private methods
+    private async Task RunAsync(TKey key, Func<Task<TResult>> operation, TaskCompletionSource<TResult> tcs)
+    {
+        try
+        {
+            TResult result = await operation().ConfigureAwait(false);
+            tcs.TrySetResult(result);
+        } catch(OperationCanceledException)
+        {
+            tcs.TrySetCanceled();
+        } catch(Exception ex)
+        {
+            tcs.TrySetException(ex);
+        } finally
+        {
+            lock(_gate)
+            {
+                if(_inFlight.TryGetValue(key, out Task<TResult>? current) && current == tcs.Task)
+                {
+                    _inFlight.Remove(key);
+                }
+            }
+        }
+    }
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Executes the operation for the specified key, or returns the already in-flight task for that key if one
-    ///exists.
+    ///Executes the operation for the specified key, or returns the already in-flight task for that key if one exists.
     ///</summary>
     ///<param name="key">The key identifying the operation.</param>
     ///<param name="operation">The operation to execute if none is currently in flight for this key.</param>
@@ -52,33 +77,6 @@ public sealed class SingleFlightExecutor<TKey, TResult>(IEqualityComparer<TKey>?
 
         _ = RunAsync(key, operation, tcs);
         return tcs.Task;
-    }
-
-    async Task RunAsync(TKey key, Func<Task<TResult>> operation, TaskCompletionSource<TResult> tcs)
-    {
-        try
-        {
-            TResult result = await operation().ConfigureAwait(false);
-            tcs.TrySetResult(result);
-        }
-        catch(OperationCanceledException)
-        {
-            tcs.TrySetCanceled();
-        }
-        catch(Exception ex)
-        {
-            tcs.TrySetException(ex);
-        }
-        finally
-        {
-            lock(_gate)
-            {
-                if(_inFlight.TryGetValue(key, out Task<TResult>? current) && current == tcs.Task)
-                {
-                    _inFlight.Remove(key);
-                }
-            }
-        }
     }
     #endregion
 

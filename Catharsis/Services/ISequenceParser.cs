@@ -9,6 +9,7 @@ namespace Catharsis.Services;
 public interface ISequenceParser
 {
     #region Public methods
+
     ///<summary>
     ///Resets the parser to its initial state for reuse.
     ///</summary>

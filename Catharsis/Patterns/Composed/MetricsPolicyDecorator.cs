@@ -9,12 +9,12 @@ namespace Catharsis.Patterns.Composed;
 public sealed class MetricsPolicyDecorator : IAsyncPolicy
 {
     #region Fields
-    readonly IAsyncPolicy _inner;
-    readonly TimeProvider _timeProvider;
-    long _executions;
-    long _failures;
-    long _cancellations;
-    long _totalTicks;
+    private long _cancellations;
+    private long _executions;
+    private long _failures;
+    private readonly IAsyncPolicy _inner;
+    private readonly TimeProvider _timeProvider;
+    private long _totalTicks;
     #endregion
 
     #region Constructors
@@ -44,18 +44,15 @@ public sealed class MetricsPolicyDecorator : IAsyncPolicy
         try
         {
             return await _inner.ExecuteAsync(operation, cancellationToken).ConfigureAwait(false);
-        }
-        catch(OperationCanceledException)
+        } catch(OperationCanceledException)
         {
             Interlocked.Increment(ref _cancellations);
             throw;
-        }
-        catch(Exception)
+        } catch(Exception)
         {
             Interlocked.Increment(ref _failures);
             throw;
-        }
-        finally
+        } finally
         {
             Interlocked.Add(ref _totalTicks, _timeProvider.GetElapsedTime(start).Ticks);
             Interlocked.Increment(ref _executions);
@@ -81,10 +78,6 @@ public sealed class MetricsPolicyDecorator : IAsyncPolicy
     ///Reads the current counters. Under concurrent execution the values may be a few operations out of step with each
     ///other.
     ///</summary>
-    public PolicyMetrics GetSnapshot() => new(
-        Interlocked.Read(ref _executions),
-        Interlocked.Read(ref _failures),
-        Interlocked.Read(ref _cancellations),
-        TimeSpan.FromTicks(Interlocked.Read(ref _totalTicks)));
+    public PolicyMetrics GetSnapshot() => new(Interlocked.Read(ref _executions), Interlocked.Read(ref _failures), Interlocked.Read(ref _cancellations), TimeSpan.FromTicks(Interlocked.Read(ref _totalTicks)));
     #endregion
 }

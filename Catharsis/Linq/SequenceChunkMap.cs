@@ -9,20 +9,20 @@ public static class SequenceChunkMap
     #region Private methods
     private static IEnumerable<TResult> ChunkAggregateIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<IReadOnlyList<T>, TResult> mapper)
     {
-        List<T> chunk = [with(chunkSize)];
+        List<T> chunk = [ with(chunkSize) ];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             chunk.Add(item);
 
-            if (chunk.Count == chunkSize)
+            if(chunk.Count == chunkSize)
             {
                 yield return mapper(chunk.AsReadOnly());
-                chunk = [with(chunkSize)];
+                chunk = [ with(chunkSize) ];
             }
         }
 
-        if (chunk.Count > 0)
+        if(chunk.Count > 0)
         {
             yield return mapper(chunk.AsReadOnly());
         }
@@ -32,35 +32,34 @@ public static class SequenceChunkMap
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         TKey currentKey = keySelector(enumerator.Current);
-        List<T> currentChunk = [enumerator.Current];
+        List<T> currentChunk = [ enumerator.Current ];
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             TKey key = keySelector(enumerator.Current);
 
-            if (comparer.Equals(key, currentKey))
+            if(comparer.Equals(key, currentKey))
             {
                 currentChunk.Add(enumerator.Current);
-            }
-            else
+            } else
             {
-                foreach (TResult result in mapper(currentKey, currentChunk.AsReadOnly()))
+                foreach(TResult result in mapper(currentKey, currentChunk.AsReadOnly()))
                 {
                     yield return result;
                 }
 
                 currentKey = key;
-                currentChunk = [enumerator.Current];
+                currentChunk = [ enumerator.Current ];
             }
         }
 
-        foreach (TResult result in mapper(currentKey, currentChunk.AsReadOnly()))
+        foreach(TResult result in mapper(currentKey, currentChunk.AsReadOnly()))
         {
             yield return result;
         }
@@ -68,28 +67,28 @@ public static class SequenceChunkMap
 
     private static IEnumerable<TResult> ChunkMapGroupsIterator<TKey, TElement, TResult>(IEnumerable<IGrouping<TKey, TElement>> source, int chunkSize, Func<TKey, IReadOnlyList<TElement>, IEnumerable<TResult>> mapper)
     {
-        foreach (IGrouping<TKey, TElement> group in source)
+        foreach(IGrouping<TKey, TElement> group in source)
         {
-            List<TElement> chunk = [with(chunkSize)];
+            List<TElement> chunk = [ with(chunkSize) ];
 
-            foreach (TElement element in group)
+            foreach(TElement element in group)
             {
                 chunk.Add(element);
 
-                if (chunk.Count == chunkSize)
+                if(chunk.Count == chunkSize)
                 {
-                    foreach (TResult result in mapper(group.Key, chunk.AsReadOnly()))
+                    foreach(TResult result in mapper(group.Key, chunk.AsReadOnly()))
                     {
                         yield return result;
                     }
 
-                    chunk = [with(chunkSize)];
+                    chunk = [ with(chunkSize) ];
                 }
             }
 
-            if (chunk.Count > 0)
+            if(chunk.Count > 0)
             {
-                foreach (TResult result in mapper(group.Key, chunk.AsReadOnly()))
+                foreach(TResult result in mapper(group.Key, chunk.AsReadOnly()))
                 {
                     yield return result;
                 }
@@ -99,28 +98,28 @@ public static class SequenceChunkMap
 
     private static IEnumerable<TResult> ChunkMapIndexedIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<int, IReadOnlyList<T>, IEnumerable<TResult>> mapper)
     {
-        List<T> chunk = [with(chunkSize)];
+        List<T> chunk = [ with(chunkSize) ];
         int chunkIndex = 0;
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             chunk.Add(item);
 
-            if (chunk.Count == chunkSize)
+            if(chunk.Count == chunkSize)
             {
-                foreach (TResult result in mapper(chunkIndex, chunk.AsReadOnly()))
+                foreach(TResult result in mapper(chunkIndex, chunk.AsReadOnly()))
                 {
                     yield return result;
                 }
 
-                chunk = [with(chunkSize)];
+                chunk = [ with(chunkSize) ];
                 chunkIndex++;
             }
         }
 
-        if (chunk.Count > 0)
+        if(chunk.Count > 0)
         {
-            foreach (TResult result in mapper(chunkIndex, chunk.AsReadOnly()))
+            foreach(TResult result in mapper(chunkIndex, chunk.AsReadOnly()))
             {
                 yield return result;
             }
@@ -129,26 +128,26 @@ public static class SequenceChunkMap
 
     private static IEnumerable<TResult> ChunkMapIterator<T, TResult>(IEnumerable<T> source, int chunkSize, Func<IReadOnlyList<T>, IEnumerable<TResult>> mapper)
     {
-        List<T> chunk = [with(chunkSize)];
+        List<T> chunk = [ with(chunkSize) ];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             chunk.Add(item);
 
-            if (chunk.Count == chunkSize)
+            if(chunk.Count == chunkSize)
             {
-                foreach (TResult result in mapper(chunk.AsReadOnly()))
+                foreach(TResult result in mapper(chunk.AsReadOnly()))
                 {
                     yield return result;
                 }
 
-                chunk = [with(chunkSize)];
+                chunk = [ with(chunkSize) ];
             }
         }
 
-        if (chunk.Count > 0)
+        if(chunk.Count > 0)
         {
-            foreach (TResult result in mapper(chunk.AsReadOnly()))
+            foreach(TResult result in mapper(chunk.AsReadOnly()))
             {
                 yield return result;
             }
@@ -198,17 +197,6 @@ public static class SequenceChunkMap
 
     ///<summary>
     ///Chunks consecutive elements that share the same key (as determined by <paramref name="keySelector"/>) and applies
-    ///<paramref name="mapper"/> to each keyed chunk. Consecutive elements with different keys start a new chunk.
-    ///</summary>
-    ///<typeparam name="T">The source element type.</typeparam>
-    ///<typeparam name="TKey">The key type.</typeparam>
-    ///<typeparam name="TResult">The result element type.</typeparam>
-    ///<param name="source">The source sequence.</param>
-    ///<param name="keySelector">A function that extracts a key from each element.</param>
-    ///<param name="mapper">A function that receives the key and the chunk and returns a result sequence.</param>
-    ///<param name="comparer">An optional equality comparer for keys.</param>
-    ///<returns>A flat sequence of all mapped results.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="keySelector"/>, or <paramref name="mapper"/> is <c>null</c>.</exception>
     public static IEnumerable<TResult> ChunkMapByKey<T, TKey, TResult>(this IEnumerable<T> source, Func<T, TKey> keySelector, Func<TKey, IReadOnlyList<T>, IEnumerable<TResult>> mapper, IEqualityComparer<TKey>? comparer = null)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));

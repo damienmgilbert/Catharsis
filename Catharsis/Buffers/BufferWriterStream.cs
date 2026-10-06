@@ -10,9 +10,9 @@ namespace Catharsis.Buffers;
 public sealed class BufferWriterStream : Stream
 {
     #region Fields
-    long _bytesWritten;
-    bool _disposed;
-    readonly IBufferWriter<byte> _writer;
+    private long _bytesWritten;
+    private bool _disposed;
+    private readonly IBufferWriter<byte> _writer;
     #endregion
 
     #region Constructors
@@ -42,13 +42,16 @@ public sealed class BufferWriterStream : Stream
     {
     }
     ///<inheritdoc/>
-    public override Task FlushAsync(CancellationToken cancellationToken) { return Task.CompletedTask; }
+    public override Task FlushAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
     ///<inheritdoc/>
-    public override int Read(byte[] buffer, int offset, int count) { throw new NotSupportedException("Reading is not supported."); }
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException("Reading is not supported.");
+
     ///<inheritdoc/>
-    public override long Seek(long offset, SeekOrigin origin) { throw new NotSupportedException("Seeking is not supported."); }
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException("Seeking is not supported.");
+
     ///<inheritdoc/>
-    public override void SetLength(long value) { throw new NotSupportedException("Setting length is not supported."); }
+    public override void SetLength(long value) => throw new NotSupportedException("Setting length is not supported.");
 
     ///<inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)

@@ -1,5 +1,5 @@
-using Catharsis.Linq.Expressions;
 using System.Linq.Expressions;
+using Catharsis.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -14,20 +14,20 @@ public static class RuleEvaluator
     #region Private methods
     private static IEnumerable<RuleContext<T>> EvaluateIterator<T>(IEnumerable<T> source, RuleSet<T> ruleSet)
     {
-        List<Rule<T>> enabledRules = [.. ruleSet.Enabled()];
+        List<Rule<T>> enabledRules = [ .. ruleSet.Enabled() ];
 
-        foreach (T element in source)
+        foreach(T element in source)
         {
             RuleContext<T> context = new(element);
 
-            foreach (Rule<T> rule in enabledRules)
+            foreach(Rule<T> rule in enabledRules)
             {
-                if (rule.Evaluate(element))
+                if(rule.Evaluate(element))
                 {
                     context.RecordMatch(rule);
                     rule.OnMatch?.Invoke(element);
 
-                    if (context.WasStopped)
+                    if(context.WasStopped)
                     {
                         break;
                     }
@@ -37,15 +37,14 @@ public static class RuleEvaluator
             yield return context;
         }
     }
-    extension<T>(IEnumerable<T> source)
-    {
     #endregion
 
-        #region Public methods
-        ///<summary>
-        ///Evaluates all enabled rules in <paramref name="ruleSet"/> against each element. Returns a ///<see
-        ///cref="RuleContext{T}"/> for every element regardless of whether any rule matched.
-        ///</summary>
+    extension<T>(IEnumerable<T> source)
+    {
+                ///<summary>
+///Evaluates all enabled rules in <paramref name="ruleSet"/> against each element. Returns a ///<see
+///cref="RuleContext{T}"/> for every element regardless of whether any rule matched.
+///</summary>
         ///<typeparam name="T">The element type.</typeparam>
         ///<param name="source">The source sequence.</param>
         ///<param name="ruleSet">The rule set to evaluate.</param>
@@ -124,8 +123,8 @@ public static class RuleEvaluator
     extension<T>(IQueryable<T> source)
     {
         ///<summary>
-        ///Applies all enabled rule conditions combined with AND as a single <c>Where</c> clause on the queryable source.
-        ///The combined expression tree is provider-translatable.
+        ///Applies all enabled rule conditions combined with AND as a single <c>Where</c> clause on the queryable source. The
+        ///combined expression tree is provider-translatable.
         ///</summary>
         ///<typeparam name="T">The element type.</typeparam>
         ///<param name="source">The queryable source.</param>
@@ -195,5 +194,4 @@ public static class RuleEvaluator
             return source.Where(ExpressionComposer.OrAny(conditions));
         }
     }
-    #endregion
 }

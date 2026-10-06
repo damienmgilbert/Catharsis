@@ -8,6 +8,7 @@ namespace Catharsis.DesignPatterns.Creational;
 public class SingletonPattern
 {
     #region Public methods
+
     ///<summary>
     ///Singleton — stores <paramref name="obj"/> in <paramref name="cache"/> under <paramref name="key"/> on first
     ///access and returns the cached instance on subsequent calls. Thread-safe.

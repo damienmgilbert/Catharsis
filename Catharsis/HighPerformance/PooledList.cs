@@ -12,10 +12,10 @@ namespace Catharsis.HighPerformance;
 public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
     #region Fields
-    int _count;
-    bool _disposed;
-    T[] _items;
-    readonly ArrayPool<T> _pool;
+    private int _count;
+    private bool _disposed;
+    private T[] _items;
+    private readonly ArrayPool<T> _pool;
     #endregion
 
     #region Constructors
@@ -60,11 +60,11 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     #endregion
 
     #region Explicit interface implementations
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Private methods
-    void EnsureCapacity(int required)
+    private void EnsureCapacity(int required)
     {
         if(required <= _items.Length)
         {
@@ -112,9 +112,10 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     }
 
     ///<inheritdoc/>
-    public bool Contains(T item) { return IndexOf(item) >= 0; }
+    public bool Contains(T item) => IndexOf(item) >= 0;
+
     ///<inheritdoc/>
-    public void CopyTo(T[] array, int arrayIndex) { Array.Copy(_items, 0, array, arrayIndex, _count); }
+    public void CopyTo(T[] array, int arrayIndex) => Array.Copy(_items, 0, array, arrayIndex, _count);
 
     ///<inheritdoc/>
     public void Dispose()
@@ -141,7 +142,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     }
 
     ///<inheritdoc/>
-    public int IndexOf(T item) { return Array.IndexOf(_items, item, 0, _count); }
+    public int IndexOf(T item) => Array.IndexOf(_items, item, 0, _count);
 
     ///<inheritdoc/>
     public void Insert(int index, T item)

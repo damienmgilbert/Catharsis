@@ -11,13 +11,13 @@ namespace Catharsis.Advanced;
 public sealed class PooledJsonDocument : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly ArrayPool<byte> _pool;
-    readonly byte[]? _rentedBuffer;
+    private bool _disposed;
+    private readonly ArrayPool<byte> _pool;
+    private readonly byte[]? _rentedBuffer;
     #endregion
 
     #region Constructors
-    PooledJsonDocument(JsonDocument document, byte[]? rentedBuffer, ArrayPool<byte> pool)
+    private PooledJsonDocument(JsonDocument document, byte[]? rentedBuffer, ArrayPool<byte> pool)
     {
         Document = document;
         _rentedBuffer = rentedBuffer;
@@ -92,7 +92,7 @@ public sealed class PooledJsonDocument : IDisposable
     ///<param name="options">Optional JSON document options.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A <see cref="PooledJsonDocument"/>.</returns>
-    public static async ValueTask<PooledJsonDocument> ParseValueAsync(Stream stream, JsonDocumentOptions options = default, CancellationToken cancellationToken = default) { return await ParseAsync(stream, options, cancellationToken).ConfigureAwait(false); }
+    public static async ValueTask<PooledJsonDocument> ParseValueAsync(Stream stream, JsonDocumentOptions options = default, CancellationToken cancellationToken = default) => await ParseAsync(stream, options, cancellationToken).ConfigureAwait(false);
     #endregion
 
     #region Public properties

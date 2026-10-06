@@ -14,17 +14,14 @@ namespace Catharsis.Buffers;
 public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : IEquatable<T>
 {
     #region Struct fields
-    ReadOnlySequence<T> _sequence = sequence;
-    SequencePosition _position = sequence.Start;
-    ReadOnlySpan<T> _currentSpan = sequence.FirstSpan;
-    int _currentIndex = 0;
-
-    #endregion
-    #region Constructors
+    private ReadOnlySequence<T> _sequence = sequence;
+    private SequencePosition _position = sequence.Start;
+    private ReadOnlySpan<T> _currentSpan = sequence.FirstSpan;
+    private int _currentIndex = 0;
     #endregion
 
     #region Private methods
-    bool MoveToNextSegment()
+    private bool MoveToNextSegment()
     {
         SequencePosition nextPos = _sequence.GetPosition(_currentIndex, _position);
         if(_sequence.TryGet(ref nextPos, out ReadOnlyMemory<T> memory))
@@ -38,7 +35,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
         return false;
     }
 
-    bool TryReadNextSegment(out T value)
+    private bool TryReadNextSegment(out T value)
     {
         if(MoveToNextSegment() && (_currentSpan.Length > 0))
         {

@@ -12,8 +12,8 @@ namespace Catharsis.Services;
 public sealed partial class SequenceParserService
 {
     #region Fields
-    readonly ILogger<SequenceParserService> _logger;
-    readonly ISequenceParser _parser;
+    private readonly ILogger<SequenceParserService> _logger;
+    private readonly ISequenceParser _parser;
     #endregion
 
     #region Constructors
@@ -30,6 +30,26 @@ public sealed partial class SequenceParserService
         _parser = parser;
         _logger = logger;
     }
+    #endregion
+
+    #region Private methods
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Parsed {Count} messages total.")]
+    partial void LogParsedTotal(int count);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Parse failed: invalid data detected.")]
+    partial void LogParseInvalidData();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Parse needs more data.")]
+    partial void LogParseNeedsMoreData();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Parse succeeded.")]
+    partial void LogParseSucceeded();
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Trace, Message = "Parsing sequence of {Length} bytes.")]
+    partial void LogParsing(long length);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "Parser service reset.")]
+    partial void LogReset();
     #endregion
 
     #region Public methods
@@ -113,25 +133,5 @@ public sealed partial class SequenceParserService
     ///Gets the total number of successful parse operations.
     ///</summary>
     public int SuccessCount { get; private set; }
-    #endregion
-
-    #region Log messages
-    [LoggerMessage(EventId = 1, Level = LogLevel.Trace, Message = "Parsing sequence of {Length} bytes.")]
-    partial void LogParsing(long length);
-
-    [LoggerMessage(EventId = 2, Level = LogLevel.Trace, Message = "Parse succeeded.")]
-    partial void LogParseSucceeded();
-
-    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Parse failed: invalid data detected.")]
-    partial void LogParseInvalidData();
-
-    [LoggerMessage(EventId = 4, Level = LogLevel.Trace, Message = "Parse needs more data.")]
-    partial void LogParseNeedsMoreData();
-
-    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Parsed {Count} messages total.")]
-    partial void LogParsedTotal(int count);
-
-    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, Message = "Parser service reset.")]
-    partial void LogReset();
     #endregion
 }

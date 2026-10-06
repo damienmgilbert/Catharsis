@@ -9,13 +9,10 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap.</typeparam>
 ///<remarks>
-///<para> Setting <see cref="Value"/> replaces the entire record and raises property change notifications. Use <see
-///cref="Update"/> to apply a transformation function to the current value.</para>
-///</remarks>
 public class BindableRecord<T> : INotifyPropertyChanged, INotifyPropertyChanging where T : class
 {
     #region Fields
-    T _value;
+    private T _value;
     #endregion
 
     #region Constructors
@@ -24,8 +21,6 @@ public class BindableRecord<T> : INotifyPropertyChanged, INotifyPropertyChanging
     ///</summary>
     ///<param name="value">The initial record value.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="value"/> is <c>null</c>.
-    ///</exception>
     public BindableRecord(T value)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -46,17 +41,18 @@ public class BindableRecord<T> : INotifyPropertyChanged, INotifyPropertyChanging
     ///Raises the <see cref="PropertyChanged"/> event.
     ///</summary>
     ///<param name="propertyName">The property name.</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
     ///<summary>
     ///Raises the <see cref="PropertyChanging"/> event.
     ///</summary>
     ///<param name="propertyName">The property name.</param>
-    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) { PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
     #endregion
 
     #region Public methods
     ///<inheritdoc/>
-    public override string ToString() { return _value.ToString() ?? string.Empty; }
+    public override string ToString() => _value.ToString() ?? string.Empty;
 
     ///<summary>
     ///Applies a transformation function to the current value and sets the result as the new value.
@@ -66,8 +62,6 @@ public class BindableRecord<T> : INotifyPropertyChanged, INotifyPropertyChanging
     ///</param>
     ///<returns>The new record value.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="transform"/> is <c>null</c>.
-    ///</exception>
     public T Update(Func<T, T> transform)
     {
         ArgumentNullException.ThrowIfNull(transform);

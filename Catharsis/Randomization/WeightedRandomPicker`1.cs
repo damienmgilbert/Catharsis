@@ -6,17 +6,11 @@ namespace Catharsis.Randomization;
 ///</summary>
 ///<typeparam name="T">The type of item to pick.</typeparam>
 ///<example>
-///<code>
-///WeightedRandomPicker&lt;string&gt; loot = new();
-///loot.Add("common", 70).Add("rare", 25).Add("legendary", 5);
-///string drop = loot.Pick();
-///</code>
-///</example>
 public sealed class WeightedRandomPicker<T>
 {
     #region Fields
-    readonly List<(T Item, double CumulativeWeight)> _entries = [];
-    double _totalWeight;
+    private readonly List<(T Item, double CumulativeWeight)> _entries = [];
+    private double _totalWeight;
     #endregion
 
     #region Public methods

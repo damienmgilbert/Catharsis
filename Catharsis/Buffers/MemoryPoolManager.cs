@@ -1,5 +1,5 @@
-using CommunityToolkit.Diagnostics;
 using System.Buffers;
+using CommunityToolkit.Diagnostics;
 
 namespace Catharsis.Buffers;
 
@@ -43,7 +43,7 @@ public sealed class MemoryPoolManager : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if (_disposed)
+        if(_disposed)
         {
             return;
         }
@@ -110,7 +110,7 @@ public sealed class MemoryPoolManager : IDisposable
         #region Public methods
         public void Dispose()
         {
-            if (_disposed)
+            if(_disposed)
             {
                 return;
             }

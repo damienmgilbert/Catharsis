@@ -6,37 +6,11 @@ namespace Catharsis.ComponentModel.TypeConverter;
 
 ///<summary>
 ///A generic <see cref="System.ComponentModel.TypeConverter"/> that uses delegates for <see cref="ConvertFrom"/> and
-///<see cref="ConvertTo"/> operations, providing a reusable, culture-aware conversion base for any type <typeparamref
-///name="T"/>.
-///</summary>
-///<typeparam name="T">The target type this converter handles.</typeparam>
-///<remarks>
-///<para> Supply <c>convertFrom</c> and <c>convertTo</c> delegates at construction time to define the conversion logic.
-///Both delegates receive the<see cref="ITypeDescriptorContext"/>, <see cref="CultureInfo"/>, and the source
-///value.</para> <para> By default, conversion from <see cref="string"/> is supported if a<c>convertFrom</c> delegate is
-///provided, and conversion to<see cref="string"/> is supported if a <c>convertTo</c> delegate is provided. Override
-///<see cref="GetSupportedSourceTypes"/> or<see cref="GetSupportedDestinationTypes"/> to extend the supported type
-///set.</para>
-///</remarks>
-///<remarks>
-///Initializes a new instance of <see cref="GenericTypeConverter{T}"/>.
-///</remarks>
-///<param name="convertFrom">
-///A delegate that converts a source value to <typeparamref name="T"/>. May be <c>null</c> if conversion from other
-///types is not supported.
-///</param>
-///<param name="convertTo">
-///A delegate that converts a <typeparamref name="T"/> value to a destination type. May be <c>null</c> if conversion
-///to other types is not supported.
-///</param>
 public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? convertFrom = null, Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? convertTo = null) : System.ComponentModel.TypeConverter
 {
     #region Fields
-    readonly Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? _convertFrom = convertFrom;
-    readonly Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? _convertTo = convertTo;
-
-    #endregion
-    #region Constructors
+    private readonly Func<ITypeDescriptorContext?, CultureInfo?, object, T?>? _convertFrom = convertFrom;
+    private readonly Func<ITypeDescriptorContext?, CultureInfo?, T, Type, object?>? _convertTo = convertTo;
     #endregion
 
     #region Protected methods
@@ -45,13 +19,14 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     ///typeof(string) ]</c>.
     ///</summary>
     ///<returns>An array of supported destination types.</returns>
-    protected virtual Type[] GetSupportedDestinationTypes() { return[ typeof(string), typeof(InstanceDescriptor) ]; }
+    protected virtual Type[] GetSupportedDestinationTypes() => [ typeof(string), typeof(InstanceDescriptor) ];
+
     ///<summary>
     ///Gets the set of source types that <see cref="ConvertFrom"/> supports. The default implementation returns <c>[
     ///typeof(string) ]</c>.
     ///</summary>
     ///<returns>An array of supported source types.</returns>
-    protected virtual Type[] GetSupportedSourceTypes() { return[ typeof(string) ]; }
+    protected virtual Type[] GetSupportedSourceTypes() => [ typeof(string) ];
     #endregion
 
     #region Public methods

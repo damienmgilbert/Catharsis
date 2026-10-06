@@ -6,6 +6,7 @@ namespace Catharsis.Collections;
 public interface INamedItem
 {
     #region Public properties
+
     ///<summary>
     ///The item's unique name.
     ///</summary>

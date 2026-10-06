@@ -18,25 +18,25 @@ public sealed class PartitionBuilder<T>
     #region Private methods
     private IEnumerable<(string Partition, T Element)> Classify(IEnumerable<T> source)
     {
-        foreach (T item in source)
+        foreach(T item in source)
         {
             bool matched = false;
 
             foreach ((string name, Func<T, bool> predicate) in _rules)
             {
-                if (predicate(item))
+                if(predicate(item))
                 {
                     yield return (name, item);
                     matched = true;
 
-                    if (_firstMatchOnly)
+                    if(_firstMatchOnly)
                     {
                         break;
                     }
                 }
             }
 
-            if (!matched)
+            if(!matched)
             {
                 yield return (_defaultPartition, item);
             }
@@ -73,7 +73,7 @@ public sealed class PartitionBuilder<T>
         ArgumentNullException.ThrowIfNull(name, nameof(name));
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        if (condition)
+        if(condition)
         {
             _rules.Add((name, predicate));
         }
@@ -96,11 +96,6 @@ public sealed class PartitionBuilder<T>
 
     ///<summary>
     ///Applies the accumulated rules to <paramref name="source"/> and returns the partitioned result as a sequence of
-    ///<see cref="IGrouping{TKey,TElement}"/>.
-    ///</summary>
-    ///<param name="source">The source sequence to partition.</param>
-    ///<returns>A sequence of groupings keyed by partition name.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public IEnumerable<IGrouping<string, T>> ApplyAsGroupings(IEnumerable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));

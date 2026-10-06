@@ -9,7 +9,7 @@ namespace Catharsis.Text.RegularExpressions;
 public sealed class WildcardMatcher
 {
     #region Fields
-    readonly Regex _pattern;
+    private readonly Regex _pattern;
     #endregion
 
     #region Constructors

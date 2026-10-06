@@ -4,16 +4,10 @@ namespace Catharsis.Domain;
 
 ///<summary>
 ///An order, the aggregate root of a set of <see cref="OrderLine"/>s priced in one currency. The class is declared
-///<c>partial</c> and split by concern: this file holds the data and how it is read and extended, while
-///<c>Order.Lifecycle.cs</c> holds the state transitions that raise domain events.
-///</summary>
-///<param name="id">The order identity.</param>
-///<param name="currency">The three-letter currency every line must use.</param>
-///<exception cref="ArgumentException"><paramref name="currency"/> is not a three-letter code.</exception>
 public sealed partial class Order(Guid id, string currency) : AggregateRoot<Guid>(id)
 {
     #region Fields
-    readonly List<OrderLine> _lines = [];
+    private readonly List<OrderLine> _lines = [];
     #endregion
 
     #region Public methods
@@ -54,16 +48,24 @@ public sealed partial class Order(Guid id, string currency) : AggregateRoot<Guid
     #endregion
 
     #region Public properties
-    ///<summary>Gets the currency every line must use.</summary>
+    ///<summary>
+    ///Gets the currency every line must use.
+    ///</summary>
     public string Currency { get; } = new Money(0m, currency).Currency;
 
-    ///<summary>Gets where the order is in its life.</summary>
-    public OrderStatus Status { get; private set; } = OrderStatus.Draft;
-
-    ///<summary>Gets the lines added so far.</summary>
+    ///<summary>
+    ///Gets the lines added so far.
+    ///</summary>
     public IReadOnlyList<OrderLine> Lines => _lines;
 
-    ///<summary>Gets the sum of every line.</summary>
-    public Money Total => _lines.Aggregate(new Money(0m, Currency), static (sum, line) => sum + line.Total);
+    ///<summary>
+    ///Gets where the order is in its life.
+    ///</summary>
+    public OrderStatus Status { get; private set; } = OrderStatus.Draft;
+
+    ///<summary>
+    ///Gets the sum of every line.
+    ///</summary>
+    public Money Total => _lines.Aggregate(new Money(0m, Currency), static(sum, line) => sum + line.Total);
     #endregion
 }

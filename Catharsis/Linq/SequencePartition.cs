@@ -12,27 +12,26 @@ public static class SequencePartition
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         TKey currentKey = keySelector(enumerator.Current);
-        List<T> currentChunk = [enumerator.Current];
+        List<T> currentChunk = [ enumerator.Current ];
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             TKey key = keySelector(enumerator.Current);
 
-            if (comparer.Equals(key, currentKey))
+            if(comparer.Equals(key, currentKey))
             {
                 currentChunk.Add(enumerator.Current);
-            }
-            else
+            } else
             {
                 yield return SequenceFactory.Grouping(currentKey, (IEnumerable<T>)currentChunk);
                 currentKey = key;
-                currentChunk = [enumerator.Current];
+                currentChunk = [ enumerator.Current ];
             }
         }
 
@@ -43,14 +42,13 @@ public static class SequencePartition
     {
         List<T> segment = [];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (comparer.Equals(item, separator))
+            if(comparer.Equals(item, separator))
             {
                 yield return segment.AsReadOnly();
                 segment = [];
-            }
-            else
+            } else
             {
                 segment.Add(item);
             }
@@ -63,9 +61,9 @@ public static class SequencePartition
     {
         List<T> segment = [];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (predicate(item) && segment.Count > 0)
+            if(predicate(item) && segment.Count > 0)
             {
                 yield return segment.AsReadOnly();
                 segment = [];
@@ -74,7 +72,7 @@ public static class SequencePartition
             segment.Add(item);
         }
 
-        if (segment.Count > 0)
+        if(segment.Count > 0)
         {
             yield return segment.AsReadOnly();
         }
@@ -121,13 +119,12 @@ public static class SequencePartition
         List<T> matched = [];
         List<T> unmatched = [];
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (predicate(item))
+            if(predicate(item))
             {
                 matched.Add(item);
-            }
-            else
+            } else
             {
                 unmatched.Add(item);
             }
@@ -166,16 +163,16 @@ public static class SequencePartition
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentOutOfRangeException.ThrowIfLessThan(groupCount, 1, nameof(groupCount));
 
-        List<List<T>> partitions = [with(groupCount)];
+        List<List<T>> partitions = [ with(groupCount) ];
 
-        for (int i = 0; i < groupCount; i++)
+        for(int i = 0; i < groupCount; i++)
         {
             partitions.Add([]);
         }
 
         int index = 0;
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
             partitions[index % groupCount].Add(item);
             index++;
@@ -202,13 +199,12 @@ public static class SequencePartition
         List<IGrouping<TKey, TElement>> matched = [];
         List<IGrouping<TKey, TElement>> unmatched = [];
 
-        foreach (IGrouping<TKey, TElement> group in source)
+        foreach(IGrouping<TKey, TElement> group in source)
         {
-            if (keyPredicate(group.Key))
+            if(keyPredicate(group.Key))
             {
                 matched.Add(group);
-            }
-            else
+            } else
             {
                 unmatched.Add(group);
             }
@@ -228,13 +224,12 @@ public static class SequencePartition
         List<T> suffix = [];
         bool switched = false;
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (!switched && predicate(item))
+            if(!switched && predicate(item))
             {
                 prefix.Add(item);
-            }
-            else
+            } else
             {
                 switched = true;
                 suffix.Add(item);
@@ -263,13 +258,12 @@ public static class SequencePartition
         List<T> after = [];
         int i = 0;
 
-        foreach (T item in source)
+        foreach(T item in source)
         {
-            if (i < index)
+            if(i < index)
             {
                 before.Add(item);
-            }
-            else
+            } else
             {
                 after.Add(item);
             }

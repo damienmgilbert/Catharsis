@@ -9,6 +9,7 @@ namespace Catharsis.ComponentModel;
 public static class TypeConversionExtensions
 {
     #region Public methods
+
     ///<summary>
     ///Converts the specified value to type <typeparamref name="TTarget"/> using the <see cref="TypeConverter"/>
     ///registered for the target type.
@@ -118,8 +119,6 @@ public static class TypeConversionExtensions
     ///The <see cref="PropertyDescriptor"/> for the property, or <c>null</c> if not found.
     ///</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="component"/> or <paramref name="propertyName"/> is <c>null</c>.
-    ///</exception>
     public static PropertyDescriptor? GetPropertyDescriptor(this object component, string propertyName)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -152,9 +151,6 @@ public static class TypeConversionExtensions
     ///<param name="value">The value to convert.</param>
     ///<param name="result">
     ///When this method returns, contains the converted value if successful; otherwise the default value for
-    ///<typeparamref name="TTarget"/>.
-    ///</param>
-    ///<returns><c>true</c> if the conversion succeeded; otherwise <c>false</c>.</returns>
     public static bool TryConvertTo<TTarget>(this object? value, out TTarget? result)
     {
         try

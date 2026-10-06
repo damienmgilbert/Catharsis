@@ -9,11 +9,11 @@ namespace Catharsis.Events;
 public sealed class EventThrottler<T>
 {
     #region Fields
-    readonly TimeSpan _interval;
-    readonly Action<T> _action;
-    readonly TimeProvider _timeProvider;
-    readonly Lock _gate = new();
-    long? _lastRun;
+    private readonly Action<T> _action;
+    private readonly Lock _gate = new();
+    private readonly TimeSpan _interval;
+    private long? _lastRun;
+    private readonly TimeProvider _timeProvider;
     #endregion
 
     #region Constructors
@@ -38,8 +38,19 @@ public sealed class EventThrottler<T>
 
     #region Public methods
     ///<summary>
-    ///Runs the action with <paramref name="value"/> unless it already ran within the interval.
+    ///Forgets the last run so the next call runs immediately.
     ///</summary>
+    public void Reset()
+    {
+        lock(_gate)
+        {
+            _lastRun = null;
+        }
+    }
+
+        ///<summary>
+///Runs the action with <paramref name="value"/> unless it already ran within the interval.
+///</summary>
     ///<param name="value">The value to pass to the action.</param>
     ///<returns><c>true</c> if the action ran; <c>false</c> if the call was throttled.</returns>
     public bool TryInvoke(T value)
@@ -58,17 +69,6 @@ public sealed class EventThrottler<T>
 
         _action(value);
         return true;
-    }
-
-    ///<summary>
-    ///Forgets the last run so the next call runs immediately.
-    ///</summary>
-    public void Reset()
-    {
-        lock(_gate)
-        {
-            _lastRun = null;
-        }
     }
     #endregion
 }

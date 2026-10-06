@@ -230,7 +230,7 @@ public static class CollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<T> toRemove = [.. source.Where(predicate)];
+        List<T> toRemove = [ .. source.Where(predicate) ];
         int removed = 0;
         foreach(T item in toRemove)
         {

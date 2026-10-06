@@ -13,6 +13,7 @@ namespace Catharsis.ComponentModel.Licensing;
 public sealed record ComponentVerb(string Text, Action Action, string? Description = null, bool Enabled = true)
 {
     #region Public methods
+
     ///<summary>
     ///Invokes the verb action if the verb is enabled.
     ///</summary>

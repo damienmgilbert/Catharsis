@@ -7,6 +7,7 @@ namespace Catharsis.ComponentModel.DTO;
 public sealed class ComponentModelDtoOptions
 {
     #region Public properties
+
     ///<summary>
     ///Gets a default <see cref="ComponentModelDtoOptions"/> instance.
     ///</summary>
@@ -38,8 +39,6 @@ public sealed class ComponentModelDtoOptions
 
     ///<summary>
     ///Gets or sets a value indicating whether validation should be performed automatically after mapping. Defaults to
-    ///<c>false</c>.
-    ///</summary>
     public bool ValidateAfterMap { get; set; }
     #endregion
 }

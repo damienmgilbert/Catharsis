@@ -5,14 +5,15 @@ namespace Catharsis.Diagnostics;
 ///<summary>
 ///A minimal <see cref="EventSource"/> exposing structured start/stop/fault events over EventPipe — a cross-platform
 ///alternative to ETW that <c>dotnet-trace</c> and other diagnostic tools can capture without any exporter
-///configuration. This is distinct from the <c>Microsoft.Extensions.Logging.Abstractions</c> usage found elsewhere
-///in the library: those calls go through whatever <c>ILogger</c> the caller wires up, while these events are
-///captured by the EventPipe/ETW diagnostic pipeline regardless of any logging configuration.
+///configuration. This is distinct from the <c>Microsoft.Extensions.Logging.Abstractions</c> usage found elsewhere in
+///the library: those calls go through whatever <c>ILogger</c> the caller wires up, while these events are captured by
+///the EventPipe/ETW diagnostic pipeline regardless of any logging configuration.
 ///</summary>
 [EventSource(Name = "Catharsis-Diagnostics")]
 public sealed class EventSourceLogger : EventSource
 {
     #region Fields
+
     ///<summary>
     ///The singleton instance of this event source, following the standard <see cref="EventSource"/> convention.
     ///</summary>
@@ -20,7 +21,9 @@ public sealed class EventSourceLogger : EventSource
     #endregion
 
     #region Constructors
-    EventSourceLogger() { }
+    private EventSourceLogger()
+    {
+    }
     #endregion
 
     #region Public methods

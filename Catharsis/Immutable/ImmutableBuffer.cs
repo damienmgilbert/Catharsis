@@ -12,7 +12,7 @@ namespace Catharsis.Immutable;
 public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<ImmutableBuffer<T>>
 {
     #region Struct fields
-    readonly ImmutableArray<T> _data;
+    private readonly ImmutableArray<T> _data;
     #endregion
 
     #region Constructors
@@ -36,7 +36,6 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     {
         return !left.Equals(right);
     }
-
     ///<summary>
     ///Determines whether two buffers are equal.
     ///</summary>
@@ -55,7 +54,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     #endregion
 
     #region Explicit interface implementations
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -64,13 +63,16 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     ///</summary>
     ///<param name="data">The source data.</param>
     ///<returns>A new immutable buffer.</returns>
-    public static ImmutableBuffer<T> Create(ReadOnlySpan<T> data) { return new(data); }
+    public static ImmutableBuffer<T> Create(ReadOnlySpan<T> data) => new(data);
+
     ///<inheritdoc/>
-    public bool Equals(ImmutableBuffer<T> other) { return _data.SequenceEqual(other._data); }
+    public bool Equals(ImmutableBuffer<T> other) => _data.SequenceEqual(other._data);
+
     ///<inheritdoc/>
-    public override bool Equals(object? obj) { return (obj is ImmutableBuffer<T> other) && Equals(other); }
+    public override bool Equals(object? obj) => (obj is ImmutableBuffer<T> other) && Equals(other);
+
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return ((IEnumerable<T>)_data).GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_data).GetEnumerator();
 
     ///<inheritdoc/>
     public override int GetHashCode()

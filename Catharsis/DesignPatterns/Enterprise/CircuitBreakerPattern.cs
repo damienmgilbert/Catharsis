@@ -2,22 +2,22 @@ namespace Catharsis.DesignPatterns.Enterprise;
 
 ///<summary>
 ///Implements the Circuit Breaker design pattern: a minimal scaffold showing the pattern's shape (closed → open on
-///repeated failure → calls rejected until the breaker resets). For a production-ready implementation with a
-///half-open probing state, use <see cref="Catharsis.Resilience.CircuitBreaker"/> instead.
+///repeated failure → calls rejected until the breaker resets). For a production-ready implementation with a half-open
+///probing state, use <see cref="Catharsis.Resilience.CircuitBreaker"/> instead.
 ///</summary>
 ///<param name="failureThreshold">The number of consecutive failures that opens the breaker.</param>
 ///<exception cref="ArgumentOutOfRangeException"><paramref name="failureThreshold"/> is not positive.</exception>
 public sealed class CircuitBreakerPattern(int failureThreshold = 3)
 {
     #region Fields
-    readonly int _failureThreshold = failureThreshold > 0 ? failureThreshold : throw new ArgumentOutOfRangeException(nameof(failureThreshold), "Failure threshold must be positive.");
-    int _consecutiveFailures;
+    private int _consecutiveFailures;
+    private readonly int _failureThreshold = failureThreshold > 0 ? failureThreshold : throw new ArgumentOutOfRangeException(nameof(failureThreshold), "Failure threshold must be positive.");
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Runs <paramref name="action"/> if the breaker is closed, tracking failures and opening the breaker once
-    ///<see cref="IsOpen"/> would flip after <c>failureThreshold</c> consecutive failures.
+    ///Runs <paramref name="action"/> if the breaker is closed, tracking failures and opening the breaker once ///<see
+    ///cref="IsOpen"/> would flip after <c>failureThreshold</c> consecutive failures.
     ///</summary>
     ///<typeparam name="T">The type of the result produced by <paramref name="action"/>.</typeparam>
     ///<param name="action">The action to run.</param>

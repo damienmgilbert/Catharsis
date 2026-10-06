@@ -3,12 +3,13 @@ using CommunityToolkit.Mvvm.Input;
 namespace Catharsis.Mvvm;
 
 ///<summary>
-///Builds <see cref="IAsyncRelayCommand"/> instances with built-in busy-state reporting and exception routing, so
-///view models don't need to hand-roll the same try/finally boilerplate around every async command.
+///Builds <see cref="IAsyncRelayCommand"/> instances with built-in busy-state reporting and exception routing, so view
+///models don't need to hand-roll the same try/finally boilerplate around every async command.
 ///</summary>
 public static class RelayCommandFactory
 {
     #region Public methods
+
     ///<summary>
     ///Creates an <see cref="IAsyncRelayCommand"/> that reports busy state via <paramref name="onBusyChanged"/> and
     ///routes exceptions to <paramref name="onException"/> instead of letting them propagate as unobserved task
@@ -23,21 +24,22 @@ public static class RelayCommandFactory
     {
         ArgumentNullException.ThrowIfNull(execute);
 
-        return new AsyncRelayCommand(async () =>
-        {
-            onBusyChanged?.Invoke(true);
+        return new AsyncRelayCommand(
+               async () =>
+               {
+                   onBusyChanged?.Invoke(true);
 
-            try
-            {
-                await execute();
-            } catch(Exception exception) when(onException is not null)
-            {
-                onException(exception);
-            } finally
-            {
-                onBusyChanged?.Invoke(false);
-            }
-        });
+                   try
+                   {
+                       await execute();
+                   } catch(Exception exception) when(onException is not null)
+                   {
+                       onException(exception);
+                   } finally
+                   {
+                       onBusyChanged?.Invoke(false);
+                   }
+               });
     }
 
     ///<summary>
@@ -55,21 +57,22 @@ public static class RelayCommandFactory
     {
         ArgumentNullException.ThrowIfNull(execute);
 
-        return new AsyncRelayCommand<T>(async parameter =>
-        {
-            onBusyChanged?.Invoke(true);
+        return new AsyncRelayCommand<T>(
+               async parameter =>
+               {
+                   onBusyChanged?.Invoke(true);
 
-            try
-            {
-                await execute(parameter);
-            } catch(Exception exception) when(onException is not null)
-            {
-                onException(exception);
-            } finally
-            {
-                onBusyChanged?.Invoke(false);
-            }
-        });
+                   try
+                   {
+                       await execute(parameter);
+                   } catch(Exception exception) when(onException is not null)
+                   {
+                       onException(exception);
+                   } finally
+                   {
+                       onBusyChanged?.Invoke(false);
+                   }
+               });
     }
     #endregion
 }

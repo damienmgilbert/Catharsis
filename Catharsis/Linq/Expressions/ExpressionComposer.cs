@@ -191,7 +191,7 @@ public static class ExpressionComposer
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
 
-        ParameterExpression[] newParameters = [.. lambda.Parameters.Select(p => parameterMap.TryGetValue(p, out ParameterExpression? replacement) ? replacement : p)];
+        ParameterExpression[] newParameters = [ .. lambda.Parameters.Select(p => parameterMap.TryGetValue(p, out ParameterExpression? replacement) ? replacement : p) ];
 
         return Expression.Lambda(lambda.Type, body, newParameters);
     }
@@ -262,14 +262,14 @@ public static class ExpressionComposer
     }
     #endregion
 
-    sealed class ReplacingVisitor(Expression searchFor, Expression replaceWith) : ExpressionVisitor
+    private sealed class ReplacingVisitor(Expression searchFor, Expression replaceWith) : ExpressionVisitor
     {
         #region Public methods
-        public override Expression Visit(Expression? node) { return node is not null && node == searchFor ? replaceWith : base.Visit(node)!; }
+        public override Expression Visit(Expression? node) => node is not null && node == searchFor ? replaceWith : base.Visit(node)!;
         #endregion
     }
 
-    sealed class InvocationExpandingVisitor : ExpressionVisitor
+    private sealed class InvocationExpandingVisitor : ExpressionVisitor
     {
         #region Protected methods
         protected override Expression VisitInvocation(InvocationExpression node)

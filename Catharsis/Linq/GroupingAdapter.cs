@@ -145,17 +145,16 @@ public static class GroupingAdapter
     {
         ArgumentNullException.ThrowIfNull(groupings, nameof(groupings));
 
-        Dictionary<TKey, List<TElement>> result = [with(comparer)];
+        Dictionary<TKey, List<TElement>> result = [ with(comparer) ];
 
-        foreach (IGrouping<TKey, TElement> group in groupings)
+        foreach(IGrouping<TKey, TElement> group in groupings)
         {
-            if (result.TryGetValue(group.Key, out List<TElement>? existing))
+            if(result.TryGetValue(group.Key, out List<TElement>? existing))
             {
                 existing.AddRange(group);
-            }
-            else
+            } else
             {
-                result[group.Key] = [.. group];
+                result[group.Key] = [ .. group ];
             }
         }
 

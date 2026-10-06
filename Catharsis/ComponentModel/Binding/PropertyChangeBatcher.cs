@@ -8,20 +8,14 @@ namespace Catharsis.ComponentModel.Binding;
 ///batcher is disposed.
 ///</summary>
 ///<remarks>
-///<para> Attach the batcher to a source via the constructor. While active, the batcher subscribes to <see
-///cref="INotifyPropertyChanged.PropertyChanged"/> and accumulates property names. Call <see cref="Flush"/> to drain the
-///pending notifications, or dispose the batcher to flush and detach.</para> <para> Use <see cref="BeginBatch"/> and
-///<see cref="EndBatch"/> (or<see cref="CreateScope"/>) to explicitly control batching windows. Nesting is
-///supported.</para>
-///</remarks>
 public sealed class PropertyChangeBatcher : IDisposable
 {
     #region Fields
-    int _batchDepth;
-    bool _disposed;
-    readonly HashSet<string> _pending = [with(StringComparer.Ordinal)];
-    readonly Action<string> _raisePropertyChanged;
-    readonly INotifyPropertyChanged _source;
+    private int _batchDepth;
+    private bool _disposed;
+    private readonly HashSet<string> _pending = [ with(StringComparer.Ordinal) ];
+    private readonly Action<string> _raisePropertyChanged;
+    private readonly INotifyPropertyChanged _source;
     #endregion
 
     #region Constructors
@@ -35,8 +29,6 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///A callback that raises the batched property changed notification for a single property name.
     ///</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="source"/> or <paramref name="raisePropertyChanged"/> is <c>null</c>.
-    ///</exception>
     public PropertyChangeBatcher(INotifyPropertyChanged source, Action<string> raisePropertyChanged)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -49,7 +41,7 @@ public sealed class PropertyChangeBatcher : IDisposable
     #endregion
 
     #region Private methods
-    void OnSourcePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnSourcePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if(_disposed)
         {
@@ -73,7 +65,7 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///Begins a batching window. While batching is active, incoming property change notifications are accumulated rather
     ///than immediately forwarded.
     ///</summary>
-    public void BeginBatch() { Interlocked.Increment(ref _batchDepth); }
+    public void BeginBatch() => Interlocked.Increment(ref _batchDepth);
 
     ///<summary>
     ///Creates a disposable scope that calls <see cref="BeginBatch"/> on creation and <see cref="EndBatch"/> on
@@ -108,8 +100,6 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///Ends a batching window. If this is the outermost batch, <see cref="Flush"/> is called automatically.
     ///</summary>
     ///<exception cref="InvalidOperationException">
-    ///<see cref="EndBatch"/> was called without a matching <see cref="BeginBatch"/>.
-    ///</exception>
     public void EndBatch()
     {
         if(Interlocked.Decrement(ref _batchDepth) < 0)
@@ -134,7 +124,7 @@ public sealed class PropertyChangeBatcher : IDisposable
             return;
         }
 
-        string[] names = [.. _pending];
+        string[] names = [ .. _pending ];
         _pending.Clear();
 
         foreach(string name in names)

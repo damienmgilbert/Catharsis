@@ -3,23 +3,18 @@ using System.Runtime.CompilerServices;
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///Provides async-safe lazy initialization: the value factory runs at most once, even when
-///<see cref="Value"/> is accessed concurrently from multiple callers, and the type is directly awaitable.
+///Provides async-safe lazy initialization: the value factory runs at most once, even when ///<see cref="Value"/> is
+///accessed concurrently from multiple callers, and the type is directly awaitable.
 ///</summary>
 ///<typeparam name="T">The type of the lazily produced value.</typeparam>
 ///<example>
-///<code>
-///AsyncLazy&lt;Config&gt; config = new(async () => await LoadConfigAsync());
-///Config value = await config;
-///</code>
-///</example>
 public sealed class AsyncLazy<T>
 {
     #region Fields
-    readonly Lazy<Task<T>> _instance;
+    private readonly Lazy<Task<T>> _instance;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates an instance backed by a synchronous value factory, which runs on the thread pool.
     ///</summary>
@@ -41,7 +36,9 @@ public sealed class AsyncLazy<T>
         ArgumentNullException.ThrowIfNull(taskFactory);
         _instance = new Lazy<Task<T>>(() => Task.Run(taskFactory));
     }
+    #endregion
 
+    #region Public methods
     ///<summary>
     ///Gets an awaiter for the lazily produced value, so instances can be awaited directly.
     ///</summary>

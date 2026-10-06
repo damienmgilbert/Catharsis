@@ -11,14 +11,14 @@ namespace Catharsis.Common;
 public sealed class BufferWeakReferenceCache<T> where T : class
 {
     #region Fields
-    readonly ConcurrentDictionary<string, WeakReference<T>> _cache = new();
+    private readonly ConcurrentDictionary<string, WeakReference<T>> _cache = new();
     #endregion
 
     #region Public methods
     ///<summary>
     ///Clears all entries from the cache.
     ///</summary>
-    public void Clear() { _cache.Clear(); }
+    public void Clear() => _cache.Clear();
 
     ///<summary>
     ///Gets an existing cached value or creates and caches a new one using the factory.

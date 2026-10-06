@@ -3,19 +3,19 @@ using System.IO.Pipes;
 namespace Catharsis.IO;
 
 ///<summary>
-///A request/response wrapper over <see cref="NamedPipeServerStream"/>/<see cref="NamedPipeClientStream"/> for
-///simple local IPC: the server side reads one line, invokes a handler, and writes back one line; the static
-///<see cref="SendRequestAsync"/> helper is the client side, sending one line and waiting for the reply. Named pipes
-///map to Unix domain sockets on Linux/macOS, so this stays cross-platform.
+///A request/response wrapper over <see cref="NamedPipeServerStream"/>/<see cref="NamedPipeClientStream"/> for simple
+///local IPC: the server side reads one line, invokes a handler, and writes back one line; the static ///<see
+///cref="SendRequestAsync"/> helper is the client side, sending one line and waiting for the reply. Named pipes map to
+///Unix domain sockets on Linux/macOS, so this stays cross-platform.
 ///</summary>
 public sealed class NamedPipeRequestChannel : IAsyncDisposable
 {
     #region Fields
-    readonly Func<string, CancellationToken, Task<string>> _handler;
-    readonly NamedPipeServerStream _server;
-    readonly CancellationTokenSource _stoppingSource = new();
-    readonly Task _acceptLoop;
-    bool _disposed;
+    private readonly Task _acceptLoop;
+    private bool _disposed;
+    private readonly Func<string, CancellationToken, Task<string>> _handler;
+    private readonly NamedPipeServerStream _server;
+    private readonly CancellationTokenSource _stoppingSource = new();
     #endregion
 
     #region Constructors
@@ -38,7 +38,7 @@ public sealed class NamedPipeRequestChannel : IAsyncDisposable
     #endregion
 
     #region Private methods
-    async Task AcceptLoopAsync(CancellationToken stoppingToken)
+    private async Task AcceptLoopAsync(CancellationToken stoppingToken)
     {
         try
         {
@@ -47,14 +47,16 @@ public sealed class NamedPipeRequestChannel : IAsyncDisposable
                 await _server.WaitForConnectionAsync(stoppingToken).ConfigureAwait(false);
 
                 using(StreamReader reader = new(_server, leaveOpen: true))
-                await using(StreamWriter writer = new(_server, leaveOpen: true) { AutoFlush = true })
                 {
-                    string? request = await reader.ReadLineAsync(stoppingToken).ConfigureAwait(false);
-
-                    if(request is not null)
+                    await using(StreamWriter writer = new(_server, leaveOpen: true) { AutoFlush = true })
                     {
-                        string response = await _handler(request, stoppingToken).ConfigureAwait(false);
-                        await writer.WriteLineAsync(response.AsMemory(), stoppingToken).ConfigureAwait(false);
+                        string? request = await reader.ReadLineAsync(stoppingToken).ConfigureAwait(false);
+
+                        if(request is not null)
+                        {
+                            string response = await _handler(request, stoppingToken).ConfigureAwait(false);
+                            await writer.WriteLineAsync(response.AsMemory(), stoppingToken).ConfigureAwait(false);
+                        }
                     }
                 }
 

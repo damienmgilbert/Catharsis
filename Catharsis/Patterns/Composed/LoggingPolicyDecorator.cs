@@ -1,20 +1,20 @@
+using System.Diagnostics;
 using Catharsis.Resilience;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace Catharsis.Patterns.Composed;
 
 ///<summary>
 ///Decorates an <see cref="IAsyncPolicy"/> with logging: it records when an execution starts and how long it took to
-///succeed or fail. Cancellation is not logged as a failure. Log messages are generated at compile time
-///(<see cref="LoggerMessageAttribute"/>), so a disabled level costs almost nothing.
+///succeed or fail. Cancellation is not logged as a failure. Log messages are generated at compile time (<see
+///cref="LoggerMessageAttribute"/>), so a disabled level costs almost nothing.
 ///</summary>
 public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
 {
     #region Fields
-    readonly IAsyncPolicy _inner;
-    readonly ILogger _logger;
-    readonly string _name;
+    private readonly IAsyncPolicy _inner;
+    private readonly ILogger _logger;
+    private readonly string _name;
     #endregion
 
     #region Constructors
@@ -38,6 +38,17 @@ public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
     }
     #endregion
 
+    #region Private methods
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Policy '{PolicyName}' failed after {ElapsedMs:F1} ms")]
+    static partial void LogFailed(ILogger logger, Exception exception, string policyName, double elapsedMs);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Policy '{PolicyName}' starting")]
+    static partial void LogStarting(ILogger logger, string policyName);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Policy '{PolicyName}' succeeded in {ElapsedMs:F1} ms")]
+    static partial void LogSucceeded(ILogger logger, string policyName, double elapsedMs);
+    #endregion
+
     #region Public methods
     ///<inheritdoc/>
     public async Task<TResult> ExecuteAsync<TResult>(Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken = default)
@@ -53,8 +64,7 @@ public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
             double elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
             LogSucceeded(_logger, _name, elapsedMs);
             return result;
-        }
-        catch(Exception ex) when(ex is not OperationCanceledException)
+        } catch(Exception ex) when(ex is not OperationCanceledException)
         {
             double elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
             LogFailed(_logger, ex, _name, elapsedMs);
@@ -76,16 +86,5 @@ public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
 
         return new ValueTask<TResult>(ExecuteAsync(ct => operation(ct).AsTask(), cancellationToken));
     }
-    #endregion
-
-    #region Private methods
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Policy '{PolicyName}' starting")]
-    static partial void LogStarting(ILogger logger, string policyName);
-
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Policy '{PolicyName}' succeeded in {ElapsedMs:F1} ms")]
-    static partial void LogSucceeded(ILogger logger, string policyName, double elapsedMs);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Policy '{PolicyName}' failed after {ElapsedMs:F1} ms")]
-    static partial void LogFailed(ILogger logger, Exception exception, string policyName, double elapsedMs);
     #endregion
 }

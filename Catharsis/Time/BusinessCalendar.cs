@@ -4,17 +4,17 @@ namespace Catharsis.Time;
 ///Performs holiday-aware business-day arithmetic against a configurable set of holidays and weekend days.
 ///</summary>
 ///<remarks>
-///This differs from <see cref="Catharsis.Extensions.DateTimeExtensions.AddBusinessDays"/>, which only skips
-///Saturday and Sunday with no concept of holidays: use that extension for a quick Monday-to-Friday calculation, and
-///this type when specific holidays or non-standard weekends (e.g. Friday/Saturday) need to be honored.
+///This differs from <see cref="Catharsis.Extensions.DateTimeExtensions.AddBusinessDays"/>, which only skips Saturday
+///and Sunday with no concept of holidays: use that extension for a quick Monday-to-Friday calculation, and this type
+///when specific holidays or non-standard weekends (e.g. Friday/Saturday) need to be honored.
 ///</remarks>
 ///<param name="holidays">The dates treated as holidays (non-business days), or <c>null</c> for none.</param>
 ///<param name="weekendDays">The days of the week treated as weekends, or <c>null</c> for the default of Saturday and Sunday.</param>
 public sealed class BusinessCalendar(IEnumerable<DateOnly>? holidays = null, IEnumerable<DayOfWeek>? weekendDays = null)
 {
     #region Fields
-    readonly HashSet<DateOnly> _holidays = [.. holidays ?? []];
-    readonly HashSet<DayOfWeek> _weekendDays = [.. weekendDays ?? [DayOfWeek.Saturday, DayOfWeek.Sunday]];
+    private readonly HashSet<DateOnly> _holidays = [ .. holidays ?? [] ];
+    private readonly HashSet<DayOfWeek> _weekendDays = [ .. weekendDays ?? [ DayOfWeek.Saturday, DayOfWeek.Sunday ] ];
     #endregion
 
     #region Public methods
@@ -50,8 +50,8 @@ public sealed class BusinessCalendar(IEnumerable<DateOnly>? holidays = null, IEn
     }
 
     ///<summary>
-    ///Counts the number of business days in the inclusive range between <paramref name="start"/> and
-    ///<paramref name="end"/>, in either order.
+    ///Counts the number of business days in the inclusive range between <paramref name="start"/> and ///<paramref
+    ///name="end"/>, in either order.
     ///</summary>
     ///<param name="start">One bound of the range.</param>
     ///<param name="end">The other bound of the range.</param>

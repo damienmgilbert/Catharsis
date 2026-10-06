@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class ChainOfResponsibility
 {
     #region Public methods
+
     ///<summary>
     ///Chain of Responsibility — passes <paramref name="obj"/> through <paramref name="handlers"/> in order until one
     ///returns <c>true</c>, indicating the request was handled.

@@ -6,7 +6,10 @@ namespace Catharsis.Common;
 public static class Disposable
 {
     #region Fields
-    static readonly IDisposable _empty = Create(static () => { });
+    private static readonly IDisposable _empty = Create(
+                                                 static() =>
+    {
+    });
     #endregion
 
     #region Public methods
@@ -20,23 +23,19 @@ public static class Disposable
     {
         ArgumentNullException.ThrowIfNull(disposables);
 
-        IDisposable[] snapshot = [.. disposables];
-        return Create(() =>
-        {
-            foreach(IDisposable disposable in snapshot)
-            {
-                disposable.Dispose();
-            }
-        });
+        IDisposable[] snapshot = [ .. disposables ];
+        return Create(
+               () =>
+               {
+                   foreach(IDisposable disposable in snapshot)
+                   {
+                       disposable.Dispose();
+                   }
+               });
     }
 
     ///<summary>
     ///Creates an <see cref="IDisposable"/> that invokes the specified delegate exactly once, on the first call to
-    ///<see cref="IDisposable.Dispose"/>. Subsequent calls are no-ops.
-    ///</summary>
-    ///<param name="onDispose">The delegate to invoke when the returned instance is disposed.</param>
-    ///<returns>A new <see cref="IDisposable"/> wrapping <paramref name="onDispose"/>.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="onDispose"/> is <c>null</c>.</exception>
     public static IDisposable Create(Action onDispose)
     {
         ArgumentNullException.ThrowIfNull(onDispose);
@@ -51,10 +50,10 @@ public static class Disposable
     public static IDisposable Empty => _empty;
     #endregion
 
-    sealed class ActionDisposable(Action onDispose) : IDisposable
+    private sealed class ActionDisposable(Action onDispose) : IDisposable
     {
         #region Fields
-        Action? _onDispose = onDispose;
+        private Action? _onDispose = onDispose;
         #endregion
 
         #region Public methods

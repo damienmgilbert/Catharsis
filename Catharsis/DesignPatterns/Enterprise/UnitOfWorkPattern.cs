@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Enterprise;
 public class UnitOfWorkPattern
 {
     #region Public methods
+
     ///<summary>
     ///Unit of Work — runs <paramref name="work"/> inside a transactional boundary, invoking <paramref name="commit"/>
     ///if it completes without throwing, or <paramref name="rollback"/> before the exception propagates if it throws.
@@ -43,14 +44,6 @@ public class UnitOfWorkPattern
 
     ///<summary>
     ///Unit of Work — runs <paramref name="work"/> inside a transactional boundary and returns its result, invoking
-    ///<paramref name="commit"/> if it completes without throwing, or <paramref name="rollback"/> before the exception
-    ///propagates if it throws.
-    ///</summary>
-    ///<typeparam name="TResult">The type of the result produced by <paramref name="work"/>.</typeparam>
-    ///<param name="work">The unit of work to perform.</param>
-    ///<param name="commit">Invoked after <paramref name="work"/> completes successfully.</param>
-    ///<param name="rollback">Invoked if <paramref name="work"/> throws, before the exception propagates.</param>
-    ///<returns>The result produced by <paramref name="work"/>.</returns>
     public static TResult UnitOfWork<TResult>(Func<TResult> work, Action commit, Action rollback)
     {
         if(work is null)

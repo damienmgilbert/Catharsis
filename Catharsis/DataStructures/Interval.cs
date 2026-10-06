@@ -9,8 +9,8 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     #region Constructors
 
     ///<summary>
-    ///Initializes a new <see cref="Interval{T}"/> with the specified bounds. If <paramref name="start"/> is
-    ///greater than <paramref name="end"/>, the values are swapped so the interval is always well-formed.
+    ///Initializes a new <see cref="Interval{T}"/> with the specified bounds. If <paramref name="start"/> is greater
+    ///than <paramref name="end"/>, the values are swapped so the interval is always well-formed.
     ///</summary>
     ///<param name="start">One bound of the interval.</param>
     ///<param name="end">The other bound of the interval.</param>
@@ -51,13 +51,16 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     ///</summary>
     ///<param name="value">The value to test.</param>
     ///<returns><c>true</c> if <paramref name="value"/> is within [Start, End]; otherwise <c>false</c>.</returns>
-    public bool Contains(T value) { return (Start.CompareTo(value) <= 0) && (value.CompareTo(End) <= 0); }
+    public bool Contains(T value) => (Start.CompareTo(value) <= 0) && (value.CompareTo(End) <= 0);
+
     ///<inheritdoc/>
-    public bool Equals(Interval<T> other) { return (Start.CompareTo(other.Start) == 0) && (End.CompareTo(other.End) == 0); }
+    public bool Equals(Interval<T> other) => (Start.CompareTo(other.Start) == 0) && (End.CompareTo(other.End) == 0);
+
     ///<inheritdoc/>
-    public override bool Equals(object? obj) { return (obj is Interval<T> other) && Equals(other); }
+    public override bool Equals(object? obj) => (obj is Interval<T> other) && Equals(other);
+
     ///<inheritdoc/>
-    public override int GetHashCode() { return HashCode.Combine(Start, End); }
+    public override int GetHashCode() => HashCode.Combine(Start, End);
 
     ///<summary>
     ///Returns the intersection of this interval with <paramref name="other"/>, or <c>null</c> if they do not overlap.
@@ -83,11 +86,12 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     ///</summary>
     ///<param name="other">The other interval.</param>
     ///<returns><c>true</c> if the intervals share at least one common point; otherwise <c>false</c>.</returns>
-    public bool Overlaps(Interval<T> other) { return (Start.CompareTo(other.End) <= 0) && (other.Start.CompareTo(End) <= 0); }
+    public bool Overlaps(Interval<T> other) => (Start.CompareTo(other.End) <= 0) && (other.Start.CompareTo(End) <= 0);
+
     ///<summary>
     ///Returns a string representation in the form <c>[Start, End]</c>.
     ///</summary>
-    public override string ToString() { return $"[{Start}, {End}]"; }
+    public override string ToString() => $"[{Start}, {End}]";
 
     ///<summary>
     ///Returns the smallest interval that covers both this interval and <paramref name="other"/>.

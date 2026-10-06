@@ -4,17 +4,17 @@ using System.Diagnostics.CodeAnalysis;
 namespace Catharsis.DataStructures;
 
 ///<summary>
-///A fixed-capacity cache that evicts the least-recently-used (LRU) entry when a new entry is added and the cache
-///is at capacity.
+///A fixed-capacity cache that evicts the least-recently-used (LRU) entry when a new entry is added and the cache is at
+///capacity.
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
 ///<typeparam name="TValue">The type of the cached values.</typeparam>
 public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : notnull
 {
     #region Fields
-    readonly int _capacity;
-    readonly Dictionary<TKey, LinkedListNode<CacheEntry>> _map;
-    readonly LinkedList<CacheEntry> _order = new();
+    private readonly int _capacity;
+    private readonly Dictionary<TKey, LinkedListNode<CacheEntry>> _map;
+    private readonly LinkedList<CacheEntry> _order = new();
     #endregion
 
     #region Constructors
@@ -28,8 +28,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     }
 
     ///<summary>
-    ///Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity and key equality
-    ///comparer.
+    ///Initializes a new <see cref="LruCache{TKey, TValue}"/> with the specified capacity and key equality comparer.
     ///</summary>
     ///<param name="capacity">The maximum number of entries. Must be greater than zero.</param>
     ///<param name="comparer">The comparer used for key equality.</param>
@@ -77,7 +76,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -118,7 +117,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     ///</summary>
     ///<param name="key">The key to look for.</param>
     ///<returns><c>true</c> if the key exists; otherwise <c>false</c>.</returns>
-    public bool ContainsKey(TKey key) { return _map.ContainsKey(key); }
+    public bool ContainsKey(TKey key) => _map.ContainsKey(key);
 
     ///<summary>
     ///Enumerates entries from most-recently-used to least-recently-used.
@@ -186,5 +185,5 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     public int Count => _map.Count;
     #endregion
 
-    readonly record struct CacheEntry(TKey Key, TValue Value);
+    private readonly record struct CacheEntry(TKey Key, TValue Value);
 }

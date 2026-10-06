@@ -3,10 +3,10 @@ using System.Diagnostics.Metrics;
 namespace Catharsis.Diagnostics;
 
 ///<summary>
-///A thin factory over a single, disposal-scoped <see cref="Meter"/>, for creating <see cref="Counter{T}"/>,
-///<see cref="Histogram{T}"/>, and <see cref="UpDownCounter{T}"/> instruments. This is a BCL primitive only: it does
-///not configure or require any exporter (Prometheus, OpenTelemetry, etc.) — instruments created here simply do
-///nothing unless something else in the process is listening via <see cref="MeterListener"/> or an OpenTelemetry SDK.
+///A thin factory over a single, disposal-scoped <see cref="Meter"/>, for creating <see cref="Counter{T}"/>, ///<see
+///cref="Histogram{T}"/>, and <see cref="UpDownCounter{T}"/> instruments. This is a BCL primitive only: it does not
+///configure or require any exporter (Prometheus, OpenTelemetry, etc.) — instruments created here simply do nothing
+///unless something else in the process is listening via <see cref="MeterListener"/> or an OpenTelemetry SDK.
 ///</summary>
 ///<param name="meterName">The name of the underlying <see cref="Meter"/>, conventionally the owning component's name.</param>
 ///<param name="version">An optional version string for the meter.</param>
@@ -14,12 +14,12 @@ namespace Catharsis.Diagnostics;
 public sealed class MetricsRecorder(string meterName, string? version = null) : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly Meter _meter = new(ValidateName(meterName), version);
+    private bool _disposed;
+    private readonly Meter _meter = new(ValidateName(meterName), version);
     #endregion
 
     #region Private methods
-    static string ValidateName(string meterName)
+    private static string ValidateName(string meterName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(meterName);
         return meterName;

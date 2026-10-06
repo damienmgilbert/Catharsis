@@ -9,17 +9,26 @@ namespace Catharsis.Security;
 public sealed class ClaimsPrincipalBuilder
 {
     #region Fields
-    readonly List<Claim> _claims = [];
-    string _authenticationType = "Custom";
-    string _nameClaimType = ClaimTypes.Name;
-    string _roleClaimType = ClaimTypes.Role;
+    private string _authenticationType = "Custom";
+    private readonly List<Claim> _claims = [];
+    private string _nameClaimType = ClaimTypes.Name;
+    private string _roleClaimType = ClaimTypes.Role;
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Sets the authentication type recorded on the built identity, which controls whether
-    ///<see cref="ClaimsIdentity.IsAuthenticated"/> is <c>true</c>.
+    ///Builds the <see cref="ClaimsPrincipal"/> from every claim and setting configured so far.
     ///</summary>
+    public ClaimsPrincipal Build()
+    {
+        ClaimsIdentity identity = new(_claims, _authenticationType, _nameClaimType, _roleClaimType);
+        return new ClaimsPrincipal(identity);
+    }
+
+        ///<summary>
+///Sets the authentication type recorded on the built identity, which controls whether ///<see
+///cref="ClaimsIdentity.IsAuthenticated"/> is <c>true</c>.
+///</summary>
     ///<param name="authenticationType">The authentication type. Defaults to <c>"Custom"</c> if never set.</param>
     ///<exception cref="ArgumentException"><paramref name="authenticationType"/> is <c>null</c>, empty, or whitespace.</exception>
     public ClaimsPrincipalBuilder WithAuthenticationType(string authenticationType)
@@ -47,10 +56,6 @@ public sealed class ClaimsPrincipalBuilder
 
     ///<summary>
     ///Adds a name claim, using whichever claim type was configured via <see cref="WithNameClaimType"/> (defaults to
-    ///<see cref="ClaimTypes.Name"/>).
-    ///</summary>
-    ///<param name="name">The name.</param>
-    ///<exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>, empty, or whitespace.</exception>
     public ClaimsPrincipalBuilder WithName(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -71,10 +76,6 @@ public sealed class ClaimsPrincipalBuilder
 
     ///<summary>
     ///Adds a role claim, using whichever claim type was configured via <see cref="WithRoleClaimType"/> (defaults to
-    ///<see cref="ClaimTypes.Role"/>).
-    ///</summary>
-    ///<param name="role">The role.</param>
-    ///<exception cref="ArgumentException"><paramref name="role"/> is <c>null</c>, empty, or whitespace.</exception>
     public ClaimsPrincipalBuilder WithRole(string role)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(role);
@@ -108,15 +109,6 @@ public sealed class ClaimsPrincipalBuilder
         }
 
         return this;
-    }
-
-    ///<summary>
-    ///Builds the <see cref="ClaimsPrincipal"/> from every claim and setting configured so far.
-    ///</summary>
-    public ClaimsPrincipal Build()
-    {
-        ClaimsIdentity identity = new(_claims, _authenticationType, _nameClaimType, _roleClaimType);
-        return new ClaimsPrincipal(identity);
     }
     #endregion
 }

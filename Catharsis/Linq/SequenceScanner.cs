@@ -12,7 +12,7 @@ public static class SequenceScanner
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
@@ -20,7 +20,7 @@ public static class SequenceScanner
         T previous = enumerator.Current;
         int index = 0;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             yield return (index, previous, enumerator.Current);
             previous = enumerator.Current;
@@ -32,16 +32,16 @@ public static class SequenceScanner
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         T previous = enumerator.Current;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
-            if (predicate(previous, enumerator.Current))
+            if(predicate(previous, enumerator.Current))
             {
                 yield return (previous, enumerator.Current);
             }
@@ -54,7 +54,7 @@ public static class SequenceScanner
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             throw new InvalidOperationException("Source sequence must contain at least one element for seedless scan.");
         }
@@ -62,7 +62,7 @@ public static class SequenceScanner
         T current = enumerator.Current;
         yield return current;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             current = accumulator(current, enumerator.Current);
             yield return current;
@@ -74,7 +74,7 @@ public static class SequenceScanner
         TAccumulate current = seed;
         yield return resultSelector(current);
 
-        foreach (T element in source)
+        foreach(T element in source)
         {
             current = accumulator(current, element);
             yield return resultSelector(current);
@@ -85,18 +85,18 @@ public static class SequenceScanner
     {
         TAccumulate current = seed;
 
-        if (!predicate(current))
+        if(!predicate(current))
         {
             yield break;
         }
 
         yield return current;
 
-        foreach (T element in source)
+        foreach(T element in source)
         {
             current = accumulator(current, element);
 
-            if (!predicate(current))
+            if(!predicate(current))
             {
                 yield break;
             }
@@ -109,21 +109,21 @@ public static class SequenceScanner
     {
         using IEnumerator<T> enumerator = source.GetEnumerator();
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         T first = enumerator.Current;
 
-        if (!enumerator.MoveNext())
+        if(!enumerator.MoveNext())
         {
             yield break;
         }
 
         T second = enumerator.Current;
 
-        while (enumerator.MoveNext())
+        while(enumerator.MoveNext())
         {
             yield return (first, second, enumerator.Current);
             first = second;

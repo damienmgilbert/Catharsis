@@ -48,7 +48,7 @@ public static class ExpressionQuoter
     ///</summary>
     ///<param name="expression">The expression to test.</param>
     ///<returns><c>true</c> if the expression is a quote; otherwise <c>false</c>.</returns>
-    public static bool IsQuoted(Expression? expression) { return expression is UnaryExpression { NodeType: ExpressionType.Quote }; }
+    public static bool IsQuoted(Expression? expression) => expression is UnaryExpression { NodeType: ExpressionType.Quote };
 
     ///<summary>
     ///Wraps the specified <see cref="LambdaExpression"/> in a <see cref="UnaryExpression"/> of type ///<see
@@ -114,7 +114,7 @@ public static class ExpressionQuoter
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
 
-        ParameterExpression[] remainingParameters = [.. lambda.Parameters.Where(p => !replacements.ContainsKey(p))];
+        ParameterExpression[] remainingParameters = [ .. lambda.Parameters.Where(p => !replacements.ContainsKey(p)) ];
 
         LambdaExpression rewritten = remainingParameters.Length > 0 ? Expression.Lambda(body, remainingParameters) : Expression.Lambda(body);
 
@@ -191,17 +191,17 @@ public static class ExpressionQuoter
     }
     #endregion
 
-    sealed class ReplacingVisitor(Expression searchFor, Expression replaceWith) : ExpressionVisitor
+    private sealed class ReplacingVisitor(Expression searchFor, Expression replaceWith) : ExpressionVisitor
     {
         #region Public methods
-        public override Expression Visit(Expression? node) { return node is not null && node == searchFor ? replaceWith : base.Visit(node)!; }
+        public override Expression Visit(Expression? node) => node is not null && node == searchFor ? replaceWith : base.Visit(node)!;
         #endregion
     }
 
-    sealed class QuoteFindingVisitor : ExpressionVisitor
+    private sealed class QuoteFindingVisitor : ExpressionVisitor
     {
         #region Fields
-        readonly List<UnaryExpression> _quotes = [];
+        private readonly List<UnaryExpression> _quotes = [];
         #endregion
 
         #region Protected methods
@@ -221,7 +221,7 @@ public static class ExpressionQuoter
         #endregion
     }
 
-    sealed class QuoteStrippingVisitor : ExpressionVisitor
+    private sealed class QuoteStrippingVisitor : ExpressionVisitor
     {
         #region Protected methods
         protected override Expression VisitUnary(UnaryExpression node)

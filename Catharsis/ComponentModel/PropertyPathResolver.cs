@@ -9,10 +9,7 @@ namespace Catharsis.ComponentModel;
 public static class PropertyPathResolver
 {
     #region Private methods
-    static PropertyInfo GetPropertyOrThrow(object instance, string segment, string path)
-    {
-        return instance.GetType().GetProperty(segment) ?? throw new ArgumentException($"Property '{segment}' was not found on type '{instance.GetType().Name}'.", nameof(path));
-    }
+    private static PropertyInfo GetPropertyOrThrow(object instance, string segment, string path) { return instance.GetType().GetProperty(segment) ?? throw new ArgumentException($"Property '{segment}' was not found on type '{instance.GetType().Name}'.", nameof(path)); }
     #endregion
 
     #region Public methods

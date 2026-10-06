@@ -8,7 +8,7 @@ namespace Catharsis.Configuration;
 public sealed class OptionsValidator<TOptions> : IOptionsValidator<TOptions>
 {
     #region Fields
-    readonly List<(Func<TOptions, bool> Predicate, string FailureMessage)> _rules = [];
+    private readonly List<(Func<TOptions, bool> Predicate, string FailureMessage)> _rules = [];
     #endregion
 
     #region Public methods
@@ -34,7 +34,7 @@ public sealed class OptionsValidator<TOptions> : IOptionsValidator<TOptions>
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        List<string> failures = [.. _rules.Where(rule => !rule.Predicate(options)).Select(static rule => rule.FailureMessage)];
+        List<string> failures = [ .. _rules.Where(rule => !rule.Predicate(options)).Select(static rule => rule.FailureMessage) ];
         return (failures.Count == 0) ? OptionsValidationResult.Success : OptionsValidationResult.Fail(failures);
     }
     #endregion

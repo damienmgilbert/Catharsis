@@ -9,7 +9,7 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class ValidationResultAggregator
 {
     #region Fields
-    readonly List<(ValidationResult Result, ValidationSeverity Severity)> _entries = [];
+    private readonly List<(ValidationResult Result, ValidationSeverity Severity)> _entries = [];
     #endregion
 
     #region Public methods
@@ -47,22 +47,23 @@ public sealed class ValidationResultAggregator
     ///<summary>
     ///Removes all collected results.
     ///</summary>
-    public void Clear() { _entries.Clear(); }
+    public void Clear() => _entries.Clear();
+
     ///<summary>
     ///Gets all distinct member names that have at least one result.
     ///</summary>
     ///<returns>The distinct member names.</returns>
     public IReadOnlyList<string> GetAffectedMembers()
     {
-        return [.. _entries
+        return[ .. _entries
                     .SelectMany(static e => e.Result.MemberNames)
-            .Distinct(StringComparer.Ordinal)];
+            .Distinct(StringComparer.Ordinal) ];
     }
     ///<summary>
     ///Gets all collected results.
     ///</summary>
     ///<returns>A read-only list of results with their severities.</returns>
-    public IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> GetAll() { return [.. _entries]; }
+    public IReadOnlyList<(ValidationResult Result, ValidationSeverity Severity)> GetAll() => [ .. _entries ];
 
     ///<summary>
     ///Gets results that apply to the specified member.
@@ -73,9 +74,9 @@ public sealed class ValidationResultAggregator
     {
         ArgumentNullException.ThrowIfNull(memberName);
 
-        return [.. _entries
+        return[ .. _entries
             .Where(e => e.Result.MemberNames.Contains(memberName, StringComparer.Ordinal))
-            .Select(e => e.Result)];
+            .Select(e => e.Result) ];
     }
 
     ///<summary>
@@ -83,7 +84,7 @@ public sealed class ValidationResultAggregator
     ///</summary>
     ///<param name="severity">The severity to filter by.</param>
     ///<returns>Matching results.</returns>
-    public IReadOnlyList<ValidationResult> GetBySeverity(ValidationSeverity severity) { return [.. _entries.Where(e => e.Severity == severity).Select(e => e.Result)]; }
+    public IReadOnlyList<ValidationResult> GetBySeverity(ValidationSeverity severity) => [ .. _entries.Where(e => e.Severity == severity).Select(e => e.Result) ];
 
     ///<summary>
     ///Converts all collected results to <see cref="ErrorInfo"/> instances.
@@ -91,18 +92,18 @@ public sealed class ValidationResultAggregator
     ///<returns>A list of <see cref="ErrorInfo"/> instances.</returns>
     public IReadOnlyList<ErrorInfo> ToErrorInfos()
     {
-        return [.. _entries.SelectMany(
-               e =>
-               {
-                   List<string> members = [.. e.Result.MemberNames];
-
-                   if(members.Count == 0)
+        return[ .. _entries.SelectMany(
+                   e =>
                    {
-                       return[ new ErrorInfo(e.Result.ErrorMessage ?? "Validation failed.", e.Severity) ];
-                   }
+                       List<string> members = [ .. e.Result.MemberNames ];
 
-                   return members.Select(m => new ErrorInfo(e.Result.ErrorMessage ?? "Validation failed.", e.Severity, m));
-               })];
+                       if(members.Count == 0)
+                       {
+                           return[ new ErrorInfo(e.Result.ErrorMessage ?? "Validation failed.", e.Severity) ];
+                       }
+
+                       return members.Select(m => new ErrorInfo(e.Result.ErrorMessage ?? "Validation failed.", e.Severity, m));
+                   }) ];
     }
     #endregion
 

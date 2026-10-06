@@ -13,8 +13,8 @@ namespace Catharsis.HighPerformance;
 public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDisposable where TKey : notnull
 {
     #region Fields
-    bool _disposed;
-    readonly Dictionary<TKey, TValue> _inner;
+    private bool _disposed;
+    private readonly Dictionary<TKey, TValue> _inner;
     #endregion
 
     #region Constructors
@@ -56,7 +56,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     #endregion
 
     #region Explicit interface implementations
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => _inner.Keys;
 
@@ -65,7 +65,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
 
     #region Public methods
     ///<inheritdoc/>
-    public void Add(KeyValuePair<TKey, TValue> item) { Add(item.Key, item.Value); }
+    public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
     ///<inheritdoc/>
     public void Add(TKey key, TValue value)
@@ -82,11 +82,13 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     }
 
     ///<inheritdoc/>
-    public bool Contains(KeyValuePair<TKey, TValue> item) { return ((ICollection<KeyValuePair<TKey, TValue>>)_inner).Contains(item); }
+    public bool Contains(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_inner).Contains(item);
+
     ///<inheritdoc/>
-    public bool ContainsKey(TKey key) { return _inner.ContainsKey(key); }
+    public bool ContainsKey(TKey key) => _inner.ContainsKey(key);
+
     ///<inheritdoc/>
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { ((ICollection<KeyValuePair<TKey, TValue>>)_inner).CopyTo(array, arrayIndex); }
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => ((ICollection<KeyValuePair<TKey, TValue>>)_inner).CopyTo(array, arrayIndex);
 
     ///<inheritdoc/>
     public void Dispose()
@@ -101,7 +103,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     }
 
     ///<inheritdoc/>
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return _inner.GetEnumerator(); }
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _inner.GetEnumerator();
 
     ///<inheritdoc/>
     public bool Remove(TKey key)
@@ -111,7 +113,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     }
 
     ///<inheritdoc/>
-    public bool Remove(KeyValuePair<TKey, TValue> item) { return ((ICollection<KeyValuePair<TKey, TValue>>)_inner).Remove(item); }
+    public bool Remove(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_inner).Remove(item);
 
     ///<summary>
     ///Attempts to add the specified key-value pair without throwing on duplicate key.
@@ -126,7 +128,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     }
 
     ///<inheritdoc/>
-    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) { return _inner.TryGetValue(key, out value); }
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _inner.TryGetValue(key, out value);
     #endregion
 
     #region Public properties

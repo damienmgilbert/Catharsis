@@ -1,21 +1,21 @@
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///Coalesces rapid, repeated trigger calls into a single execution of an operation: each call to
-///<see cref="Trigger"/> restarts a delay window, and the operation only runs once the window elapses without a
-///further trigger. Useful for search-as-you-type, save-on-idle, and similar debounced-action scenarios.
+///Coalesces rapid, repeated trigger calls into a single execution of an operation: each call to ///<see
+///cref="Trigger"/> restarts a delay window, and the operation only runs once the window elapses without a further
+///trigger. Useful for search-as-you-type, save-on-idle, and similar debounced-action scenarios.
 ///</summary>
 public sealed class TaskDebouncer : IDisposable
 {
     #region Fields
-    readonly TimeSpan _delay;
-    readonly Func<CancellationToken, Task> _action;
-    readonly Lock _gate = new();
-    CancellationTokenSource? _pending;
-    bool _disposed;
+    private readonly Func<CancellationToken, Task> _action;
+    private readonly TimeSpan _delay;
+    private bool _disposed;
+    private readonly Lock _gate = new();
+    private CancellationTokenSource? _pending;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates a debouncer with the specified delay and action.
     ///</summary>
@@ -35,39 +35,19 @@ public sealed class TaskDebouncer : IDisposable
         _delay = delay;
         _action = action;
     }
+    #endregion
 
-    ///<summary>
-    ///Restarts the delay window, canceling any run scheduled by a previous trigger that has not yet started.
-    ///</summary>
-    ///<exception cref="ObjectDisposedException">The debouncer has already been disposed.</exception>
-    public void Trigger()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-
-        CancellationTokenSource cts = new();
-
-        lock(_gate)
-        {
-            _pending?.Cancel();
-            _pending?.Dispose();
-            _pending = cts;
-        }
-
-        _ = RunAfterDelayAsync(cts);
-    }
-
-    async Task RunAfterDelayAsync(CancellationTokenSource cts)
+    #region Private methods
+    private async Task RunAfterDelayAsync(CancellationTokenSource cts)
     {
         try
         {
             await Task.Delay(_delay, cts.Token).ConfigureAwait(false);
             await _action(cts.Token).ConfigureAwait(false);
-        }
-        catch(OperationCanceledException)
+        } catch(OperationCanceledException)
         {
             // Superseded by a later trigger; nothing to do.
-        }
-        finally
+        } finally
         {
             lock(_gate)
             {
@@ -80,7 +60,9 @@ public sealed class TaskDebouncer : IDisposable
             cts.Dispose();
         }
     }
+    #endregion
 
+    #region Public methods
     ///<inheritdoc/>
     public void Dispose()
     {
@@ -101,6 +83,26 @@ public sealed class TaskDebouncer : IDisposable
 
         pending?.Cancel();
         pending?.Dispose();
+    }
+
+    ///<summary>
+    ///Restarts the delay window, canceling any run scheduled by a previous trigger that has not yet started.
+    ///</summary>
+    ///<exception cref="ObjectDisposedException">The debouncer has already been disposed.</exception>
+    public void Trigger()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        CancellationTokenSource cts = new();
+
+        lock(_gate)
+        {
+            _pending?.Cancel();
+            _pending?.Dispose();
+            _pending = cts;
+        }
+
+        _ = RunAfterDelayAsync(cts);
     }
     #endregion
 }

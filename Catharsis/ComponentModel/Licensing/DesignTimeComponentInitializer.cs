@@ -23,7 +23,7 @@ public sealed class DesignTimeComponentInitializer
     ///</summary>
     ///<typeparam name="T">The component type.</typeparam>
     ///<returns><c>true</c> if registration exists; otherwise, <c>false</c>.</returns>
-    public bool HasRegistration<T>() where T : IComponent { return _defaults.ContainsKey(typeof(T)) || _initializers.ContainsKey(typeof(T)); }
+    public bool HasRegistration<T>() where T : IComponent => _defaults.ContainsKey(typeof(T)) || _initializers.ContainsKey(typeof(T));
 
     ///<summary>
     ///Initializes the specified component by applying registered default values and invoking the initialization
@@ -37,21 +37,21 @@ public sealed class DesignTimeComponentInitializer
 
         Type type = component.GetType();
 
-        if (_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
+        if(_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
 
             foreach (var (name, value) in props)
             {
                 PropertyDescriptor? prop = properties[name];
-                if ((prop is not null) && !prop.IsReadOnly)
+                if((prop is not null) && !prop.IsReadOnly)
                 {
                     prop.SetValue(component, value);
                 }
             }
         }
 
-        if (_initializers.TryGetValue(type, out Action<IComponent>? initializer))
+        if(_initializers.TryGetValue(type, out Action<IComponent>? initializer))
         {
             initializer(component);
         }
@@ -71,9 +71,9 @@ public sealed class DesignTimeComponentInitializer
 
         Type type = typeof(T);
 
-        if (!_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
+        if(!_defaults.TryGetValue(type, out Dictionary<string, object?>? props))
         {
-            props = [with(StringComparer.Ordinal)];
+            props = [ with(StringComparer.Ordinal) ];
             _defaults[type] = props;
         }
 

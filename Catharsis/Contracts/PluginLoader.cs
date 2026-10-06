@@ -1,5 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catharsis.Contracts;
 
@@ -9,7 +9,41 @@ namespace Catharsis.Contracts;
 ///</summary>
 public static class PluginLoader
 {
+    #region Private methods
+    private static Type[] SafeGetTypes(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetTypes();
+        } catch(ReflectionTypeLoadException ex)
+        {
+            return[ .. ex.Types.OfType<Type>() ];
+        }
+    }
+    #endregion
+
     #region Public methods
+    ///<summary>
+    ///Creates an instance of a discovered plugin.
+    ///</summary>
+    ///<typeparam name="TContract">The contract type to return.</typeparam>
+    ///<param name="descriptor">The plugin to create.</param>
+    ///<param name="services">
+    ///An optional container used to supply constructor arguments. When <c>null</c> the plugin needs a public
+    ///parameterless constructor.
+    ///</param>
+    ///<returns>The new plugin instance.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="descriptor"/> is <c>null</c>.</exception>
+    ///<exception cref="InvalidCastException">The plugin does not implement <typeparamref name="TContract"/>.</exception>
+    public static TContract Create<TContract>(PluginDescriptor descriptor, IServiceProvider? services = null)
+    {
+        ArgumentNullException.ThrowIfNull(descriptor);
+
+        object instance = services is null ? Activator.CreateInstance(descriptor.ImplementationType)! : ActivatorUtilities.CreateInstance(services, descriptor.ImplementationType);
+
+        return (TContract)instance;
+    }
+
     ///<summary>
     ///Finds every plugin in <paramref name="assemblies"/> that is assignable to <typeparamref name="TContract"/>.
     ///</summary>
@@ -59,32 +93,8 @@ public static class PluginLoader
             }
         }
 
-        return [.. byName.Values.OrderBy(static d => d.Name, StringComparer.OrdinalIgnoreCase)];
+        return[ .. byName.Values.OrderBy(static d => d.Name, StringComparer.OrdinalIgnoreCase) ];
     }
-
-    ///<summary>
-    ///Creates an instance of a discovered plugin.
-    ///</summary>
-    ///<typeparam name="TContract">The contract type to return.</typeparam>
-    ///<param name="descriptor">The plugin to create.</param>
-    ///<param name="services">
-    ///An optional container used to supply constructor arguments. When <c>null</c> the plugin needs a public
-    ///parameterless constructor.
-    ///</param>
-    ///<returns>The new plugin instance.</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="descriptor"/> is <c>null</c>.</exception>
-    ///<exception cref="InvalidCastException">The plugin does not implement <typeparamref name="TContract"/>.</exception>
-    public static TContract Create<TContract>(PluginDescriptor descriptor, IServiceProvider? services = null)
-    {
-        ArgumentNullException.ThrowIfNull(descriptor);
-
-        object instance = services is null
-            ? Activator.CreateInstance(descriptor.ImplementationType)!
-            : ActivatorUtilities.CreateInstance(services, descriptor.ImplementationType);
-
-        return (TContract)instance;
-    }
-    #endregion
 
     ///<summary>
     ///Creates every plugin in <paramref name="descriptors"/> as an <see cref="IPlugin"/> and initializes each in turn.
@@ -123,21 +133,6 @@ public static class PluginLoader
     ///<returns>The started plugins, in the order of <paramref name="descriptors"/>.</returns>
     ///<exception cref="ArgumentNullException">An argument is <c>null</c>.</exception>
     public static ValueTask<IReadOnlyList<IPlugin>> InitializeAllValueAsync(IEnumerable<PluginDescriptor> descriptors, IServiceProvider services, CancellationToken cancellationToken = default)
-    {
-        return new ValueTask<IReadOnlyList<IPlugin>>(InitializeAllAsync(descriptors, services, cancellationToken));
-    }
-
-    #region Private methods
-    static Type[] SafeGetTypes(Assembly assembly)
-    {
-        try
-        {
-            return assembly.GetTypes();
-        }
-        catch(ReflectionTypeLoadException ex)
-        {
-            return [.. ex.Types.OfType<Type>()];
-        }
-    }
+    { return new ValueTask<IReadOnlyList<IPlugin>>(InitializeAllAsync(descriptors, services, cancellationToken)); }
     #endregion
 }

@@ -9,13 +9,15 @@ namespace Catharsis.Contracts;
 public sealed class DecoratorForAttribute(Type serviceType) : Attribute
 {
     #region Public properties
-    ///<summary>Gets the service being decorated.</summary>
-    public Type ServiceType { get; } = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
-
     ///<summary>
-    ///Gets or sets the application order among decorators of the same service. Lower values are applied first, so
-    ///they sit closest to the real implementation; higher values wrap the outside.
+    ///Gets or sets the application order among decorators of the same service. Lower values are applied first, so they
+    ///sit closest to the real implementation; higher values wrap the outside.
     ///</summary>
     public int Order { get; set; }
+
+    ///<summary>
+    ///Gets the service being decorated.
+    ///</summary>
+    public Type ServiceType { get; } = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
     #endregion
 }

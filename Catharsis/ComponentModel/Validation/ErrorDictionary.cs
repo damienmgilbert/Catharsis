@@ -11,7 +11,7 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class ErrorDictionary : INotifyDataErrorInfo
 {
     #region Fields
-    private readonly Dictionary<string, List<ErrorInfo>> _errors = [with(StringComparer.Ordinal)];
+    private readonly Dictionary<string, List<ErrorInfo>> _errors = [ with(StringComparer.Ordinal) ];
     private readonly Lock _lock = new();
     #endregion
 
@@ -21,8 +21,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     #endregion
 
     #region Private methods
-    private void OnErrorsChanged(string propertyName)
-    { ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName)); }
+    private void OnErrorsChanged(string propertyName) { ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName)); }
     #endregion
 
     #region Public methods
@@ -37,9 +36,9 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
         ArgumentNullException.ThrowIfNull(propertyName);
         ArgumentNullException.ThrowIfNull(error);
 
-        lock (_lock)
+        lock(_lock)
         {
-            if (!_errors.TryGetValue(propertyName, out List<ErrorInfo>? list))
+            if(!_errors.TryGetValue(propertyName, out List<ErrorInfo>? list))
             {
                 list = [];
                 _errors[propertyName] = list;
@@ -58,13 +57,13 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     {
         string[] keys;
 
-        lock (_lock)
+        lock(_lock)
         {
-            keys = [.. _errors.Keys];
+            keys = [ .. _errors.Keys ];
             _errors.Clear();
         }
 
-        foreach (string key in keys)
+        foreach(string key in keys)
         {
             OnErrorsChanged(key);
         }
@@ -80,12 +79,12 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
 
         bool removed;
 
-        lock (_lock)
+        lock(_lock)
         {
             removed = _errors.Remove(propertyName);
         }
 
-        if (removed)
+        if(removed)
         {
             OnErrorsChanged(propertyName);
         }
@@ -100,11 +99,11 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     ///<returns>A read-only list of error entries.</returns>
     public IReadOnlyList<ErrorInfo> GetErrorInfos(string? propertyName)
     {
-        lock (_lock)
+        lock(_lock)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            if(string.IsNullOrEmpty(propertyName))
             {
-                return [.. _errors.Values.SelectMany(static e => e)];
+                return[ .. _errors.Values.SelectMany(static e => e) ];
             }
 
             return _errors.TryGetValue(propertyName, out List<ErrorInfo>? errors) ? errors.ToList() : [];
@@ -114,9 +113,9 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        lock (_lock)
+        lock(_lock)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            if(string.IsNullOrEmpty(propertyName))
             {
                 return _errors.Values.SelectMany(static e => e).ToList();
             }
@@ -140,22 +139,21 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
 
         bool changed;
 
-        lock (_lock)
+        lock(_lock)
         {
             List<ErrorInfo> errorList = errors?.ToList() ?? [];
 
-            if (errorList.Count == 0)
+            if(errorList.Count == 0)
             {
                 changed = _errors.Remove(propertyName);
-            }
-            else
+            } else
             {
                 _errors[propertyName] = errorList;
                 changed = true;
             }
         }
 
-        if (changed)
+        if(changed)
         {
             OnErrorsChanged(propertyName);
         }
@@ -168,7 +166,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     {
         get
         {
-            lock (_lock)
+            lock(_lock)
             {
                 return _errors.Count > 0;
             }
@@ -182,7 +180,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     {
         get
         {
-            lock (_lock)
+            lock(_lock)
             {
                 return _errors.Count;
             }
@@ -196,7 +194,7 @@ public sealed class ErrorDictionary : INotifyDataErrorInfo
     {
         get
         {
-            lock (_lock)
+            lock(_lock)
             {
                 return _errors.Values.Sum(static e => e.Count);
             }

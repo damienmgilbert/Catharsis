@@ -36,11 +36,11 @@ public sealed class ComponentMetadataRegistry
     {
         ArgumentNullException.ThrowIfNull(componentType);
 
-        if (_events.TryGetValue(componentType, out List<EventMetadata>? list))
+        if(_events.TryGetValue(componentType, out List<EventMetadata>? list))
         {
-            lock (list)
+            lock(list)
             {
-                return [.. list];
+                return[ .. list ];
             }
         }
 
@@ -58,11 +58,11 @@ public sealed class ComponentMetadataRegistry
     {
         ArgumentNullException.ThrowIfNull(componentType);
 
-        if (_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
+        if(_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
         {
-            lock (list)
+            lock(list)
             {
-                return [.. list];
+                return[ .. list ];
             }
         }
 
@@ -94,9 +94,9 @@ public sealed class ComponentMetadataRegistry
 
         List<EventMetadata> list = _events.GetOrAdd(componentType, _ => []);
 
-        lock (list)
+        lock(list)
         {
-            if (list.Any(e => string.Equals(e.Name, metadata.Name, StringComparison.Ordinal)))
+            if(list.Any(e => string.Equals(e.Name, metadata.Name, StringComparison.Ordinal)))
             {
                 throw new ArgumentException($"An event named '{metadata.Name}' is already registered for type '{componentType.Name}'.", nameof(metadata));
             }
@@ -121,9 +121,9 @@ public sealed class ComponentMetadataRegistry
 
         List<PropertyMetadata> list = _properties.GetOrAdd(componentType, _ => []);
 
-        lock (list)
+        lock(list)
         {
-            if (list.Any(p => string.Equals(p.Name, metadata.Name, StringComparison.Ordinal)))
+            if(list.Any(p => string.Equals(p.Name, metadata.Name, StringComparison.Ordinal)))
             {
                 throw new ArgumentException($"A property named '{metadata.Name}' is already registered for type '{componentType.Name}'.", nameof(metadata));
             }
@@ -149,12 +149,12 @@ public sealed class ComponentMetadataRegistry
 
         metadata = null;
 
-        if (!_events.TryGetValue(componentType, out List<EventMetadata>? list))
+        if(!_events.TryGetValue(componentType, out List<EventMetadata>? list))
         {
             return false;
         }
 
-        lock (list)
+        lock(list)
         {
             metadata = list.FirstOrDefault(e => string.Equals(e.Name, eventName, StringComparison.Ordinal));
         }
@@ -177,12 +177,12 @@ public sealed class ComponentMetadataRegistry
 
         metadata = null;
 
-        if (!_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
+        if(!_properties.TryGetValue(componentType, out List<PropertyMetadata>? list))
         {
             return false;
         }
 
-        lock (list)
+        lock(list)
         {
             metadata = list.FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.Ordinal));
         }

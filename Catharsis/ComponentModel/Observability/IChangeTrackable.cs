@@ -13,6 +13,7 @@ namespace Catharsis.ComponentModel.Observability;
 public interface IChangeTrackable : IRevertibleChangeTracking
 {
     #region Public methods
+
     ///<summary>
     ///Redoes the most recently undone change.
     ///</summary>

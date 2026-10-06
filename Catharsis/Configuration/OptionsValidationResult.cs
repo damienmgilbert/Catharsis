@@ -6,11 +6,11 @@ namespace Catharsis.Configuration;
 public sealed class OptionsValidationResult
 {
     #region Fields
-    static readonly OptionsValidationResult _success = new(true, []);
+    private static readonly OptionsValidationResult _success = new(true, []);
     #endregion
 
     #region Constructors
-    OptionsValidationResult(bool succeeded, IReadOnlyList<string> failures)
+    private OptionsValidationResult(bool succeeded, IReadOnlyList<string> failures)
     {
         Succeeded = succeeded;
         Failures = failures;
@@ -38,13 +38,13 @@ public sealed class OptionsValidationResult
     public IReadOnlyList<string> Failures { get; }
 
     ///<summary>
-    ///Gets a successful result with no failure messages.
-    ///</summary>
-    public static OptionsValidationResult Success => _success;
-
-    ///<summary>
     ///Gets whether validation succeeded.
     ///</summary>
     public bool Succeeded { get; }
+
+    ///<summary>
+    ///Gets a successful result with no failure messages.
+    ///</summary>
+    public static OptionsValidationResult Success => _success;
     #endregion
 }

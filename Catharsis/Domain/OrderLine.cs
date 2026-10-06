@@ -9,7 +9,10 @@ namespace Catharsis.Domain;
 public sealed class OrderLine : ValueObject
 {
     #region Constructors
-    ///<summary>Initializes a new <see cref="OrderLine"/>.</summary>
+
+    ///<summary>
+    ///Initializes a new <see cref="OrderLine"/>.
+    ///</summary>
     ///<param name="sku">The product code. Must not be blank.</param>
     ///<param name="quantity">How many units. Must be positive.</param>
     ///<param name="unitPrice">The price of one unit. Must not be negative.</param>
@@ -31,20 +34,6 @@ public sealed class OrderLine : ValueObject
     }
     #endregion
 
-    #region Public properties
-    ///<summary>Gets the product code.</summary>
-    public string Sku { get; }
-
-    ///<summary>Gets the number of units.</summary>
-    public int Quantity { get; }
-
-    ///<summary>Gets the price of one unit.</summary>
-    public Money UnitPrice { get; }
-
-    ///<summary>Gets the price of the whole line.</summary>
-    public Money Total => UnitPrice * Quantity;
-    #endregion
-
     #region Protected methods
     ///<inheritdoc/>
     protected override IEnumerable<object?> GetEqualityComponents()
@@ -53,5 +42,27 @@ public sealed class OrderLine : ValueObject
         yield return Quantity;
         yield return UnitPrice;
     }
+    #endregion
+
+    #region Public properties
+    ///<summary>
+    ///Gets the number of units.
+    ///</summary>
+    public int Quantity { get; }
+
+        ///<summary>
+///Gets the product code.
+///</summary>
+    public string Sku { get; }
+
+    ///<summary>
+    ///Gets the price of the whole line.
+    ///</summary>
+    public Money Total => UnitPrice * Quantity;
+
+    ///<summary>
+    ///Gets the price of one unit.
+    ///</summary>
+    public Money UnitPrice { get; }
     #endregion
 }

@@ -5,18 +5,13 @@ namespace Catharsis.Resilience;
 ///if it does not complete in time.
 ///</summary>
 ///<example>
-///<code>
-///TimeoutPolicy policy = new(TimeSpan.FromSeconds(5));
-///string result = await policy.ExecuteAsync(async ct => await httpClient.GetStringAsync(url, ct), cancellationToken);
-///</code>
-///</example>
 public sealed class TimeoutPolicy : IAsyncPolicy
 {
     #region Fields
-    readonly TimeSpan _timeout;
+    private readonly TimeSpan _timeout;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates a timeout policy with the specified maximum duration.
     ///</summary>
@@ -31,7 +26,9 @@ public sealed class TimeoutPolicy : IAsyncPolicy
 
         _timeout = timeout;
     }
+    #endregion
 
+    #region Public methods
     ///<summary>
     ///Asynchronously executes the specified operation, canceling it if it exceeds the configured timeout.
     ///</summary>
@@ -51,8 +48,7 @@ public sealed class TimeoutPolicy : IAsyncPolicy
         try
         {
             return await operation(linked.Token).ConfigureAwait(false);
-        }
-        catch(OperationCanceledException) when(!cancellationToken.IsCancellationRequested)
+        } catch(OperationCanceledException) when(!cancellationToken.IsCancellationRequested)
         {
             throw new TimeoutException($"The operation did not complete within {_timeout}.");
         }
@@ -69,11 +65,14 @@ public sealed class TimeoutPolicy : IAsyncPolicy
     {
         ArgumentNullException.ThrowIfNull(operation);
 
-        await ExecuteAsync<object?>(async ct =>
-        {
-            await operation(ct).ConfigureAwait(false);
-            return null;
-        }, cancellationToken).ConfigureAwait(false);
+        await ExecuteAsync<object?>(
+              async ct =>
+              {
+                  await operation(ct).ConfigureAwait(false);
+                  return null;
+              },
+              cancellationToken)
+            .ConfigureAwait(false);
     }
     #endregion
 

@@ -1,13 +1,14 @@
 namespace Catharsis.Resilience;
 
 ///<summary>
-///Represents a resilience policy that can execute an operation, applying its own cross-cutting behavior (retry,
-///circuit breaking, timeout, bulkhead isolation, etc.) around the call. Implementations of this interface can be
-///composed together with <see cref="PolicyWrap"/>.
+///Represents a resilience policy that can execute an operation, applying its own cross-cutting behavior (retry, circuit
+///breaking, timeout, bulkhead isolation, etc.) around the call. Implementations of this interface can be composed
+///together with <see cref="PolicyWrap"/>.
 ///</summary>
 public interface IAsyncPolicy
 {
     #region Public methods
+
     ///<summary>
     ///Executes the specified operation under this policy.
     ///</summary>

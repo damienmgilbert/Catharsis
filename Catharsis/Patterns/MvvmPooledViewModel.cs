@@ -10,21 +10,21 @@ namespace Catharsis.Patterns;
 public class MvvmPooledViewModel : BufferViewModelBase
 {
     #region Fields
-    RelayCommand? _clearAllDataCommand;
-    readonly ObservablePooledBuffer<byte> _dataBuffer = new();
-    string _displayText = string.Empty;
-    AsyncRelayCommand? _loadSampleDataCommand;
+    private RelayCommand? _clearAllDataCommand;
+    private readonly ObservablePooledBuffer<byte> _dataBuffer = new();
+    private string _displayText = string.Empty;
+    private AsyncRelayCommand? _loadSampleDataCommand;
     #endregion
 
     #region Private methods
-    void ClearAllData()
+    private void ClearAllData()
     {
         _dataBuffer.Clear();
         DisplayText = string.Empty;
         ClearData();
     }
 
-    async Task LoadSampleDataAsync() { await LoadAsync(); }
+    private async Task LoadSampleDataAsync() => await LoadAsync();
     #endregion
 
     #region Protected methods

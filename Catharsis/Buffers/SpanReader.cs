@@ -13,8 +13,8 @@ namespace Catharsis.Buffers;
 public ref struct SpanReader
 {
     #region Struct fields
-    readonly ReadOnlySpan<byte> _span;
-    int _position;
+    private readonly ReadOnlySpan<byte> _span;
+    private int _position;
     #endregion
 
     #region Constructors
@@ -140,7 +140,7 @@ public ref struct SpanReader
     ///<summary>
     ///Resets the reader to the beginning of the span.
     ///</summary>
-    public void Reset() { _position = 0; }
+    public void Reset() => _position = 0;
 
     ///<summary>
     ///Advances the reader position by the specified number of bytes.

@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 namespace Catharsis.IO;
 
 ///<summary>
-///Wraps a <see cref="FileSystemWatcher"/> and coalesces bursts of events for the same path into a single
-///<see cref="Changed"/> notification, raised only once that path has stopped changing for the configured delay.
-///This tames the notoriously bursty raw events a <see cref="FileSystemWatcher"/> raises for a single logical save
-///(e.g. several <c>Changed</c> events as an editor writes a file in chunks).
+///Wraps a <see cref="FileSystemWatcher"/> and coalesces bursts of events for the same path into a single ///<see
+///cref="Changed"/> notification, raised only once that path has stopped changing for the configured delay. This tames
+///the notoriously bursty raw events a <see cref="FileSystemWatcher"/> raises for a single logical save (e.g. several
+///<c>Changed</c> events as an editor writes a file in chunks).
 ///</summary>
 ///<param name="path">The directory to watch.</param>
 ///<param name="debounceDelay">How long a path must stay quiet before <see cref="Changed"/> fires for it.</param>
@@ -15,17 +15,9 @@ namespace Catharsis.IO;
 public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDelay, string filter = "*.*") : IDisposable
 {
     #region Fields
-    readonly ConcurrentDictionary<string, CancellationTokenSource> _pending = new();
-    readonly FileSystemWatcher _watcher = CreateWatcher(path, filter);
-    bool _disposed;
-    #endregion
-
-    #region Constructors
-    static FileSystemWatcher CreateWatcher(string path, string filter)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
-        return new FileSystemWatcher(path, filter) { EnableRaisingEvents = false };
-    }
+    private bool _disposed;
+    private readonly ConcurrentDictionary<string, CancellationTokenSource> _pending = new();
+    private readonly FileSystemWatcher _watcher = CreateWatcher(path, filter);
     #endregion
 
     #region Events
@@ -36,7 +28,13 @@ public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDela
     #endregion
 
     #region Private methods
-    async Task DebounceAsync(FileSystemEventArgs args, CancellationToken cancellationToken)
+    private static FileSystemWatcher CreateWatcher(string path, string filter)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        return new FileSystemWatcher(path, filter) { EnableRaisingEvents = false };
+    }
+
+    private async Task DebounceAsync(FileSystemEventArgs args, CancellationToken cancellationToken)
     {
         try
         {
@@ -48,11 +46,14 @@ public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDela
         }
     }
 
-    void OnRawEvent(object sender, FileSystemEventArgs args)
+    private void OnRawEvent(object sender, FileSystemEventArgs args)
     {
         CancellationTokenSource newSource = new();
 
-        _pending.AddOrUpdate(args.FullPath, newSource, (_, existing) =>
+        _pending.AddOrUpdate(
+        args.FullPath,
+        newSource,
+        (_, existing) =>
         {
             existing.Cancel();
             existing.Dispose();

@@ -1,18 +1,18 @@
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///An async-friendly countdown latch, analogous to <see cref="CountdownEvent"/> but awaitable without blocking a
-///thread. All waiters are released once the count reaches zero.
+///An async-friendly countdown latch, analogous to <see cref="CountdownEvent"/> but awaitable without blocking a thread.
+///All waiters are released once the count reaches zero.
 ///</summary>
 public sealed class AsyncCountdownEvent
 {
     #region Fields
-    readonly Lock _gate = new();
-    readonly TaskCompletionSource _tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    int _remaining;
+    private readonly Lock _gate = new();
+    private int _remaining;
+    private readonly TaskCompletionSource _tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates a countdown latch with the specified initial count.
     ///</summary>
@@ -32,7 +32,9 @@ public sealed class AsyncCountdownEvent
             _tcs.TrySetResult();
         }
     }
+    #endregion
 
+    #region Public methods
     ///<summary>
     ///Decrements the count by the specified amount, releasing all waiters once it reaches zero.
     ///</summary>

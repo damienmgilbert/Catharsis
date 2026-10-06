@@ -7,14 +7,10 @@ namespace Catharsis.ComponentModel;
 ///replacing, and merging attributes.
 ///</summary>
 ///<remarks>
-///<para> When merging, attributes of the same type are replaced by the incoming attribute (last-in wins). Use <see
-///cref="Merge(AttributeCollection)"/> to combine two collections.</para> <para> Call <see cref="Build"/> to produce an
-///immutable <see cref="AttributeCollection"/>. The builder can be reused after building.</para>
-///</remarks>
 public sealed class AttributeCollectionBuilder
 {
     #region Fields
-    readonly Dictionary<Type, Attribute> _attributes = [];
+    private readonly Dictionary<Type, Attribute> _attributes = [];
     #endregion
 
     #region Constructors
@@ -31,8 +27,6 @@ public sealed class AttributeCollectionBuilder
     ///</summary>
     ///<param name="existing">The collection to seed from.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="existing"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder(AttributeCollection existing)
     {
         ArgumentNullException.ThrowIfNull(existing);
@@ -51,8 +45,6 @@ public sealed class AttributeCollectionBuilder
     ///<param name="attribute">The attribute to add.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="attribute"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder Add(Attribute attribute)
     {
         ArgumentNullException.ThrowIfNull(attribute);
@@ -66,8 +58,6 @@ public sealed class AttributeCollectionBuilder
     ///<param name="attributes">The attributes to add.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="attributes"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder AddRange(IEnumerable<Attribute> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
@@ -109,7 +99,7 @@ public sealed class AttributeCollectionBuilder
     ///</summary>
     ///<typeparam name="TAttribute">The attribute type to check for.</typeparam>
     ///<returns><c>true</c> if the attribute is present; otherwise, <c>false</c>.</returns>
-    public bool Contains<TAttribute>() where TAttribute : Attribute { return _attributes.ContainsKey(typeof(TAttribute)); }
+    public bool Contains<TAttribute>() where TAttribute : Attribute => _attributes.ContainsKey(typeof(TAttribute));
 
     ///<summary>
     ///Merges attributes from the specified collection into this builder. Attributes of the same type are replaced by
@@ -118,8 +108,6 @@ public sealed class AttributeCollectionBuilder
     ///<param name="other">The collection to merge from.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="other"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder Merge(AttributeCollection other)
     {
         ArgumentNullException.ThrowIfNull(other);
@@ -139,8 +127,6 @@ public sealed class AttributeCollectionBuilder
     ///<param name="attributes">The attributes to merge.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="attributes"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder Merge(params Attribute[] attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
@@ -170,8 +156,6 @@ public sealed class AttributeCollectionBuilder
     ///<param name="attributeType">The attribute type to remove.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="attributeType"/> is <c>null</c>.
-    ///</exception>
     public AttributeCollectionBuilder Remove(Type attributeType)
     {
         ArgumentNullException.ThrowIfNull(attributeType);

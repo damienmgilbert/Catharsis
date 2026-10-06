@@ -9,7 +9,7 @@ namespace Catharsis.DataAnnotations;
 public sealed class CompositeValidationResult
 {
     #region Fields
-    readonly IReadOnlyList<ValidationResult> _results;
+    private readonly IReadOnlyList<ValidationResult> _results;
     #endregion
 
     #region Constructors

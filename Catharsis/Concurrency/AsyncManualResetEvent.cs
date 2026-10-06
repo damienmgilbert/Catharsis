@@ -1,17 +1,17 @@
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///An async-friendly manual-reset event, analogous to <see cref="ManualResetEventSlim"/> but awaitable without
-///blocking a thread. Once <see cref="Set"/> is called, every current and future waiter is released until
-///<see cref="Reset"/> is called.
+///An async-friendly manual-reset event, analogous to <see cref="ManualResetEventSlim"/> but awaitable without blocking
+///a thread. Once <see cref="Set"/> is called, every current and future waiter is released until ///<see cref="Reset"/>
+///is called.
 ///</summary>
 public sealed class AsyncManualResetEvent
 {
     #region Fields
-    volatile TaskCompletionSource _tcs;
+    private volatile TaskCompletionSource _tcs;
     #endregion
 
-    #region Public methods
+    #region Constructors
     ///<summary>
     ///Creates an event in the specified initial state.
     ///</summary>
@@ -25,12 +25,9 @@ public sealed class AsyncManualResetEvent
             _tcs.TrySetResult();
         }
     }
+    #endregion
 
-    ///<summary>
-    ///Sets the event, releasing all current and future waiters until the event is reset.
-    ///</summary>
-    public void Set() => _tcs.TrySetResult();
-
+    #region Public methods
     ///<summary>
     ///Resets the event so that subsequent waiters block until <see cref="Set"/> is called again.
     ///</summary>
@@ -51,6 +48,11 @@ public sealed class AsyncManualResetEvent
             }
         }
     }
+
+    ///<summary>
+    ///Sets the event, releasing all current and future waiters until the event is reset.
+    ///</summary>
+    public void Set() => _tcs.TrySetResult();
 
     ///<summary>
     ///Synchronously blocks until the event is set.

@@ -11,6 +11,7 @@ namespace Catharsis.Patterns;
 public static class SpanSerializerPattern
 {
     #region Public methods
+
     ///<summary>
     ///Deserializes a batch of sensor readings from raw bytes.
     ///</summary>
@@ -55,6 +56,7 @@ public static class SpanSerializerPattern
     public readonly record struct SensorReading(int SensorId, float Temperature, float Humidity, long TimestampTicks) : ISequenceSerializable
     {
         #region Constants
+
         ///<summary>
         ///The fixed serialized size of a sensor reading.
         ///</summary>
@@ -81,7 +83,7 @@ public static class SpanSerializerPattern
         }
 
         ///<inheritdoc/>
-        public int GetSerializedSize() { return SerializedSizeValue; }
+        public int GetSerializedSize() => SerializedSizeValue;
 
         ///<inheritdoc/>
         public void Serialize(IBufferWriter<byte> writer)

@@ -10,13 +10,13 @@ namespace Catharsis.Collections;
 public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Fields
-    readonly Stack<T> _stack = new();
-    readonly Stack<T> _undone = new();
+    private readonly Stack<T> _stack = new();
+    private readonly Stack<T> _undone = new();
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -30,7 +30,7 @@ public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
     }
 
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return _stack.GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => _stack.GetEnumerator();
 
     ///<summary>
     ///Returns the item at the top of the stack without removing it.

@@ -10,9 +10,9 @@ namespace Catharsis.Patterns.Composed;
 public sealed class TieredPricingStrategy<TItem> : IPricingStrategy<TItem>
 {
     #region Fields
-    readonly Func<TItem, int> _quantity;
-    readonly string _currency;
-    readonly (int MinQuantity, decimal UnitPrice)[] _tiers;
+    private readonly string _currency;
+    private readonly Func<TItem, int> _quantity;
+    private readonly (int MinQuantity, decimal UnitPrice)[] _tiers;
     #endregion
 
     #region Constructors
@@ -30,7 +30,7 @@ public sealed class TieredPricingStrategy<TItem> : IPricingStrategy<TItem>
         ArgumentNullException.ThrowIfNull(currency);
         ArgumentNullException.ThrowIfNull(tiers);
 
-        _tiers = [.. tiers.OrderBy(static t => t.MinQuantity)];
+        _tiers = [ .. tiers.OrderBy(static t => t.MinQuantity) ];
 
         if(_tiers.Length == 0 || _tiers[0].MinQuantity > 1)
         {

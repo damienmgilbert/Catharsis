@@ -12,8 +12,8 @@ namespace Catharsis.Advanced;
 public sealed class HighPerformanceSerializer : IDisposable
 {
     #region Fields
-    bool _disposed;
-    readonly ArrayPool<byte> _pool;
+    private bool _disposed;
+    private readonly ArrayPool<byte> _pool;
     #endregion
 
     #region Constructors

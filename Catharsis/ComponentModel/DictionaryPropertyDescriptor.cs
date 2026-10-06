@@ -14,29 +14,28 @@ namespace Catharsis.ComponentModel;
 ///<param name="store">The backing dictionary for get/set operations.</param>
 ///<param name="attributes">Optional attributes for the property.</param>
 ///<exception cref="ArgumentNullException">
-///<paramref name="store"/> or <paramref name="propertyType"/> is <c>null</c>.
-///</exception>
 public sealed class DictionaryPropertyDescriptor(string name, Type propertyType, IDictionary<string, object?> store, params Attribute[] attributes) : PropertyDescriptor(name, attributes)
 {
     #region Fields
-    readonly Type _propertyType = propertyType ?? throw new ArgumentNullException(nameof(propertyType));
-    readonly IDictionary<string, object?> _store = store ?? throw new ArgumentNullException(nameof(store));
-
-    #endregion
-    #region Constructors
+    private readonly Type _propertyType = propertyType ?? throw new ArgumentNullException(nameof(propertyType));
+    private readonly IDictionary<string, object?> _store = store ?? throw new ArgumentNullException(nameof(store));
     #endregion
 
     #region Public methods
     ///<inheritdoc/>
-    public override bool CanResetValue(object component) { return true; }
+    public override bool CanResetValue(object component) => true;
+
     ///<inheritdoc/>
-    public override object? GetValue(object? component) { return _store.TryGetValue(Name, out object? value) ? value : null; }
+    public override object? GetValue(object? component) => _store.TryGetValue(Name, out object? value) ? value : null;
+
     ///<inheritdoc/>
-    public override void ResetValue(object component) { _store.Remove(Name); }
+    public override void ResetValue(object component) => _store.Remove(Name);
+
     ///<inheritdoc/>
-    public override void SetValue(object? component, object? value) { _store[Name] = value; }
+    public override void SetValue(object? component, object? value) => _store[Name] = value;
+
     ///<inheritdoc/>
-    public override bool ShouldSerializeValue(object component) { return _store.ContainsKey(Name); }
+    public override bool ShouldSerializeValue(object component) => _store.ContainsKey(Name);
     #endregion
 
     #region Public properties

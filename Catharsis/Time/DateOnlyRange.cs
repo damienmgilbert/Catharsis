@@ -2,12 +2,13 @@ namespace Catharsis.Time;
 
 ///<summary>
 ///Represents a closed, inclusive range [<see cref="Start"/>, <see cref="End"/>] of <see cref="DateOnly"/> values.
-///Complements the generic <see cref="Catharsis.DataStructures.Interval{T}"/> with date-specific conveniences such
-///as <see cref="DayCount"/> and <see cref="ToDates"/>.
+///Complements the generic <see cref="Catharsis.DataStructures.Interval{T}"/> with date-specific conveniences such as
+///<see cref="DayCount"/> and <see cref="ToDates"/>.
 ///</summary>
 public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new <see cref="DateOnlyRange"/> with the specified bounds. If <paramref name="start"/> is later
     ///than <paramref name="end"/>, the values are swapped so the range is always well-formed.
@@ -30,14 +31,20 @@ public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
 
     #region Operators
     ///<summary>
-    ///Determines whether two ranges are equal.
-    ///</summary>
-    public static bool operator ==(DateOnlyRange left, DateOnlyRange right) => left.Equals(right);
-
-    ///<summary>
     ///Determines whether two ranges are not equal.
     ///</summary>
-    public static bool operator !=(DateOnlyRange left, DateOnlyRange right) => !left.Equals(right);
+    public static bool operator !=(DateOnlyRange left, DateOnlyRange right)
+    {
+        return !left.Equals(right);
+    }
+
+    ///<summary>
+    ///Determines whether two ranges are equal.
+    ///</summary>
+    public static bool operator ==(DateOnlyRange left, DateOnlyRange right)
+    {
+        return left.Equals(right);
+    }
     #endregion
 
     #region Public methods
@@ -45,7 +52,10 @@ public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
     ///Determines whether the range contains the specified date.
     ///</summary>
     ///<param name="value">The date to test.</param>
-    ///<returns><c>true</c> if <paramref name="value"/> is within [<see cref="Start"/>, <see cref="End"/>]; otherwise <c>false</c>.</returns>
+    ///<returns>
+    ///<c>true</c> if <paramref name="value"/> is within [<see cref="Start"/>, <see cref="End"/>]; otherwise
+    ///<c>false</c>.
+    ///</returns>
     public bool Contains(DateOnly value) => (Start <= value) && (value <= End);
 
     ///<inheritdoc/>

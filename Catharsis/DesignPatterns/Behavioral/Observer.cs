@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class Observer
 {
     #region Public methods
+
     ///<summary>
     ///Observer — notifies each observer in <paramref name="observers"/> of the current state of <paramref name="obj"/>.
     ///</summary>

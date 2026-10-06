@@ -11,7 +11,8 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed record ErrorInfo(string Message, ValidationSeverity Severity = ValidationSeverity.Error, string? PropertyName = null)
 {
     #region Public methods
+
     ///<inheritdoc/>
-    public override string ToString() { return (PropertyName is not null) ? ($"[{Severity}] {PropertyName}: {Message}") : ($"[{Severity}] {Message}"); }
+    public override string ToString() => (PropertyName is not null) ? ($"[{Severity}] {PropertyName}: {Message}") : ($"[{Severity}] {Message}");
     #endregion
 }

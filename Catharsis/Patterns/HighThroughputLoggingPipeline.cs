@@ -17,13 +17,10 @@ namespace Catharsis.Patterns;
 public sealed class HighThroughputLoggingPipeline(ILogger logger, int flushThreshold = 100) : IDisposable
 {
     #region Fields
-    readonly BufferLogger _bufferLogger = new BufferLogger(logger, flushThreshold * 128);
-    bool _disposed;
-    int _entryCount;
-    readonly int _flushThreshold = flushThreshold;
-
-    #endregion
-    #region Constructors
+    private readonly BufferLogger _bufferLogger = new BufferLogger(logger, flushThreshold * 128);
+    private bool _disposed;
+    private int _entryCount;
+    private readonly int _flushThreshold = flushThreshold;
     #endregion
 
     #region Public methods
@@ -42,7 +39,7 @@ public sealed class HighThroughputLoggingPipeline(ILogger logger, int flushThres
     ///<summary>
     ///Flushes all pending log entries.
     ///</summary>
-    public void Flush() { _bufferLogger.Flush(); }
+    public void Flush() => _bufferLogger.Flush();
 
     ///<summary>
     ///Logs a message, auto-flushing when the threshold is reached.

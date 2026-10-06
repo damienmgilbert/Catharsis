@@ -12,7 +12,7 @@ namespace Catharsis.ComponentModel.Licensing;
 public sealed class BasicLicense : License
 {
     #region Fields
-    bool _disposed;
+    private bool _disposed;
     #endregion
 
     #region Constructors
@@ -27,8 +27,6 @@ public sealed class BasicLicense : License
     ///The UTC expiration date, or <c>null</c> for a perpetual license.
     ///</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="licenseKey"/> is <c>null</c>.
-    ///</exception>
     public BasicLicense(string licenseKey, string? licensee = null, DateTime? expiresUtc = null)
     {
         ArgumentNullException.ThrowIfNull(licenseKey);

@@ -9,17 +9,11 @@ namespace Catharsis.ComponentModel.Observability;
 ///undo/redo support and <see cref="INotifyPropertyChanged"/> notifications.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="SetTrackedProperty{T}"/> in property setters to automatically record changes. The <see
-///cref="Changes"/> property exposes the full<see cref="ChangeSet"/> for querying, and <see cref="Undo"/>/<see
-///cref="Redo"/> revert or reapply individual property changes.</para> <para> Call <see cref="AcceptChanges"/> to commit
-///all pending changes (clearing the undo/redo history), or <see cref="RejectChanges"/> to revert all pending changes in
-///reverse order.</para>
-///</remarks>
 public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropertyChanged, INotifyPropertyChanging
 {
     #region Fields
-    readonly ChangeSet _changes = new();
-    bool _isTrackingSuspended;
+    private readonly ChangeSet _changes = new();
+    private bool _isTrackingSuspended;
     #endregion
 
     #region Events
@@ -31,7 +25,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     #endregion
 
     #region Private methods
-    void ApplyPropertyValue(string propertyName, object? value)
+    private void ApplyPropertyValue(string propertyName, object? value)
     {
         PropertyInfo? prop = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -57,12 +51,13 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     ///Raises the <see cref="PropertyChanged"/> event.
     ///</summary>
     ///<param name="propertyName">The property name.</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
     ///<summary>
     ///Raises the <see cref="PropertyChanging"/> event.
     ///</summary>
     ///<param name="propertyName">The property name.</param>
-    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) { PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
 
     ///<summary>
     ///Sets the backing field to the specified value, records the change, and raises property change notifications.
@@ -74,8 +69,6 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
-    ///</returns>
     protected bool SetTrackedProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if(EqualityComparer<T>.Default.Equals(field, value))
@@ -101,7 +94,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     ///Suspends change tracking until the returned scope is disposed. Changes made during the scope are not recorded.
     ///</summary>
     ///<returns>A disposable that resumes tracking on disposal.</returns>
-    protected IDisposable SuspendTracking() { return new TrackingSuspensionScope(this); }
+    protected IDisposable SuspendTracking() => new TrackingSuspensionScope(this);
     #endregion
 
     #region Protected properties
@@ -113,7 +106,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
 
     #region Public methods
     ///<inheritdoc/>
-    public void AcceptChanges() { _changes.AcceptAll(); }
+    public void AcceptChanges() => _changes.AcceptAll();
 
     ///<inheritdoc/>
     public ChangeEntry? Redo()
@@ -181,12 +174,12 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     public bool IsChanged => _changes.HasChanges;
     #endregion
 
-    sealed class TrackingSuspensionScope : IDisposable
+    private sealed class TrackingSuspensionScope : IDisposable
     {
         #region Fields
-        bool _disposed;
-        readonly ChangeTrackingComponent _owner;
-        readonly bool _previousState;
+        private bool _disposed;
+        private readonly ChangeTrackingComponent _owner;
+        private readonly bool _previousState;
         #endregion
 
         #region Constructors

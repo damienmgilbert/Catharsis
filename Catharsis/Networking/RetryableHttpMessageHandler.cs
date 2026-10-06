@@ -3,24 +3,24 @@ using Catharsis.Resilience;
 namespace Catharsis.Networking;
 
 ///<summary>
-///An <see cref="HttpMessageHandler"/> that wires a <see cref="RetryPolicy"/> into an <see cref="HttpClient"/>
-///pipeline, retrying failed requests according to the configured policy.
+///An <see cref="HttpMessageHandler"/> that wires a <see cref="RetryPolicy"/> into an <see cref="HttpClient"/> pipeline,
+///retrying failed requests according to the configured policy.
 ///</summary>
 ///<remarks>
-///A <see cref="HttpRequestMessage"/> can only be sent once, so each retry attempt sends a clone of the original
-///request (including headers, content, and options) rather than reusing the same instance, which would throw on
-///the second attempt.
+///A <see cref="HttpRequestMessage"/> can only be sent once, so each retry attempt sends a clone of the original request
+///(including headers, content, and options) rather than reusing the same instance, which would throw on the second
+///attempt.
 ///</remarks>
 ///<param name="retryPolicy">The retry policy to apply to every request sent through this handler.</param>
 ///<exception cref="ArgumentNullException"><paramref name="retryPolicy"/> is <c>null</c>.</exception>
 public sealed class RetryableHttpMessageHandler(RetryPolicy retryPolicy) : DelegatingHandler
 {
     #region Fields
-    readonly RetryPolicy _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
+    private readonly RetryPolicy _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
     #endregion
 
     #region Private methods
-    static async Task<HttpRequestMessage> CloneAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    private static async Task<HttpRequestMessage> CloneAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         HttpRequestMessage clone = new(request.Method, request.RequestUri) { Version = request.Version };
 
@@ -60,11 +60,13 @@ public sealed class RetryableHttpMessageHandler(RetryPolicy retryPolicy) : Deleg
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        return _retryPolicy.ExecuteAsync(async token =>
-        {
-            HttpRequestMessage attemptRequest = await CloneAsync(request, token).ConfigureAwait(false);
-            return await base.SendAsync(attemptRequest, token).ConfigureAwait(false);
-        }, cancellationToken);
+        return _retryPolicy.ExecuteAsync(
+               async token =>
+               {
+                   HttpRequestMessage attemptRequest = await CloneAsync(request, token).ConfigureAwait(false);
+                   return await base.SendAsync(attemptRequest, token).ConfigureAwait(false);
+               },
+               cancellationToken);
     }
     #endregion
 }

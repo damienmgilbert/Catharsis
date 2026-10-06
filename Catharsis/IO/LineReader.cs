@@ -5,10 +5,10 @@ namespace Catharsis.IO;
 
 ///<summary>
 ///Enumerates the lines of a large text source without allocating a <see cref="string"/> per line: each line is
-///delivered as a <see cref="ReadOnlySpan{T}"/> view into a rented buffer, valid only for the duration of the
-///callback. This is why the API is callback-based (via <see cref="ReadOnlySpanAction{T, TArg}"/>) rather than
-///<see cref="IEnumerable{T}"/>: a <see cref="ReadOnlySpan{T}"/> cannot be a type argument, so it cannot be the
-///element type of a yielded sequence.
+///delivered as a <see cref="ReadOnlySpan{T}"/> view into a rented buffer, valid only for the duration of the callback.
+///This is why the API is callback-based (via <see cref="ReadOnlySpanAction{T, TArg}"/>) rather than ///<see
+///cref="IEnumerable{T}"/>: a <see cref="ReadOnlySpan{T}"/> cannot be a type argument, so it cannot be the element type
+///of a yielded sequence.
 ///</summary>
 ///<param name="stream">The stream to read lines from.</param>
 ///<param name="encoding">The text encoding to use, or <c>null</c> to use UTF-8.</param>
@@ -18,13 +18,13 @@ namespace Catharsis.IO;
 public sealed class LineReader(Stream stream, Encoding? encoding = null, int bufferSize = 4096) : IDisposable
 {
     #region Fields
-    readonly int _bufferSize = bufferSize > 0 ? bufferSize : throw new ArgumentOutOfRangeException(nameof(bufferSize), "Buffer size must be positive.");
-    readonly Encoding _encoding = encoding ?? Encoding.UTF8;
-    readonly Stream _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+    private readonly int _bufferSize = bufferSize > 0 ? bufferSize : throw new ArgumentOutOfRangeException(nameof(bufferSize), "Buffer size must be positive.");
+    private readonly Encoding _encoding = encoding ?? Encoding.UTF8;
+    private readonly Stream _stream = stream ?? throw new ArgumentNullException(nameof(stream));
     #endregion
 
     #region Private methods
-    static ReadOnlySpan<char> TrimTrailingCarriageReturn(ReadOnlySpan<char> line) => ((line.Length > 0) && (line[^1] == '\r')) ? line[..^1] : line;
+    private static ReadOnlySpan<char> TrimTrailingCarriageReturn(ReadOnlySpan<char> line) => ((line.Length > 0) && (line[^1] == '\r')) ? line[..^1] : line;
     #endregion
 
     #region Public methods
@@ -34,8 +34,8 @@ public sealed class LineReader(Stream stream, Encoding? encoding = null, int buf
     public void Dispose() => _stream.Dispose();
 
     ///<summary>
-    ///Reads every line from the source, invoking <paramref name="onLine"/> once per line with a span into an
-    ///internal rented buffer. The span is only valid for the duration of the call; do not store it.
+    ///Reads every line from the source, invoking <paramref name="onLine"/> once per line with a span into an internal
+    ///rented buffer. The span is only valid for the duration of the call; do not store it.
     ///</summary>
     ///<param name="onLine">The callback invoked for each line, with the line's text and <paramref name="state"/>.</param>
     ///<param name="state">Arbitrary state passed through to every call of <paramref name="onLine"/>.</param>

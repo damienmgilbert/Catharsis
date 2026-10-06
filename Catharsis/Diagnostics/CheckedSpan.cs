@@ -7,10 +7,10 @@ namespace Catharsis.Diagnostics;
 ///and range validation.
 ///</summary>
 ///<typeparam name="T">The element type.</typeparam>
-public readonly ref struct CheckedSpan<T>
+public ref readonly struct CheckedSpan<T>
 {
     #region Struct fields
-    readonly Span<T> _span;
+    private readonly Span<T> _span;
     #endregion
 
     #region Constructors
@@ -50,11 +50,12 @@ public readonly ref struct CheckedSpan<T>
     ///Gets the underlying span. Use with caution as this bypasses validation.
     ///</summary>
     ///<returns>The raw underlying span.</returns>
-    public readonly Span<T> AsSpan() { return _span; }
+    public readonly Span<T> AsSpan() => _span;
+
     ///<summary>
     ///Clears all elements to their default value.
     ///</summary>
-    public readonly void Clear() { _span.Clear(); }
+    public readonly void Clear() => _span.Clear();
 
     ///<summary>
     ///Copies the contents of this span to a destination span with validation.
@@ -74,7 +75,7 @@ public readonly ref struct CheckedSpan<T>
     ///Fills the span with the specified value.
     ///</summary>
     ///<param name="value">The value to fill with.</param>
-    public readonly void Fill(T value) { _span.Fill(value); }
+    public readonly void Fill(T value) => _span.Fill(value);
 
     ///<summary>
     ///Returns a checked slice of this span.

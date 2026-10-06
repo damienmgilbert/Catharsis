@@ -4,14 +4,10 @@ namespace Catharsis.Common;
 ///A fluent, chainable wrapper around <see cref="HashCode"/> for combining values into a single hash code.
 ///</summary>
 ///<remarks>
-///<see cref="HashCode"/> already covers most needs via <see cref="HashCode.Combine{T1, T2}(T1, T2)"/> and its
-///overloads; this exists for the two cases those don't cover well: chaining an unknown number of values (via
-///<see cref="Start"/>) and combining an existing <see cref="IEnumerable{T}"/> in one call (via <see cref="Combine"/>).
-///</remarks>
 public sealed class HashCodeCombiner
 {
     #region Fields
-    HashCode _hashCode;
+    private HashCode _hashCode;
     #endregion
 
     #region Public methods
@@ -26,12 +22,6 @@ public sealed class HashCodeCombiner
         _hashCode.Add(value);
         return this;
     }
-
-    ///<summary>
-    ///Computes the combined hash code from every value added so far.
-    ///</summary>
-    ///<returns>The combined hash code.</returns>
-    public int ToHashCode() => _hashCode.ToHashCode();
 
     ///<summary>
     ///Combines the hash codes of every value in <paramref name="values"/> into a single hash code.
@@ -58,5 +48,11 @@ public sealed class HashCodeCombiner
     ///</summary>
     ///<returns>A new <see cref="HashCodeCombiner"/>.</returns>
     public static HashCodeCombiner Start() => new();
+
+    ///<summary>
+    ///Computes the combined hash code from every value added so far.
+    ///</summary>
+    ///<returns>The combined hash code.</returns>
+    public int ToHashCode() => _hashCode.ToHashCode();
     #endregion
 }

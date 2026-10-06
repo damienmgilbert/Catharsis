@@ -11,10 +11,10 @@ namespace Catharsis.Buffers;
 public sealed class PooledBuffer<T> : IResizableBuffer<T>
 {
     #region Fields
-    T[] _buffer;
-    bool _disposed;
-    readonly ArrayPool<T> _pool;
-    int _position;
+    private T[] _buffer;
+    private bool _disposed;
+    private readonly ArrayPool<T> _pool;
+    private int _position;
     #endregion
 
     #region Constructors
@@ -45,7 +45,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
     #endregion
 
     #region Private methods
-    int CalculateNewSize(int required)
+    private int CalculateNewSize(int required)
     {
         return GrowthStrategy switch
         {
@@ -120,7 +120,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
     }
 
     ///<inheritdoc/>
-    public void Reset() { _position = 0; }
+    public void Reset() => _position = 0;
     #endregion
 
     #region Public properties

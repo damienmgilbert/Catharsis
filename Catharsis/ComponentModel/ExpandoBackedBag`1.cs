@@ -6,18 +6,49 @@ namespace Catharsis.ComponentModel;
 
 ///<summary>
 ///A strongly-typed façade over an <see cref="ExpandoObject"/> for ad hoc property bags: a typed indexer for
-///programmatic access, backed by the same dynamic storage that also supports dynamic member access via
-///<see cref="AsDynamic"/> (e.g. <c>((dynamic)bag.AsDynamic).PropertyName</c>).
+///programmatic access, backed by the same dynamic storage that also supports dynamic member access via ///<see
+///cref="AsDynamic"/> (e.g. <c>((dynamic)bag.AsDynamic).PropertyName</c>).
 ///</summary>
 ///<typeparam name="T">The type of values stored in the bag.</typeparam>
 public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
 {
     #region Fields
-    readonly ExpandoObject _expando = new();
+    private readonly ExpandoObject _expando = new();
     #endregion
 
-    #region Private methods
-    IDictionary<string, object?> Storage => _expando;
+    #region Indexers
+    ///<summary>
+    ///Gets or sets the value associated with the specified key.
+    ///</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
+    ///<exception cref="KeyNotFoundException">On get, the key was not found or its value is not of type <typeparamref name="T"/>.</exception>
+    public T this[string key]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(key);
+
+            if(!TryGetValue(key, out T? value))
+            {
+                throw new KeyNotFoundException($"The key '{key}' was not found.");
+            }
+
+            return value;
+        }
+        set
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            Storage[key] = value;
+        }
+    }
+    #endregion
+
+    #region Explicit interface implementations
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    #endregion
+
+    #region Private properties
+    private IDictionary<string, object?> Storage => _expando;
     #endregion
 
     #region Public methods
@@ -43,8 +74,6 @@ public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
             }
         }
     }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     ///<summary>
     ///Removes the entry with the specified key, if present.
@@ -83,38 +112,11 @@ public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
     #region Public properties
     ///<summary>
     ///Exposes this bag's storage as a <c>dynamic</c> value, so its entries can also be accessed as
-    ///<c>((dynamic)bag.AsDynamic).PropertyName</c>.
-    ///</summary>
     public dynamic AsDynamic => _expando;
 
     ///<summary>
     ///The number of entries in the bag.
     ///</summary>
     public int Count => Storage.Count;
-
-    ///<summary>
-    ///Gets or sets the value associated with the specified key.
-    ///</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
-    ///<exception cref="KeyNotFoundException">On get, the key was not found or its value is not of type <typeparamref name="T"/>.</exception>
-    public T this[string key]
-    {
-        get
-        {
-            ArgumentNullException.ThrowIfNull(key);
-
-            if(!TryGetValue(key, out T? value))
-            {
-                throw new KeyNotFoundException($"The key '{key}' was not found.");
-            }
-
-            return value;
-        }
-        set
-        {
-            ArgumentNullException.ThrowIfNull(key);
-            Storage[key] = value;
-        }
-    }
     #endregion
 }

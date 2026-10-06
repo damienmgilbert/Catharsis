@@ -8,11 +8,11 @@ namespace Catharsis.HighPerformance;
 ///Provides bit-level access over a <see cref="Span{T}"/> of bytes, enabling compact boolean arrays and bitwise
 ///operations without extra allocation.
 ///</summary>
-public readonly ref struct BitSpan
+public ref readonly struct BitSpan
 {
     #region Struct fields
-    readonly Span<byte> _bytes;
-    readonly int _bitLength;
+    private readonly Span<byte> _bytes;
+    private readonly int _bitLength;
     #endregion
 
     #region Constructors
@@ -74,12 +74,14 @@ public readonly ref struct BitSpan
     ///<summary>
     ///Clears all bits to zero.
     ///</summary>
-    public void Clear() { _bytes.Clear(); }
+    public void Clear() => _bytes.Clear();
+
     ///<summary>
     ///Sets all bits to the specified value.
     ///</summary>
     ///<param name="value">The value to set all bits to.</param>
-    public void Fill(bool value) { _bytes.Fill(value ? ((byte)0xFF) : ((byte)0x00)); }
+    public void Fill(bool value) => _bytes.Fill(value ? ((byte)0xFF) : ((byte)0x00));
+
     ///<summary>
     ///Gets the minimum number of bytes required to store the specified number of bits.
     ///</summary>

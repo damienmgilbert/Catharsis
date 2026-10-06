@@ -1,8 +1,8 @@
-﻿namespace Catharsis.Collections;
+namespace Catharsis.Collections;
 
 ///<summary>
-///A collection that invokes a callback when an item is added. Wraps a <see cref="List{T}"/> and implements
-///<see cref="ICollection{T}"/>.
+///A collection that invokes a callback when an item is added. Wraps a <see cref="List{T}"/> and implements ///<see
+///cref="ICollection{T}"/>.
 ///</summary>
 ///<typeparam name="T">The type of elements in the collection.</typeparam>
 ///<remarks>
@@ -12,16 +12,13 @@
 public sealed class TrackingCollection<T>(Action<T> onAdd) : ICollection<T>
 {
     #region Fields
-    readonly List<T> _items = [];
-    readonly Action<T> _onAdd = onAdd;
-
-    #endregion
-    #region Constructors
+    private readonly List<T> _items = [];
+    private readonly Action<T> _onAdd = onAdd;
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -36,15 +33,19 @@ public sealed class TrackingCollection<T>(Action<T> onAdd) : ICollection<T>
     }
 
     ///<inheritdoc/>
-    public void Clear() { _items.Clear(); }
+    public void Clear() => _items.Clear();
+
     ///<inheritdoc/>
-    public bool Contains(T item) { return _items.Contains(item); }
+    public bool Contains(T item) => _items.Contains(item);
+
     ///<inheritdoc/>
-    public void CopyTo(T[] array, int arrayIndex) { _items.CopyTo(array, arrayIndex); }
+    public void CopyTo(T[] array, int arrayIndex) => _items.CopyTo(array, arrayIndex);
+
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return _items.GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+
     ///<inheritdoc/>
-    public bool Remove(T item) { return _items.Remove(item); }
+    public bool Remove(T item) => _items.Remove(item);
     #endregion
 
     #region Public properties

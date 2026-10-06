@@ -4,13 +4,14 @@ namespace Catharsis.DesignPatterns.Enterprise;
 ///Implements the Specification design pattern.
 ///</summary>
 ///<remarks>
-///This composes plain <see cref="Func{T, TResult}"/> predicates for in-memory evaluation. For composing
-///<see cref="System.Linq.Expressions.Expression{TDelegate}"/> predicates against a query provider (e.g. Entity
-///Framework), use <see cref="Catharsis.Linq.Expressions.PredicateCombinator"/> instead.
+///This composes plain <see cref="Func{T, TResult}"/> predicates for in-memory evaluation. For composing ///<see
+///cref="System.Linq.Expressions.Expression{TDelegate}"/> predicates against a query provider (e.g. Entity Framework),
+///use <see cref="Catharsis.Linq.Expressions.PredicateCombinator"/> instead.
 ///</remarks>
 public class SpecificationPattern
 {
     #region Public methods
+
     ///<summary>
     ///Specification — combines two specifications so the result is satisfied only when both are.
     ///</summary>

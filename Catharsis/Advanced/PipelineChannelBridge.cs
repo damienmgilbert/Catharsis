@@ -5,19 +5,18 @@ using System.Threading.Channels;
 namespace Catharsis.Advanced;
 
 ///<summary>
-///Pumps data written to a <see cref="System.IO.Pipelines.Pipe"/>'s <see cref="PipeWriter"/> into a
-///<see cref="MemoryBackedChannel{T}"/> of pooled segments, bridging pipeline-based producers into channel-based
-///consumers while preserving backpressure: the pump only reads more from the pipe once the channel has room for
-///another segment.
+///Pumps data written to a <see cref="System.IO.Pipelines.Pipe"/>'s <see cref="PipeWriter"/> into a ///<see
+///cref="MemoryBackedChannel{T}"/> of pooled segments, bridging pipeline-based producers into channel-based consumers
+///while preserving backpressure: the pump only reads more from the pipe once the channel has room for another segment.
 ///</summary>
 public sealed class PipelineChannelBridge : IAsyncDisposable
 {
     #region Fields
-    readonly Pipe _pipe = new();
-    readonly MemoryBackedChannel<byte> _channel;
-    readonly CancellationTokenSource _stoppingSource = new();
-    readonly Task _pumpTask;
-    bool _disposed;
+    private readonly MemoryBackedChannel<byte> _channel;
+    private bool _disposed;
+    private readonly Pipe _pipe = new();
+    private readonly Task _pumpTask;
+    private readonly CancellationTokenSource _stoppingSource = new();
     #endregion
 
     #region Constructors
@@ -33,7 +32,7 @@ public sealed class PipelineChannelBridge : IAsyncDisposable
     #endregion
 
     #region Private methods
-    async Task PumpAsync(CancellationToken stoppingToken)
+    private async Task PumpAsync(CancellationToken stoppingToken)
     {
         try
         {

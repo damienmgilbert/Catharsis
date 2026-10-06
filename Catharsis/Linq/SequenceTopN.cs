@@ -3,12 +3,13 @@ using Catharsis.DataStructures;
 namespace Catharsis.Linq;
 
 ///<summary>
-///Provides streaming top-N/bottom-N selection over <see cref="IEnumerable{T}"/> without a full sort, using a
-///<see cref="MinMaxHeap{T}"/> bounded to <c>count</c> elements. Runs in O(n log count) time and O(count) space.
+///Provides streaming top-N/bottom-N selection over <see cref="IEnumerable{T}"/> without a full sort, using a ///<see
+///cref="MinMaxHeap{T}"/> bounded to <c>count</c> elements. Runs in O(n log count) time and O(count) space.
 ///</summary>
 public static class SequenceTopN
 {
     #region Public methods
+
     ///<summary>
     ///Selects the <paramref name="count"/> smallest elements, ordered smallest-first.
     ///</summary>

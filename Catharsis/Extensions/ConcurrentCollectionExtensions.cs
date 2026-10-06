@@ -121,7 +121,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(count)];
+        List<T> result = [ with(count) ];
         for(int i = 0; (i < count) && source.TryDequeue(out T? item); i++)
         {
             result.Add(item);
@@ -212,7 +212,7 @@ public static class ConcurrentCollectionExtensions
 
         T[] buffer = new T[count];
         int popped = source.TryPopRange(buffer);
-        return [with(buffer[..popped])];
+        return[ with(buffer[..popped]) ];
     }
 
     // ── ConcurrentStack<T> ──────────────────────────────────────────────
@@ -236,7 +236,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        T[] array = items as T[] ?? [.. items];
+        T[] array = items as T[] ?? [ .. items ];
         source.PushRange(array);
         return source;
     }
@@ -297,7 +297,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
+        List<TKey> keysToRemove = [ .. source.Where(predicate).Select(static kvp => kvp.Key) ];
         int removed = 0;
         foreach(TKey key in keysToRemove)
         {
@@ -331,7 +331,7 @@ public static class ConcurrentCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(count)];
+        List<T> result = [ with(count) ];
         for(int i = 0; (i < count) && source.TryTake(out T? item); i++)
         {
             result.Add(item);

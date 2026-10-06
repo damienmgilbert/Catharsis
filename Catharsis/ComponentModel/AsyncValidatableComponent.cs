@@ -4,12 +4,13 @@ namespace Catharsis.ComponentModel;
 
 ///<summary>
 ///An async counterpart to <see cref="ValidatableComponent"/>: adds <see cref="IAsyncDisposable"/> and an async
-///validation hook for validation logic that itself needs to be asynchronous (e.g. a uniqueness check against a
-///remote service).
+///validation hook for validation logic that itself needs to be asynchronous (e.g. a uniqueness check against a remote
+///service).
 ///</summary>
 public abstract class AsyncValidatableComponent : ValidatableComponent, IAsyncDisposable
 {
     #region Protected methods
+
     ///<summary>
     ///Releases the unmanaged and, optionally, asynchronous resources used by this component. Override to release
     ///additional asynchronous resources; the default implementation does nothing.
@@ -18,13 +19,13 @@ public abstract class AsyncValidatableComponent : ValidatableComponent, IAsyncDi
     protected virtual ValueTask DisposeAsyncCore() => ValueTask.CompletedTask;
 
     ///<summary>
-    ///Invokes <paramref name="setter"/> with <paramref name="value"/>, raises change notification for
-    ///<paramref name="propertyName"/>, and then asynchronously validates the new value.
+    ///Invokes <paramref name="setter"/> with <paramref name="value"/>, raises change notification for ///<paramref
+    ///name="propertyName"/>, and then asynchronously validates the new value.
     ///</summary>
     ///<remarks>
-    ///This takes a setter delegate rather than a <c>ref</c> backing field, unlike
-    ///<see cref="ValidatableComponent.SetPropertyAndValidate{T}"/>, because C# does not allow <c>ref</c> parameters
-    ///on an <c>async</c> method.
+    ///This takes a setter delegate rather than a <c>ref</c> backing field, unlike ///<see
+    ///cref="ValidatableComponent.SetPropertyAndValidate{T}"/>, because C# does not allow <c>ref</c> parameters on an
+    ///<c>async</c> method.
     ///</remarks>
     ///<typeparam name="T">The type of the property.</typeparam>
     ///<param name="value">The new value.</param>

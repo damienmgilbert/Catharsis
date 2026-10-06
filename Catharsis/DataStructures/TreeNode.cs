@@ -1,16 +1,12 @@
-﻿namespace Catharsis.DataStructures;
+namespace Catharsis.DataStructures;
 
 ///<summary>
 ///Helper class representing a tree node for testing purposes.
 ///</summary>
 public sealed class TreeNode(string name)
 {
-
-    #region Constructors
-    #endregion
-
     #region Public methods
-    public void AddChild(TreeNode child) { Children.Add(child); }
+    public void AddChild(TreeNode child) => Children.Add(child);
     #endregion
 
     #region Public properties

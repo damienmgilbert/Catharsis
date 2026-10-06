@@ -13,6 +13,7 @@ namespace Catharsis.ComponentModel;
 public sealed class PropertyMetadata
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new instance of <see cref="PropertyMetadata"/>.
     ///</summary>
@@ -24,8 +25,6 @@ public sealed class PropertyMetadata
     ///<param name="attributes">Optional attributes to associate with the property.</param>
     ///<exception cref="ArgumentException"><paramref name="name"/> is null or whitespace.</exception>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="propertyType"/> or <paramref name="componentType"/> is <c>null</c>.
-    ///</exception>
     public PropertyMetadata(string name, Type propertyType, Type componentType, bool isReadOnly = false, object? defaultValue = null, params Attribute[] attributes)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -45,7 +44,7 @@ public sealed class PropertyMetadata
     ///<summary>
     ///Returns a string representation containing the property name and type.
     ///</summary>
-    public override string ToString() { return $"{Name} ({PropertyType.Name})"; }
+    public override string ToString() => $"{Name} ({PropertyType.Name})";
     #endregion
 
     #region Public properties

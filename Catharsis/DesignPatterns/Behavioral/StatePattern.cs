@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class StatePattern
 {
     #region Public methods
+
     ///<summary>
     ///State — selects a behavior based on the current <paramref name="state"/> via <paramref name="behaviorSelector"/>
     ///and applies it to <paramref name="obj"/>.

@@ -14,10 +14,13 @@ namespace Catharsis.DataAnnotations;
 public sealed class FutureDateAttribute : ValidationAttribute
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new instance of <see cref="FutureDateAttribute"/>.
     ///</summary>
-    public FutureDateAttribute() : base("The field {0} must be a date in the future.") { }
+    public FutureDateAttribute() : base("The field {0} must be a date in the future.")
+    {
+    }
     #endregion
 
     #region Protected methods

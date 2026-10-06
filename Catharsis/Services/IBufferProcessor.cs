@@ -8,6 +8,7 @@ namespace Catharsis.Services;
 public interface IBufferProcessor
 {
     #region Public methods
+
     ///<summary>
     ///Processes data from the input span and writes results to the output writer.
     ///</summary>

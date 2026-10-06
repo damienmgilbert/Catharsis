@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Structural;
 public class ProxyPattern
 {
     #region Public methods
+
     ///<summary>
     ///Proxy — intercepts <paramref name="operation"/> on <paramref name="obj"/> with optional <paramref name="before"/>
     ///and <paramref name="after"/> cross-cutting actions.

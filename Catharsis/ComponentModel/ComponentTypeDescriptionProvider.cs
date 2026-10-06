@@ -9,24 +9,18 @@ namespace Catharsis.ComponentModel;
 ///experience with caching and metadata lookup support.
 ///</summary>
 ///<remarks>
-///<para> This provider builds on <see cref="ComponentDescriptorProvider"/> by adding a <see
-///cref="ComponentReflectionCache"/> for performance and exposing the full <see cref="MetadataProvider"/> for
-///programmatic metadata queries.</para> <para> Typical usage:<code> var provider = new
-///ComponentTypeDescriptionProvider(); provider.Registry.RegisterProperty(typeof(MyComponent), myPropertyMetadata);
-///TypeDescriptor.AddProvider(provider, typeof(MyComponent));</code></para>
-///</remarks>
 public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
 {
     #region Fields
-    readonly ComponentReflectionCache _cache;
-    readonly MetadataProvider _metadataProvider;
-    readonly ComponentMetadataRegistry _registry;
+    private readonly ComponentReflectionCache _cache;
+    private readonly MetadataProvider _metadataProvider;
+    private readonly ComponentMetadataRegistry _registry;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with new registry and
-    ///cache instances.
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with new registry and cache
+    ///instances.
     ///</summary>
     public ComponentTypeDescriptionProvider()
     {
@@ -36,8 +30,8 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> that chains to the specified
-    ///parent provider.
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> that chains to the specified parent
+    ///provider.
     ///</summary>
     ///<param name="parent">The parent provider to chain to.</param>
     public ComponentTypeDescriptionProvider(TypeDescriptionProvider parent) : base(parent)
@@ -54,8 +48,6 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     ///<param name="registry">The metadata registry.</param>
     ///<param name="cache">The reflection cache.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="registry"/> or <paramref name="cache"/> is <c>null</c>.
-    ///</exception>
     public ComponentTypeDescriptionProvider(ComponentMetadataRegistry registry, ComponentReflectionCache cache)
     {
         ArgumentNullException.ThrowIfNull(registry);
@@ -67,15 +59,13 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry,
-    ///cache, and parent provider.
+    ///Initializes a new instance of <see cref="ComponentTypeDescriptionProvider"/> with the specified registry, cache,
+    ///and parent provider.
     ///</summary>
     ///<param name="registry">The metadata registry.</param>
     ///<param name="cache">The reflection cache.</param>
     ///<param name="parent">The parent provider to chain to.</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="registry"/> or <paramref name="cache"/> is <c>null</c>.
-    ///</exception>
     public ComponentTypeDescriptionProvider(ComponentMetadataRegistry registry, ComponentReflectionCache cache, TypeDescriptionProvider parent) : base(parent)
     {
         ArgumentNullException.ThrowIfNull(registry);
@@ -130,39 +120,36 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     public ComponentMetadataRegistry Registry => _registry;
     #endregion
 
-    sealed class CachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
+    private sealed class CachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly ComponentReflectionCache _cache = cache;
-        readonly Type _componentType = componentType;
-
-        #endregion
-        #region Constructors
+        private readonly ComponentReflectionCache _cache = cache;
+        private readonly Type _componentType = componentType;
         #endregion
 
         #region Public methods
-        public override EventDescriptorCollection GetEvents() { return _cache.GetEvents(_componentType); }
-        public override EventDescriptorCollection GetEvents(Attribute[]? attributes) { return _cache.GetEvents(_componentType, attributes ?? []); }
-        public override PropertyDescriptorCollection GetProperties() { return _cache.GetProperties(_componentType); }
-        public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes) { return _cache.GetProperties(_componentType, attributes ?? []); }
+        public override EventDescriptorCollection GetEvents() => _cache.GetEvents(_componentType);
+
+        public override EventDescriptorCollection GetEvents(Attribute[]? attributes) => _cache.GetEvents(_componentType, attributes ?? []);
+
+        public override PropertyDescriptorCollection GetProperties() => _cache.GetProperties(_componentType);
+
+        public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes) => _cache.GetProperties(_componentType, attributes ?? []);
         #endregion
     }
 
-    sealed class RegistryCachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
+    private sealed class RegistryCachedTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, ComponentReflectionCache cache, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        readonly ComponentReflectionCache _cache = cache;
-        readonly Type _componentType = componentType;
-        readonly ComponentMetadataRegistry _registry = registry;
-
-        #endregion
-        #region Constructors
+        private readonly ComponentReflectionCache _cache = cache;
+        private readonly Type _componentType = componentType;
+        private readonly ComponentMetadataRegistry _registry = registry;
         #endregion
 
         #region Private methods
-        static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
+        private static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
         {
-            Dictionary<string, EventDescriptor> merged = [with(StringComparer.Ordinal)];
+            Dictionary<string, EventDescriptor> merged = [ with(StringComparer.Ordinal) ];
 
             foreach(EventDescriptor evt in baseEvents)
             {
@@ -188,9 +175,9 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
             return new EventDescriptorCollection([ .. merged.Values ]);
         }
 
-        static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
+        private static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
-            Dictionary<string, PropertyDescriptor> merged = [with(StringComparer.Ordinal)];
+            Dictionary<string, PropertyDescriptor> merged = [ with(StringComparer.Ordinal) ];
 
             foreach(PropertyDescriptor prop in baseProperties)
             {

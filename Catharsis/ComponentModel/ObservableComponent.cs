@@ -14,6 +14,7 @@ namespace Catharsis.ComponentModel;
 public abstract class ObservableComponent : ComponentBase, INotifyPropertyChanged, INotifyPropertyChanging
 {
     #region Events
+
     ///<inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -41,7 +42,8 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///The name of the property that changed. Pass <c>null</c> or <see cref="string.Empty"/> to indicate all properties
     ///changed.
     ///</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
     ///<summary>
     ///Raises the <see cref="PropertyChanging"/> event.
     ///</summary>
@@ -49,7 +51,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///The name of the property that is changing. Pass <c>null</c> or <see cref="string.Empty"/> to indicate all
     ///properties are changing.
     ///</param>
-    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) { PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName)); }
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
 
     ///<summary>
     ///Sets the backing field to the specified value and raises change notifications if the value has changed.
@@ -61,8 +63,6 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
-    ///</returns>
     protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if(EqualityComparer<T>.Default.Equals(field, value))
@@ -90,8 +90,6 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///The name of the property. Automatically provided by the compiler.
     ///</param>
     ///<returns>
-    ///<c>true</c> if the value changed; <c>false</c> if the existing value matched the new value.
-    ///</returns>
     protected bool SetProperty<T>(ref T field, T value, Action<T> onChanged, [CallerMemberName] string? propertyName = null)
     {
         ArgumentNullException.ThrowIfNull(onChanged);

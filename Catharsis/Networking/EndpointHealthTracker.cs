@@ -9,7 +9,7 @@ namespace Catharsis.Networking;
 public sealed class EndpointHealthTracker
 {
     #region Fields
-    readonly ConcurrentDictionary<Uri, (long Successes, long Failures)> _stats = new();
+    private readonly ConcurrentDictionary<Uri, (long Successes, long Failures)> _stats = new();
     #endregion
 
     #region Public methods
@@ -42,7 +42,7 @@ public sealed class EndpointHealthTracker
     public void RecordFailure(Uri endpoint)
     {
         ArgumentNullException.ThrowIfNull(endpoint);
-        _stats.AddOrUpdate(endpoint, static _ => (0, 1), static (_, existing) => (existing.Successes, existing.Failures + 1));
+        _stats.AddOrUpdate(endpoint, static _ => (0, 1), static(_, existing) => (existing.Successes, existing.Failures + 1));
     }
 
     ///<summary>
@@ -53,12 +53,12 @@ public sealed class EndpointHealthTracker
     public void RecordSuccess(Uri endpoint)
     {
         ArgumentNullException.ThrowIfNull(endpoint);
-        _stats.AddOrUpdate(endpoint, static _ => (1, 0), static (_, existing) => (existing.Successes + 1, existing.Failures));
+        _stats.AddOrUpdate(endpoint, static _ => (1, 0), static(_, existing) => (existing.Successes + 1, existing.Failures));
     }
 
     ///<summary>
-    ///Selects the endpoint with the highest success ratio among <paramref name="candidates"/>, breaking ties by
-    ///the order they appear in.
+    ///Selects the endpoint with the highest success ratio among <paramref name="candidates"/>, breaking ties by the
+    ///order they appear in.
     ///</summary>
     ///<param name="candidates">The endpoints to choose from.</param>
     ///<returns>The healthiest endpoint, or <c>null</c> if <paramref name="candidates"/> is empty.</returns>

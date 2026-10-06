@@ -89,7 +89,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(Math.Min(count, source.Count))];
+        List<T> result = [ with(Math.Min(count, source.Count)) ];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -120,7 +120,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<TElement> result = [with(Math.Min(count, source.Count))];
+        List<TElement> result = [ with(Math.Min(count, source.Count)) ];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Dequeue());
@@ -207,7 +207,7 @@ public static class QueueStackExtensions
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        List<TKey> keys = [.. source.Keys];
+        List<TKey> keys = [ .. source.Keys ];
         foreach(TKey key in keys)
         {
             source[key] = modifier(key, source[key]);
@@ -237,7 +237,7 @@ public static class QueueStackExtensions
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        List<TKey> keys = [.. source.Keys];
+        List<TKey> keys = [ .. source.Keys ];
         foreach(TKey key in keys)
         {
             source[key] = modifier(key, source[key]);
@@ -267,7 +267,7 @@ public static class QueueStackExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(Math.Min(count, source.Count))];
+        List<T> result = [ with(Math.Min(count, source.Count)) ];
         for(int i = 0; (i < count) && (source.Count > 0); i++)
         {
             result.Add(source.Pop());
@@ -392,7 +392,7 @@ public static class QueueStackExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
+        List<TKey> keysToRemove = [ .. source.Where(predicate).Select(static kvp => kvp.Key) ];
         int removed = 0;
         foreach(TKey key in keysToRemove)
         {
@@ -426,7 +426,7 @@ public static class QueueStackExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
+        List<TKey> keysToRemove = [ .. source.Where(predicate).Select(static kvp => kvp.Key) ];
         int removed = 0;
         foreach(TKey key in keysToRemove)
         {

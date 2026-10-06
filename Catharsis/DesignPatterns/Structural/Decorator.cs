@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Structural;
 public class Decorator
 {
     #region Public methods
+
     ///<summary>
     ///Decorator — applies one or more <paramref name="decorators"/> in sequence, each wrapping the result of the
     ///previous transformation.

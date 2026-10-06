@@ -8,20 +8,44 @@ namespace Catharsis.Concurrency;
 ///<typeparam name="TKey">The key type. Must support equality comparison.</typeparam>
 ///<param name="comparer">The equality comparer used to match keys, or <c>null</c> to use the default comparer.</param>
 ///<example>
-///<code>
-///KeyedAsyncLock&lt;string&gt; locks = new();
-///
-///using(await locks.LockAsync(userId))
-///{
-///    // Only one caller per distinct userId executes this block at a time.
-///}
-///</code>
-///</example>
 public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = null) where TKey : notnull
 {
     #region Fields
-    readonly Dictionary<TKey, Entry> _entries = new(comparer);
-    readonly Lock _gate = new();
+    private readonly Dictionary<TKey, Entry> _entries = new(comparer);
+    private readonly Lock _gate = new();
+    #endregion
+
+    #region Private methods
+    private Entry Acquire(TKey key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        lock(_gate)
+        {
+            if(!_entries.TryGetValue(key, out Entry? entry))
+            {
+                entry = new Entry();
+                _entries.Add(key, entry);
+            }
+
+            entry.RefCount++;
+            return entry;
+        }
+    }
+
+    private void Release(TKey key, Entry entry)
+    {
+        lock(_gate)
+        {
+            entry.RefCount--;
+
+            if(entry.RefCount == 0 && _entries.TryGetValue(key, out Entry? current) && current == entry)
+            {
+                _entries.Remove(key);
+                entry.Semaphore.Dispose();
+            }
+        }
+    }
     #endregion
 
     #region Public methods
@@ -52,45 +76,13 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
         try
         {
             await entry.Semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-        }
-        catch
+        } catch
         {
             Release(key, entry);
             throw;
         }
 
         return new ReleaseHandle(this, key, entry);
-    }
-
-    Entry Acquire(TKey key)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-
-        lock(_gate)
-        {
-            if(!_entries.TryGetValue(key, out Entry? entry))
-            {
-                entry = new Entry();
-                _entries.Add(key, entry);
-            }
-
-            entry.RefCount++;
-            return entry;
-        }
-    }
-
-    void Release(TKey key, Entry entry)
-    {
-        lock(_gate)
-        {
-            entry.RefCount--;
-
-            if(entry.RefCount == 0 && _entries.TryGetValue(key, out Entry? current) && current == entry)
-            {
-                _entries.Remove(key);
-                entry.Semaphore.Dispose();
-            }
-        }
     }
     #endregion
 
@@ -110,19 +102,19 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
     }
     #endregion
 
-    sealed class Entry
+    private sealed class Entry
     {
         #region Public properties
-        public SemaphoreSlim Semaphore { get; } = new(1, 1);
-
         public int RefCount { get; set; }
+
+        public SemaphoreSlim Semaphore { get; } = new(1, 1);
         #endregion
     }
 
-    sealed class ReleaseHandle(KeyedAsyncLock<TKey> owner, TKey key, Entry entry) : IDisposable
+    private sealed class ReleaseHandle(KeyedAsyncLock<TKey> owner, TKey key, Entry entry) : IDisposable
     {
         #region Fields
-        int _released;
+        private int _released;
         #endregion
 
         #region Public methods

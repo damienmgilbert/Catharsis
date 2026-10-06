@@ -11,11 +11,11 @@ public static class AsyncSequenceProjector
     #region Private methods
     private static async IAsyncEnumerable<TResult> ChooseRefIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, TResult?> chooser, [EnumeratorCancellation] CancellationToken cancellationToken = default) where TResult : class
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             TResult? result = chooser(item);
 
-            if (result is not null)
+            if(result is not null)
             {
                 yield return result;
             }
@@ -24,11 +24,11 @@ public static class AsyncSequenceProjector
 
     private static async IAsyncEnumerable<TResult> ChooseValueIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, TResult?> chooser, [EnumeratorCancellation] CancellationToken cancellationToken = default) where TResult : struct
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             TResult? result = chooser(item);
 
-            if (result.HasValue)
+            if(result.HasValue)
             {
                 yield return result.Value;
             }
@@ -40,7 +40,7 @@ public static class AsyncSequenceProjector
         TAccumulate current = seed;
         yield return current;
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             current = await accumulator(current, item, cancellationToken).ConfigureAwait(false);
             yield return current;
@@ -52,7 +52,7 @@ public static class AsyncSequenceProjector
         TAccumulate current = seed;
         yield return current;
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             current = accumulator(current, item);
             yield return current;
@@ -61,7 +61,7 @@ public static class AsyncSequenceProjector
 
     private static async IAsyncEnumerable<TResult> SelectAsyncIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, CancellationToken, ValueTask<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return await selector(item, cancellationToken).ConfigureAwait(false);
         }
@@ -71,7 +71,7 @@ public static class AsyncSequenceProjector
     {
         int index = 0;
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return selector(item, index);
             index++;
@@ -80,7 +80,7 @@ public static class AsyncSequenceProjector
 
     private static async IAsyncEnumerable<TResult> SelectIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, TResult> selector, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return selector(item);
         }
@@ -88,9 +88,9 @@ public static class AsyncSequenceProjector
 
     private static async IAsyncEnumerable<TResult> SelectManyIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, IAsyncEnumerable<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            await foreach (TResult result in selector(item).WithCancellation(cancellationToken).ConfigureAwait(false))
+            await foreach(TResult result in selector(item).WithCancellation(cancellationToken).ConfigureAwait(false))
             {
                 yield return result;
             }
@@ -99,9 +99,9 @@ public static class AsyncSequenceProjector
 
     private static async IAsyncEnumerable<TResult> SelectManySyncIterator<T, TResult>(IAsyncEnumerable<T> source, Func<T, IEnumerable<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            foreach (TResult result in selector(item))
+            foreach(TResult result in selector(item))
             {
                 yield return result;
             }
@@ -128,7 +128,7 @@ public static class AsyncSequenceProjector
 
         TAccumulate result = seed;
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             result = accumulator(result, item);
         }
@@ -150,9 +150,9 @@ public static class AsyncSequenceProjector
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if (!predicate(item))
+            if(!predicate(item))
             {
                 return false;
             }
@@ -175,9 +175,9 @@ public static class AsyncSequenceProjector
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if (predicate(item))
+            if(predicate(item))
             {
                 return true;
             }
@@ -234,7 +234,7 @@ public static class AsyncSequenceProjector
 
         int count = 0;
 
-        await foreach (T _ in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T _ in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             count++;
         }
@@ -254,7 +254,7 @@ public static class AsyncSequenceProjector
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
-        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             return item;
         }

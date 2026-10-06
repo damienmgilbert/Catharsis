@@ -4,8 +4,8 @@ namespace Catharsis.Mvvm;
 
 ///<summary>
 ///An observable property that coalesces rapid updates: <see cref="Value"/> updates and notifies immediately on every
-///set, but <see cref="DebouncedValueChanged"/> fires only once the value has stopped changing for the configured
-///delay — the classic "search as you type" debounce.
+///set, but <see cref="DebouncedValueChanged"/> fires only once the value has stopped changing for the configured delay
+///— the classic "search as you type" debounce.
 ///</summary>
 ///<typeparam name="T">The type of the property's value.</typeparam>
 ///<param name="initialValue">The initial value.</param>
@@ -13,9 +13,9 @@ namespace Catharsis.Mvvm;
 public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan delay) : ObservableObject, IDisposable
 {
     #region Fields
-    CancellationTokenSource? _debounceSource;
-    bool _disposed;
-    T _value = initialValue;
+    private CancellationTokenSource? _debounceSource;
+    private bool _disposed;
+    private T _value = initialValue;
     #endregion
 
     #region Events
@@ -26,7 +26,7 @@ public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan dela
     #endregion
 
     #region Private methods
-    async Task DebounceAsync(T value, CancellationToken cancellationToken)
+    private async Task DebounceAsync(T value, CancellationToken cancellationToken)
     {
         try
         {
@@ -37,7 +37,7 @@ public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan dela
         }
     }
 
-    void ScheduleDebounce(T value)
+    private void ScheduleDebounce(T value)
     {
         _debounceSource?.Cancel();
         _debounceSource?.Dispose();

@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class Memento
 {
     #region Public methods
+
     ///<summary>
     ///Memento (restore) — restores <paramref name="obj"/> from <paramref name="memento"/> using the supplied <paramref
     ///name="restore"/> action.

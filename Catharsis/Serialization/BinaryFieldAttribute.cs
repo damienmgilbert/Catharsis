@@ -1,13 +1,14 @@
 namespace Catharsis.Serialization;
 
 ///<summary>
-///Marks a property for inclusion in a <see cref="BinaryRecordSerializer{T}"/>'s fixed layout and specifies its
-///position within that layout.
+///Marks a property for inclusion in a <see cref="BinaryRecordSerializer{T}"/>'s fixed layout and specifies its position
+///within that layout.
 ///</summary>
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 public sealed class BinaryFieldAttribute : Attribute
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new instance of <see cref="BinaryFieldAttribute"/>.
     ///</summary>

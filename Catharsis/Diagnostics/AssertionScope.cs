@@ -5,16 +5,16 @@ namespace Catharsis.Diagnostics;
 ///</summary>
 ///<remarks>
 ///Disposing the scope throws an <see cref="AggregateException"/> containing every recorded failure, if any were
-///recorded. This deliberately throws from <see cref="Dispose"/>: the entire point of a batch-assert scope is that
-///the caller never has to remember to call <see cref="ThrowIfAny"/> explicitly — wrapping usage in a <c>using</c>
-///block is enough. Call <see cref="ThrowIfAny"/> directly instead if throwing from <see cref="Dispose"/> is
-///undesirable in a particular context.
+///recorded. This deliberately throws from <see cref="Dispose"/>: the entire point of a batch-assert scope is that the
+///caller never has to remember to call <see cref="ThrowIfAny"/> explicitly — wrapping usage in a <c>using</c> block is
+///enough. Call <see cref="ThrowIfAny"/> directly instead if throwing from <see cref="Dispose"/> is undesirable in a
+///particular context.
 ///</remarks>
 public sealed class AssertionScope : IDisposable
 {
     #region Fields
-    readonly List<string> _failures = [];
-    bool _thrown;
+    private readonly List<string> _failures = [];
+    private bool _thrown;
     #endregion
 
     #region Public methods
@@ -38,16 +38,16 @@ public sealed class AssertionScope : IDisposable
     }
 
     ///<summary>
-    ///Disposes the scope, throwing an <see cref="AggregateException"/> if any failures were recorded and
-    ///<see cref="ThrowIfAny"/> has not already been called.
+    ///Disposes the scope, throwing an <see cref="AggregateException"/> if any failures were recorded and ///<see
+    ///cref="ThrowIfAny"/> has not already been called.
     ///</summary>
     ///<exception cref="AggregateException">One or more failures were recorded.</exception>
     public void Dispose() => ThrowIfAny();
 
     ///<summary>
-    ///Throws an <see cref="AggregateException"/> containing every recorded failure, if any were recorded. Calling
-    ///this more than once, or calling it before <see cref="Dispose"/>, has no further effect once the failures have
-    ///already been thrown.
+    ///Throws an <see cref="AggregateException"/> containing every recorded failure, if any were recorded. Calling this
+    ///more than once, or calling it before <see cref="Dispose"/>, has no further effect once the failures have already
+    ///been thrown.
     ///</summary>
     ///<exception cref="AggregateException">One or more failures were recorded.</exception>
     public void ThrowIfAny()

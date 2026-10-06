@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.DataAnnotations;
 
@@ -14,8 +14,7 @@ namespace Catharsis.DataAnnotations;
 public sealed class FileNameAttribute : ValidationAttribute
 {
     #region Fields
-    static readonly HashSet<char> InvalidChars =
-        [with(Path.GetInvalidFileNameChars())];
+    private static readonly HashSet<char> InvalidChars =[ with(Path.GetInvalidFileNameChars()) ];
     #endregion
 
     #region Constructors

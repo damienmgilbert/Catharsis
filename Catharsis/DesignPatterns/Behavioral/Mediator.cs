@@ -6,6 +6,7 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class Mediator
 {
     #region Public methods
+
     ///<summary>
     ///Mediator — routes <paramref name="obj"/> through <paramref name="mediator"/> using the supplied <paramref
     ///name="route"/> delegate, returning the result.

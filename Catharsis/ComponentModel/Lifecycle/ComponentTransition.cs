@@ -17,18 +17,16 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///<param name="name">An optional human-readable name for this transition.</param>
 public sealed class ComponentTransition(ComponentState from, ComponentState to, string? name = null)
 {
-
-    #region Constructors
-    #endregion
-
     #region Public methods
+
     ///<summary>
     ///Evaluates whether this transition is currently allowed.
     ///</summary>
     ///<returns><c>true</c> if the guard is <c>null</c> or returns <c>true</c>; otherwise, <c>false</c>.</returns>
-    public bool CanExecute() { return Guard?.Invoke() ?? true; }
+    public bool CanExecute() => Guard?.Invoke() ?? true;
+
     ///<inheritdoc/>
-    public override string ToString() { return Name; }
+    public override string ToString() => Name;
     #endregion
 
     #region Public properties
@@ -39,8 +37,6 @@ public sealed class ComponentTransition(ComponentState from, ComponentState to, 
 
     ///<summary>
     ///Gets or sets an optional guard predicate. The transition only proceeds if this returns <c>true</c> (or is
-    ///<c>null</c>).
-    ///</summary>
     public Func<bool>? Guard { get; set; }
 
     ///<summary>

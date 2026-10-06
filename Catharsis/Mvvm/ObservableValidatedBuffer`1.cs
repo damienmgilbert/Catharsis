@@ -4,16 +4,16 @@ using System.ComponentModel;
 namespace Catharsis.Mvvm;
 
 ///<summary>
-///An <see cref="ObservablePooledBuffer{T}"/> that automatically revalidates its written contents against a
-///configured validator after every write or clear, exposing the result through <see cref="INotifyDataErrorInfo"/>
-///for binding to validation UI.
+///An <see cref="ObservablePooledBuffer{T}"/> that automatically revalidates its written contents against a configured
+///validator after every write or clear, exposing the result through <see cref="INotifyDataErrorInfo"/> for binding to
+///validation UI.
 ///</summary>
 ///<typeparam name="T">The type of elements in the buffer.</typeparam>
 public sealed class ObservableValidatedBuffer<T> : ObservablePooledBuffer<T>, INotifyDataErrorInfo
 {
     #region Fields
-    readonly Func<ReadOnlyMemory<T>, IEnumerable<string>> _validator;
-    List<string> _errors = [];
+    private List<string> _errors = [];
+    private readonly Func<ReadOnlyMemory<T>, IEnumerable<string>> _validator;
     #endregion
 
     #region Constructors
@@ -38,7 +38,7 @@ public sealed class ObservableValidatedBuffer<T> : ObservablePooledBuffer<T>, IN
     #endregion
 
     #region Private methods
-    void OnBufferPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    private void OnBufferPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         if(args.PropertyName == nameof(Count))
         {
@@ -46,9 +46,9 @@ public sealed class ObservableValidatedBuffer<T> : ObservablePooledBuffer<T>, IN
         }
     }
 
-    void Revalidate()
+    private void Revalidate()
     {
-        _errors = [.. _validator(WrittenMemory)];
+        _errors = [ .. _validator(WrittenMemory) ];
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(WrittenMemory)));
     }
     #endregion

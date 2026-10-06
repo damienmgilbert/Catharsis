@@ -6,11 +6,11 @@ namespace Catharsis.DataStructures;
 public sealed class Trie
 {
     #region Fields
-    readonly TrieNode _root = new();
+    private readonly TrieNode _root = new();
     #endregion
 
     #region Private methods
-    TrieNode? FindNode(string prefix)
+    private TrieNode? FindNode(string prefix)
     {
         TrieNode current = _root;
 
@@ -27,7 +27,7 @@ public sealed class Trie
         return current;
     }
 
-    static bool Remove(TrieNode node, string word, int index)
+    private static bool Remove(TrieNode node, string word, int index)
     {
         if(index == word.Length)
         {
@@ -203,7 +203,7 @@ public sealed class Trie
     public int Count { get; private set; }
     #endregion
 
-    sealed class TrieNode
+    private sealed class TrieNode
     {
         #region Public properties
         public Dictionary<char, TrieNode> Children { get; } = [];

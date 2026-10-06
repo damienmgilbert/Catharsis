@@ -12,7 +12,17 @@ namespace Catharsis.Collections;
 public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? comparer = null) : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
 {
     #region Fields
-    readonly Dictionary<TKey, List<TValue>> _map = new(comparer);
+    private readonly Dictionary<TKey, List<TValue>> _map = new(comparer);
+    #endregion
+
+    #region Indexers
+    ///<summary>
+    ///Gets the values associated with the specified key.
+    ///</summary>
+    ///<param name="key">The key to look up.</param>
+    ///<returns>The associated values.</returns>
+    ///<exception cref="KeyNotFoundException"><paramref name="key"/> was not found.</exception>
+    public IReadOnlyCollection<TValue> this[TKey key] => TryGetValues(key, out IReadOnlyCollection<TValue> values) ? values : throw new KeyNotFoundException($"Key '{key}' was not found.");
     #endregion
 
     #region Explicit interface implementations
@@ -22,8 +32,8 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
 
     #region Public methods
     ///<summary>
-    ///Adds a value to the collection associated with the specified key, creating the collection if this is the
-    ///key's first value.
+    ///Adds a value to the collection associated with the specified key, creating the collection if this is the key's
+    ///first value.
     ///</summary>
     ///<param name="key">The key of the entry.</param>
     ///<param name="value">The value to add.</param>
@@ -114,27 +124,16 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
     }
     #endregion
 
-    #region Indexers
-    ///<summary>
-    ///Gets the values associated with the specified key.
-    ///</summary>
-    ///<param name="key">The key to look up.</param>
-    ///<returns>The associated values.</returns>
-    ///<exception cref="KeyNotFoundException"><paramref name="key"/> was not found.</exception>
-    public IReadOnlyCollection<TValue> this[TKey key] =>
-        TryGetValues(key, out IReadOnlyCollection<TValue> values) ? values : throw new KeyNotFoundException($"Key '{key}' was not found.");
-    #endregion
-
     #region Public properties
-    ///<summary>
-    ///Gets the keys currently in the dictionary.
-    ///</summary>
-    public IReadOnlyCollection<TKey> Keys => _map.Keys;
-
     ///<summary>
     ///Gets the number of distinct keys in the dictionary.
     ///</summary>
     public int KeyCount => _map.Count;
+
+        ///<summary>
+///Gets the keys currently in the dictionary.
+///</summary>
+    public IReadOnlyCollection<TKey> Keys => _map.Keys;
 
     ///<summary>
     ///Gets the total number of values across every key.

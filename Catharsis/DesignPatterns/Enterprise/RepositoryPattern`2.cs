@@ -10,8 +10,8 @@ namespace Catharsis.DesignPatterns.Enterprise;
 public sealed class RepositoryPattern<TEntity, TKey>(Func<TEntity, TKey> keySelector) where TKey : notnull
 {
     #region Fields
-    readonly Func<TEntity, TKey> _keySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector), "Key selector must not be null.");
-    readonly Dictionary<TKey, TEntity> _store = [];
+    private readonly Func<TEntity, TKey> _keySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector), "Key selector must not be null.");
+    private readonly Dictionary<TKey, TEntity> _store = [];
     #endregion
 
     #region Public methods
@@ -30,7 +30,7 @@ public sealed class RepositoryPattern<TEntity, TKey>(Func<TEntity, TKey> keySele
     ///Returns every entity currently in the repository.
     ///</summary>
     ///<returns>A snapshot of all stored entities.</returns>
-    public IReadOnlyCollection<TEntity> GetAll() => [.. _store.Values];
+    public IReadOnlyCollection<TEntity> GetAll() => [ .. _store.Values ];
 
     ///<summary>
     ///Removes the entity with the specified key.

@@ -3,16 +3,16 @@ using System.Collections;
 namespace Catharsis.Collections;
 
 ///<summary>
-///A fixed-capacity circular (ring) buffer that overwrites the oldest item when a new item is added and the buffer
-///is already full.
+///A fixed-capacity circular (ring) buffer that overwrites the oldest item when a new item is added and the buffer is
+///already full.
 ///</summary>
 ///<typeparam name="T">The type of elements stored in the buffer.</typeparam>
 public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Fields
-    readonly T[] _buffer;
-    int _count;
-    int _head;
+    private readonly T[] _buffer;
+    private int _count;
+    private int _head;
     #endregion
 
     #region Constructors
@@ -55,7 +55,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods

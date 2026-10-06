@@ -12,8 +12,8 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableDictionary<TKey, TValue> ───────────────────────────────
     ///<summary>
-    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries from <paramref name="items"/>
-    ///added or updated.
+    ///Returns a new <see cref="ImmutableDictionary{TKey,TValue}"/> with all entries from <paramref name="items"/> added
+    ///or updated.
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> AddRange<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> items) where TKey : notnull
     {
@@ -45,7 +45,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(count)];
+        List<T> result = [ with(count) ];
         ImmutableQueue<T> queue = source;
         for(int i = 0; (i < count) && !queue.IsEmpty; i++)
         {
@@ -78,10 +78,9 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableArray<T> ───────────────────────────────────────────────
     ///<summary>
-    ///Returns a new <see cref="ImmutableArray{T}"/> with <paramref name="item"/> inserted at <paramref
-    ///name="index"/>.
+    ///Returns a new <see cref="ImmutableArray{T}"/> with <paramref name="item"/> inserted at <paramref name="index"/>.
     ///</summary>
-    public static ImmutableArray<T> InsertAt<T>(this ImmutableArray<T> source, int index, T item) { return source.Insert(index, item); }
+    public static ImmutableArray<T> InsertAt<T>(this ImmutableArray<T> source, int index, T item) => source.Insert(index, item);
 
     ///<summary>
     ///Returns a new <see cref="ImmutableArray{T}"/> with all elements transformed by <paramref name="modifier"/>.
@@ -202,8 +201,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a new <see cref="ImmutableArray{T}"/> with matching elements transformed by <paramref
-    ///name="modifier"/>.
+    ///Returns a new <see cref="ImmutableArray{T}"/> with matching elements transformed by <paramref name="modifier"/>.
     ///</summary>
     public static ImmutableArray<T> ModifyWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate, Func<T, T> modifier)
     {
@@ -230,8 +228,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a new <see cref="ImmutableList{T}"/> with matching elements transformed by <paramref
-    ///name="modifier"/>.
+    ///Returns a new <see cref="ImmutableList{T}"/> with matching elements transformed by <paramref name="modifier"/>.
     ///</summary>
     public static ImmutableList<T> ModifyWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate, Func<T, T> modifier)
     {
@@ -271,7 +268,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        List<T> result = [with(count)];
+        List<T> result = [ with(count) ];
         ImmutableStack<T> stack = source;
         for(int i = 0; (i < count) && !stack.IsEmpty; i++)
         {
@@ -322,8 +319,7 @@ public static class ImmutableCollectionExtensions
     }
 
     ///<summary>
-    ///Returns a new <see cref="ImmutableArray{T}"/> with all elements matching <paramref name="predicate"/>
-    ///removed.
+    ///Returns a new <see cref="ImmutableArray{T}"/> with all elements matching <paramref name="predicate"/> removed.
     ///</summary>
     public static ImmutableArray<T> RemoveWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate)
     {
@@ -337,8 +333,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableList<T> ────────────────────────────────────────────────
     ///<summary>
-    ///Returns a new <see cref="ImmutableList{T}"/> with all elements matching <paramref name="predicate"/>
-    ///removed.
+    ///Returns a new <see cref="ImmutableList{T}"/> with all elements matching <paramref name="predicate"/> removed.
     ///</summary>
     public static ImmutableList<T> RemoveWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate)
     {
@@ -377,8 +372,7 @@ public static class ImmutableCollectionExtensions
 
     // ── ImmutableHashSet<T> ─────────────────────────────────────────────
     ///<summary>
-    ///Returns a new <see cref="ImmutableHashSet{T}"/> with all elements matching <paramref name="predicate"/>
-    ///removed.
+    ///Returns a new <see cref="ImmutableHashSet{T}"/> with all elements matching <paramref name="predicate"/> removed.
     ///</summary>
     public static ImmutableHashSet<T> RemoveWhere<T>(this ImmutableHashSet<T> source, Func<T, bool> predicate)
     {
@@ -413,7 +407,7 @@ public static class ImmutableCollectionExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<T> toRemove = [.. source.Where(predicate)];
+        List<T> toRemove = [ .. source.Where(predicate) ];
         return source.Except(toRemove);
     }
 

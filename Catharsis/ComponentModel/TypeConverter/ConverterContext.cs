@@ -6,15 +6,10 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///An immutable context that carries culture, format string, and behavioral options for type conversion operations.
 ///</summary>
 ///<remarks>
-///<para> Use <see cref="ConverterContext"/> to pass ambient conversion settings through <see
-///cref="GenericTypeConverter{T}"/>,<see cref="CultureAwareConverter{T}"/>, and<see cref="SpanBasedTypeConverter{T}"/>
-///without coupling callers to specific culture or format choices.</para> <para> The <see cref="Default"/> instance uses
-///<see cref="CultureInfo.CurrentCulture"/> and no format string. Use <see cref="Invariant"/> for culture-independent
-///conversions.</para>
-///</remarks>
 public sealed class ConverterContext
 {
     #region Constructors
+
     ///<summary>
     ///Initializes a new instance of <see cref="ConverterContext"/>.
     ///</summary>
@@ -30,8 +25,6 @@ public sealed class ConverterContext
     ///Whether to allow trailing whitespace in parsed input. Defaults to <c>true</c>.
     ///</param>
     ///<exception cref="ArgumentNullException">
-    ///<paramref name="culture"/> is <c>null</c>.
-    ///</exception>
     public ConverterContext(CultureInfo culture, string? format = null, bool ignoreCase = true, bool allowLeadingWhiteSpace = true, bool allowTrailingWhiteSpace = true)
     {
         ArgumentNullException.ThrowIfNull(culture);
@@ -61,7 +54,7 @@ public sealed class ConverterContext
     ///</summary>
     ///<param name="format">The new format string, or <c>null</c>.</param>
     ///<returns>A new <see cref="ConverterContext"/> with the updated format.</returns>
-    public ConverterContext WithFormat(string? format) { return new(Culture, format, IgnoreCase, AllowLeadingWhiteSpace, AllowTrailingWhiteSpace); }
+    public ConverterContext WithFormat(string? format) => new(Culture, format, IgnoreCase, AllowLeadingWhiteSpace, AllowTrailingWhiteSpace);
     #endregion
 
     #region Public properties

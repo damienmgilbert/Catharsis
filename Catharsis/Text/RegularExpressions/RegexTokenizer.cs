@@ -11,7 +11,7 @@ namespace Catharsis.Text.RegularExpressions;
 public sealed class RegexTokenizer : IEnumerable<MatchResult>
 {
     #region Fields
-    readonly Regex _pattern;
+    private readonly Regex _pattern;
     #endregion
 
     #region Constructors
@@ -53,7 +53,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -74,7 +74,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     }
 
     ///<inheritdoc/>
-    public IEnumerator<MatchResult> GetEnumerator() { return Tokenize(string.Empty).GetEnumerator(); }
+    public IEnumerator<MatchResult> GetEnumerator() => Tokenize(string.Empty).GetEnumerator();
 
     ///<summary>
     ///Returns the non-matching segments of the input (the text between tokens).
@@ -107,7 +107,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
         }
 
         MatchCollection matches = _pattern.Matches(input);
-        List<MatchResult> tokens = [with(matches.Count)];
+        List<MatchResult> tokens = [ with(matches.Count) ];
 
         foreach(Match match in matches)
         {

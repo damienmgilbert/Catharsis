@@ -1,6 +1,6 @@
-using Catharsis.Linq.Expressions;
 using System.Collections;
 using System.Linq.Expressions;
+using Catharsis.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -30,7 +30,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet(IEnumerable<Rule<T>> rules)
     {
         ArgumentNullException.ThrowIfNull(rules, nameof(rules));
-        _rules = [.. rules];
+        _rules = [ .. rules ];
     }
     #endregion
 
@@ -41,7 +41,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -86,21 +86,17 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
 
     ///<summary>
     ///Combines all enabled rule conditions with logical AND into a single expression-tree predicate. Returns a constant
-    ///<c>true</c> predicate if no enabled rules exist.
-    ///</summary>
-    ///<returns>A combined AND predicate expression.</returns>
-    public Expression<Func<T, bool>> CombineWithAnd() { return ExpressionComposer.AndAll(Enabled().Select(static r => r.Condition)); }
+    public Expression<Func<T, bool>> CombineWithAnd() => ExpressionComposer.AndAll(Enabled().Select(static r => r.Condition));
+
     ///<summary>
     ///Combines all enabled rule conditions with logical OR into a single expression-tree predicate. Returns a constant
-    ///<c>false</c> predicate if no enabled rules exist.
-    ///</summary>
-    ///<returns>A combined OR predicate expression.</returns>
-    public Expression<Func<T, bool>> CombineWithOr() { return ExpressionComposer.OrAny(Enabled().Select(static r => r.Condition)); }
+    public Expression<Func<T, bool>> CombineWithOr() => ExpressionComposer.OrAny(Enabled().Select(static r => r.Condition));
+
     ///<summary>
     ///Returns only enabled rules, ordered by priority (ascending).
     ///</summary>
     ///<returns>An ordered sequence of enabled rules.</returns>
-    public IEnumerable<Rule<T>> Enabled() { return _rules.Where(static r => r.IsEnabled).OrderBy(static r => r.Priority); }
+    public IEnumerable<Rule<T>> Enabled() => _rules.Where(static r => r.IsEnabled).OrderBy(static r => r.Priority);
 
     ///<summary>
     ///Finds a rule by name.
@@ -115,17 +111,19 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     }
 
     ///<inheritdoc/>
-    public IEnumerator<Rule<T>> GetEnumerator() { return _rules.GetEnumerator(); }
+    public IEnumerator<Rule<T>> GetEnumerator() => _rules.GetEnumerator();
+
     ///<summary>
     ///Groups enabled rules by priority.
     ///</summary>
     ///<returns>A lookup mapping priority values to rules.</returns>
-    public ILookup<int, Rule<T>> GroupByPriority() { return _rules.Where(static r => r.IsEnabled).ToLookup(static r => r.Priority); }
+    public ILookup<int, Rule<T>> GroupByPriority() => _rules.Where(static r => r.IsEnabled).ToLookup(static r => r.Priority);
+
     ///<summary>
     ///Groups enabled rules by tag. Each rule appears in every tag group it belongs to.
     ///</summary>
     ///<returns>A lookup mapping tags to rules.</returns>
-    public ILookup<string, Rule<T>> GroupByTag() { return _rules.Where(r => r.IsEnabled).SelectMany(r => r.Tags.Select(t => (Tag: t, Rule: r))).ToLookup(x => x.Tag, x => x.Rule, StringComparer.Ordinal); }
+    public ILookup<string, Rule<T>> GroupByTag() => _rules.Where(r => r.IsEnabled).SelectMany(r => r.Tags.Select(t => (Tag: t, Rule: r))).ToLookup(x => x.Tag, x => x.Rule, StringComparer.Ordinal);
 
     ///<summary>
     ///Merges another rule set into this one, returning a new combined set.
@@ -136,7 +134,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet<T> Merge(RuleSet<T> other)
     {
         ArgumentNullException.ThrowIfNull(other, nameof(other));
-        return [with(_rules.Concat(other._rules))];
+        return[ with(_rules.Concat(other._rules)) ];
     }
 
     ///<summary>
@@ -162,7 +160,7 @@ public sealed class RuleSet<T> : IReadOnlyList<Rule<T>>
     public RuleSet<T> Where(Func<Rule<T>, bool> ruleFilter)
     {
         ArgumentNullException.ThrowIfNull(ruleFilter, nameof(ruleFilter));
-        return [with(_rules.Where(ruleFilter))];
+        return[ with(_rules.Where(ruleFilter)) ];
     }
 
     ///<summary>

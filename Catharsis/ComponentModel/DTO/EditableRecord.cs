@@ -8,26 +8,12 @@ namespace Catharsis.ComponentModel.DTO;
 ///</summary>
 ///<typeparam name="T">The record type to wrap.</typeparam>
 ///<remarks>
-///<para> Call <see cref="BeginEdit"/> to capture a snapshot of the current value,<see cref="CancelEdit"/> to revert to
-///the snapshot, or <see cref="EndEdit"/> to commit the changes. <see cref="AcceptChanges"/> and<see
-///cref="RejectChanges"/> provide <see cref="IRevertibleChangeTracking"/> semantics.</para>
-///</remarks>
-///<remarks>
-///Initializes a new instance of <see cref="EditableRecord{T}"/>.
-///</remarks>
-///<param name="value">The initial record value.</param>
-///<exception cref="ArgumentNullException">
-///<paramref name="value"/> is <c>null</c>.
-///</exception>
 public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObject, IRevertibleChangeTracking where T : class
 {
     #region Fields
-    T? _acceptedValue = value;
-    bool _isEditing;
-    T? _snapshot;
-
-    #endregion
-    #region Constructors
+    private T? _acceptedValue = value;
+    private bool _isEditing;
+    private T? _snapshot;
     #endregion
 
     #region Public methods

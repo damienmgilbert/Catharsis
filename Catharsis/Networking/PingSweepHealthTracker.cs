@@ -13,12 +13,12 @@ namespace Catharsis.Networking;
 public sealed class PingSweepHealthTracker(EndpointHealthTracker healthTracker, TimeSpan? timeout = null)
 {
     #region Fields
-    readonly EndpointHealthTracker _healthTracker = healthTracker ?? throw new ArgumentNullException(nameof(healthTracker));
-    readonly TimeSpan _timeout = ValidateTimeout(timeout ?? TimeSpan.FromSeconds(4));
+    private readonly EndpointHealthTracker _healthTracker = healthTracker ?? throw new ArgumentNullException(nameof(healthTracker));
+    private readonly TimeSpan _timeout = ValidateTimeout(timeout ?? TimeSpan.FromSeconds(4));
     #endregion
 
     #region Private methods
-    static TimeSpan ValidateTimeout(TimeSpan timeout)
+    private static TimeSpan ValidateTimeout(TimeSpan timeout)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(timeout, TimeSpan.Zero);
         return timeout;
@@ -71,7 +71,7 @@ public sealed class PingSweepHealthTracker(EndpointHealthTracker healthTracker, 
     {
         ArgumentNullException.ThrowIfNull(endpoints);
 
-        Uri[] endpointArray = [.. endpoints];
+        Uri[] endpointArray = [ .. endpoints ];
         bool[] results = await Task.WhenAll(endpointArray.Select(endpoint => PingAsync(endpoint, cancellationToken))).ConfigureAwait(false);
 
         Dictionary<Uri, bool> map = new(endpointArray.Length);

@@ -17,10 +17,7 @@ namespace Catharsis.Immutable;
 public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyList<T>, IEquatable<ImmutableSequence<T>>
 {
     #region Struct fields
-    readonly ImmutableArray<T> _data = data;
-
-    #endregion
-    #region Constructors
+    private readonly ImmutableArray<T> _data = data;
     #endregion
 
     #region Operators
@@ -31,7 +28,6 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     {
         return !left.Equals(right);
     }
-
     ///<summary>
     ///Determines whether two sequences are equal.
     ///</summary>
@@ -50,7 +46,7 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     #endregion
 
     #region Explicit interface implementations
-    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     #endregion
 
     #region Public methods
@@ -59,7 +55,7 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     ///</summary>
     ///<param name="item">The item to append.</param>
     ///<returns>A new immutable sequence with the item appended.</returns>
-    public ImmutableSequence<T> Add(T item) { return new(_data.Add(item)); }
+    public ImmutableSequence<T> Add(T item) => new(_data.Add(item));
 
     ///<summary>
     ///Creates an <see cref="ImmutableSequence{T}"/> from a span.
@@ -104,11 +100,13 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     }
 
     ///<inheritdoc/>
-    public bool Equals(ImmutableSequence<T> other) { return _data.SequenceEqual(other._data); }
+    public bool Equals(ImmutableSequence<T> other) => _data.SequenceEqual(other._data);
+
     ///<inheritdoc/>
-    public override bool Equals(object? obj) { return (obj is ImmutableSequence<T> other) && Equals(other); }
+    public override bool Equals(object? obj) => (obj is ImmutableSequence<T> other) && Equals(other);
+
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() { return ((IEnumerable<T>)_data).GetEnumerator(); }
+    public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_data).GetEnumerator();
 
     ///<inheritdoc/>
     public override int GetHashCode()

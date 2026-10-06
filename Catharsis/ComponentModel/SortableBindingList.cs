@@ -9,9 +9,9 @@ namespace Catharsis.ComponentModel;
 public class SortableBindingList<T> : BindingList<T>
 {
     #region Fields
-    bool _isSorted;
-    ListSortDirection _sortDirection;
-    PropertyDescriptor? _sortProperty;
+    private bool _isSorted;
+    private ListSortDirection _sortDirection;
+    private PropertyDescriptor? _sortProperty;
     #endregion
 
     #region Constructors
@@ -31,7 +31,7 @@ public class SortableBindingList<T> : BindingList<T>
     #endregion
 
     #region Private methods
-    static int CompareValues(object? x, object? y)
+    private static int CompareValues(object? x, object? y)
     {
         if((x is null) && (y is null))
         {
