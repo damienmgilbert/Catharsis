@@ -9,10 +9,12 @@ namespace Catharsis.ComponentModel;
 ///metadata, surfacing properties, events, attributes, and validation state.
 ///</summary>
 ///<remarks>
+///<para> Use <see cref="GetPropertyReport"/> for a full property-level report including type converter info, validation
+///attributes, and current values. Use <see cref="GetEventReport"/> for event-level details.</para>
+///</remarks>
 public sealed class ComponentModelInspector
 {
     #region Public methods
-
     ///<summary>
     ///Returns a summary of interfaces implemented by the component that are relevant to the ComponentModel
     ///infrastructure.
@@ -20,12 +22,28 @@ public sealed class ComponentModelInspector
     ///<param name="component">The component to inspect.</param>
     ///<returns>A list of interface names.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public static IReadOnlyList<string> GetComponentModelInterfaces(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         Type componentType = component.GetType();
-        Type[] relevant =[ typeof(IComponent), typeof(INotifyPropertyChanged), typeof(INotifyPropertyChanging), typeof(INotifyDataErrorInfo), typeof(IEditableObject), typeof(IChangeTracking), typeof(IRevertibleChangeTracking), typeof(ICustomTypeDescriptor), typeof(IDataErrorInfo), typeof(ISupportInitialize), typeof(IServiceProvider), typeof(IDisposable) ];
+        Type[] relevant =
+        [
+            typeof(IComponent),
+            typeof(INotifyPropertyChanged),
+            typeof(INotifyPropertyChanging),
+            typeof(INotifyDataErrorInfo),
+            typeof(IEditableObject),
+            typeof(IChangeTracking),
+            typeof(IRevertibleChangeTracking),
+            typeof(ICustomTypeDescriptor),
+            typeof(IDataErrorInfo),
+            typeof(ISupportInitialize),
+            typeof(IServiceProvider),
+            typeof(IDisposable)
+        ];
 
         List<string> result = [];
 
@@ -46,12 +64,14 @@ public sealed class ComponentModelInspector
     ///<param name="component">The component to inspect.</param>
     ///<returns>A list of <see cref="EventReport"/> entries.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public static IReadOnlyList<EventReport> GetEventReport(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         EventDescriptorCollection events = TypeDescriptor.GetEvents(component);
-        List<EventReport> reports = [ with(events.Count) ];
+        List<EventReport> reports = [with(events.Count)];
 
         foreach(EventDescriptor evt in events)
         {
@@ -75,12 +95,14 @@ public sealed class ComponentModelInspector
     ///<param name="component">The component to inspect.</param>
     ///<returns>A list of <see cref="PropertyReport"/> entries.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public static IReadOnlyList<PropertyReport> GetPropertyReport(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-        List<PropertyReport> reports = [ with(properties.Count) ];
+        List<PropertyReport> reports = [with(properties.Count)];
 
         foreach(PropertyDescriptor property in properties)
         {
@@ -93,7 +115,7 @@ public sealed class ComponentModelInspector
                 attributes.Add(attr);
             }
 
-            List<ValidationAttribute> validationAttributes = [ .. attributes.OfType<ValidationAttribute>() ];
+            List<ValidationAttribute> validationAttributes = [.. attributes.OfType<ValidationAttribute>()];
 
             reports.Add(
             new PropertyReport
@@ -132,11 +154,11 @@ public sealed class ComponentModelInspector
         if((component is INotifyDataErrorInfo errorInfo) && errorInfo.HasErrors)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
-            Dictionary<string, IReadOnlyList<string>> dict = [ with(StringComparer.Ordinal) ];
+            Dictionary<string, IReadOnlyList<string>> dict = [with(StringComparer.Ordinal)];
 
             foreach(PropertyDescriptor prop in properties)
             {
-                List<string> propErrors = [ .. errorInfo.GetErrors(prop.Name).Cast<object>().Select(static e => e.ToString() ?? string.Empty).Where(static e => !string.IsNullOrWhiteSpace(e)) ];
+                List<string> propErrors = [.. errorInfo.GetErrors(prop.Name).Cast<object>().Select(static e => e.ToString() ?? string.Empty).Where(static e => !string.IsNullOrWhiteSpace(e))];
 
                 if(propErrors.Count > 0)
                 {
@@ -162,9 +184,8 @@ public sealed class ComponentModelInspector
     public sealed class PropertyReport
     {
         #region Public methods
-
         ///<inheritdoc/>
-        public override string ToString() => $"{Name} ({PropertyType.Name}){(IsReadOnly ? " [ReadOnly]" : string.Empty)} = {CurrentValue}";
+        public override string ToString() { return $"{Name} ({PropertyType.Name}){(IsReadOnly ? " [ReadOnly]" : string.Empty)} = {CurrentValue}"; }
         #endregion
 
         #region Public properties
@@ -246,9 +267,8 @@ public sealed class ComponentModelInspector
     public sealed class EventReport
     {
         #region Public methods
-
         ///<inheritdoc/>
-        public override string ToString() => $"{Name} ({EventType.Name}){(IsMulticast ? " [Multicast]" : string.Empty)}";
+        public override string ToString() { return $"{Name} ({EventType.Name}){(IsMulticast ? " [Multicast]" : string.Empty)}"; }
         #endregion
 
         #region Public properties

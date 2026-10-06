@@ -8,16 +8,21 @@ namespace Catharsis.ComponentModel.Binding;
 ///property changes on the source, the target property is automatically updated, and vice versa.
 ///</summary>
 ///<remarks>
+///<para> Use <see cref="Bind"/> to establish a two-way binding, or<see cref="BindOneWay"/> for a one-way source-to-
+///target binding. Call <see cref="Unbind"/> or <see cref="UnbindAll"/> to remove bindings.</para> <para> Property
+///values are transferred using <see cref="TypeDescriptor"/> property descriptors and <see cref="TypeConverter"/> for
+///type coercion when the source and target property types differ.</para>
+///</remarks>
 public sealed class ComponentModelBinder : IDisposable
 {
     #region Fields
-    private readonly List<BindingEntry> _bindings = [];
-    private bool _disposed;
-    private bool _isSynchronizing;
+    readonly List<BindingEntry> _bindings = [];
+    bool _disposed;
+    bool _isSynchronizing;
     #endregion
 
     #region Private methods
-    private static void DetachEntry(BindingEntry entry)
+    static void DetachEntry(BindingEntry entry)
     {
         if(entry.Source is INotifyPropertyChanged sourceNpc)
         {
@@ -30,14 +35,14 @@ public sealed class ComponentModelBinder : IDisposable
         }
     }
 
-    private static PropertyDescriptor GetPropertyDescriptor(object obj, string propertyName)
+    static PropertyDescriptor GetPropertyDescriptor(object obj, string propertyName)
     {
         PropertyDescriptor? descriptor = TypeDescriptor.GetProperties(obj)[propertyName];
 
         return descriptor ?? throw new ArgumentException($"Property '{propertyName}' not found on type '{obj.GetType().Name}'.", propertyName);
     }
 
-    private void SynchronizeProperty(BindingEntry entry, object sender, PropertyChangedEventArgs e)
+    void SynchronizeProperty(BindingEntry entry, object sender, PropertyChangedEventArgs e)
     {
         if(_isSynchronizing)
         {
@@ -61,7 +66,7 @@ public sealed class ComponentModelBinder : IDisposable
         }
     }
 
-    private void TransferValue(PropertyDescriptor fromProp, object fromObj, PropertyDescriptor toProp, object toObj)
+    void TransferValue(PropertyDescriptor fromProp, object fromObj, PropertyDescriptor toProp, object toObj)
     {
         if(toProp.IsReadOnly)
         {
@@ -222,12 +227,11 @@ public sealed class ComponentModelBinder : IDisposable
     public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
     #endregion
 
-    private sealed class BindingEntry(object source, PropertyDescriptor sourceDescriptor, object target, PropertyDescriptor targetDescriptor, bool isTwoWay)
+    sealed class BindingEntry(object source, PropertyDescriptor sourceDescriptor, object target, PropertyDescriptor targetDescriptor, bool isTwoWay)
     {
         #region Public methods
-        public void OnSourceChanged(object? sender, PropertyChangedEventArgs e) => Synchronize?.Invoke(Source, e);
-
-        public void OnTargetChanged(object? sender, PropertyChangedEventArgs e) => Synchronize?.Invoke(Target, e);
+        public void OnSourceChanged(object? sender, PropertyChangedEventArgs e) { Synchronize?.Invoke(Source, e); }
+        public void OnTargetChanged(object? sender, PropertyChangedEventArgs e) { Synchronize?.Invoke(Target, e); }
         #endregion
 
         #region Public properties

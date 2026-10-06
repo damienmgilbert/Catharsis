@@ -1,70 +1,31 @@
+using Catharsis.Common;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using Catharsis.Common;
 
 namespace Catharsis.Events;
 
 ///<summary>
 ///An event that holds its instance-method subscribers weakly, so subscribing does not keep the subscriber alive. This
-///avoids the classic "forgotten subscription" memory leak. Each subscription is a ///<see
-///cref="WeakEventHandler{TEventArgs}"/>; static handlers are held normally.
+///avoids the classic "forgotten subscription" memory leak. Each subscription is a
+///<see cref="WeakEventHandler{TEventArgs}"/>; static handlers are held normally.
 ///</summary>
 ///<remarks>
-///Because the subscriber is only weakly referenced, a lambda that captures variables (whose closure object nothing else
-///references) may be collected and silently stop being invoked. Subscribe a method on a long-lived object instead.
+///Because the subscriber is only weakly referenced, a lambda that captures variables (whose closure object nothing
+///else references) may be collected and silently stop being invoked. Subscribe a method on a long-lived object
+///instead.
 ///</remarks>
 ///<typeparam name="TArgs">The type of the event data.</typeparam>
 public sealed class WeakEvent<TArgs>
 {
     #region Fields
-    private readonly List<Entry> _entries = [];
-    private readonly Lock _gate = new();
+    readonly Lock _gate = new();
+    readonly List<Entry> _entries = [];
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Raises the event, invoking every handler whose subscriber is still alive and discarding those that are not. An
-    ///exception thrown by a handler propagates unwrapped to the caller.
+    ///Subscribes a handler. Instance handlers are held weakly.
     ///</summary>
-    ///<param name="sender">The source of the event.</param>
-    ///<param name="args">The event data.</param>
-    public void Invoke(object? sender, TArgs args)
-    {
-        Entry[] snapshot;
-
-        lock(_gate)
-        {
-            snapshot = [ .. _entries ];
-        }
-
-        List<Entry> dead = [];
-
-        foreach(Entry entry in snapshot)
-        {
-            try
-            {
-                if(!entry.Handler.Invoke(sender, args))
-                {
-                    dead.Add(entry);
-                }
-            } catch(TargetInvocationException ex) when(ex.InnerException is not null)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-            }
-        }
-
-        if(dead.Count > 0)
-        {
-            lock(_gate)
-            {
-                _entries.RemoveAll(dead.Contains);
-            }
-        }
-    }
-
-        ///<summary>
-///Subscribes a handler. Instance handlers are held weakly.
-///</summary>
     ///<param name="handler">The handler to invoke when the event is raised.</param>
     ///<exception cref="ArgumentNullException"><paramref name="handler"/> is <c>null</c>.</exception>
     ///<exception cref="ArgumentException"><paramref name="handler"/> is a multicast delegate.</exception>
@@ -108,12 +69,51 @@ public sealed class WeakEvent<TArgs>
             return true;
         }
     }
+
+    ///<summary>
+    ///Raises the event, invoking every handler whose subscriber is still alive and discarding those that are not. An
+    ///exception thrown by a handler propagates unwrapped to the caller.
+    ///</summary>
+    ///<param name="sender">The source of the event.</param>
+    ///<param name="args">The event data.</param>
+    public void Invoke(object? sender, TArgs args)
+    {
+        Entry[] snapshot;
+
+        lock(_gate)
+        {
+            snapshot = [.. _entries];
+        }
+
+        List<Entry> dead = [];
+
+        foreach(Entry entry in snapshot)
+        {
+            try
+            {
+                if(!entry.Handler.Invoke(sender, args))
+                {
+                    dead.Add(entry);
+                }
+            }
+            catch(TargetInvocationException ex) when(ex.InnerException is not null)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            }
+        }
+
+        if(dead.Count > 0)
+        {
+            lock(_gate)
+            {
+                _entries.RemoveAll(dead.Contains);
+            }
+        }
+    }
     #endregion
 
     #region Public properties
-    ///<summary>
-    ///Gets the number of subscriptions whose subscriber is still alive.
-    ///</summary>
+    ///<summary>Gets the number of subscriptions whose subscriber is still alive.</summary>
     public int Count
     {
         get
@@ -126,5 +126,7 @@ public sealed class WeakEvent<TArgs>
     }
     #endregion
 
-    private sealed record Entry(WeakEventHandler<TArgs> Handler, MethodInfo Method, WeakReference? Target);
+    #region Nested types
+    sealed record Entry(WeakEventHandler<TArgs> Handler, MethodInfo Method, WeakReference? Target);
+    #endregion
 }

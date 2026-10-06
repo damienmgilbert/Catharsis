@@ -7,18 +7,35 @@ namespace Catharsis.ComponentModel;
 ///cref="ComponentSite"/> support, deterministic disposal, and optional service provider integration.
 ///</summary>
 ///<remarks>
+///<para> Components are sited with <see cref="ComponentSite"/> instances that support design-mode indication and
+///hierarchical service resolution when an<see cref="IServiceProvider"/> is supplied.</para> <para> Components are
+///disposed in reverse insertion order when the container is disposed, ensuring dependent components are cleaned up
+///before their dependencies.</para>
+///</remarks>
+///<remarks>
+///Initializes a new instance of <see cref="ComponentContainer"/>.
+///</remarks>
+///<param name="designMode">
+///<c>true</c> to indicate components are in design mode; otherwise, <c>false</c>.
+///</param>
+///<param name="serviceProvider">
+///An optional service provider passed to <see cref="ComponentSite"/> instances for hierarchical service resolution.
+///</param>
 public sealed class ComponentContainer(bool designMode = false, IServiceProvider? serviceProvider = null) : IContainer, IServiceProvider
 {
     #region Fields
-    private readonly bool _designMode = designMode;
-    private bool _disposed;
-    private readonly IServiceProvider? _serviceProvider = serviceProvider;
-    private readonly List<ComponentSite> _sites = [];
+    readonly bool _designMode = designMode;
+    bool _disposed;
+    readonly IServiceProvider? _serviceProvider = serviceProvider;
+    readonly List<ComponentSite> _sites = [];
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Public methods
     ///<inheritdoc/>
-    public void Add(IComponent? component) => Add(component, null);
+    public void Add(IComponent? component) { Add(component, null); }
 
     ///<inheritdoc/>
     ///<exception cref="ArgumentException">
@@ -134,7 +151,7 @@ public sealed class ComponentContainer(bool designMode = false, IServiceProvider
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            IComponent[] components = [ .. _sites.Select(static s => s.Component) ];
+            IComponent[] components = [.. _sites.Select(static s => s.Component)];
 
             return new ComponentCollection(components);
         }

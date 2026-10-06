@@ -35,15 +35,15 @@ public ref struct SpanTokenizer
     ///<returns>The number of tokens.</returns>
     public static int Count(ReadOnlySpan<char> span, char separator)
     {
-        if(span.IsEmpty)
+        if (span.IsEmpty)
         {
             return 0;
         }
 
         int count = 1;
-        foreach(char c in span)
+        foreach (char c in span)
         {
-            if(c == separator)
+            if (c == separator)
             {
                 count++;
             }
@@ -68,14 +68,14 @@ public ref struct SpanTokenizer
     ///<returns><c>true</c> if a token was read; <c>false</c> if no more tokens remain.</returns>
     public bool TryGetNext(out ReadOnlySpan<char> token)
     {
-        if(_finished)
+        if (_finished)
         {
             token = default;
             return false;
         }
 
         int index = _remaining.IndexOf(_separator);
-        if(index < 0)
+        if (index < 0)
         {
             token = _remaining;
             _remaining = default;

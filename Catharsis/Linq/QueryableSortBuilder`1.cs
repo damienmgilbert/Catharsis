@@ -18,7 +18,7 @@ public sealed class QueryableSortBuilder<T>
     ///Builds the accumulated sort descriptors into a read-only list.
     ///</summary>
     ///<returns>The list of sort descriptors.</returns>
-    public IReadOnlyList<SortDescriptor<T>> Build() => _descriptors.AsReadOnly();
+    public IReadOnlyList<SortDescriptor<T>> Build() { return _descriptors.AsReadOnly(); }
 
     ///<summary>
     ///Removes all accumulated sort descriptors.
@@ -71,7 +71,7 @@ public sealed class QueryableSortBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
 
-        if(condition)
+        if (condition)
         {
             _descriptors.Add(SortDescriptor<T>.Create(keySelector, direction));
         }

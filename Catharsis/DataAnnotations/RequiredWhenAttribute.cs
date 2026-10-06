@@ -9,13 +9,15 @@ namespace Catharsis.DataAnnotations;
 ///specified <see cref="DependentProperty"/> equals any of a set of target values.
 ///</summary>
 ///<remarks>
-///This differs from <see cref="RequiredIfAttribute"/> by accepting multiple target values, which reads more naturally
-///when the dependent property is an enum with several members that all trigger the requirement (e.g.
+///This differs from <see cref="RequiredIfAttribute"/> by accepting multiple target values, which reads more
+///naturally when the dependent property is an enum with several members that all trigger the requirement (e.g.
+///<c>[RequiredWhen(nameof(Status), Status.Approved, Status.Shipped)]</c>) instead of stacking several
+///<see cref="RequiredIfAttribute"/> instances.
+///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = true)]
 public sealed class RequiredWhenAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="RequiredWhenAttribute"/>.
     ///</summary>
@@ -67,7 +69,7 @@ public sealed class RequiredWhenAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DependentProperty);
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DependentProperty); }
     #endregion
 
     #region Public properties

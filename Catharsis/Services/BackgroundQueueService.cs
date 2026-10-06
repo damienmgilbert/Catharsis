@@ -5,18 +5,18 @@ using Microsoft.Extensions.Logging;
 namespace Catharsis.Services;
 
 ///<summary>
-///A bounded-channel-backed background work queue: callers enqueue delegates, and a single background loop drains and
-///runs them one at a time, in order, isolating callers from exceptions thrown by individual work items.
+///A bounded-channel-backed background work queue: callers enqueue delegates, and a single background loop drains
+///and runs them one at a time, in order, isolating callers from exceptions thrown by individual work items.
 ///</summary>
 public sealed partial class BackgroundQueueService : IAsyncDisposable
 {
     #region Fields
-    private readonly Channel<Func<CancellationToken, Task>> _channel;
-    private bool _disposed;
-    private readonly ILogger<BackgroundQueueService> _logger;
-    private readonly Task _processingLoop;
-    private long _queuedCount;
-    private readonly CancellationTokenSource _stoppingSource = new();
+    readonly Channel<Func<CancellationToken, Task>> _channel;
+    readonly ILogger<BackgroundQueueService> _logger;
+    readonly Task _processingLoop;
+    readonly CancellationTokenSource _stoppingSource = new();
+    bool _disposed;
+    long _queuedCount;
     #endregion
 
     #region Constructors
@@ -38,10 +38,7 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
     #endregion
 
     #region Private methods
-    [LoggerMessage(EventId = 1, Level = LogLevel.Error, Message = "Background work item failed.")]
-    partial void LogWorkItemFailed(Exception exception);
-
-    private async Task ProcessQueueAsync(CancellationToken stoppingToken)
+    async Task ProcessQueueAsync(CancellationToken stoppingToken)
     {
         try
         {
@@ -62,6 +59,22 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
     #endregion
 
     #region Public methods
+    ///<summary>
+    ///Queues a work item for background execution. Waits if the queue is currently full.
+    ///</summary>
+    ///<param name="workItem">The work item to run in the background.</param>
+    ///<param name="cancellationToken">A token that cancels the wait for queue space.</param>
+    ///<returns>A task that completes once the work item has been queued (not once it has run).</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="workItem"/> is <c>null</c>.</exception>
+    public async ValueTask EnqueueAsync(Func<CancellationToken, Task> workItem, CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(workItem);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        await _channel.Writer.WriteAsync(workItem, cancellationToken).ConfigureAwait(false);
+        Interlocked.Increment(ref _queuedCount);
+    }
+
     ///<summary>
     ///Stops accepting new work, cancels the running background loop's token, and waits for it to finish.
     ///</summary>
@@ -86,22 +99,6 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
 
         _stoppingSource.Dispose();
     }
-
-        ///<summary>
-///Queues a work item for background execution. Waits if the queue is currently full.
-///</summary>
-    ///<param name="workItem">The work item to run in the background.</param>
-    ///<param name="cancellationToken">A token that cancels the wait for queue space.</param>
-    ///<returns>A task that completes once the work item has been queued (not once it has run).</returns>
-    ///<exception cref="ArgumentNullException"><paramref name="workItem"/> is <c>null</c>.</exception>
-    public async ValueTask EnqueueAsync(Func<CancellationToken, Task> workItem, CancellationToken cancellationToken = default)
-    {
-        Guard.IsNotNull(workItem);
-        ObjectDisposedException.ThrowIf(_disposed, this);
-
-        await _channel.Writer.WriteAsync(workItem, cancellationToken).ConfigureAwait(false);
-        Interlocked.Increment(ref _queuedCount);
-    }
     #endregion
 
     #region Public properties
@@ -109,5 +106,10 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
     ///Gets the total number of work items enqueued so far.
     ///</summary>
     public long QueuedCount => Interlocked.Read(ref _queuedCount);
+    #endregion
+
+    #region Log messages
+    [LoggerMessage(EventId = 1, Level = LogLevel.Error, Message = "Background work item failed.")]
+    partial void LogWorkItemFailed(Exception exception);
     #endregion
 }

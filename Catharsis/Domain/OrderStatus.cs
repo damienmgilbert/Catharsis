@@ -1,3 +1,5 @@
+using Catharsis.Generators;
+
 namespace Catharsis.Domain;
 
 ///<summary>
@@ -6,18 +8,12 @@ namespace Catharsis.Domain;
 [EnumExtensions]
 public enum OrderStatus
 {
-    ///<summary>
-    ///Lines can still be added.
-    ///</summary>
+    ///<summary>Lines can still be added.</summary>
     Draft,
 
-    ///<summary>
-    ///The order has been placed and is locked.
-    ///</summary>
+    ///<summary>The order has been placed and is locked.</summary>
     Confirmed,
 
-    ///<summary>
-    ///The order has been abandoned.
-    ///</summary>
+    ///<summary>The order has been abandoned.</summary>
     Cancelled
 }

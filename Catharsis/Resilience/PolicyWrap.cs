@@ -1,18 +1,23 @@
 namespace Catharsis.Resilience;
 
 ///<summary>
-///Composes multiple <see cref="IAsyncPolicy"/> instances into a single pipeline, applying them outermost-first around
-///the wrapped operation. For example, wrapping a <see cref="CircuitBreaker"/> around a ///<see cref="RetryPolicy"/>
-///means each individual retry attempt passes through the circuit breaker.
+///Composes multiple <see cref="IAsyncPolicy"/> instances into a single pipeline, applying them outermost-first
+///around the wrapped operation. For example, wrapping a <see cref="CircuitBreaker"/> around a
+///<see cref="RetryPolicy"/> means each individual retry attempt passes through the circuit breaker.
 ///</summary>
 ///<example>
+///<code>
+///PolicyWrap wrap = new(circuitBreaker, retryPolicy, timeoutPolicy);
+///string result = await wrap.ExecuteAsync(async ct => await httpClient.GetStringAsync(url, ct), cancellationToken);
+///</code>
+///</example>
 public sealed class PolicyWrap : IAsyncPolicy
 {
     #region Fields
-    private readonly IAsyncPolicy[] _policies;
+    readonly IAsyncPolicy[] _policies;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a policy that applies the specified policies in order, outermost first.
     ///</summary>
@@ -35,21 +40,7 @@ public sealed class PolicyWrap : IAsyncPolicy
 
         _policies = policies;
     }
-    #endregion
 
-    #region Private methods
-    private Task<TResult> ExecuteFrom<TResult>(int index, Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken)
-    {
-        if(index == _policies.Length)
-        {
-            return operation(cancellationToken);
-        }
-
-        return _policies[index].ExecuteAsync(ct => ExecuteFrom(index + 1, operation, ct), cancellationToken);
-    }
-    #endregion
-
-    #region Public methods
     ///<summary>
     ///Executes the specified operation through every composed policy, outermost first.
     ///</summary>
@@ -74,14 +65,21 @@ public sealed class PolicyWrap : IAsyncPolicy
     {
         ArgumentNullException.ThrowIfNull(operation);
 
-        await ExecuteAsync<object?>(
-              async ct =>
-              {
-                  await operation(ct).ConfigureAwait(false);
-                  return null;
-              },
-              cancellationToken)
-            .ConfigureAwait(false);
+        await ExecuteAsync<object?>(async ct =>
+        {
+            await operation(ct).ConfigureAwait(false);
+            return null;
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
+    Task<TResult> ExecuteFrom<TResult>(int index, Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken)
+    {
+        if(index == _policies.Length)
+        {
+            return operation(cancellationToken);
+        }
+
+        return _policies[index].ExecuteAsync(ct => ExecuteFrom(index + 1, operation, ct), cancellationToken);
     }
     #endregion
 

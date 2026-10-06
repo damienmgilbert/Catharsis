@@ -18,6 +18,9 @@ public sealed class ComponentServiceProvider(IServiceProvider? parent = null) : 
     private readonly Dictionary<Type, Func<object>> _factories = [];
     private readonly Dictionary<Type, object> _instances = [];
     private readonly IServiceProvider? _parent = parent;
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Public methods
@@ -26,17 +29,17 @@ public sealed class ComponentServiceProvider(IServiceProvider? parent = null) : 
     {
         ArgumentNullException.ThrowIfNull(serviceType);
 
-        if(serviceType == typeof(IServiceProvider))
+        if (serviceType == typeof(IServiceProvider))
         {
             return this;
         }
 
-        if(_instances.TryGetValue(serviceType, out object? instance))
+        if (_instances.TryGetValue(serviceType, out object? instance))
         {
             return instance;
         }
 
-        if(_factories.TryGetValue(serviceType, out Func<object>? factory))
+        if (_factories.TryGetValue(serviceType, out Func<object>? factory))
         {
             return factory();
         }
@@ -50,7 +53,7 @@ public sealed class ComponentServiceProvider(IServiceProvider? parent = null) : 
     ///</summary>
     ///<typeparam name="TService">The service type to check.</typeparam>
     ///<returns>
-    public bool IsRegistered<TService>() where TService : class => _instances.ContainsKey(typeof(TService)) || _factories.ContainsKey(typeof(TService));
+    public bool IsRegistered<TService>() where TService : class { return _instances.ContainsKey(typeof(TService)) || _factories.ContainsKey(typeof(TService)); }
 
     ///<summary>
     ///Registers a singleton service instance for the specified service type.

@@ -9,7 +9,7 @@ namespace Catharsis.Text.RegularExpressions;
 public sealed class RegexReplacer
 {
     #region Fields
-    private readonly List<(Regex Pattern, string Replacement)> _rules = [];
+    readonly List<(Regex Pattern, string Replacement)> _rules = [];
     #endregion
 
     #region Public methods
@@ -46,9 +46,9 @@ public sealed class RegexReplacer
         return this;
     }
 
-    ///<summary>
-    ///Appends a replacement rule using a pre-compiled <see cref="Regex"/> instance.
-    ///</summary>
+        ///<summary>
+///Appends a replacement rule using a pre-compiled <see cref="Regex"/> instance.
+///</summary>
     ///<param name="pattern">The regex pattern to match.</param>
     ///<param name="replacement">The replacement string (supports group references such as <c>$1</c>).</param>
     ///<returns>The current <see cref="RegexReplacer"/> instance for fluent chaining.</returns>

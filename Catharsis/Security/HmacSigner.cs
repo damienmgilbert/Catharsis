@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 namespace Catharsis.Security;
 
 ///<summary>
-///Signs and verifies byte payloads with HMAC-SHA256, for tamper-evident tokens. Complements ///<see
-///cref="SecureRandomToken"/>, which only generates random tokens: use this when a payload's authenticity — not just its
-///randomness — must be verifiable, such as a signed cookie value or webhook payload.
+///Signs and verifies byte payloads with HMAC-SHA256, for tamper-evident tokens. Complements
+///<see cref="SecureRandomToken"/>, which only generates random tokens: use this when a payload's authenticity —
+///not just its randomness — must be verifiable, such as a signed cookie value or webhook payload.
 ///</summary>
 ///<param name="key">The shared secret key.</param>
 ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
@@ -13,11 +13,11 @@ namespace Catharsis.Security;
 public sealed class HmacSigner(byte[] key)
 {
     #region Fields
-    private readonly byte[] _key = ValidateKey(key);
+    readonly byte[] _key = ValidateKey(key);
     #endregion
 
     #region Private methods
-    private static byte[] ValidateKey(byte[] key)
+    static byte[] ValidateKey(byte[] key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
@@ -39,8 +39,8 @@ public sealed class HmacSigner(byte[] key)
     public byte[] Sign(ReadOnlySpan<byte> data) => HMACSHA256.HashData(_key, data);
 
     ///<summary>
-    ///Verifies that <paramref name="signature"/> is the correct HMAC-SHA256 signature of <paramref name="data"/>, using
-    ///a constant-time comparison to avoid leaking timing information about the correct signature.
+    ///Verifies that <paramref name="signature"/> is the correct HMAC-SHA256 signature of <paramref name="data"/>,
+    ///using a constant-time comparison to avoid leaking timing information about the correct signature.
     ///</summary>
     ///<param name="data">The data that was signed.</param>
     ///<param name="signature">The signature to verify.</param>

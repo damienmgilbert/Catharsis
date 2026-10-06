@@ -9,12 +9,19 @@ namespace Catharsis.Text.RegularExpressions;
 public sealed class TemplateEngine
 {
     #region Fields
-    private static readonly Regex TokenPattern = new(@"\{\{\s*(\w+)\s*\}\}", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+    static readonly Regex TokenPattern = new(@"\{\{\s*(\w+)\s*\}\}", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
     #endregion
 
     #region Public methods
     ///<summary>
     ///Renders <paramref name="template"/>, replacing every <c>{{token}}</c> placeholder whose name is a key in
+    ///<paramref name="values"/> with the corresponding value. A <c>null</c> value is substituted as an empty string.
+    ///Placeholders with no matching key are left in the output unchanged.
+    ///</summary>
+    ///<param name="template">The template text to render.</param>
+    ///<param name="values">The values available for substitution, keyed by token name.</param>
+    ///<returns>The rendered text.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="template"/> or <paramref name="values"/> is <c>null</c>.</exception>
     public string Render(string template, IReadOnlyDictionary<string, string?> values)
     {
         if(template is null)

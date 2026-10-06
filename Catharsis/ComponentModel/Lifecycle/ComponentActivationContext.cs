@@ -7,11 +7,14 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///and configuration properties.
 ///</summary>
 ///<remarks>
+///<para> The <see cref="ComponentLifecycleManager"/> creates an activation context for each component being initialized
+///or activated. Components can use the context to resolve services and read configuration parameters.</para>
+///</remarks>
 public sealed class ComponentActivationContext : IServiceProvider
 {
     #region Fields
-    private readonly Dictionary<string, object?> _properties = [ with(StringComparer.Ordinal) ];
-    private readonly IServiceProvider? _serviceProvider;
+    readonly Dictionary<string, object?> _properties = [with(StringComparer.Ordinal)];
+    readonly IServiceProvider? _serviceProvider;
     #endregion
 
     #region Constructors
@@ -21,6 +24,8 @@ public sealed class ComponentActivationContext : IServiceProvider
     ///<param name="component">The component being activated.</param>
     ///<param name="serviceProvider">An optional service provider for service resolution.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public ComponentActivationContext(IComponent component, IServiceProvider? serviceProvider = null)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -55,6 +60,8 @@ public sealed class ComponentActivationContext : IServiceProvider
     ///<param name="key">The property key.</param>
     ///<param name="value">The property value.</param>
     ///<exception cref="ArgumentException">
+    ///<paramref name="key"/> is null or whitespace.
+    ///</exception>
     public void SetProperty(string key, object? value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -62,7 +69,7 @@ public sealed class ComponentActivationContext : IServiceProvider
     }
 
     ///<inheritdoc/>
-    public override string ToString() => $"ActivationContext [{Component.GetType().Name}]: {CurrentState} -> {TargetState}";
+    public override string ToString() { return $"ActivationContext [{Component.GetType().Name}]: {CurrentState} -> {TargetState}"; }
     #endregion
 
     #region Public properties

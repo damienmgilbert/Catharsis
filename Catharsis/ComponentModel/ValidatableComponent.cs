@@ -12,7 +12,7 @@ namespace Catharsis.ComponentModel;
 public abstract class ValidatableComponent : ObservableComponent, INotifyDataErrorInfo
 {
     #region Fields
-    private readonly Dictionary<string, List<string>> _errors = [ with(StringComparer.Ordinal) ];
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     #endregion
 
     #region Events
@@ -32,18 +32,18 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(!_errors.TryGetValue(propertyName, out List<string>? errors))
+        if (!_errors.TryGetValue(propertyName, out List<string>? errors))
         {
             errors = [];
             _errors[propertyName] = errors;
         }
 
-        if(!errors.Contains(error, StringComparer.Ordinal))
+        if (!errors.Contains(error, StringComparer.Ordinal))
         {
             errors.Add(error);
             OnErrorsChanged(propertyName);
@@ -55,10 +55,10 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///</summary>
     protected void ClearAllErrors()
     {
-        List<string> propertyNames = [ .. _errors.Keys ];
+        List<string> propertyNames = [.. _errors.Keys];
         _errors.Clear();
 
-        foreach(string name in propertyNames)
+        foreach (string name in propertyNames)
         {
             OnErrorsChanged(name);
         }
@@ -72,12 +72,12 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///</param>
     protected void ClearErrors([CallerMemberName] string? propertyName = null)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        if(_errors.Remove(propertyName))
+        if (_errors.Remove(propertyName))
         {
             OnErrorsChanged(propertyName);
         }
@@ -86,7 +86,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             _errors.Clear();
             ErrorsChanged = null;
@@ -116,14 +116,14 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return;
         }
 
-        List<string> errorList = [ .. errors.Where(static e => !string.IsNullOrWhiteSpace(e)) ];
+        List<string> errorList = [.. errors.Where(static e => !string.IsNullOrWhiteSpace(e))];
 
-        if(errorList.Count == 0)
+        if (errorList.Count == 0)
         {
             ClearErrors(propertyName);
             return;
@@ -145,7 +145,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///<returns>
     protected bool SetPropertyAndValidate<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(!SetProperty(ref field, value, propertyName))
+        if (!SetProperty(ref field, value, propertyName))
         {
             return false;
         }
@@ -169,7 +169,7 @@ public abstract class ValidatableComponent : ObservableComponent, INotifyDataErr
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }

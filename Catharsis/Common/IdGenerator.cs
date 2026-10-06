@@ -2,18 +2,21 @@ namespace Catharsis.Common;
 
 ///<summary>
 ///Generates 64-bit identifiers that are strictly increasing across calls on the same instance, without depending on
+///<see cref="Guid"/> or a database sequence. Each identifier packs a millisecond timestamp (relative to a
+///configurable epoch) into the high bits and a per-millisecond sequence number into the low bits, in the spirit of
+///Twitter's Snowflake scheme.
+///</summary>
+///<param name="epoch">The reference point that timestamps are measured from, or <c>null</c> to use 2020-01-01 UTC.</param>
 public sealed class IdGenerator(DateTimeOffset? epoch = null)
 {
-    #region Constants
-    private const long MaxSequence = (1L << SequenceBits) - 1;
-    private const int SequenceBits = 12;
-    #endregion
-
     #region Fields
-    private readonly long _epochMilliseconds = (epoch ?? new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero)).ToUnixTimeMilliseconds();
-    private long _lastTimestamp = -1;
-    private readonly Lock _lock = new();
-    private long _sequence;
+    const int SequenceBits = 12;
+    const long MaxSequence = (1L << SequenceBits) - 1;
+
+    readonly long _epochMilliseconds = (epoch ?? new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero)).ToUnixTimeMilliseconds();
+    readonly Lock _lock = new();
+    long _lastTimestamp = -1;
+    long _sequence;
     #endregion
 
     #region Public methods

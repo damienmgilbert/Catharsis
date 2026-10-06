@@ -4,23 +4,20 @@ using System.Buffers.Text;
 namespace Catharsis.Buffers;
 
 ///<summary>
-///Static helpers over <see cref="Utf8Formatter"/> for formatting numeric and related values directly to UTF-8 bytes in
-///an <see cref="IBufferWriter{Byte}"/>, growing the destination automatically rather than requiring the caller to pre-
-///size a destination span and retry on failure — the write-side complement to ///<see cref="Utf8SpanNumberParser"/>,
-///and distinct from the binary-primitive-focused <see cref="SpanReader"/>/ ///<see cref="SpanWriter"/>.
+///Static helpers over <see cref="Utf8Formatter"/> for formatting numeric and related values directly to UTF-8
+///bytes in an <see cref="IBufferWriter{Byte}"/>, growing the destination automatically rather than requiring the
+///caller to pre-size a destination span and retry on failure — the write-side complement to
+///<see cref="Utf8SpanNumberParser"/>, and distinct from the binary-primitive-focused <see cref="SpanReader"/>/
+///<see cref="SpanWriter"/>.
 ///</summary>
 public static class Utf8SpanNumberFormatter
 {
-    #region Constants
-    private const int InitialBufferSize = 32;
-    #endregion
-
-    #region Delegates
-    private delegate bool TryFormat<T>(T value, Span<byte> destination, out int bytesWritten, StandardFormat format);
+    #region Fields
+    const int InitialBufferSize = 32;
     #endregion
 
     #region Private methods
-    private static int WriteGrowing<T>(IBufferWriter<byte> destination, T value, StandardFormat format, TryFormat<T> tryFormat)
+    static int WriteGrowing<T>(IBufferWriter<byte> destination, T value, StandardFormat format, TryFormat<T> tryFormat)
     {
         ArgumentNullException.ThrowIfNull(destination);
 
@@ -39,6 +36,8 @@ public static class Utf8SpanNumberFormatter
             size *= 2;
         }
     }
+
+    delegate bool TryFormat<T>(T value, Span<byte> destination, out int bytesWritten, StandardFormat format);
     #endregion
 
     #region Public methods

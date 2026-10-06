@@ -12,7 +12,6 @@ namespace Catharsis.DataAnnotations;
 public static class CompositeValidator
 {
     #region Public methods
-
     ///<summary>
     ///Validates all annotated properties and <see cref="IValidatableObject"/> on the given <paramref name="instance"/>.
     ///</summary>
@@ -43,6 +42,8 @@ public static class CompositeValidator
     ///A <see cref="CompositeValidationResult"/> containing results for the property.
     ///</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/> or <paramref name="propertyName"/> is <c>null</c>.
+    ///</exception>
     public static CompositeValidationResult ValidateProperty<T>(T instance, string propertyName) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -68,6 +69,8 @@ public static class CompositeValidator
     ///A <see cref="CompositeValidationResult"/> containing all failures, if any.
     ///</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="displayName"/> or <paramref name="attributes"/> is <c>null</c>.
+    ///</exception>
     public static CompositeValidationResult ValidateValue(object? value, string displayName, IEnumerable<ValidationAttribute> attributes)
     {
         ArgumentNullException.ThrowIfNull(displayName);

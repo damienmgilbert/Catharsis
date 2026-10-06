@@ -4,10 +4,13 @@ namespace Catharsis.Buffers;
 
 ///<summary>
 ///Static helpers over <see cref="Utf8Parser"/> for parsing UTF-8-encoded numeric and related text directly from a
+///<see cref="ReadOnlySpan{Byte}"/>, without first decoding to a <see cref="string"/> or <see cref="char"/> span —
+///the read-side complement to <see cref="Utf8SpanNumberFormatter"/>, and distinct from the binary-primitive-focused
+///<see cref="SpanReader"/>/<see cref="SpanWriter"/>.
+///</summary>
 public static class Utf8SpanNumberParser
 {
     #region Public methods
-
     ///<summary>
     ///Attempts to parse a <see cref="bool"/> from the start of <paramref name="utf8Text"/>.
     ///</summary>

@@ -3,17 +3,17 @@ using System.Collections.Concurrent;
 namespace Catharsis.DesignPatterns.Enterprise;
 
 ///<summary>
-///Implements the Object Pool design pattern: a minimal scaffold showing the pattern's shape (rent, use, return). For a
-///production-ready pool with DI and logging integration, use ///<see cref="Catharsis.Services.PooledObjectFactory{T}"/>
-///instead.
+///Implements the Object Pool design pattern: a minimal scaffold showing the pattern's shape (rent, use, return).
+///For a production-ready pool with DI and logging integration, use
+///<see cref="Catharsis.Services.PooledObjectFactory{T}"/> instead.
 ///</summary>
 ///<typeparam name="T">The type of object to pool.</typeparam>
 ///<param name="factory">A delegate that creates a new instance when the pool is empty.</param>
 public sealed class ObjectPoolPattern<T>(Func<T> factory)
 {
     #region Fields
-    private readonly Func<T> _factory = factory ?? throw new ArgumentNullException(nameof(factory), "Factory must not be null.");
-    private readonly ConcurrentBag<T> _items = [];
+    readonly Func<T> _factory = factory ?? throw new ArgumentNullException(nameof(factory), "Factory must not be null.");
+    readonly ConcurrentBag<T> _items = [];
     #endregion
 
     #region Public methods

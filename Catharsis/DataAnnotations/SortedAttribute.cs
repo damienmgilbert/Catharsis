@@ -19,8 +19,11 @@ namespace Catharsis.DataAnnotations;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 public sealed class SortedAttribute(SortDirection direction = SortDirection.Ascending) : ValidationAttribute("The field {0} must be sorted in {1} order.")
 {
-    #region Protected methods
 
+    #region Constructors
+    #endregion
+
+    #region Protected methods
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
@@ -70,7 +73,7 @@ public sealed class SortedAttribute(SortDirection direction = SortDirection.Asce
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, (Direction == SortDirection.Ascending) ? "ascending" : "descending");
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, (Direction == SortDirection.Ascending) ? "ascending" : "descending"); }
     #endregion
 
     #region Public properties

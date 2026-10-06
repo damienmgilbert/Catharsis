@@ -4,39 +4,30 @@ namespace Catharsis.Collections;
 
 ///<summary>
 ///A mutable collection of items paired with a weight, supporting proportionally-weighted random selection. Unlike
+///<see cref="Catharsis.Randomization.WeightedRandomPicker{T}"/>, items can be removed after being added; the
+///cumulative-weight table used for picking is rebuilt lazily after a mutation.
+///</summary>
+///<typeparam name="T">The type of item stored in the list.</typeparam>
+///<example>
+///<code>
+///WeightedList&lt;string&gt; loot = new();
+///loot.Add("common", 70);
+///loot.Add("rare", 25);
+///loot.Add("legendary", 5);
+///string drop = loot.PickRandom();
+///</code>
+///</example>
 public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Fields
-    private double[]? _cumulativeWeights;
-    private readonly List<(T Item, double Weight)> _items = [];
-    private double _totalWeight;
+    readonly List<(T Item, double Weight)> _items = [];
+    double[]? _cumulativeWeights;
+    double _totalWeight;
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    #endregion
-
-    #region Private methods
-    private double[] EnsureCumulativeWeights()
-    {
-        if(_cumulativeWeights is not null)
-        {
-            return _cumulativeWeights;
-        }
-
-        double[] cumulative = new double[_items.Count];
-        double running = 0;
-
-        for(int i = 0; i < _items.Count; i++)
-        {
-            running += _items[i].Weight;
-            cumulative[i] = running;
-        }
-
-        _cumulativeWeights = cumulative;
-        return cumulative;
-    }
     #endregion
 
     #region Public methods
@@ -121,6 +112,26 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
         _items.RemoveAt(index);
         _cumulativeWeights = null;
         return true;
+    }
+
+    double[] EnsureCumulativeWeights()
+    {
+        if(_cumulativeWeights is not null)
+        {
+            return _cumulativeWeights;
+        }
+
+        double[] cumulative = new double[_items.Count];
+        double running = 0;
+
+        for(int i = 0; i < _items.Count; i++)
+        {
+            running += _items[i].Weight;
+            cumulative[i] = running;
+        }
+
+        _cumulativeWeights = cumulative;
+        return cumulative;
     }
     #endregion
 

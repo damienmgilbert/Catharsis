@@ -10,20 +10,16 @@ namespace Catharsis.Domain;
 public class Rectangle(double width, double height) : Shape
 {
     #region Public properties
-    ///<inheritdoc/>
-    public override double Area => Width * Height;
+    ///<summary>Gets the width.</summary>
+    public double Width { get; } = RequirePositive(width, nameof(width));
 
-    ///<summary>
-    ///Gets the height.
-    ///</summary>
+    ///<summary>Gets the height.</summary>
     public double Height { get; } = RequirePositive(height, nameof(height));
 
     ///<inheritdoc/>
-    public override double Perimeter => 2 * (Width + Height);
+    public override double Area => Width * Height;
 
-    ///<summary>
-    ///Gets the width.
-    ///</summary>
-    public double Width { get; } = RequirePositive(width, nameof(width));
+    ///<inheritdoc/>
+    public override double Perimeter => 2 * (Width + Height);
     #endregion
 }

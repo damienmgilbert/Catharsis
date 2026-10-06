@@ -8,19 +8,30 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///order until one succeeds. This allows composing conversion logic from multiple specialized converters.
 ///</summary>
 ///<remarks>
+///<para><see cref="CanConvertFrom"/> and <see cref="CanConvertTo"/> return <c>true</c> if any converter in the chain
+///reports the conversion is supported.<see cref="ConvertFrom"/> and <see cref="ConvertTo"/> delegate to the first
+///converter that can handle the conversion.</para> <para> Converters are evaluated in the order they were added.
+///Use<see cref="CompositeTypeConverter(IEnumerable{System.ComponentModel.TypeConverter})"/> or <see
+///cref="CompositeTypeConverter(System.ComponentModel.TypeConverter[])"/> to specify the chain.</para>
+///</remarks>
 public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
 {
     #region Fields
-    private readonly System.ComponentModel.TypeConverter[] _converters;
+    readonly System.ComponentModel.TypeConverter[] _converters;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated in
-    ///order.
+    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
+    ///in order.
     ///</summary>
     ///<param name="converters">The converters to chain.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="converters"/> is <c>null</c>.
+    ///</exception>
+    ///<exception cref="ArgumentException">
+    ///<paramref name="converters"/> is empty.
+    ///</exception>
     public CompositeTypeConverter(params System.ComponentModel.TypeConverter[] converters)
     {
         ArgumentNullException.ThrowIfNull(converters);
@@ -34,11 +45,16 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     }
 
     ///<summary>
-    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated in
-    ///order.
+    ///Initializes a new instance of <see cref="CompositeTypeConverter"/> with the specified converters evaluated
+    ///in order.
     ///</summary>
     ///<param name="converters">The converters to chain.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="converters"/> is <c>null</c>.
+    ///</exception>
+    ///<exception cref="ArgumentException">
+    ///<paramref name="converters"/> is empty.
+    ///</exception>
     public CompositeTypeConverter(IEnumerable<System.ComponentModel.TypeConverter> converters)
     {
         ArgumentNullException.ThrowIfNull(converters);

@@ -12,9 +12,9 @@ namespace Catharsis.Advanced;
 public sealed class MemoryBackedChannel<T> : IDisposable
 {
     #region Fields
-    private readonly Channel<OwnedSegment> _channel;
-    private bool _disposed;
-    private readonly MemoryPool<T> _pool;
+    readonly Channel<OwnedSegment> _channel;
+    bool _disposed;
+    readonly MemoryPool<T> _pool;
     #endregion
 
     #region Constructors
@@ -45,7 +45,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     ///<summary>
     ///Signals that no more data will be written to the channel.
     ///</summary>
-    public void Complete() => _channel.Writer.TryComplete();
+    public void Complete() { _channel.Writer.TryComplete(); }
 
     ///<inheritdoc/>
     public void Dispose()
@@ -107,8 +107,8 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     public sealed class OwnedSegment : IDisposable
     {
         #region Fields
-        private bool _disposed;
-        private readonly IMemoryOwner<T> _owner;
+        bool _disposed;
+        readonly IMemoryOwner<T> _owner;
         #endregion
 
         #region Constructors

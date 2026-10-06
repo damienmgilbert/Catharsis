@@ -6,13 +6,15 @@ namespace Catharsis.Advanced;
 
 ///<summary>
 ///Reads structured data from a <see cref="Stream"/> by building a <see cref="ReadOnlySequence{T}"/> incrementally using
+///<see cref="PooledSequenceBuilder{T}"/>.
+///</summary>
 public sealed class StreamingSequenceReader : IDisposable
 {
     #region Fields
-    private readonly PooledSequenceBuilder<byte> _builder;
-    private bool _disposed;
-    private readonly ArrayPool<byte> _pool;
-    private readonly int _readBufferSize;
+    readonly PooledSequenceBuilder<byte> _builder;
+    bool _disposed;
+    readonly ArrayPool<byte> _pool;
+    readonly int _readBufferSize;
     #endregion
 
     #region Constructors
@@ -90,7 +92,7 @@ public sealed class StreamingSequenceReader : IDisposable
     ///<param name="stream">The source stream.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A <see cref="ReadOnlySequence{T}"/> over the read data.</returns>
-    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) => await ReadAllAsync(stream, cancellationToken).ConfigureAwait(false);
+    public async ValueTask<ReadOnlySequence<byte>> ReadAllValueAsync(Stream stream, CancellationToken cancellationToken = default) { return await ReadAllAsync(stream, cancellationToken).ConfigureAwait(false); }
 
     ///<summary>
     ///Resets the reader for reuse.

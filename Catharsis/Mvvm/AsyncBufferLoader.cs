@@ -11,12 +11,12 @@ namespace Catharsis.Mvvm;
 public class AsyncBufferLoader : ObservableObject, IDisposable
 {
     #region Fields
-    private byte[]? _buffer;
-    private int _bytesLoaded;
-    private bool _disposed;
-    private bool _isLoading;
-    private double _loadProgress;
-    private readonly ArrayPool<byte> _pool;
+    byte[]? _buffer;
+    int _bytesLoaded;
+    bool _disposed;
+    bool _isLoading;
+    double _loadProgress;
+    readonly ArrayPool<byte> _pool;
     #endregion
 
     #region Constructors
@@ -123,7 +123,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
     ///<param name="bufferSize">The read buffer size.</param>
     ///<param name="cancellationToken">A cancellation token.</param>
     ///<returns>A value task representing the async operation.</returns>
-    public ValueTask LoadValueAsync(Stream stream, int bufferSize = 4096, CancellationToken cancellationToken = default) => new ValueTask(LoadAsync(stream, bufferSize, cancellationToken));
+    public ValueTask LoadValueAsync(Stream stream, int bufferSize = 4096, CancellationToken cancellationToken = default) { return new ValueTask(LoadAsync(stream, bufferSize, cancellationToken)); }
     #endregion
 
     #region Public properties

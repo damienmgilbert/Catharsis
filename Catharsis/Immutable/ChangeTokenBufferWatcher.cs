@@ -10,11 +10,11 @@ namespace Catharsis.Immutable;
 public sealed class ChangeTokenBufferWatcher : IDisposable
 {
     #region Fields
-    private int _changeCount;
-    private bool _disposed;
-    private readonly IBufferChangeNotifier _notifier;
-    private readonly Action _onChange;
-    private IDisposable? _registration;
+    int _changeCount;
+    bool _disposed;
+    readonly IBufferChangeNotifier _notifier;
+    readonly Action _onChange;
+    IDisposable? _registration;
     #endregion
 
     #region Constructors

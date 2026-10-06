@@ -3,18 +3,18 @@ namespace Catharsis.Resilience;
 ///<summary>
 ///Limits the number of concurrent executions of an operation, isolating it from resource exhaustion caused by an
 ///unbounded number of simultaneous callers. Callers beyond the concurrency limit wait for a slot, bounded by an
-///optional queue length; once both the execution slots and the queue are full, further callers are rejected immediately
-///with <see cref="BulkheadRejectedException"/>.
+///optional queue length; once both the execution slots and the queue are full, further callers are rejected
+///immediately with <see cref="BulkheadRejectedException"/>.
 ///</summary>
 public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
 {
     #region Fields
-    private bool _disposed;
-    private readonly SemaphoreSlim _executionSlots;
-    private readonly SemaphoreSlim? _queueSlots;
+    readonly SemaphoreSlim _executionSlots;
+    readonly SemaphoreSlim? _queueSlots;
+    bool _disposed;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a bulkhead policy with the specified concurrency limit and, optionally, a bounded waiting queue.
     ///</summary>
@@ -24,6 +24,8 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
     ///rejected immediately once all execution slots are busy.
     ///</param>
     ///<exception cref="ArgumentOutOfRangeException">
+    ///<paramref name="maxConcurrency"/> is less than 1, or <paramref name="maxQueueLength"/> is negative.
+    ///</exception>
     public BulkheadPolicy(int maxConcurrency, int maxQueueLength = 0)
     {
         if(maxConcurrency < 1)
@@ -41,9 +43,7 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
         MaxConcurrency = maxConcurrency;
         MaxQueueLength = maxQueueLength;
     }
-    #endregion
 
-    #region Public methods
     ///<inheritdoc/>
     public void Dispose()
     {
@@ -76,7 +76,8 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
             try
             {
                 return await operation(cancellationToken).ConfigureAwait(false);
-            } finally
+            }
+            finally
             {
                 _executionSlots.Release();
             }
@@ -90,7 +91,8 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
         try
         {
             await _executionSlots.WaitAsync(cancellationToken).ConfigureAwait(false);
-        } finally
+        }
+        finally
         {
             _queueSlots.Release();
         }
@@ -98,7 +100,8 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
         try
         {
             return await operation(cancellationToken).ConfigureAwait(false);
-        } finally
+        }
+        finally
         {
             _executionSlots.Release();
         }
@@ -115,31 +118,28 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
     {
         ArgumentNullException.ThrowIfNull(operation);
 
-        await ExecuteAsync<object?>(
-              async ct =>
-              {
-                  await operation(ct).ConfigureAwait(false);
-                  return null;
-              },
-              cancellationToken)
-            .ConfigureAwait(false);
+        await ExecuteAsync<object?>(async ct =>
+        {
+            await operation(ct).ConfigureAwait(false);
+            return null;
+        }, cancellationToken).ConfigureAwait(false);
     }
     #endregion
 
     #region Public properties
     ///<summary>
-    ///Gets the number of execution slots currently available.
+    ///Gets the configured maximum concurrency.
     ///</summary>
-    public int AvailableConcurrency => _executionSlots.CurrentCount;
-
-        ///<summary>
-///Gets the configured maximum concurrency.
-///</summary>
     public int MaxConcurrency { get; }
 
     ///<summary>
     ///Gets the configured maximum queue length.
     ///</summary>
     public int MaxQueueLength { get; }
+
+    ///<summary>
+    ///Gets the number of execution slots currently available.
+    ///</summary>
+    public int AvailableConcurrency => _executionSlots.CurrentCount;
     #endregion
 }

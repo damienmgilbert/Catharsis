@@ -6,11 +6,19 @@ namespace Catharsis.ComponentModel.Validation;
 
 ///<summary>
 ///Validates objects using <see cref="System.ComponentModel.DataAnnotations"/> attributes and exposes results through
+///<see cref="INotifyDataErrorInfo"/> backed by an <see cref="ErrorDictionary"/>.
+///</summary>
+///<remarks>
+///<para> Call <see cref="ValidateObject"/> to validate all annotated properties, or<see cref="ValidateProperty"/> to
+///validate a single property. Results are stored in the <see cref="Errors"/> dictionary and change notifications are
+///raised through <see cref="ErrorsChanged"/>.</para> <para> The <see cref="ValidationContextFactory"/> can be provided
+///at construction time to control service-provider and item configuration on contexts.</para>
+///</remarks>
 public sealed class DataAnnotationValidator : INotifyDataErrorInfo
 {
     #region Fields
-    private readonly ValidationContextFactory _contextFactory;
-    private readonly ErrorDictionary _errors = new();
+    readonly ValidationContextFactory _contextFactory;
+    readonly ErrorDictionary _errors = new();
     #endregion
 
     #region Constructors
@@ -37,10 +45,9 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
     ///<summary>
     ///Clears all validation errors.
     ///</summary>
-    public void ClearAll() => _errors.ClearAll();
-
+    public void ClearAll() { _errors.ClearAll(); }
     ///<inheritdoc/>
-    public IEnumerable GetErrors(string? propertyName) => _errors.GetErrors(propertyName);
+    public IEnumerable GetErrors(string? propertyName) { return _errors.GetErrors(propertyName); }
 
     ///<summary>
     ///Validates all annotated properties on the specified object and populates the <see cref="Errors"/> dictionary with
@@ -49,6 +56,8 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
     ///<param name="instance">The object to validate.</param>
     ///<returns><c>true</c> if the object is valid; otherwise, <c>false</c>.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/> is <c>null</c>.
+    ///</exception>
     public bool ValidateObject(object instance)
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -62,7 +71,7 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
 
         foreach(ValidationResult result in results)
         {
-            List<string> members = [ .. result.MemberNames ];
+            List<string> members = [.. result.MemberNames];
 
             if(members.Count == 0)
             {
@@ -88,6 +97,8 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
     ///<param name="value">The property value to validate.</param>
     ///<returns><c>true</c> if the property is valid; otherwise, <c>false</c>.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/> or <paramref name="propertyName"/> is <c>null</c>.
+    ///</exception>
     public bool ValidateProperty(object instance, string propertyName, object? value)
     {
         ArgumentNullException.ThrowIfNull(instance);

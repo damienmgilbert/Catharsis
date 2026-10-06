@@ -2,7 +2,8 @@ namespace Catharsis.Extensions;
 
 ///<summary>
 ///Provides extension methods for <see cref="DateTime"/>: period boundaries and simple weekend-skipping business-day
-///arithmetic. For holiday-aware scheduling, compose with a calendar of your own; this type has no notion of holidays.
+///arithmetic. For holiday-aware scheduling, compose with a calendar of your own; this type has no notion of
+///holidays.
 ///</summary>
 public static class DateTimeExtensions
 {

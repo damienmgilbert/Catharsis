@@ -8,7 +8,6 @@ namespace Catharsis.Linq;
 public sealed class GroupJoinBuilderKeys<TOuter, TInner>(IEnumerable<TOuter> outer, IEnumerable<TInner> inner)
 {
     #region Public methods
-
     ///<summary>
     ///Specifies the key selectors for both outer and inner sequences.
     ///</summary>

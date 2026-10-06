@@ -9,11 +9,11 @@ namespace Catharsis.Common;
 public readonly struct ValueStopwatch
 {
     #region Struct fields
-    private readonly long _startTimestamp;
+    readonly long _startTimestamp;
     #endregion
 
     #region Constructors
-    private ValueStopwatch(long startTimestamp) { _startTimestamp = startTimestamp; }
+    ValueStopwatch(long startTimestamp) { _startTimestamp = startTimestamp; }
     #endregion
 
     #region Public methods
@@ -21,13 +21,12 @@ public readonly struct ValueStopwatch
     ///Gets the elapsed time in microseconds since the stopwatch was started.
     ///</summary>
     ///<returns>Elapsed microseconds as a double.</returns>
-    public double GetElapsedMicroseconds() => GetElapsedTime().TotalMicroseconds;
-
+    public double GetElapsedMicroseconds() { return GetElapsedTime().TotalMicroseconds; }
     ///<summary>
     ///Gets the elapsed time in milliseconds since the stopwatch was started.
     ///</summary>
     ///<returns>Elapsed milliseconds as a double.</returns>
-    public double GetElapsedMilliseconds() => GetElapsedTime().TotalMilliseconds;
+    public double GetElapsedMilliseconds() { return GetElapsedTime().TotalMilliseconds; }
 
     ///<summary>
     ///Gets the elapsed time since the stopwatch was started.
@@ -48,7 +47,7 @@ public readonly struct ValueStopwatch
     ///Starts a new <see cref="ValueStopwatch"/>.
     ///</summary>
     ///<returns>A running stopwatch.</returns>
-    public static ValueStopwatch StartNew() => new(Stopwatch.GetTimestamp());
+    public static ValueStopwatch StartNew() { return new(Stopwatch.GetTimestamp()); }
     #endregion
 
     #region Public properties

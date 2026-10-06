@@ -14,13 +14,10 @@ namespace Catharsis.DataAnnotations;
 public sealed class PastDateAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="PastDateAttribute"/>.
     ///</summary>
-    public PastDateAttribute() : base("The field {0} must be a date in the past.")
-    {
-    }
+    public PastDateAttribute() : base("The field {0} must be a date in the past.") { }
     #endregion
 
     #region Protected methods

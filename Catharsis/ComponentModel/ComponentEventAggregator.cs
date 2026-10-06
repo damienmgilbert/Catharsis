@@ -1,22 +1,22 @@
-using System.Collections.Concurrent;
 using Catharsis.Common;
+using System.Collections.Concurrent;
 
 namespace Catharsis.ComponentModel;
 
 ///<summary>
 ///A lightweight, type-keyed publish/subscribe hub scoped to a component graph. This is intentionally simpler than a
-///full messenger (no per-recipient tokens, channels, or weak references): it exists for wiring up sibling components
-///within a single container, not for cross-cutting application-wide messaging.
+///full messenger (no per-recipient tokens, channels, or weak references): it exists for wiring up sibling
+///components within a single container, not for cross-cutting application-wide messaging.
 ///</summary>
 public sealed class ComponentEventAggregator
 {
     #region Fields
-    private readonly Lock _gate = new();
-    private readonly ConcurrentDictionary<Type, List<Delegate>> _subscribers = new();
+    readonly Lock _gate = new();
+    readonly ConcurrentDictionary<Type, List<Delegate>> _subscribers = new();
     #endregion
 
     #region Private methods
-    private void Unsubscribe<TEvent>(Action<TEvent> handler)
+    void Unsubscribe<TEvent>(Action<TEvent> handler)
     {
         lock(_gate)
         {
@@ -30,7 +30,8 @@ public sealed class ComponentEventAggregator
 
     #region Public methods
     ///<summary>
-    ///Publishes an event to every handler currently subscribed to <typeparamref name="TEvent"/>, in subscription order.
+    ///Publishes an event to every handler currently subscribed to <typeparamref name="TEvent"/>, in subscription
+    ///order.
     ///</summary>
     ///<typeparam name="TEvent">The type of the event.</typeparam>
     ///<param name="event">The event instance to publish.</param>
@@ -48,7 +49,7 @@ public sealed class ComponentEventAggregator
                 return;
             }
 
-            snapshot = [ .. handlers.Cast<Action<TEvent>>() ];
+            snapshot = [.. handlers.Cast<Action<TEvent>>()];
         }
 
         foreach(Action<TEvent> handler in snapshot)

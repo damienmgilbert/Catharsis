@@ -10,7 +10,6 @@ namespace Catharsis.Security;
 public static class SecureRandomToken
 {
     #region Public methods
-
     ///<summary>
     ///Generates a new random token.
     ///</summary>

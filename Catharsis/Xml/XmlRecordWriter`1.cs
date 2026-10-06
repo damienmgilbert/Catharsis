@@ -5,17 +5,18 @@ using System.Xml.Linq;
 namespace Catharsis.Xml;
 
 ///<summary>
-///Writes instances of <typeparamref name="T"/> as XML, one child element per public, readable property. Mirrors what
-///<see cref="Catharsis.Serialization.DelimitedRecordWriter{T}"/> does for CSV, but produces an ///<see
-///cref="XElement"/> tree instead of delimited text.
+///Writes instances of <typeparamref name="T"/> as XML, one child element per public, readable property. Mirrors
+///what <see cref="Catharsis.Serialization.DelimitedRecordWriter{T}"/> does for CSV, but produces an
+///<see cref="XElement"/> tree instead of delimited text.
 ///</summary>
 ///<typeparam name="T">The record type to write.</typeparam>
 ///<param name="recordElementName">The element name to use for a single record. Defaults to <c>"Record"</c>.</param>
 public sealed class XmlRecordWriter<T>(string recordElementName = "Record")
 {
     #region Fields
-    private static readonly PropertyInfo[] _properties = [ .. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead) ];
-    private readonly string _recordElementName = string.IsNullOrWhiteSpace(recordElementName) ? throw new ArgumentException("Record element name must not be null, empty, or whitespace.", nameof(recordElementName)) : recordElementName;
+    static readonly PropertyInfo[] _properties = [.. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead)];
+
+    readonly string _recordElementName = string.IsNullOrWhiteSpace(recordElementName) ? throw new ArgumentException("Record element name must not be null, empty, or whitespace.", nameof(recordElementName)) : recordElementName;
     #endregion
 
     #region Public methods
@@ -41,8 +42,7 @@ public sealed class XmlRecordWriter<T>(string recordElementName = "Record")
     }
 
     ///<summary>
-    ///Writes every record as a single container element wrapping one child element per record (via <see
-    ///cref="WriteRecord"/>).
+    ///Writes every record as a single container element wrapping one child element per record (via <see cref="WriteRecord"/>).
     ///</summary>
     ///<param name="records">The records to write.</param>
     ///<param name="containerElementName">The element name for the wrapping container. Defaults to <c>"Records"</c>.</param>

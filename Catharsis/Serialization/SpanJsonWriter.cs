@@ -4,22 +4,22 @@ using System.Text.Json;
 namespace Catharsis.Serialization;
 
 ///<summary>
-///A minimal facade over <see cref="Utf8JsonWriter"/> for hot-path JSON emission directly into an ///<see
-///cref="IBufferWriter{T}"/> — e.g. <see cref="Catharsis.Buffers.PooledBuffer{T}"/> — instead of building a ///<see
-///cref="string"/> or intermediate <see cref="System.Text.Json.Nodes.JsonNode"/> tree first.
+///A minimal facade over <see cref="Utf8JsonWriter"/> for hot-path JSON emission directly into an
+///<see cref="IBufferWriter{T}"/> — e.g. <see cref="Catharsis.Buffers.PooledBuffer{T}"/> — instead of building a
+///<see cref="string"/> or intermediate <see cref="System.Text.Json.Nodes.JsonNode"/> tree first.
 ///</summary>
 ///<remarks>
 ///This deliberately does not reimplement JSON escaping or encoding: <see cref="Utf8JsonWriter"/> already writes
-///directly into the destination buffer's spans with no intermediate allocation, which is the entire point of a "span-
-///based" writer. This type exists to pair that writer with this library's own pooled buffers and to expose only the
-///handful of members most hot paths need.
+///directly into the destination buffer's spans with no intermediate allocation, which is the entire point of a
+///"span-based" writer. This type exists to pair that writer with this library's own pooled buffers and to expose
+///only the handful of members most hot paths need.
 ///</remarks>
 ///<param name="bufferWriter">The destination buffer that encoded UTF-8 JSON bytes are written into.</param>
 ///<param name="options">The writer options to use, or the default options if omitted.</param>
 public sealed class SpanJsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterOptions options = default) : IDisposable
 {
     #region Fields
-    private readonly Utf8JsonWriter _writer = new(bufferWriter ?? throw new ArgumentNullException(nameof(bufferWriter)), options);
+    readonly Utf8JsonWriter _writer = new(bufferWriter ?? throw new ArgumentNullException(nameof(bufferWriter)), options);
     #endregion
 
     #region Public methods

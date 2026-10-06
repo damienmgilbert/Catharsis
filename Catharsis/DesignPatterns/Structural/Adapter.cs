@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Structural;
 public class Adapter
 {
     #region Public methods
-
     ///<summary>
     ///Adapter — converts <paramref name="obj"/> to <typeparamref name="TResult"/> using the supplied <paramref
     ///name="adapter"/> delegate.

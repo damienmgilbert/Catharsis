@@ -13,7 +13,6 @@ namespace Catharsis.ComponentModel.Licensing;
 public sealed class ComponentDesignContext
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="ComponentDesignContext"/>.
     ///</summary>
@@ -25,6 +24,8 @@ public sealed class ComponentDesignContext
     ///The service provider for resolving design-time services, or <c>null</c>.
     ///</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public ComponentDesignContext(IComponent component, IContainer? container = null, IServiceProvider? serviceProvider = null)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -41,7 +42,7 @@ public sealed class ComponentDesignContext
     ///</summary>
     ///<typeparam name="T">The service type.</typeparam>
     ///<returns>The service instance, or <c>null</c> if not available.</returns>
-    public T? GetService<T>() where T : class => ServiceProvider?.GetService(typeof(T)) as T;
+    public T? GetService<T>() where T : class { return ServiceProvider?.GetService(typeof(T)) as T; }
     #endregion
 
     #region Public properties

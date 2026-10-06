@@ -1,14 +1,14 @@
+using Catharsis.Resilience;
 using System.Net.Http.Headers;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
-using Catharsis.Resilience;
 
 namespace Catharsis.Networking;
 
 ///<summary>
-///A reconnecting client subscriber for a server-sent-event endpoint: issues the initial and every reconnect request,
-///tracks the last received <c>Last-Event-ID</c> and resumes from it, and delegates reconnect/backoff timing to a <see
-///cref="Resilience.RetryPolicy"/>.
+///A reconnecting client subscriber for a server-sent-event endpoint: issues the initial and every reconnect
+///request, tracks the last received <c>Last-Event-ID</c> and resumes from it, and delegates reconnect/backoff
+///timing to a <see cref="Resilience.RetryPolicy"/>.
 ///</summary>
 ///<typeparam name="T">The type each event's data is parsed into.</typeparam>
 ///<param name="httpClient">The client used to issue the (re)connecting HTTP requests.</param>
@@ -16,18 +16,20 @@ namespace Catharsis.Networking;
 ///<param name="itemParser">The parser used to decode each event's payload bytes into a <typeparamref name="T"/>.</param>
 ///<param name="retryPolicy">The policy governing reconnect backoff. Defaults to a new <see cref="RetryPolicy"/> if not specified.</param>
 ///<exception cref="ArgumentNullException">
+///<paramref name="httpClient"/>, <paramref name="requestUri"/>, or <paramref name="itemParser"/> is <c>null</c>.
+///</exception>
 public sealed class SseClientSubscriber<T>(HttpClient httpClient, Uri requestUri, SseItemParser<T> itemParser, RetryPolicy? retryPolicy = null)
 {
     #region Fields
-    private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    private readonly SseItemParser<T> _itemParser = itemParser ?? throw new ArgumentNullException(nameof(itemParser));
-    private string? _lastEventId;
-    private readonly Uri _requestUri = requestUri ?? throw new ArgumentNullException(nameof(requestUri));
-    private readonly RetryPolicy _retryPolicy = retryPolicy ?? new RetryPolicy();
+    readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    readonly Uri _requestUri = requestUri ?? throw new ArgumentNullException(nameof(requestUri));
+    readonly SseItemParser<T> _itemParser = itemParser ?? throw new ArgumentNullException(nameof(itemParser));
+    readonly RetryPolicy _retryPolicy = retryPolicy ?? new RetryPolicy();
+    string? _lastEventId;
     #endregion
 
     #region Private methods
-    private async Task<Stream> OpenStreamAsync(CancellationToken cancellationToken)
+    async Task<Stream> OpenStreamAsync(CancellationToken cancellationToken)
     {
         HttpRequestMessage request = new(HttpMethod.Get, _requestUri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));

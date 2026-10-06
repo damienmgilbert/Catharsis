@@ -3,6 +3,10 @@ namespace Catharsis.Linq;
 ///<summary>
 ///Provides a padded-zip extension for <see cref="IEnumerable{T}"/>, continuing until both sequences are exhausted
 ///rather than stopping at the shorter one as <see cref="Enumerable.Zip{TFirst, TSecond}"/> does. Named
+///<c>ZipPadded</c> rather than the more common "ZipLongest" to avoid colliding with
+///<see cref="AsyncSequenceMerger.ZipLongest{TFirst, TSecond}"/>, which serves the same purpose for
+///<see cref="IAsyncEnumerable{T}"/> sequences.
+///</summary>
 public static class SequenceZipper
 {
     #region Private methods
@@ -49,8 +53,8 @@ public static class SequenceZipper
 
     #region Public methods
     ///<summary>
-    ///Zips two sequences together, continuing until both are exhausted. Once the shorter sequence ends, its slots are
-    ///filled with <c>default</c>.
+    ///Zips two sequences together, continuing until both are exhausted. Once the shorter sequence ends, its slots
+    ///are filled with <c>default</c>.
     ///</summary>
     ///<typeparam name="TFirst">The first sequence's element type.</typeparam>
     ///<typeparam name="TSecond">The second sequence's element type.</typeparam>
@@ -66,8 +70,8 @@ public static class SequenceZipper
     }
 
     ///<summary>
-    ///Zips two sequences together using the specified fallback values and result selector, continuing until both are
-    ///exhausted.
+    ///Zips two sequences together using the specified fallback values and result selector, continuing until both
+    ///are exhausted.
     ///</summary>
     ///<typeparam name="TFirst">The first sequence's element type.</typeparam>
     ///<typeparam name="TSecond">The second sequence's element type.</typeparam>
@@ -79,6 +83,8 @@ public static class SequenceZipper
     ///<param name="resultSelector">A function that combines each pair into a result.</param>
     ///<returns>A sequence of projected results, continuing until both sequences are exhausted.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="first"/>, <paramref name="second"/>, or <paramref name="resultSelector"/> is <c>null</c>.
+    ///</exception>
     public static IEnumerable<TResult> ZipPadded<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, TFirst firstDefault, TSecond secondDefault, Func<TFirst, TSecond, TResult> resultSelector)
     {
         ArgumentNullException.ThrowIfNull(first, nameof(first));

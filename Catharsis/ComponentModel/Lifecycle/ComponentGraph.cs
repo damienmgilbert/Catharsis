@@ -7,16 +7,20 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///and enabling topologically-ordered lifecycle operations (activation, deactivation, disposal).
 ///</summary>
 ///<remarks>
+///<para> Use <see cref="ComponentGraphBuilder"/> to construct graph instances. The graph provides <see
+///cref="GetActivationOrder"/> for startup sequencing and<see cref="GetDeactivationOrder"/> for shutdown
+///sequencing.</para>
+///</remarks>
 public sealed class ComponentGraph
 {
     #region Fields
-    private readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
+    readonly Dictionary<IComponent, ComponentGraphNode> _nodes = [];
     #endregion
 
     #region Private methods
-    private List<ComponentGraphNode> TopologicalSort(bool reverse)
+    List<ComponentGraphNode> TopologicalSort(bool reverse)
     {
-        List<ComponentGraphNode> sorted = [ with(_nodes.Count) ];
+        List<ComponentGraphNode> sorted = [with(_nodes.Count)];
         HashSet<ComponentGraphNode> visited = [];
         HashSet<ComponentGraphNode> visiting = [];
 
@@ -36,7 +40,7 @@ public sealed class ComponentGraph
         return sorted;
     }
 
-    private static void Visit(ComponentGraphNode node, HashSet<ComponentGraphNode> visited, HashSet<ComponentGraphNode> visiting, List<ComponentGraphNode> sorted)
+    static void Visit(ComponentGraphNode node, HashSet<ComponentGraphNode> visited, HashSet<ComponentGraphNode> visiting, List<ComponentGraphNode> sorted)
     {
         if(visiting.Contains(node))
         {
@@ -91,8 +95,7 @@ public sealed class ComponentGraph
     ///<exception cref="InvalidOperationException">
     ///The graph contains a cycle.
     ///</exception>
-    public IReadOnlyList<ComponentGraphNode> GetActivationOrder() => TopologicalSort(reverse: false);
-
+    public IReadOnlyList<ComponentGraphNode> GetActivationOrder() { return TopologicalSort(reverse: false); }
     ///<summary>
     ///Returns the nodes in reverse topological order suitable for deactivation (dependents before dependencies).
     ///</summary>
@@ -100,7 +103,7 @@ public sealed class ComponentGraph
     ///<exception cref="InvalidOperationException">
     ///The graph contains a cycle.
     ///</exception>
-    public IReadOnlyList<ComponentGraphNode> GetDeactivationOrder() => TopologicalSort(reverse: true);
+    public IReadOnlyList<ComponentGraphNode> GetDeactivationOrder() { return TopologicalSort(reverse: true); }
 
     ///<summary>
     ///Returns all leaf nodes (nodes with no dependents).

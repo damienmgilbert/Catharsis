@@ -1,9 +1,9 @@
 namespace Catharsis.Time;
 
 ///<summary>
-///Describes a weekly recurrence such as "every Monday at 9am local time" and computes its next occurrence, correctly
-///accounting for the target time zone's UTC offset (including daylight saving transitions) at the specific future date
-///being computed, not just at the moment of the call.
+///Describes a weekly recurrence such as "every Monday at 9am local time" and computes its next occurrence,
+///correctly accounting for the target time zone's UTC offset (including daylight saving transitions) at the
+///specific future date being computed, not just at the moment of the call.
 ///</summary>
 ///<param name="dayOfWeek">The day of the week the recurrence falls on.</param>
 ///<param name="timeOfDay">The local time of day the recurrence falls at.</param>
@@ -12,7 +12,7 @@ namespace Catharsis.Time;
 public sealed class RecurringSchedule(DayOfWeek dayOfWeek, TimeOnly timeOfDay, TimeZoneInfo timeZone)
 {
     #region Fields
-    private readonly TimeZoneInfo _timeZone = timeZone ?? throw new ArgumentNullException(nameof(timeZone), "Time zone must not be null.");
+    readonly TimeZoneInfo _timeZone = timeZone ?? throw new ArgumentNullException(nameof(timeZone), "Time zone must not be null.");
     #endregion
 
     #region Public methods

@@ -6,14 +6,36 @@ namespace Catharsis.ComponentModel.TypeConverter;
 
 ///<summary>
 ///A <see cref="System.ComponentModel.TypeConverter"/> that performs culture-aware conversions for types implementing
+///<see cref="IParsable{T}"/> and <see cref="IFormattable"/>, with optional <see cref="ISpanParsable{T}"/> and <see
+///cref="ISpanFormattable"/> support for zero-allocation paths.
+///</summary>
+///<typeparam name="T">
+///The target type. Must implement <see cref="IParsable{T}"/> and <see cref="IFormattable"/>.
+///</typeparam>
+///<remarks>
+///<para> Conversion from <see cref="string"/> uses <see cref="IParsable{T}.Parse"/> with the culture from the converter
+///context. When <typeparamref name="T"/> also implements <see cref="ISpanParsable{T}"/>, the<see cref="TryParseSpan"/>
+///method provides a zero-allocation alternative.</para> <para> Conversion to <see cref="string"/> uses <see
+///cref="IFormattable.ToString"/> with the configured format and culture.</para>
+///</remarks>
+///<remarks>
+///Initializes a new instance of <see cref="CultureAwareConverter{T}"/> using the specified context.
+///</remarks>
+///<param name="context">
+///The converter context providing culture and format settings. If <c>null</c>, <see
+///cref="ConverterContext.Default"/> is used.
+///</param>
 public class CultureAwareConverter<T>(ConverterContext? context = null) : System.ComponentModel.TypeConverter where T : IParsable<T>, IFormattable
 {
     #region Fields
-    private readonly ConverterContext _context = context ?? ConverterContext.Default;
+    readonly ConverterContext _context = context ?? ConverterContext.Default;
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Private methods
-    private string PrepareInput(string text)
+    string PrepareInput(string text)
     {
         if(_context.AllowLeadingWhiteSpace && _context.AllowTrailingWhiteSpace)
         {
@@ -36,10 +58,9 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
 
     #region Public methods
     ///<inheritdoc/>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => (sourceType == typeof(string)) || base.CanConvertFrom(context, sourceType);
-
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) { return (sourceType == typeof(string)) || base.CanConvertFrom(context, sourceType); }
     ///<inheritdoc/>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => (destinationType == typeof(string)) || base.CanConvertTo(context, destinationType);
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) { return (destinationType == typeof(string)) || base.CanConvertTo(context, destinationType); }
 
     ///<inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
@@ -93,6 +114,8 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     ///<param name="destination">The destination span.</param>
     ///<param name="charsWritten">The number of characters written.</param>
     ///<returns>
+    ///<c>true</c> if the value was successfully written; otherwise, <c>false</c>.
+    ///</returns>
     public bool TryFormatSpan(T value, Span<char> destination, out int charsWritten)
     {
         if(value is ISpanFormattable spanFormattable)

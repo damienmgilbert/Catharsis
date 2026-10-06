@@ -4,8 +4,8 @@ using System.Text.Json;
 namespace Catharsis.Networking;
 
 ///<summary>
-///Writes a sequence of <see cref="SseItem{T}"/> values as server-sent events to a stream, JSON-encoding each item's
-///data (via <see cref="System.Text.Json.JsonSerializer"/>) as the event payload.
+///Writes a sequence of <see cref="SseItem{T}"/> values as server-sent events to a stream, JSON-encoding each
+///item's data (via <see cref="System.Text.Json.JsonSerializer"/>) as the event payload.
 ///</summary>
 ///<typeparam name="T">The type of each event's data.</typeparam>
 ///<param name="destination">The stream to write formatted events to.</param>
@@ -13,7 +13,7 @@ namespace Catharsis.Networking;
 public sealed class SseEventStreamWriter<T>(Stream destination)
 {
     #region Fields
-    private readonly Stream _destination = destination ?? throw new ArgumentNullException(nameof(destination));
+    readonly Stream _destination = destination ?? throw new ArgumentNullException(nameof(destination));
     #endregion
 
     #region Public methods
@@ -27,15 +27,11 @@ public sealed class SseEventStreamWriter<T>(Stream destination)
     {
         ArgumentNullException.ThrowIfNull(events);
 
-        return SseFormatter.WriteAsync(
-               events,
-               _destination,
-               static(item, writer) =>
-               {
-                   using Utf8JsonWriter jsonWriter = new(writer);
-                   JsonSerializer.Serialize(jsonWriter, item.Data);
-               },
-               cancellationToken);
+        return SseFormatter.WriteAsync(events, _destination, static (item, writer) =>
+        {
+            using Utf8JsonWriter jsonWriter = new(writer);
+            JsonSerializer.Serialize(jsonWriter, item.Data);
+        }, cancellationToken);
     }
     #endregion
 }

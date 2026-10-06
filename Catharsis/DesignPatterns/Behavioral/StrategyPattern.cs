@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class StrategyPattern
 {
     #region Public methods
-
     ///<summary>
     ///Strategy — applies the interchangeable <paramref name="strategy"/> algorithm to <paramref name="obj"/> and
     ///returns the result.

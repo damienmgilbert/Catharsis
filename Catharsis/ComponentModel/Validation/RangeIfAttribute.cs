@@ -16,7 +16,7 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class RangeIfAttribute : ValidationAttribute
 {
     #region Fields
-    private readonly RangeAttribute _inner;
+    readonly RangeAttribute _inner;
     #endregion
 
     #region Constructors
@@ -28,6 +28,8 @@ public sealed class RangeIfAttribute : ValidationAttribute
     ///<param name="minimum">The minimum allowed value (inclusive).</param>
     ///<param name="maximum">The maximum allowed value (inclusive).</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="dependentProperty"/> is <c>null</c>.
+    ///</exception>
     public RangeIfAttribute(string dependentProperty, object? targetValue, int minimum, int maximum) : base("The field {0} must be between {1} and {2} when {3} equals {4}.")
     {
         ArgumentNullException.ThrowIfNull(dependentProperty);
@@ -44,6 +46,8 @@ public sealed class RangeIfAttribute : ValidationAttribute
     ///<param name="minimum">The minimum allowed value (inclusive).</param>
     ///<param name="maximum">The maximum allowed value (inclusive).</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="dependentProperty"/> is <c>null</c>.
+    ///</exception>
     public RangeIfAttribute(string dependentProperty, object? targetValue, double minimum, double maximum) : base("The field {0} must be between {1} and {2} when {3} equals {4}.")
     {
         ArgumentNullException.ThrowIfNull(dependentProperty);
@@ -54,7 +58,7 @@ public sealed class RangeIfAttribute : ValidationAttribute
     #endregion
 
     #region Private methods
-    private bool IsConditionMet(ValidationContext context)
+    bool IsConditionMet(ValidationContext context)
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
@@ -90,7 +94,7 @@ public sealed class RangeIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum, DependentProperty, TargetValue ?? "null");
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Minimum, Maximum, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties

@@ -12,11 +12,13 @@ namespace Catharsis.ComponentModel.Validation;
 ///<remarks>
 ///When the condition defined by <see cref="DependentProperty"/> and <see cref="TargetValue"/> is not met, the property
 ///passes validation regardless of its value. Null values pass validation even when the condition is met; combine with
+///<see cref="RequiredIfAttribute"/> to enforce non-null when needed.
+///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = true)]
 public sealed class RegexIfAttribute : ValidationAttribute
 {
     #region Fields
-    private readonly Regex _regex;
+    readonly Regex _regex;
     #endregion
 
     #region Constructors
@@ -28,6 +30,8 @@ public sealed class RegexIfAttribute : ValidationAttribute
     ///<param name="pattern">The regular expression pattern.</param>
     ///<param name="options">Optional regex options. Defaults to <see cref="RegexOptions.None"/>.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="dependentProperty"/> or <paramref name="pattern"/> is <c>null</c>.
+    ///</exception>
     public RegexIfAttribute(string dependentProperty, object? targetValue, string pattern, RegexOptions options = RegexOptions.None) : base("The field {0} must match the pattern '{1}' when {2} equals {3}.")
     {
         ArgumentNullException.ThrowIfNull(dependentProperty);
@@ -41,7 +45,7 @@ public sealed class RegexIfAttribute : ValidationAttribute
     #endregion
 
     #region Private methods
-    private bool IsConditionMet(ValidationContext context)
+    bool IsConditionMet(ValidationContext context)
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
@@ -82,7 +86,7 @@ public sealed class RegexIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Pattern, DependentProperty, TargetValue ?? "null");
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Pattern, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties

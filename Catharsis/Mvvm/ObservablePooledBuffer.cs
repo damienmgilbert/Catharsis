@@ -12,11 +12,11 @@ namespace Catharsis.Mvvm;
 public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
 {
     #region Fields
-    private T[] _buffer;
-    private int _capacity;
-    private int _count;
-    private bool _disposed;
-    private readonly ArrayPool<T> _pool;
+    T[] _buffer;
+    int _capacity;
+    int _count;
+    bool _disposed;
+    readonly ArrayPool<T> _pool;
     #endregion
 
     #region Constructors
@@ -45,7 +45,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
     #endregion
 
     #region Private methods
-    private void EnsureCapacity(int required)
+    void EnsureCapacity(int required)
     {
         if(required <= _buffer.Length)
         {

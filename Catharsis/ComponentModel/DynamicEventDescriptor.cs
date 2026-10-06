@@ -7,24 +7,29 @@ namespace Catharsis.ComponentModel;
 ///dynamic event definitions without requiring compile-time event accessors.
 ///</summary>
 ///<remarks>
+///<para> The add and remove delegates receive the component instance and the handler delegate to attach or detach. Use
+///<see cref="WithMergedAttributes"/> to produce a new descriptor with additional attributes.</para>
+///</remarks>
 public sealed class DynamicEventDescriptor : EventDescriptor
 {
     #region Fields
-    private readonly Action<object, Delegate> _addHandler;
-    private readonly Type _componentType;
-    private readonly Type _eventType;
-    private readonly Action<object, Delegate> _removeHandler;
+    readonly Action<object, Delegate> _addHandler;
+    readonly Type _componentType;
+    readonly Type _eventType;
+    readonly Action<object, Delegate> _removeHandler;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="DynamicEventDescriptor"/> from <see cref="EventMetadata"/> and delegate
-    ///handlers.
+    ///Initializes a new instance of <see cref="DynamicEventDescriptor"/> from <see cref="EventMetadata"/> and
+    ///delegate handlers.
     ///</summary>
     ///<param name="metadata">The event metadata.</param>
     ///<param name="addHandler">A delegate that subscribes a handler.</param>
     ///<param name="removeHandler">A delegate that unsubscribes a handler.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="metadata"/>, <paramref name="addHandler"/>, or <paramref name="removeHandler"/> is <c>null</c>.
+    ///</exception>
     public DynamicEventDescriptor(EventMetadata metadata, Action<object, Delegate> addHandler, Action<object, Delegate> removeHandler) : base(metadata?.Name ?? throw new ArgumentNullException(nameof(metadata)), ToAttributeArray(metadata.Attributes))
     {
         ArgumentNullException.ThrowIfNull(addHandler);
@@ -46,6 +51,9 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     ///<param name="removeHandler">A delegate that unsubscribes a handler from the event.</param>
     ///<param name="attributes">Optional attributes for the event.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="eventType"/>, <paramref name="componentType"/>, <paramref name="addHandler"/>, or <paramref
+    ///name="removeHandler"/> is <c>null</c>.
+    ///</exception>
     public DynamicEventDescriptor(string name, Type eventType, Type componentType, Action<object, Delegate> addHandler, Action<object, Delegate> removeHandler, params Attribute[] attributes) : base(name, attributes)
     {
         ArgumentNullException.ThrowIfNull(eventType);
@@ -61,7 +69,7 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     #endregion
 
     #region Private methods
-    private static Attribute[] ToAttributeArray(AttributeCollection collection)
+    static Attribute[] ToAttributeArray(AttributeCollection collection)
     {
         Attribute[] result = new Attribute[collection.Count];
 

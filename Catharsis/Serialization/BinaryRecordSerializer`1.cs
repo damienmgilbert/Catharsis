@@ -4,19 +4,27 @@ namespace Catharsis.Serialization;
 
 ///<summary>
 ///Serializes and deserializes instances of <typeparamref name="T"/> to and from a fixed binary layout, driven by
+///<see cref="BinaryFieldAttribute"/> on each participating property. Supports <see cref="bool"/>, <see cref="byte"/>,
+///<see cref="short"/>, <see cref="int"/>, <see cref="long"/>, <see cref="float"/>, and <see cref="double"/> fields,
+///written in <see cref="BinaryFieldAttribute.Order"/> order using little-endian byte order.
+///</summary>
+///<typeparam name="T">The record type to serialize. Must have a public parameterless constructor.</typeparam>
+///<exception cref="InvalidOperationException">
+///<typeparamref name="T"/> has no properties decorated with <see cref="BinaryFieldAttribute"/>.
+///</exception>
 public sealed class BinaryRecordSerializer<T> where T : new()
 {
     #region Fields
-    private static readonly PropertyInfo[] _fields = [ .. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+    static readonly PropertyInfo[] _fields = [.. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
         .Where(static property => property.GetCustomAttribute<BinaryFieldAttribute>() is not null)
-        .OrderBy(static property => property.GetCustomAttribute<BinaryFieldAttribute>()!.Order) ];
+        .OrderBy(static property => property.GetCustomAttribute<BinaryFieldAttribute>()!.Order)];
     #endregion
 
     #region Constructors
     ///<remarks>
-    ///This validation deliberately lives here rather than in the static field initializer above: an exception thrown
-    ///from a type initializer is wrapped in <see cref="TypeInitializationException"/> by the runtime, which would
-    ///obscure the actual failure reason from callers.
+    ///This validation deliberately lives here rather than in the static field initializer above: an exception
+    ///thrown from a type initializer is wrapped in <see cref="TypeInitializationException"/> by the runtime, which
+    ///would obscure the actual failure reason from callers.
     ///</remarks>
     public BinaryRecordSerializer()
     {
@@ -28,7 +36,8 @@ public sealed class BinaryRecordSerializer<T> where T : new()
     #endregion
 
     #region Private methods
-    private static object ReadValue(BinaryReader reader, Type type)
+
+    static object ReadValue(BinaryReader reader, Type type)
     {
         if(type == typeof(int))
         {
@@ -68,7 +77,7 @@ public sealed class BinaryRecordSerializer<T> where T : new()
         throw new NotSupportedException($"Field type '{type.Name}' is not supported by {nameof(BinaryRecordSerializer<T>)}.");
     }
 
-    private static void WriteValue(BinaryWriter writer, Type type, object? value)
+    static void WriteValue(BinaryWriter writer, Type type, object? value)
     {
         switch(value)
         {

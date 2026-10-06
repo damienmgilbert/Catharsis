@@ -12,10 +12,10 @@ namespace Catharsis.Mvvm;
 public class ObservableSpan<T> : ObservableObject, IDisposable
 {
     #region Fields
-    private T[] _buffer;
-    private bool _disposed;
-    private int _length;
-    private readonly ArrayPool<T> _pool;
+    T[] _buffer;
+    bool _disposed;
+    int _length;
+    readonly ArrayPool<T> _pool;
     #endregion
 
     #region Constructors

@@ -6,10 +6,7 @@ namespace Catharsis.Domain;
 public sealed class Triangle : Shape
 {
     #region Constructors
-
-    ///<summary>
-    ///Initializes a new <see cref="Triangle"/>.
-    ///</summary>
+    ///<summary>Initializes a new <see cref="Triangle"/>.</summary>
     ///<param name="a">The first side. Must be positive and finite.</param>
     ///<param name="b">The second side. Must be positive and finite.</param>
     ///<param name="c">The third side. Must be positive and finite.</param>
@@ -29,10 +26,14 @@ public sealed class Triangle : Shape
     #endregion
 
     #region Public properties
-    ///<summary>
-    ///Gets the first side.
-    ///</summary>
+    ///<summary>Gets the first side.</summary>
     public double A { get; }
+
+    ///<summary>Gets the second side.</summary>
+    public double B { get; }
+
+    ///<summary>Gets the third side.</summary>
+    public double C { get; }
 
     ///<inheritdoc/>
     public override double Area
@@ -44,16 +45,6 @@ public sealed class Triangle : Shape
             return Math.Sqrt(s * (s - A) * (s - B) * (s - C));
         }
     }
-
-    ///<summary>
-    ///Gets the second side.
-    ///</summary>
-    public double B { get; }
-
-    ///<summary>
-    ///Gets the third side.
-    ///</summary>
-    public double C { get; }
 
     ///<inheritdoc/>
     public override double Perimeter => A + B + C;

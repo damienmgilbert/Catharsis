@@ -10,11 +10,11 @@ public static class SequenceDistinct
     #region Private methods
     private static IEnumerable<T> DistinctByKeyIterator<T, TKey>(IEnumerable<T> source, Func<T, TKey> keySelector, IEqualityComparer<TKey> comparer)
     {
-        HashSet<TKey> seen = [ with(comparer) ];
+        HashSet<TKey> seen = [with(comparer)];
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
-            if(seen.Add(keySelector(item)))
+            if (seen.Add(keySelector(item)))
             {
                 yield return item;
             }
@@ -23,7 +23,7 @@ public static class SequenceDistinct
 
     private static IEnumerable<IGrouping<TGroupKey, TElement>> DistinctByKeyPerGroupIterator<TGroupKey, TElement, TKey>(IEnumerable<IGrouping<TGroupKey, TElement>> source, Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer)
     {
-        foreach(IGrouping<TGroupKey, TElement> group in source)
+        foreach (IGrouping<TGroupKey, TElement> group in source)
         {
             IEnumerable<TElement> distinct = DistinctByKeyIterator(group, keySelector, comparer);
             yield return SequenceFactory.Grouping(group.Key, distinct);
@@ -47,16 +47,17 @@ public static class SequenceDistinct
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
 
-        Dictionary<TKey, int> counts = [ with(comparer ?? EqualityComparer<TKey>.Default) ];
+        Dictionary<TKey, int> counts = [with(comparer ?? EqualityComparer<TKey>.Default)];
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             TKey key = keySelector(item);
 
-            if(counts.TryGetValue(key, out int count))
+            if (counts.TryGetValue(key, out int count))
             {
                 counts[key] = count + 1;
-            } else
+            }
+            else
             {
                 counts[key] = 1;
             }
@@ -120,16 +121,17 @@ public static class SequenceDistinct
         ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
         ArgumentNullException.ThrowIfNull(duplicateResolver, nameof(duplicateResolver));
 
-        Dictionary<TKey, T> seen = [ with(comparer ?? EqualityComparer<TKey>.Default) ];
+        Dictionary<TKey, T> seen = [with(comparer ?? EqualityComparer<TKey>.Default)];
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             TKey key = keySelector(item);
 
-            if(seen.TryGetValue(key, out T? existing))
+            if (seen.TryGetValue(key, out T? existing))
             {
                 seen[key] = duplicateResolver(existing, item);
-            } else
+            }
+            else
             {
                 seen[key] = item;
             }

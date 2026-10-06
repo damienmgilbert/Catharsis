@@ -9,7 +9,6 @@ namespace Catharsis.Buffers;
 public interface IResizableBuffer<T> : IBufferWriter<T>, IDisposable
 {
     #region Public methods
-
     ///<summary>
     ///Ensures the buffer has at least the specified capacity.
     ///</summary>

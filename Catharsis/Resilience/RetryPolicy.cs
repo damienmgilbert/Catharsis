@@ -8,19 +8,32 @@ namespace Catharsis.Resilience;
 ///call one of the <c>Execute</c> overloads to run an operation under the policy.
 ///</summary>
 ///<example>
+///<code>
+///var policy = new RetryPolicy()
+///    .MaxAttempts(5)
+///    .InitialDelay(TimeSpan.FromMilliseconds(200))
+///    .ExponentialBackoff(2.0)
+///    .WithJitter()
+///    .RetryOn&lt;HttpRequestException&gt;();
+///
+///string result = await policy.ExecuteAsync(
+///    async ct => await httpClient.GetStringAsync(url, ct),
+///    cancellationToken);
+///</code>
+///</example>
 public sealed class RetryPolicy : IAsyncPolicy
 {
     #region Fields
-    private double _backoffMultiplier = 2.0;
-    private TimeSpan _initialDelay = TimeSpan.FromMilliseconds(200);
-    private int _maxAttempts = 3;
-    private TimeSpan _maxDelay = TimeSpan.FromSeconds(30);
-    private Func<Exception, bool> _retryPredicate = static _ => true;
-    private bool _useJitter;
+    TimeSpan _initialDelay = TimeSpan.FromMilliseconds(200);
+    double _backoffMultiplier = 2.0;
+    int _maxAttempts = 3;
+    TimeSpan _maxDelay = TimeSpan.FromSeconds(30);
+    Func<Exception, bool> _retryPredicate = static _ => true;
+    bool _useJitter;
     #endregion
 
     #region Private methods
-    private TimeSpan ComputeDelay(int attempt)
+    TimeSpan ComputeDelay(int attempt)
     {
         double delayMs = _initialDelay.TotalMilliseconds * Math.Pow(_backoffMultiplier, attempt);
         delayMs = Math.Min(delayMs, _maxDelay.TotalMilliseconds);
@@ -59,13 +72,15 @@ public sealed class RetryPolicy : IAsyncPolicy
             try
             {
                 return operation();
-            } catch(Exception ex) when(attempt < _maxAttempts - 1 && _retryPredicate(ex))
+            }
+            catch(Exception ex) when(attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
-                exceptions ??= [ with(_maxAttempts) ];
+                exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 Thread.Sleep(ComputeDelay(attempt));
-            } catch(Exception ex) when(exceptions is not null && _retryPredicate(ex))
+            }
+            catch(Exception ex) when(exceptions is not null && _retryPredicate(ex))
             {
                 exceptions.Add(ex);
                 throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -90,8 +105,7 @@ public sealed class RetryPolicy : IAsyncPolicy
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
-        Execute<object?>(
-        () =>
+        Execute<object?>(() =>
         {
             operation();
             return null;
@@ -125,13 +139,15 @@ public sealed class RetryPolicy : IAsyncPolicy
             try
             {
                 return await operation(cancellationToken).ConfigureAwait(false);
-            } catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
+            }
+            catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
-                exceptions ??= [ with(_maxAttempts) ];
+                exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 await Task.Delay(ComputeDelay(attempt), cancellationToken).ConfigureAwait(false);
-            } catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+            }
+            catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
             {
                 exceptions.Add(ex);
                 throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -157,14 +173,11 @@ public sealed class RetryPolicy : IAsyncPolicy
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
-        await ExecuteAsync<object?>(
-              async ct =>
-              {
-                  await operation(ct).ConfigureAwait(false);
-                  return null;
-              },
-              cancellationToken)
-            .ConfigureAwait(false);
+        await ExecuteAsync<object?>(async ct =>
+        {
+            await operation(ct).ConfigureAwait(false);
+            return null;
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     ///<summary>
@@ -199,13 +212,15 @@ public sealed class RetryPolicy : IAsyncPolicy
                 try
                 {
                     return await op(ct).ConfigureAwait(false);
-                } catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
+                }
+                catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
                 {
-                    exceptions ??= [ with(_maxAttempts) ];
+                    exceptions ??= [with(_maxAttempts)];
                     exceptions.Add(ex);
 
                     await Task.Delay(ComputeDelay(attempt), ct).ConfigureAwait(false);
-                } catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+                }
+                catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
                 {
                     exceptions.Add(ex);
                     throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -237,14 +252,11 @@ public sealed class RetryPolicy : IAsyncPolicy
 
         async ValueTask Core(Func<CancellationToken, ValueTask> op, CancellationToken ct)
         {
-            await ExecuteValueAsync<object?>(
-                  async token =>
-                  {
-                      await op(token).ConfigureAwait(false);
-                      return null;
-                  },
-                  ct)
-                .ConfigureAwait(false);
+            await ExecuteValueAsync<object?>(async token =>
+            {
+                await op(token).ConfigureAwait(false);
+                return null;
+            }, ct).ConfigureAwait(false);
         }
     }
 
@@ -360,13 +372,13 @@ public sealed class RetryPolicy : IAsyncPolicy
 
     #region Public properties
     ///<summary>
+    ///Gets the configured maximum number of attempts.
+    ///</summary>
+    public int ConfiguredMaxAttempts => _maxAttempts;
+
+    ///<summary>
     ///Gets the configured initial delay.
     ///</summary>
     public TimeSpan ConfiguredInitialDelay => _initialDelay;
-
-        ///<summary>
-///Gets the configured maximum number of attempts.
-///</summary>
-    public int ConfiguredMaxAttempts => _maxAttempts;
     #endregion
 }

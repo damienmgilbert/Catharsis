@@ -8,10 +8,16 @@ namespace Catharsis.Linq.Expressions;
 ///compiled delegates (which a provider cannot see into).
 ///</summary>
 ///<example>
+///<code>
+///Expression&lt;Func&lt;User, bool&gt;&gt; isActive = u => u.IsActive;
+///Expression&lt;Func&lt;User, bool&gt;&gt; isAdmin = u => u.Role == "Admin";
+///Expression&lt;Func&lt;User, bool&gt;&gt; filter = isActive.And(isAdmin);
+///</code>
+///</example>
 public static class PredicateCombinator
 {
     #region Private methods
-    private static Expression<Func<T, bool>> Combine<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right, Func<Expression, Expression, BinaryExpression> combinator)
+    static Expression<Func<T, bool>> Combine<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right, Func<Expression, Expression, BinaryExpression> combinator)
     {
         ParameterExpression parameter = left.Parameters[0];
         Expression rightBody = new ParameterRebinder(right.Parameters[0], parameter).Visit(right.Body);
@@ -64,7 +70,7 @@ public static class PredicateCombinator
     }
     #endregion
 
-    private sealed class ParameterRebinder(ParameterExpression from, ParameterExpression to) : ExpressionVisitor
+    sealed class ParameterRebinder(ParameterExpression from, ParameterExpression to) : ExpressionVisitor
     {
         #region Protected methods
         protected override Expression VisitParameter(ParameterExpression node) => node == from ? to : base.VisitParameter(node);

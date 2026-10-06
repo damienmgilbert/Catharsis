@@ -2,21 +2,31 @@ namespace Catharsis.Resilience;
 
 ///<summary>
 ///A token-bucket rate limiter that permits up to <see cref="Capacity"/> operations in a burst, then refills tokens
-///continuously at a configured rate, either rejecting or asynchronously waiting for callers once the bucket is empty.
+///continuously at a configured rate, either rejecting or asynchronously waiting for callers once the bucket is
+///empty.
 ///</summary>
 ///<example>
+///<code>
+///RateLimiter limiter = new(capacity: 10, tokensPerSecond: 2);
+///
+///if(limiter.TryAcquire())
+///{
+///    // Proceed immediately.
+///}
+///</code>
+///</example>
 public sealed class RateLimiter
 {
     #region Fields
-    private double _availableTokens;
-    private readonly double _capacity;
-    private readonly Lock _gate = new();
-    private long _lastRefillTimestamp;
-    private readonly TimeProvider _timeProvider;
-    private readonly double _tokensPerSecond;
+    readonly Lock _gate = new();
+    readonly double _capacity;
+    readonly double _tokensPerSecond;
+    readonly TimeProvider _timeProvider;
+    double _availableTokens;
+    long _lastRefillTimestamp;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a rate limiter with the specified bucket capacity and refill rate.
     ///</summary>
@@ -24,6 +34,8 @@ public sealed class RateLimiter
     ///<param name="tokensPerSecond">The number of tokens added to the bucket per second.</param>
     ///<param name="timeProvider">The time source used to compute refills, or <c>null</c> to use <see cref="TimeProvider.System"/>.</param>
     ///<exception cref="ArgumentOutOfRangeException">
+    ///<paramref name="capacity"/> or <paramref name="tokensPerSecond"/> is not greater than zero.
+    ///</exception>
     public RateLimiter(double capacity, double tokensPerSecond, TimeProvider? timeProvider = null)
     {
         if(capacity <= 0)
@@ -42,25 +54,34 @@ public sealed class RateLimiter
         _availableTokens = capacity;
         _lastRefillTimestamp = _timeProvider.GetTimestamp();
     }
-    #endregion
 
-    #region Private methods
-    private void Refill()
+    ///<summary>
+    ///Attempts to acquire the specified number of tokens without waiting.
+    ///</summary>
+    ///<param name="tokens">The number of tokens to acquire. Defaults to 1.</param>
+    ///<returns><c>true</c> if the tokens were acquired; otherwise <c>false</c>.</returns>
+    ///<exception cref="ArgumentOutOfRangeException"><paramref name="tokens"/> is not greater than zero.</exception>
+    public bool TryAcquire(double tokens = 1)
     {
-        long now = _timeProvider.GetTimestamp();
-        double elapsedSeconds = _timeProvider.GetElapsedTime(_lastRefillTimestamp, now).TotalSeconds;
-
-        if(elapsedSeconds <= 0)
+        if(tokens <= 0)
         {
-            return;
+            throw new ArgumentOutOfRangeException(nameof(tokens), "Token count must be greater than zero.");
         }
 
-        _availableTokens = Math.Min(_capacity, _availableTokens + (elapsedSeconds * _tokensPerSecond));
-        _lastRefillTimestamp = now;
-    }
-    #endregion
+        lock(_gate)
+        {
+            Refill();
 
-    #region Public methods
+            if(_availableTokens < tokens)
+            {
+                return false;
+            }
+
+            _availableTokens -= tokens;
+            return true;
+        }
+    }
+
     ///<summary>
     ///Asynchronously acquires the specified number of tokens, waiting for them to refill if necessary.
     ///</summary>
@@ -68,6 +89,8 @@ public sealed class RateLimiter
     ///<param name="cancellationToken">A cancellation token that can abandon the wait.</param>
     ///<returns>A task that completes once the tokens have been acquired.</returns>
     ///<exception cref="ArgumentOutOfRangeException">
+    ///<paramref name="tokens"/> is not greater than zero, or exceeds the bucket capacity.
+    ///</exception>
     public async Task AcquireAsync(double tokens = 1, CancellationToken cancellationToken = default)
     {
         if(tokens <= 0)
@@ -102,35 +125,27 @@ public sealed class RateLimiter
         }
     }
 
-    ///<summary>
-    ///Attempts to acquire the specified number of tokens without waiting.
-    ///</summary>
-    ///<param name="tokens">The number of tokens to acquire. Defaults to 1.</param>
-    ///<returns><c>true</c> if the tokens were acquired; otherwise <c>false</c>.</returns>
-    ///<exception cref="ArgumentOutOfRangeException"><paramref name="tokens"/> is not greater than zero.</exception>
-    public bool TryAcquire(double tokens = 1)
+    void Refill()
     {
-        if(tokens <= 0)
+        long now = _timeProvider.GetTimestamp();
+        double elapsedSeconds = _timeProvider.GetElapsedTime(_lastRefillTimestamp, now).TotalSeconds;
+
+        if(elapsedSeconds <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(tokens), "Token count must be greater than zero.");
+            return;
         }
 
-        lock(_gate)
-        {
-            Refill();
-
-            if(_availableTokens < tokens)
-            {
-                return false;
-            }
-
-            _availableTokens -= tokens;
-            return true;
-        }
+        _availableTokens = Math.Min(_capacity, _availableTokens + (elapsedSeconds * _tokensPerSecond));
+        _lastRefillTimestamp = now;
     }
     #endregion
 
     #region Public properties
+    ///<summary>
+    ///Gets the bucket capacity.
+    ///</summary>
+    public double Capacity => _capacity;
+
     ///<summary>
     ///Gets the number of tokens currently available, after applying any pending refill.
     ///</summary>
@@ -145,10 +160,5 @@ public sealed class RateLimiter
             }
         }
     }
-
-        ///<summary>
-///Gets the bucket capacity.
-///</summary>
-    public double Capacity => _capacity;
     #endregion
 }

@@ -10,7 +10,7 @@ namespace Catharsis.ComponentModel;
 public class DynamicTypeDescriptor : CustomTypeDescriptor
 {
     #region Fields
-    private readonly List<PropertyDescriptor> _properties = [];
+    readonly List<PropertyDescriptor> _properties = [];
     #endregion
 
     #region Constructors
@@ -31,7 +31,7 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     #endregion
 
     #region Private methods
-    private static bool MatchesAttributes(PropertyDescriptor property, Attribute[]? attributes)
+    static bool MatchesAttributes(PropertyDescriptor property, Attribute[]? attributes)
     {
         if((attributes is null) || (attributes.Length == 0))
         {
@@ -85,7 +85,7 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
     {
         PropertyDescriptorCollection baseProperties = base.GetProperties(attributes);
-        PropertyDescriptor[] filtered = [ .. _properties.Where(p => MatchesAttributes(p, attributes)) ];
+        PropertyDescriptor[] filtered = [.. _properties.Where(p => MatchesAttributes(p, attributes))];
         PropertyDescriptor[] merged = new PropertyDescriptor[baseProperties.Count + filtered.Length];
 
         baseProperties.CopyTo(merged, 0);

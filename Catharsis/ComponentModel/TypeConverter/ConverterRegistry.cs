@@ -20,7 +20,7 @@ public sealed class ConverterRegistry
     ///<summary>
     ///Removes all registered converters.
     ///</summary>
-    public void Clear() => _converters.Clear();
+    public void Clear() { _converters.Clear(); }
 
     ///<summary>
     ///Converts a value of type <typeparamref name="T"/> to the specified destination type using the registered (or
@@ -56,7 +56,7 @@ public sealed class ConverterRegistry
     {
         System.ComponentModel.TypeConverter converter = GetConverter<T>();
 
-        if(converter.CanConvertFrom(value.GetType()))
+        if (converter.CanConvertFrom(value.GetType()))
         {
             return (T?)converter.ConvertFrom(null, culture ?? CultureInfo.CurrentCulture, value);
         }
@@ -70,7 +70,7 @@ public sealed class ConverterRegistry
     ///</summary>
     ///<typeparam name="T">The type to get a converter for.</typeparam>
     ///<returns>The converter for the type.</returns>
-    public System.ComponentModel.TypeConverter GetConverter<T>() => GetConverter(typeof(T));
+    public System.ComponentModel.TypeConverter GetConverter<T>() { return GetConverter(typeof(T)); }
 
     ///<summary>
     ///Gets the registered converter for the specified type, falling back to <see
@@ -83,7 +83,7 @@ public sealed class ConverterRegistry
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        if(_converters.TryGetValue(type, out System.ComponentModel.TypeConverter? converter))
+        if (_converters.TryGetValue(type, out System.ComponentModel.TypeConverter? converter))
         {
             return converter;
         }
@@ -96,7 +96,7 @@ public sealed class ConverterRegistry
     ///</summary>
     ///<typeparam name="T">The type to check.</typeparam>
     ///<returns><c>true</c> if a converter is registered; otherwise, <c>false</c>.</returns>
-    public bool IsRegistered<T>() => _converters.ContainsKey(typeof(T));
+    public bool IsRegistered<T>() { return _converters.ContainsKey(typeof(T)); }
 
     ///<summary>
     ///Gets a value indicating whether a converter is explicitly registered for the specified type.
@@ -202,7 +202,8 @@ public sealed class ConverterRegistry
         {
             result = ConvertTo<T>(value, culture)!;
             return result is not null;
-        } catch
+        }
+        catch
         {
             result = default;
             return false;
@@ -228,7 +229,7 @@ public sealed class ConverterRegistry
     ///</summary>
     ///<typeparam name="T">The type to unregister.</typeparam>
     ///<returns>
-    public bool Unregister<T>() => _converters.TryRemove(typeof(T), out _);
+    public bool Unregister<T>() { return _converters.TryRemove(typeof(T), out _); }
 
     ///<summary>
     ///Removes the registered converter for the specified type.

@@ -3,17 +3,25 @@ namespace Catharsis.Scheduling;
 ///<summary>
 ///Computes exponential backoff delays with a configurable jitter strategy, so retry loops avoid a thundering herd of
 ///synchronized retries. Useful for hand-rolled retry loops, scheduled reconnect logic, or anywhere a delay similar to
+///<see cref="Catharsis.Resilience.RetryPolicy"/>'s internal backoff is needed standalone.
+///</summary>
+///<example>
+///<code>
+///JitteredDelayCalculator calculator = new(TimeSpan.FromMilliseconds(200), TimeSpan.FromSeconds(30));
+///TimeSpan delay = calculator.ComputeDelay(attempt: 2);
+///</code>
+///</example>
 public sealed class JitteredDelayCalculator
 {
     #region Fields
-    private readonly TimeSpan _baseDelay;
-    private readonly JitterStrategy _jitter;
-    private readonly TimeSpan _maxDelay;
-    private readonly double _multiplier;
-    private readonly Random _random;
+    readonly TimeSpan _baseDelay;
+    readonly TimeSpan _maxDelay;
+    readonly double _multiplier;
+    readonly JitterStrategy _jitter;
+    readonly Random _random;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a delay calculator with the specified base delay, maximum delay, backoff multiplier, and jitter strategy.
     ///</summary>
@@ -23,6 +31,9 @@ public sealed class JitteredDelayCalculator
     ///<param name="jitter">The jitter strategy to apply. Defaults to <see cref="JitterStrategy.Full"/>.</param>
     ///<param name="random">The random source used for jitter, or <c>null</c> to use <see cref="Random.Shared"/>.</param>
     ///<exception cref="ArgumentOutOfRangeException">
+    ///<paramref name="baseDelay"/> is negative, <paramref name="maxDelay"/> is less than <paramref name="baseDelay"/>, or
+    ///<paramref name="multiplier"/> is less than 1.0.
+    ///</exception>
     public JitteredDelayCalculator(TimeSpan baseDelay, TimeSpan maxDelay, double multiplier = 2.0, JitterStrategy jitter = JitterStrategy.Full, Random? random = null)
     {
         if(baseDelay < TimeSpan.Zero)
@@ -46,9 +57,7 @@ public sealed class JitteredDelayCalculator
         _jitter = jitter;
         _random = random ?? Random.Shared;
     }
-    #endregion
 
-    #region Public methods
     ///<summary>
     ///Computes the delay for the specified attempt number.
     ///</summary>

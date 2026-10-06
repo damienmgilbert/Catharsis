@@ -6,7 +6,6 @@ namespace Catharsis.Randomization;
 public static class ShuffleExtensions
 {
     #region Public methods
-
     ///<summary>
     ///Shuffles the elements of the specified list in place, using the Fisher-Yates algorithm.
     ///</summary>

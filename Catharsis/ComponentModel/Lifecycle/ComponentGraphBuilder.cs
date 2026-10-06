@@ -26,7 +26,7 @@ public sealed class ComponentGraphBuilder
     {
         ArgumentNullException.ThrowIfNull(component);
 
-        if(_nodes.ContainsKey(component))
+        if (_nodes.ContainsKey(component))
         {
             throw new InvalidOperationException($"Component '{name ?? component.GetType().Name}' is already registered.");
         }
@@ -65,19 +65,19 @@ public sealed class ComponentGraphBuilder
     {
         ComponentGraph graph = new();
 
-        foreach(ComponentGraphNode node in _nodes.Values)
+        foreach (ComponentGraphNode node in _nodes.Values)
         {
             graph.AddNode(node);
         }
 
         foreach (var (dependent, dependency) in _edges)
         {
-            if(!_nodes.TryGetValue(dependent, out ComponentGraphNode? dependentNode))
+            if (!_nodes.TryGetValue(dependent, out ComponentGraphNode? dependentNode))
             {
                 throw new InvalidOperationException($"Dependent component '{dependent.GetType().Name}' is not registered in the graph.");
             }
 
-            if(!_nodes.TryGetValue(dependency, out ComponentGraphNode? dependencyNode))
+            if (!_nodes.TryGetValue(dependency, out ComponentGraphNode? dependencyNode))
             {
                 throw new InvalidOperationException($"Dependency component '{dependency.GetType().Name}' is not registered in the graph.");
             }

@@ -11,11 +11,11 @@ public static class AsyncSequenceFilter
     #region Private methods
     private static async IAsyncEnumerable<T> DistinctByIterator<T, TKey>(IAsyncEnumerable<T> source, Func<T, TKey> keySelector, IEqualityComparer<TKey> comparer, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        HashSet<TKey> seen = [ with(comparer) ];
+        HashSet<TKey> seen = [with(comparer)];
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(seen.Add(keySelector(item)))
+            if (seen.Add(keySelector(item)))
             {
                 yield return item;
             }
@@ -26,9 +26,9 @@ public static class AsyncSequenceFilter
     {
         int skipped = 0;
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(skipped < count)
+            if (skipped < count)
             {
                 skipped++;
                 continue;
@@ -42,9 +42,9 @@ public static class AsyncSequenceFilter
     {
         bool skipping = true;
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(skipping && predicate(item))
+            if (skipping && predicate(item))
             {
                 continue;
             }
@@ -58,9 +58,9 @@ public static class AsyncSequenceFilter
     {
         int taken = 0;
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(taken >= count)
+            if (taken >= count)
             {
                 yield break;
             }
@@ -72,9 +72,9 @@ public static class AsyncSequenceFilter
 
     private static async IAsyncEnumerable<T> TakeWhileIterator<T>(IAsyncEnumerable<T> source, Func<T, bool> predicate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(!predicate(item))
+            if (!predicate(item))
             {
                 yield break;
             }
@@ -87,9 +87,9 @@ public static class AsyncSequenceFilter
     {
         bool first = true;
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(!first)
+            if (!first)
             {
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
             }
@@ -101,9 +101,9 @@ public static class AsyncSequenceFilter
 
     private static async IAsyncEnumerable<T> WhereAsyncIterator<T>(IAsyncEnumerable<T> source, Func<T, CancellationToken, ValueTask<bool>> predicate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(await predicate(item, cancellationToken).ConfigureAwait(false))
+            if (await predicate(item, cancellationToken).ConfigureAwait(false))
             {
                 yield return item;
             }
@@ -114,9 +114,9 @@ public static class AsyncSequenceFilter
     {
         int index = 0;
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(predicate(item, index))
+            if (predicate(item, index))
             {
                 yield return item;
             }
@@ -127,9 +127,9 @@ public static class AsyncSequenceFilter
 
     private static async IAsyncEnumerable<T> WhereIterator<T>(IAsyncEnumerable<T> source, Func<T, bool> predicate, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
-            if(predicate(item))
+            if (predicate(item))
             {
                 yield return item;
             }

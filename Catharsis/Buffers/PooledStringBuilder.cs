@@ -11,10 +11,10 @@ namespace Catharsis.Buffers;
 public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
 {
     #region Fields
-    private char[] _buffer;
-    private bool _disposed;
-    private readonly ArrayPool<char> _pool;
-    private int _position;
+    char[] _buffer;
+    bool _disposed;
+    readonly ArrayPool<char> _pool;
+    int _position;
     #endregion
 
     #region Constructors
@@ -42,7 +42,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     #endregion
 
     #region Private methods
-    private void EnsureCapacity(int required)
+    void EnsureCapacity(int required)
     {
         if(required <= _buffer.Length)
         {
@@ -132,7 +132,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     ///<summary>
     ///Appends a line break to the builder.
     ///</summary>
-    public void AppendLine() => Append(Environment.NewLine.AsSpan());
+    public void AppendLine() { Append(Environment.NewLine.AsSpan()); }
 
     ///<summary>
     ///Appends a string followed by a line break.
@@ -147,7 +147,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     ///<summary>
     ///Clears all written characters without releasing the buffer.
     ///</summary>
-    public void Clear() => _position = 0;
+    public void Clear() { _position = 0; }
 
     ///<inheritdoc/>
     public void Dispose()
@@ -184,7 +184,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     ///Returns the accumulated string and resets the builder.
     ///</summary>
     ///<returns>The built string.</returns>
-    public override string ToString() => new string(_buffer, 0, _position);
+    public override string ToString() { return new string(_buffer, 0, _position); }
 
     ///<summary>
     ///Returns the accumulated string and disposes the builder.

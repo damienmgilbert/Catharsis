@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Catharsis.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -46,12 +46,12 @@ public sealed class RuleQueryBuilder<T>
 
         IQueryable<T> query = source.Where(BuildPredicate());
 
-        if(_skip.HasValue)
+        if (_skip.HasValue)
         {
             query = query.Skip(_skip.Value);
         }
 
-        if(_take.HasValue)
+        if (_take.HasValue)
         {
             query = query.Take(_take.Value);
         }
@@ -72,12 +72,12 @@ public sealed class RuleQueryBuilder<T>
         Func<T, bool> compiled = BuildPredicate().Compile();
         IEnumerable<T> result = source.Where(compiled);
 
-        if(_skip.HasValue)
+        if (_skip.HasValue)
         {
             result = result.Skip(_skip.Value);
         }
 
-        if(_take.HasValue)
+        if (_take.HasValue)
         {
             result = result.Take(_take.Value);
         }
@@ -97,7 +97,7 @@ public sealed class RuleQueryBuilder<T>
 
         IEnumerable<T> filtered = Apply(source);
 
-        List<(string Name, Func<T, bool> Compiled)> compiled = [ .. _namedFilters.Select(nf => (nf.Name, Compiled: nf.Condition.Compile())) ];
+        List<(string Name, Func<T, bool> Compiled)> compiled = [.. _namedFilters.Select(nf => (nf.Name, Compiled: nf.Condition.Compile()))];
 
         return filtered
             .Select(
@@ -211,7 +211,7 @@ public sealed class RuleQueryBuilder<T>
     ///<returns>The current builder for fluent chaining.</returns>
     public RuleQueryBuilder<T> WhereAllRules()
     {
-        foreach(Rule<T> rule in _ruleSet.Enabled())
+        foreach (Rule<T> rule in _ruleSet.Enabled())
         {
             _filters.Add(rule.Condition);
             _namedFilters.Add((rule.Name, rule.Condition));
@@ -231,7 +231,7 @@ public sealed class RuleQueryBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        if(condition)
+        if (condition)
         {
             _filters.Add(predicate);
         }
@@ -267,7 +267,7 @@ public sealed class RuleQueryBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(tags, nameof(tags));
 
-        foreach(Rule<T> rule in _ruleSet.WithAnyTag(tags).Where(static r => r.IsEnabled))
+        foreach (Rule<T> rule in _ruleSet.WithAnyTag(tags).Where(static r => r.IsEnabled))
         {
             _filters.Add(rule.Condition);
             _namedFilters.Add((rule.Name, rule.Condition));

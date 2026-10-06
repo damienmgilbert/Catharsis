@@ -6,18 +6,29 @@ namespace Catharsis.ComponentModel;
 ///<summary>
 ///A <see cref="TypeDescriptionProvider"/> that builds <see cref="ICustomTypeDescriptor"/> instances from a <see
 ///cref="ComponentMetadataRegistry"/>, producing <see cref="DynamicPropertyDescriptor"/> entries for each registered
+///<see cref="PropertyMetadata"/>.
+///</summary>
+///<remarks>
+///<para> This provider chains to an optional parent <see cref="TypeDescriptionProvider"/> so that standard reflection-
+///based descriptors are preserved for types without explicit registry entries.</para> <para> Register this provider
+///with <see cref="TypeDescriptor.AddProvider"/> to override the default type description for specific component
+///types.</para>
+///</remarks>
 public class ComponentDescriptorProvider : TypeDescriptionProvider
 {
     #region Fields
-    private readonly ComponentMetadataRegistry _registry;
+    readonly ComponentMetadataRegistry _registry;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry.
+    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata
+    ///registry.
     ///</summary>
     ///<param name="registry">The registry containing property and event metadata.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="registry"/> is <c>null</c>.
+    ///</exception>
     public ComponentDescriptorProvider(ComponentMetadataRegistry registry)
     {
         ArgumentNullException.ThrowIfNull(registry);
@@ -25,14 +36,16 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
 
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry and
-    ///parent provider.
+    ///Initializes a new instance of <see cref="ComponentDescriptorProvider"/> with the specified metadata registry
+    ///and parent provider.
     ///</summary>
     ///<param name="registry">The registry containing property and event metadata.</param>
     ///<param name="parent">
     ///The parent <see cref="TypeDescriptionProvider"/> to chain to for unregistered types.
     ///</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="registry"/> is <c>null</c>.
+    ///</exception>
     public ComponentDescriptorProvider(ComponentMetadataRegistry registry, TypeDescriptionProvider parent) : base(parent)
     {
         ArgumentNullException.ThrowIfNull(registry);
@@ -62,15 +75,18 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
     }
     #endregion
 
-    private sealed class RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : CustomTypeDescriptor(parent)
+    sealed class RegistryTypeDescriptor(ICustomTypeDescriptor? parent, ComponentMetadataRegistry registry, Type componentType) : CustomTypeDescriptor(parent)
     {
         #region Fields
-        private readonly Type _componentType = componentType;
-        private readonly ComponentMetadataRegistry _registry = registry;
+        readonly Type _componentType = componentType;
+        readonly ComponentMetadataRegistry _registry = registry;
+
+        #endregion
+        #region Constructors
         #endregion
 
         #region Private methods
-        private static DynamicEventDescriptor CreateEventDescriptor(EventMetadata metadata)
+        static DynamicEventDescriptor CreateEventDescriptor(EventMetadata metadata)
         {
             return new DynamicEventDescriptor(
                    metadata,
@@ -86,7 +102,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
                    });
         }
 
-        private static DynamicPropertyDescriptor CreatePropertyDescriptor(PropertyMetadata metadata)
+        static DynamicPropertyDescriptor CreatePropertyDescriptor(PropertyMetadata metadata)
         {
             return new DynamicPropertyDescriptor(
                    metadata,
@@ -104,7 +120,7 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
                    });
         }
 
-        private static bool MatchesAttributes(MemberDescriptor descriptor, Attribute[] attributes)
+        static bool MatchesAttributes(MemberDescriptor descriptor, Attribute[] attributes)
         {
             foreach(Attribute attribute in attributes)
             {
@@ -117,9 +133,9 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
             return true;
         }
 
-        private static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
+        static EventDescriptorCollection MergeEvents(EventDescriptorCollection baseEvents, IReadOnlyList<EventMetadata> registeredMetadata)
         {
-            Dictionary<string, EventDescriptor> merged = [ with(StringComparer.Ordinal) ];
+            Dictionary<string, EventDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(EventDescriptor evt in baseEvents)
             {
@@ -134,9 +150,9 @@ public class ComponentDescriptorProvider : TypeDescriptionProvider
             return new EventDescriptorCollection([ .. merged.Values ]);
         }
 
-        private static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
+        static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
-            Dictionary<string, PropertyDescriptor> merged = [ with(StringComparer.Ordinal) ];
+            Dictionary<string, PropertyDescriptor> merged = [with(StringComparer.Ordinal)];
 
             foreach(PropertyDescriptor prop in baseProperties)
             {

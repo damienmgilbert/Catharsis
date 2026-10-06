@@ -5,13 +5,17 @@ namespace Catharsis.Events;
 ///<summary>
 ///Coalesces a burst of values into one call: each <see cref="Post"/> restarts a quiet-period timer, and once the timer
 ///elapses without a further post the action runs once with the <em>latest</em> value. It is the value-carrying form of
+///<see cref="TaskDebouncer"/>, which it wraps, and the trailing-edge counterpart of the leading-edge
+///<see cref="EventThrottler{T}"/>.
+///</summary>
+///<typeparam name="T">The type of the posted value.</typeparam>
 public sealed class EventDebouncer<T> : IDisposable
 {
     #region Fields
-    private readonly Func<T, CancellationToken, Task> _action;
-    private readonly TaskDebouncer _debouncer;
-    private readonly Lock _gate = new();
-    private T? _latest;
+    readonly Func<T, CancellationToken, Task> _action;
+    readonly TaskDebouncer _debouncer;
+    readonly Lock _gate = new();
+    T? _latest;
     #endregion
 
     #region Constructors
@@ -37,45 +41,14 @@ public sealed class EventDebouncer<T> : IDisposable
     ///<param name="action">The action to run with the latest posted value.</param>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is negative.</exception>
     ///<exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
-    public EventDebouncer(TimeSpan delay, Action<T> action) : this(delay, WrapAction(action))
-    {
-    }
-    #endregion
-
-    #region Private methods
-    private Task RunAsync(CancellationToken cancellationToken)
-    {
-        T value;
-
-        lock(_gate)
-        {
-            value = _latest!;
-        }
-
-        return _action(value, cancellationToken);
-    }
-
-    private static Func<T, CancellationToken, Task> WrapAction(Action<T> action)
-    {
-        ArgumentNullException.ThrowIfNull(action);
-
-        return(value, _) =>
-        {
-            action(value);
-            return Task.CompletedTask;
-        };
-    }
+    public EventDebouncer(TimeSpan delay, Action<T> action)
+        : this(delay, WrapAction(action)) { }
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Cancels any pending run and stops accepting posts.
+    ///Records <paramref name="value"/> as the latest and restarts the quiet period.
     ///</summary>
-    public void Dispose() => _debouncer.Dispose();
-
-        ///<summary>
-///Records <paramref name="value"/> as the latest and restarts the quiet period.
-///</summary>
     ///<param name="value">The value to deliver once posting goes quiet.</param>
     ///<exception cref="ObjectDisposedException">The debouncer has been disposed.</exception>
     public void Post(T value)
@@ -86,6 +59,36 @@ public sealed class EventDebouncer<T> : IDisposable
         }
 
         _debouncer.Trigger();
+    }
+
+    ///<summary>
+    ///Cancels any pending run and stops accepting posts.
+    ///</summary>
+    public void Dispose() => _debouncer.Dispose();
+    #endregion
+
+    #region Private methods
+    static Func<T, CancellationToken, Task> WrapAction(Action<T> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        return (value, _) =>
+        {
+            action(value);
+            return Task.CompletedTask;
+        };
+    }
+
+    Task RunAsync(CancellationToken cancellationToken)
+    {
+        T value;
+
+        lock(_gate)
+        {
+            value = _latest!;
+        }
+
+        return _action(value, cancellationToken);
     }
     #endregion
 }

@@ -13,7 +13,6 @@ namespace Catharsis.ComponentModel;
 public sealed class EventMetadata
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="EventMetadata"/>.
     ///</summary>
@@ -24,6 +23,8 @@ public sealed class EventMetadata
     ///<param name="attributes">Optional attributes to associate with the event.</param>
     ///<exception cref="ArgumentException"><paramref name="name"/> is null or whitespace.</exception>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="eventType"/> or <paramref name="componentType"/> is <c>null</c>.
+    ///</exception>
     public EventMetadata(string name, Type eventType, Type componentType, bool isMulticast = true, params Attribute[] attributes)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -42,7 +43,7 @@ public sealed class EventMetadata
     ///<summary>
     ///Returns a string representation containing the event name and handler type.
     ///</summary>
-    public override string ToString() => $"{Name} ({EventType.Name})";
+    public override string ToString() { return $"{Name} ({EventType.Name})"; }
     #endregion
 
     #region Public properties

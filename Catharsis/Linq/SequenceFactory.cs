@@ -7,7 +7,7 @@ public static class SequenceFactory
     #region Private methods
     private static IEnumerable<T> CreateIterator<T>(int count, Func<int, T> factory)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             yield return factory(i);
         }
@@ -15,16 +15,16 @@ public static class SequenceFactory
 
     private static IEnumerable<T> CycleIterator<T>(IEnumerable<T> source)
     {
-        List<T> buffer = [ .. source ];
+        List<T> buffer = [.. source];
 
-        if(buffer.Count == 0)
+        if (buffer.Count == 0)
         {
             throw new InvalidOperationException("Source sequence must contain at least one element to cycle.");
         }
 
-        while(true)
+        while (true)
         {
-            for(int i = 0; i < buffer.Count; i++)
+            for (int i = 0; i < buffer.Count; i++)
             {
                 yield return buffer[i];
             }
@@ -33,7 +33,7 @@ public static class SequenceFactory
 
     private static IEnumerable<T> GenerateIterator<T>(T seed, Func<T, bool> predicate, Func<T, T> generator)
     {
-        for(T current = seed; predicate(current); current = generator(current))
+        for (T current = seed; predicate(current); current = generator(current))
         {
             yield return current;
         }
@@ -41,7 +41,7 @@ public static class SequenceFactory
 
     private static IEnumerable<TResult> GenerateIterator<TState, TResult>(TState seed, Func<TState, bool> predicate, Func<TState, TState> generator, Func<TState, TResult> resultSelector)
     {
-        for(TState current = seed; predicate(current); current = generator(current))
+        for (TState current = seed; predicate(current); current = generator(current))
         {
             yield return resultSelector(current);
         }
@@ -51,7 +51,7 @@ public static class SequenceFactory
     {
         T current = seed;
 
-        while(true)
+        while (true)
         {
             yield return current;
             current = generator(current);
@@ -60,7 +60,7 @@ public static class SequenceFactory
 
     private static IEnumerable<T> RandomIterator<T>(Func<Random, T> factory, Random random)
     {
-        while(true)
+        while (true)
         {
             yield return factory(random);
         }
@@ -104,7 +104,7 @@ public static class SequenceFactory
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<returns>An empty sequence.</returns>
-    public static IEnumerable<T> Empty<T>() => [];
+    public static IEnumerable<T> Empty<T>() { return []; }
 
     ///<summary>
     ///Generates a sequence by repeatedly applying <paramref name="generator"/> to produce successive elements, starting
@@ -166,7 +166,7 @@ public static class SequenceFactory
     ///<param name="key">The key of the grouping.</param>
     ///<param name="elements">The elements in the group.</param>
     ///<returns>An <see cref="IGrouping{TKey, TElement}"/> containing the specified elements under the specified key.</returns>
-    public static IGrouping<TKey, TElement> Grouping<TKey, TElement>(TKey key, params TElement[] elements) => new SimpleGrouping<TKey, TElement>(key, elements);
+    public static IGrouping<TKey, TElement> Grouping<TKey, TElement>(TKey key, params TElement[] elements) { return new SimpleGrouping<TKey, TElement>(key, elements); }
 
     ///<summary>
     ///Creates multiple <see cref="IGrouping{TKey,TElement}"/> instances by grouping the elements with the supplied key
@@ -297,21 +297,21 @@ public static class SequenceFactory
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="element">The element to wrap.</param>
     ///<returns>A sequence containing only <paramref name="element"/>.</returns>
-    public static IEnumerable<T> Singleton<T>(T element) => [ element ];
+    public static IEnumerable<T> Singleton<T>(T element) { return [element]; }
     #endregion
 
     private sealed class SimpleGrouping<TKey, TElement>(TKey key, IEnumerable<TElement> elements) : IGrouping<TKey, TElement>
     {
         #region Fields
-        private readonly List<TElement> _elements = [ .. elements ];
+        private readonly List<TElement> _elements = [.. elements];
         #endregion
 
         #region Explicit interface implementations
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return GetEnumerator(); }
         #endregion
 
         #region Public methods
-        public IEnumerator<TElement> GetEnumerator() => _elements.GetEnumerator();
+        public IEnumerator<TElement> GetEnumerator() { return _elements.GetEnumerator(); }
         #endregion
 
         #region Public properties

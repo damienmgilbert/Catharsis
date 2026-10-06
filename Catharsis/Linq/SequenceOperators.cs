@@ -12,11 +12,11 @@ public static class SequenceOperators
     {
         int index = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             TResult? result = chooser(item, index);
 
-            if(result is not null)
+            if (result is not null)
             {
                 yield return result;
             }
@@ -27,11 +27,11 @@ public static class SequenceOperators
 
     private static IEnumerable<TResult> ChooseRefIterator<T, TResult>(IEnumerable<T> source, Func<T, TResult?> chooser) where TResult : class
     {
-        foreach(T item in source)
+        foreach (T item in source)
         {
             TResult? result = chooser(item);
 
-            if(result is not null)
+            if (result is not null)
             {
                 yield return result;
             }
@@ -40,11 +40,11 @@ public static class SequenceOperators
 
     private static IEnumerable<TResult> ChooseValueIterator<T, TResult>(IEnumerable<T> source, Func<T, TResult?> chooser) where TResult : struct
     {
-        foreach(T item in source)
+        foreach (T item in source)
         {
             TResult? result = chooser(item);
 
-            if(result.HasValue)
+            if (result.HasValue)
             {
                 yield return result.Value;
             }
@@ -53,7 +53,7 @@ public static class SequenceOperators
 
     private static IEnumerable<T> TapEachIterator<T>(IEnumerable<T> source, Action<T> action)
     {
-        foreach(T item in source)
+        foreach (T item in source)
         {
             action(item);
             yield return item;

@@ -8,10 +8,13 @@ namespace Catharsis.ComponentModel;
 ///validation state, and component lifecycle information in debugger tool windows.
 ///</summary>
 ///<remarks>
+///<para> Apply <c>[DebuggerTypeProxy(typeof(ComponentModelDebuggerView))]</c> to a component class to make this view
+///the default representation in Visual Studio debugger windows.</para>
+///</remarks>
 public sealed class ComponentModelDebuggerView
 {
     #region Fields
-    private readonly object _component;
+    readonly object _component;
     #endregion
 
     #region Constructors
@@ -20,6 +23,8 @@ public sealed class ComponentModelDebuggerView
     ///</summary>
     ///<param name="component">The component to create a debug view for.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public ComponentModelDebuggerView(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -28,10 +33,24 @@ public sealed class ComponentModelDebuggerView
     #endregion
 
     #region Private methods
-    private string[] GetComponentModelInterfaces()
+    string[] GetComponentModelInterfaces()
     {
         Type type = _component.GetType();
-        Type[] relevant =[ typeof(IComponent), typeof(INotifyPropertyChanged), typeof(INotifyPropertyChanging), typeof(INotifyDataErrorInfo), typeof(IEditableObject), typeof(IChangeTracking), typeof(IRevertibleChangeTracking), typeof(ICustomTypeDescriptor), typeof(IDataErrorInfo), typeof(ISupportInitialize), typeof(IServiceProvider), typeof(IDisposable) ];
+        Type[] relevant =
+                          [
+                          typeof(IComponent),
+                          typeof(INotifyPropertyChanged),
+                          typeof(INotifyPropertyChanging),
+                          typeof(INotifyDataErrorInfo),
+                          typeof(IEditableObject),
+                          typeof(IChangeTracking),
+                          typeof(IRevertibleChangeTracking),
+                          typeof(ICustomTypeDescriptor),
+                          typeof(IDataErrorInfo),
+                          typeof(ISupportInitialize),
+                          typeof(IServiceProvider),
+                          typeof(IDisposable)
+                          ];
 
         List<string> result = [];
 
@@ -46,7 +65,7 @@ public sealed class ComponentModelDebuggerView
         return[ .. result ];
     }
 
-    private PropertyEntry[] GetPropertyEntries()
+    PropertyEntry[] GetPropertyEntries()
     {
         PropertyDescriptorCollection descriptors = TypeDescriptor.GetProperties(_component);
         PropertyEntry[] entries = new PropertyEntry[descriptors.Count];
@@ -70,7 +89,7 @@ public sealed class ComponentModelDebuggerView
         return entries;
     }
 
-    private ValidationErrorEntry[] GetValidationErrors()
+    ValidationErrorEntry[] GetValidationErrors()
     {
         if((_component is not INotifyDataErrorInfo errorInfo) || !errorInfo.HasErrors)
         {

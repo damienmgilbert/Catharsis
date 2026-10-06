@@ -13,26 +13,27 @@ public static class AsyncSequenceBuffer
     {
         await using IAsyncEnumerator<T> enumerator = source.GetAsyncEnumerator(cancellationToken);
 
-        if(!await enumerator.MoveNextAsync().ConfigureAwait(false))
+        if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             yield break;
         }
 
         TKey currentKey = keySelector(enumerator.Current);
-        List<T> currentBucket = [ enumerator.Current ];
+        List<T> currentBucket = [enumerator.Current];
 
-        while(await enumerator.MoveNextAsync().ConfigureAwait(false))
+        while (await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             TKey key = keySelector(enumerator.Current);
 
-            if(comparer.Equals(key, currentKey))
+            if (comparer.Equals(key, currentKey))
             {
                 currentBucket.Add(enumerator.Current);
-            } else
+            }
+            else
             {
                 yield return (currentKey, currentBucket.AsReadOnly());
                 currentKey = key;
-                currentBucket = [ enumerator.Current ];
+                currentBucket = [enumerator.Current];
             }
         }
 
@@ -41,20 +42,20 @@ public static class AsyncSequenceBuffer
 
     private static async IAsyncEnumerable<IReadOnlyList<T>> BufferIterator<T>(IAsyncEnumerable<T> source, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        List<T> buffer = [ with(size) ];
+        List<T> buffer = [with(size)];
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             buffer.Add(item);
 
-            if(buffer.Count == size)
+            if (buffer.Count == size)
             {
                 yield return buffer.AsReadOnly();
-                buffer = [ with(size) ];
+                buffer = [with(size)];
             }
         }
 
-        if(buffer.Count > 0)
+        if (buffer.Count > 0)
         {
             yield return buffer.AsReadOnly();
         }
@@ -64,12 +65,12 @@ public static class AsyncSequenceBuffer
     {
         List<T> allItems = [];
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             allItems.Add(item);
         }
 
-        for(int i = 0; i <= allItems.Count - size; i += skip)
+        for (int i = 0; i <= allItems.Count - size; i += skip)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return allItems.GetRange(i, size).AsReadOnly();
@@ -80,14 +81,14 @@ public static class AsyncSequenceBuffer
     {
         await using IAsyncEnumerator<T> enumerator = source.GetAsyncEnumerator(cancellationToken);
 
-        if(!await enumerator.MoveNextAsync().ConfigureAwait(false))
+        if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             yield break;
         }
 
         T previous = enumerator.Current;
 
-        while(await enumerator.MoveNextAsync().ConfigureAwait(false))
+        while (await enumerator.MoveNextAsync().ConfigureAwait(false))
         {
             yield return (previous, enumerator.Current);
             previous = enumerator.Current;
@@ -176,7 +177,7 @@ public static class AsyncSequenceBuffer
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         List<T> list = await source.ToListAsync(cancellationToken).ConfigureAwait(false);
-        return[ .. list ];
+        return [.. list];
     }
 
     ///<summary>
@@ -193,7 +194,7 @@ public static class AsyncSequenceBuffer
 
         List<T> result = [];
 
-        await foreach(T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in source.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             result.Add(item);
         }

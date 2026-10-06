@@ -13,9 +13,8 @@ namespace Catharsis.ComponentModel.Observability;
 public sealed record ChangeEntry(string PropertyName, object? OldValue, object? NewValue, DateTime? Timestamp = null)
 {
     #region Public methods
-
     ///<inheritdoc/>
-    public override string ToString() => $"{PropertyName}: '{OldValue}' -> '{NewValue}' at {Timestamp:O}";
+    public override string ToString() { return $"{PropertyName}: '{OldValue}' -> '{NewValue}' at {Timestamp:O}"; }
     #endregion
 
     #region Public properties

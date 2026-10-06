@@ -1,21 +1,21 @@
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///Coalesces rapid, repeated trigger calls into a single execution of an operation: each call to ///<see
-///cref="Trigger"/> restarts a delay window, and the operation only runs once the window elapses without a further
-///trigger. Useful for search-as-you-type, save-on-idle, and similar debounced-action scenarios.
+///Coalesces rapid, repeated trigger calls into a single execution of an operation: each call to
+///<see cref="Trigger"/> restarts a delay window, and the operation only runs once the window elapses without a
+///further trigger. Useful for search-as-you-type, save-on-idle, and similar debounced-action scenarios.
 ///</summary>
 public sealed class TaskDebouncer : IDisposable
 {
     #region Fields
-    private readonly Func<CancellationToken, Task> _action;
-    private readonly TimeSpan _delay;
-    private bool _disposed;
-    private readonly Lock _gate = new();
-    private CancellationTokenSource? _pending;
+    readonly TimeSpan _delay;
+    readonly Func<CancellationToken, Task> _action;
+    readonly Lock _gate = new();
+    CancellationTokenSource? _pending;
+    bool _disposed;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a debouncer with the specified delay and action.
     ///</summary>
@@ -34,55 +34,6 @@ public sealed class TaskDebouncer : IDisposable
 
         _delay = delay;
         _action = action;
-    }
-    #endregion
-
-    #region Private methods
-    private async Task RunAfterDelayAsync(CancellationTokenSource cts)
-    {
-        try
-        {
-            await Task.Delay(_delay, cts.Token).ConfigureAwait(false);
-            await _action(cts.Token).ConfigureAwait(false);
-        } catch(OperationCanceledException)
-        {
-            // Superseded by a later trigger; nothing to do.
-        } finally
-        {
-            lock(_gate)
-            {
-                if(_pending == cts)
-                {
-                    _pending = null;
-                }
-            }
-
-            cts.Dispose();
-        }
-    }
-    #endregion
-
-    #region Public methods
-    ///<inheritdoc/>
-    public void Dispose()
-    {
-        if(_disposed)
-        {
-            return;
-        }
-
-        _disposed = true;
-
-        CancellationTokenSource? pending;
-
-        lock(_gate)
-        {
-            pending = _pending;
-            _pending = null;
-        }
-
-        pending?.Cancel();
-        pending?.Dispose();
     }
 
     ///<summary>
@@ -103,6 +54,53 @@ public sealed class TaskDebouncer : IDisposable
         }
 
         _ = RunAfterDelayAsync(cts);
+    }
+
+    async Task RunAfterDelayAsync(CancellationTokenSource cts)
+    {
+        try
+        {
+            await Task.Delay(_delay, cts.Token).ConfigureAwait(false);
+            await _action(cts.Token).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException)
+        {
+            // Superseded by a later trigger; nothing to do.
+        }
+        finally
+        {
+            lock(_gate)
+            {
+                if(_pending == cts)
+                {
+                    _pending = null;
+                }
+            }
+
+            cts.Dispose();
+        }
+    }
+
+    ///<inheritdoc/>
+    public void Dispose()
+    {
+        if(_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
+        CancellationTokenSource? pending;
+
+        lock(_gate)
+        {
+            pending = _pending;
+            _pending = null;
+        }
+
+        pending?.Cancel();
+        pending?.Dispose();
     }
     #endregion
 }

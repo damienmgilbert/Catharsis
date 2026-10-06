@@ -25,15 +25,12 @@ public static class StringExtensions
         }
 
         return value.Length == 0
-               ? value
-               : string.Create(
-                 value.Length,
-                 value,
-                 static(span, source) =>
-                 {
-                     span[0] = char.ToUpper(source[0], CultureInfo.CurrentCulture);
-                     source.AsSpan(1).CopyTo(span[1..]);
-                 });
+            ? value
+            : string.Create(value.Length, value, static (span, source) =>
+            {
+                span[0] = char.ToUpper(source[0], CultureInfo.CurrentCulture);
+                source.AsSpan(1).CopyTo(span[1..]);
+            });
     }
 
     ///<summary>
@@ -55,8 +52,8 @@ public static class StringExtensions
     }
 
     ///<summary>
-    ///Converts <paramref name="value"/> into a lowercase, hyphen-separated slug suitable for URLs: runs of non-
-    ///alphanumeric characters become a single hyphen, and leading/trailing hyphens are trimmed.
+    ///Converts <paramref name="value"/> into a lowercase, hyphen-separated slug suitable for URLs: runs of
+    ///non-alphanumeric characters become a single hyphen, and leading/trailing hyphens are trimmed.
     ///</summary>
     ///<param name="value">The string to slugify.</param>
     ///<returns>The slugified string.</returns>
@@ -94,8 +91,8 @@ public static class StringExtensions
 
     ///<summary>
     ///Truncates <paramref name="value"/> to at most <paramref name="maxLength"/> characters, appending <paramref
-    ///name="ellipsis"/> when truncation occurs. The returned string, including the ellipsis, never exceeds ///<paramref
-    ///name="maxLength"/> characters.
+    ///name="ellipsis"/> when truncation occurs. The returned string, including the ellipsis, never exceeds
+    ///<paramref name="maxLength"/> characters.
     ///</summary>
     ///<param name="value">The string to truncate.</param>
     ///<param name="maxLength">The maximum length of the result, including the ellipsis.</param>

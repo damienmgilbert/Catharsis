@@ -12,6 +12,15 @@ public static class LookupFactory
 
     ///<summary>
     ///Creates an <see cref="ILookup{TKey,TElement}"/> by applying <paramref name="keySelector"/> to every element in
+    ///<paramref name="source"/>.
+    ///</summary>
+    ///<typeparam name="TKey">The key type.</typeparam>
+    ///<typeparam name="TElement">The element type.</typeparam>
+    ///<param name="source">The source sequence.</param>
+    ///<param name="keySelector">A function that extracts the key from each element.</param>
+    ///<param name="comparer">An optional equality comparer for keys.</param>
+    ///<returns>An <see cref="ILookup{TKey,TElement}"/>.</returns>
+    ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keySelector"/> is <c>null</c>.</exception>
     public static ILookup<TKey, TElement> Create<TKey, TElement>(IEnumerable<TElement> source, Func<TElement, TKey> keySelector, IEqualityComparer<TKey>? comparer = null)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
@@ -45,7 +54,7 @@ public static class LookupFactory
     ///<typeparam name="TKey">The key type.</typeparam>
     ///<typeparam name="TElement">The element type.</typeparam>
     ///<returns>An empty lookup.</returns>
-    public static ILookup<TKey, TElement> Empty<TKey, TElement>() => new EmptyLookup<TKey, TElement>();
+    public static ILookup<TKey, TElement> Empty<TKey, TElement>() { return new EmptyLookup<TKey, TElement>(); }
 
     ///<summary>
     ///Creates an <see cref="ILookup{TKey,TElement}"/> from a dictionary. Each dictionary entry becomes a single-
@@ -141,13 +150,12 @@ public static class LookupFactory
         #endregion
 
         #region Explicit interface implementations
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
         #endregion
 
         #region Public methods
-        public bool Contains(TKey key) => false;
-
-        public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => Enumerable.Empty<IGrouping<TKey, TElement>>().GetEnumerator();
+        public bool Contains(TKey key) { return false; }
+        public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() { return Enumerable.Empty<IGrouping<TKey, TElement>>().GetEnumerator(); }
         #endregion
 
         #region Public properties

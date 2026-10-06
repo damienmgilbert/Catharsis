@@ -3,20 +3,19 @@ using System.ComponentModel.DataAnnotations;
 namespace Catharsis.DataAnnotations;
 
 ///<summary>
-///Validates that an integral or enum value corresponds to a defined member of the specified enum type, guarding against
-///values that were unchecked-cast or deserialized from outside the enum's declared range.
+///Validates that an integral or enum value corresponds to a defined member of the specified enum type, guarding
+///against values that were unchecked-cast or deserialized from outside the enum's declared range.
 ///</summary>
 ///<remarks>
-///A <c>null</c> value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow nulls). Values of
-///an enum decorated with <see cref="FlagsAttribute"/> are validated bit-combination-aware via ///<see
-///cref="Enum.IsDefined(Type, object)"/> semantics, so a value composed only of defined flag bits is accepted even when
-///that exact combination is not itself a named member.
+///A <c>null</c> value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow nulls). Values
+///of an enum decorated with <see cref="FlagsAttribute"/> are validated bit-combination-aware via
+///<see cref="Enum.IsDefined(Type, object)"/> semantics, so a value composed only of defined flag bits is accepted
+///even when that exact combination is not itself a named member.
 ///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 public sealed class EnumRangeAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="EnumRangeAttribute"/>.
     ///</summary>
@@ -33,32 +32,6 @@ public sealed class EnumRangeAttribute : ValidationAttribute
         }
 
         EnumType = enumType;
-    }
-    #endregion
-
-    #region Private methods
-    private bool IsFlagsCombinationDefined(object value)
-    {
-        if(Attribute.GetCustomAttribute(EnumType, typeof(FlagsAttribute)) is null)
-        {
-            return false;
-        }
-
-        try
-        {
-            long numericValue = Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture);
-            long allDefinedBits = 0;
-
-            foreach(object definedValue in Enum.GetValues(EnumType))
-            {
-                allDefinedBits |= Convert.ToInt64(definedValue, System.Globalization.CultureInfo.InvariantCulture);
-            }
-
-            return (numericValue & ~allDefinedBits) == 0;
-        } catch(Exception exception) when(exception is InvalidCastException or FormatException or OverflowException)
-        {
-            return false;
-        }
     }
     #endregion
 
@@ -85,9 +58,35 @@ public sealed class EnumRangeAttribute : ValidationAttribute
     }
     #endregion
 
+    #region Private methods
+    bool IsFlagsCombinationDefined(object value)
+    {
+        if(Attribute.GetCustomAttribute(EnumType, typeof(FlagsAttribute)) is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            long numericValue = Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture);
+            long allDefinedBits = 0;
+
+            foreach(object definedValue in Enum.GetValues(EnumType))
+            {
+                allDefinedBits |= Convert.ToInt64(definedValue, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            return (numericValue & ~allDefinedBits) == 0;
+        } catch(Exception exception) when(exception is InvalidCastException or FormatException or OverflowException)
+        {
+            return false;
+        }
+    }
+    #endregion
+
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(System.Globalization.CultureInfo.CurrentCulture, ErrorMessageString, name, EnumType.Name);
+    public override string FormatErrorMessage(string name) { return string.Format(System.Globalization.CultureInfo.CurrentCulture, ErrorMessageString, name, EnumType.Name); }
     #endregion
 
     #region Public properties

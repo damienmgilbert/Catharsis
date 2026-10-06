@@ -18,14 +18,13 @@ public sealed class GroupJoinBuilderResult<TOuter, TInner, TKey>(IEnumerable<TOu
     ///outer element.
     ///</summary>
     ///<returns>A sequence of groupings where each key is an outer element and elements are the matched inners.</returns>
-    public IEnumerable<IGrouping<TOuter, TInner>> AsGroupings() => outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => SequenceFactory.Grouping(o, inners), _comparer);
-
+    public IEnumerable<IGrouping<TOuter, TInner>> AsGroupings() { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => SequenceFactory.Grouping(o, inners), _comparer); }
     ///<summary>
     ///Executes the group join and returns a sequence of tuples pairing each outer element with its matching inner
     ///elements.
     ///</summary>
     ///<returns>A sequence of <c>(Outer, InnerGroup)</c> tuples.</returns>
-    public IEnumerable<(TOuter Outer, IEnumerable<TInner> InnerGroup)> AsTuples() => outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer);
+    public IEnumerable<(TOuter Outer, IEnumerable<TInner> InnerGroup)> AsTuples() { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer); }
 
     ///<summary>
     ///Performs a left outer join: for each outer element, if no inner matches exist the ///<paramref
@@ -49,7 +48,7 @@ public sealed class GroupJoinBuilderResult<TOuter, TInner, TKey>(IEnumerable<TOu
     ///<param name="defaultInner">The fallback inner value when no match exists.</param>
     ///<returns>A flat sequence of tuples.</returns>
     public IEnumerable<(TOuter Outer, TInner? Inner)> LeftJoinTuples(TInner? defaultInner = default)
-    { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer).SelectMany(pair => pair.inners.DefaultIfEmpty(defaultInner!), (pair, innerItem) => (pair.o, innerItem)); }
+    { return outer.GroupJoin(inner, outerKeySelector, innerKeySelector, (o, inners) => (o, inners), _comparer).SelectMany(pair => pair.inners.DefaultIfEmpty(defaultInner!), (pair, innerItem) => (pair.o, (TInner?)innerItem)); }
 
     ///<summary>
     ///Projects each outer element and its matched inner group into a result and executes the group join.

@@ -34,18 +34,13 @@ public sealed partial class BufferLogger : IDisposable
     }
     #endregion
 
-    #region Private methods
-    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Flushing {EntryCount} buffered log entries:\n{Content}")]
-    partial void LogFlush(int entryCount, string content);
-    #endregion
-
     #region Public methods
     ///<summary>
     ///Flushes and disposes the buffer logger.
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -66,9 +61,9 @@ public sealed partial class BufferLogger : IDisposable
         string output;
         int entries;
 
-        lock(_syncLock)
+        lock (_syncLock)
         {
-            if(_pendingEntries == 0)
+            if (_pendingEntries == 0)
             {
                 return;
             }
@@ -82,6 +77,9 @@ public sealed partial class BufferLogger : IDisposable
         LogFlush(entries, output);
     }
 
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Flushing {EntryCount} buffered log entries:\n{Content}")]
+    partial void LogFlush(int entryCount, string content);
+
     ///<summary>
     ///Buffers a log entry at the specified level.
     ///</summary>
@@ -91,7 +89,7 @@ public sealed partial class BufferLogger : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        lock(_syncLock)
+        lock (_syncLock)
         {
             _builder.Append('[');
             _builder.Append(level.ToString().AsSpan());
@@ -107,7 +105,7 @@ public sealed partial class BufferLogger : IDisposable
     ///</summary>
     ///<param name="level">The log level.</param>
     ///<param name="message">The log message.</param>
-    public void Log(LogLevel level, string message) => Log(level, message.AsSpan());
+    public void Log(LogLevel level, string message) { Log(level, message.AsSpan()); }
     #endregion
 
     #region Public properties

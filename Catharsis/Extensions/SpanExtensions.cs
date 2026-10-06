@@ -13,10 +13,7 @@ public static class SpanExtensions
     ///</summary>
     ///<param name="span">The span to search.</param>
     ///<param name="values">The candidate substrings to look for.</param>
-    ///<returns>
-    ///<c>true</c> if any value in <paramref name="values"/> occurs within <paramref name="span"/>; otherwise
-    ///<c>false</c>.
-    ///</returns>
+    ///<returns><c>true</c> if any value in <paramref name="values"/> occurs within <paramref name="span"/>; otherwise <c>false</c>.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="values"/> is <c>null</c>.</exception>
     public static bool ContainsAnyOf(this ReadOnlySpan<char> span, params string[] values)
     {
@@ -62,10 +59,7 @@ public static class SpanExtensions
     ///</summary>
     ///<param name="span">The span to truncate.</param>
     ///<param name="maxLength">The maximum number of characters to keep. Must not be negative.</param>
-    ///<returns>
-    ///<paramref name="span"/> unchanged if it is already within <paramref name="maxLength"/>; otherwise a truncated
-    ///slice.
-    ///</returns>
+    ///<returns><paramref name="span"/> unchanged if it is already within <paramref name="maxLength"/>; otherwise a truncated slice.</returns>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="maxLength"/> is negative.</exception>
     public static ReadOnlySpan<char> Truncate(this ReadOnlySpan<char> span, int maxLength)
     {

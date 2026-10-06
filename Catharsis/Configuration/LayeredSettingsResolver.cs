@@ -1,17 +1,17 @@
 namespace Catharsis.Configuration;
 
 ///<summary>
-///Resolves a setting's value by checking a fixed, precedence-ordered list of layers (e.g. environment variables, then a
-///config file, then hard-coded defaults) and returning the first layer that defines the key. This is deliberately
-///source-agnostic: callers supply each layer as a plain dictionary, so no config-file parser or other dependency is
-///required.
+///Resolves a setting's value by checking a fixed, precedence-ordered list of layers (e.g. environment variables,
+///then a config file, then hard-coded defaults) and returning the first layer that defines the key. This is
+///deliberately source-agnostic: callers supply each layer as a plain dictionary, so no config-file parser or other
+///dependency is required.
 ///</summary>
 ///<param name="layersHighestPrecedenceFirst">The setting layers, in precedence order (the first layer wins).</param>
 ///<exception cref="ArgumentNullException"><paramref name="layersHighestPrecedenceFirst"/> is <c>null</c>.</exception>
 public sealed class LayeredSettingsResolver(params IReadOnlyDictionary<string, string?>[] layersHighestPrecedenceFirst)
 {
     #region Fields
-    private readonly IReadOnlyList<IReadOnlyDictionary<string, string?>> _layers = layersHighestPrecedenceFirst ?? throw new ArgumentNullException(nameof(layersHighestPrecedenceFirst));
+    readonly IReadOnlyList<IReadOnlyDictionary<string, string?>> _layers = layersHighestPrecedenceFirst ?? throw new ArgumentNullException(nameof(layersHighestPrecedenceFirst));
     #endregion
 
     #region Public methods

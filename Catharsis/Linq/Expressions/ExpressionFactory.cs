@@ -169,15 +169,14 @@ public static class ExpressionFactory
     ///</summary>
     ///<param name="expressions">The expressions in the block.</param>
     ///<returns>A <see cref="BlockExpression"/> containing the expressions.</returns>
-    public static BlockExpression Block(params Expression[] expressions) => Expression.Block(expressions);
-
+    public static BlockExpression Block(params Expression[] expressions) { return Expression.Block(expressions); }
     ///<summary>
     ///Creates a <see cref="BlockExpression"/> with local variables.
     ///</summary>
     ///<param name="variables">The local variables for the block.</param>
     ///<param name="expressions">The expressions in the block.</param>
     ///<returns>A <see cref="BlockExpression"/> with declared variables.</returns>
-    public static BlockExpression Block(IEnumerable<ParameterExpression> variables, params Expression[] expressions) => Expression.Block(variables, expressions);
+    public static BlockExpression Block(IEnumerable<ParameterExpression> variables, params Expression[] expressions) { return Expression.Block(variables, expressions); }
 
     ///<summary>
     ///Creates a <see cref="BlockExpression"/> with an explicit result type.
@@ -319,7 +318,7 @@ public static class ExpressionFactory
     ///</summary>
     ///<param name="value">The value of the constant.</param>
     ///<returns>A <see cref="ConstantExpression"/> representing the constant value.</returns>
-    public static ConstantExpression Constant(object? value) => Expression.Constant(value);
+    public static ConstantExpression Constant(object? value) { return Expression.Constant(value); }
 
     ///<summary>
     ///Creates a <see cref="ConstantExpression"/> with the specified value and explicit type.
@@ -463,7 +462,7 @@ public static class ExpressionFactory
     ///Creates an empty expression that returns <see cref="void"/>.
     ///</summary>
     ///<returns>A <see cref="DefaultExpression"/> of type <see cref="void"/>.</returns>
-    public static DefaultExpression Empty() => Expression.Empty();
+    public static DefaultExpression Empty() { return Expression.Empty(); }
 
     ///<summary>
     ///Creates a <see cref="BinaryExpression"/> that represents an equality comparison.
@@ -645,7 +644,7 @@ public static class ExpressionFactory
     ///</summary>
     ///<param name="name">An optional name for the label.</param>
     ///<returns>A <see cref="LabelTarget"/>.</returns>
-    public static LabelTarget Label(string? name = null) => Expression.Label(name);
+    public static LabelTarget Label(string? name = null) { return Expression.Label(name); }
 
     ///<summary>
     ///Creates a <see cref="LabelTarget"/> with a result type and optional name.
@@ -1248,7 +1247,7 @@ public static class ExpressionFactory
     ///</summary>
     ///<param name="variables">The variables to expose at runtime.</param>
     ///<returns>A <see cref="RuntimeVariablesExpression"/>.</returns>
-    public static RuntimeVariablesExpression RuntimeVariables(params ParameterExpression[] variables) => Expression.RuntimeVariables(variables);
+    public static RuntimeVariablesExpression RuntimeVariables(params ParameterExpression[] variables) { return Expression.RuntimeVariables(variables); }
 
     ///<summary>
     ///Creates a <see cref="BinaryExpression"/> that represents a subtraction operation.
@@ -1344,7 +1343,7 @@ public static class ExpressionFactory
     ///<param name="value">The exception expression to throw.</param>
     ///<param name="type">The type of the expression; defaults to <see cref="void"/>.</param>
     ///<returns>A <see cref="UnaryExpression"/> representing the throw.</returns>
-    public static UnaryExpression Throw(Expression? value, Type? type = null) => type is null ? Expression.Throw(value) : Expression.Throw(value, type);
+    public static UnaryExpression Throw(Expression? value, Type? type = null) { return type is null ? Expression.Throw(value) : Expression.Throw(value, type); }
 
     ///<summary>
     ///Creates a <see cref="TryExpression"/> with catch handlers.

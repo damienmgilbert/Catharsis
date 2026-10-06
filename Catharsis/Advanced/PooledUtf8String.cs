@@ -11,14 +11,14 @@ namespace Catharsis.Advanced;
 public sealed class PooledUtf8String : IDisposable, IEquatable<PooledUtf8String>
 {
     #region Fields
-    private byte[] _buffer;
-    private bool _disposed;
-    private readonly int _length;
-    private readonly ArrayPool<byte> _pool;
+    byte[] _buffer;
+    bool _disposed;
+    readonly int _length;
+    readonly ArrayPool<byte> _pool;
     #endregion
 
     #region Constructors
-    private PooledUtf8String(byte[] buffer, int length, ArrayPool<byte> pool)
+    PooledUtf8String(byte[] buffer, int length, ArrayPool<byte> pool)
     {
         _buffer = buffer;
         _length = length;
@@ -34,6 +34,7 @@ public sealed class PooledUtf8String : IDisposable, IEquatable<PooledUtf8String>
     {
         return !(left == right);
     }
+
     ///<summary>
     ///Determines whether two pooled UTF-8 strings are equal.
     ///</summary>
@@ -94,7 +95,7 @@ public sealed class PooledUtf8String : IDisposable, IEquatable<PooledUtf8String>
     }
 
     ///<inheritdoc/>
-    public override bool Equals(object? obj) => (obj is PooledUtf8String other) && Equals(other);
+    public override bool Equals(object? obj) { return (obj is PooledUtf8String other) && Equals(other); }
 
     ///<summary>
     ///Creates a <see cref="PooledUtf8String"/> from existing UTF-8 bytes.

@@ -15,7 +15,7 @@ public static class ExpressionReducer
     ///</summary>
     ///<param name="expression">The expression to test.</param>
     ///<returns><c>true</c> if the expression can be reduced; otherwise <c>false</c>.</returns>
-    public static bool CanReduce(Expression? expression) => expression is not null && expression.CanReduce;
+    public static bool CanReduce(Expression? expression) { return expression is not null && expression.CanReduce; }
 
     ///<summary>
     ///Determines whether any node in the expression tree can be reduced.
@@ -233,7 +233,7 @@ public static class ExpressionReducer
     }
     #endregion
 
-    private sealed class ReducibilityVisitor : ExpressionVisitor
+    sealed class ReducibilityVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
@@ -258,7 +258,7 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class ReducibleCountVisitor : ExpressionVisitor
+    sealed class ReducibleCountVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
@@ -282,7 +282,7 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class DeepReducingVisitor : ExpressionVisitor
+    sealed class DeepReducingVisitor : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
@@ -298,10 +298,10 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class ReducibleCollectorVisitor : ExpressionVisitor
+    sealed class ReducibleCollectorVisitor : ExpressionVisitor
     {
         #region Fields
-        private readonly List<Expression> _reducibleNodes = [];
+        readonly List<Expression> _reducibleNodes = [];
         #endregion
 
         #region Public methods
@@ -326,7 +326,7 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class NodeTypeReducingVisitor(ExpressionType targetNodeType) : ExpressionVisitor
+    sealed class NodeTypeReducingVisitor(ExpressionType targetNodeType) : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)
@@ -342,7 +342,7 @@ public static class ExpressionReducer
         #endregion
     }
 
-    private sealed class NodeTypeSetReducingVisitor(IReadOnlySet<ExpressionType> targetNodeTypes) : ExpressionVisitor
+    sealed class NodeTypeSetReducingVisitor(IReadOnlySet<ExpressionType> targetNodeTypes) : ExpressionVisitor
     {
         #region Public methods
         public override Expression Visit(Expression? node)

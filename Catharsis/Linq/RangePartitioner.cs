@@ -15,15 +15,16 @@ public static class RangePartitioner
         int hi = boundaries.Count - 1;
         int result = 0;
 
-        while(lo <= hi)
+        while (lo <= hi)
         {
             int mid = lo + (hi - lo) / 2;
 
-            if(comparer.Compare(boundaries[mid], value) <= 0)
+            if (comparer.Compare(boundaries[mid], value) <= 0)
             {
                 result = mid;
                 lo = mid + 1;
-            } else
+            }
+            else
             {
                 hi = mid - 1;
             }
@@ -32,8 +33,10 @@ public static class RangePartitioner
         return boundaries[result];
     }
 
-    private static int FloorToRange(int value, int rangeSize) { return value >= 0 ? (value / rangeSize) * rangeSize : ((value - rangeSize + 1) / rangeSize) * rangeSize; }
-    private static double FloorToRange(double value, double rangeSize) { return Math.Floor(value / rangeSize) * rangeSize; }
+    private static int FloorToRange(int value, int rangeSize)
+    { return value >= 0 ? (value / rangeSize) * rangeSize : ((value - rangeSize + 1) / rangeSize) * rangeSize; }
+    private static double FloorToRange(double value, double rangeSize)
+    { return Math.Floor(value / rangeSize) * rangeSize; }
     #endregion
 
     #region Public methods
@@ -57,7 +60,7 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentNullException.ThrowIfNull(boundaries, nameof(boundaries));
 
-        if(boundaries.Count == 0)
+        if (boundaries.Count == 0)
         {
             throw new ArgumentException("Boundaries must contain at least one element.", nameof(boundaries));
         }
@@ -84,7 +87,7 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentNullException.ThrowIfNull(boundaries, nameof(boundaries));
 
-        if(boundaries.Count == 0)
+        if (boundaries.Count == 0)
         {
             throw new ArgumentException("Boundaries must contain at least one element.", nameof(boundaries));
         }
@@ -111,9 +114,9 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentOutOfRangeException.ThrowIfLessThan(bucketCount, 1, nameof(bucketCount));
 
-        List<T> sorted = [ .. source.OrderBy(valueSelector) ];
+        List<T> sorted = [.. source.OrderBy(valueSelector)];
 
-        if(sorted.Count == 0)
+        if (sorted.Count == 0)
         {
             return LookupFactory.Empty<int, T>();
         }
@@ -139,20 +142,20 @@ public static class RangePartitioner
         ArgumentNullException.ThrowIfNull(valueSelector, nameof(valueSelector));
         ArgumentOutOfRangeException.ThrowIfLessThan(bucketCount, 1, nameof(bucketCount));
 
-        List<T> sorted = [ .. source.OrderBy(valueSelector) ];
+        List<T> sorted = [.. source.OrderBy(valueSelector)];
 
-        if(sorted.Count == 0)
+        if (sorted.Count == 0)
         {
             yield break;
         }
 
         int bucketSize = Math.Max(1, (int)Math.Ceiling((double)sorted.Count / bucketCount));
 
-        for(int bucket = 0; bucket < bucketCount; bucket++)
+        for (int bucket = 0; bucket < bucketCount; bucket++)
         {
             int start = bucket * bucketSize;
 
-            if(start >= sorted.Count)
+            if (start >= sorted.Count)
             {
                 break;
             }

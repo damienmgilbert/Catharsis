@@ -7,7 +7,7 @@ namespace Catharsis.Linq;
 ///</summary>
 public static class GroupJoinBuilder
 {
-    #region Public methods
+
     ///<summary>
     ///Begins a group join builder starting from the specified outer sequence.
     ///</summary>
@@ -20,5 +20,5 @@ public static class GroupJoinBuilder
         ArgumentNullException.ThrowIfNull(outer, nameof(outer));
         return new GroupJoinBuilderInner<TOuter>(outer);
     }
-    #endregion
+
 }

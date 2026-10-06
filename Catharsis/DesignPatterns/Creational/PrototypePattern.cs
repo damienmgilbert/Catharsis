@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Creational;
 public class PrototypePattern
 {
     #region Public methods
-
     ///<summary>
     ///Prototype — returns a copy of <paramref name="obj"/> produced by the supplied <paramref name="clone"/> delegate.
     ///</summary>

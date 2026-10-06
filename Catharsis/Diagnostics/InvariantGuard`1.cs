@@ -1,8 +1,8 @@
 namespace Catharsis.Diagnostics;
 
 ///<summary>
-///Wraps a value and re-validates a configured invariant predicate on every read and write, throwing immediately if the
-///invariant is ever violated instead of letting invalid state propagate silently.
+///Wraps a value and re-validates a configured invariant predicate on every read and write, throwing immediately if
+///the invariant is ever violated instead of letting invalid state propagate silently.
 ///</summary>
 ///<typeparam name="T">The type of the guarded value.</typeparam>
 ///<param name="initialValue">The initial value. Must satisfy <paramref name="invariant"/>.</param>
@@ -13,13 +13,13 @@ namespace Catharsis.Diagnostics;
 public sealed class InvariantGuard<T>(T initialValue, Func<T, bool> invariant, string? message = null)
 {
     #region Fields
-    private readonly Func<T, bool> _invariant = invariant ?? throw new ArgumentNullException(nameof(invariant));
-    private readonly string _message = message ?? "Value violates the configured invariant.";
-    private T _value = ValidateInitialValue(initialValue, invariant, message);
+    readonly Func<T, bool> _invariant = invariant ?? throw new ArgumentNullException(nameof(invariant));
+    readonly string _message = message ?? "Value violates the configured invariant.";
+    T _value = ValidateInitialValue(initialValue, invariant, message);
     #endregion
 
     #region Private methods
-    private static T ValidateInitialValue(T initialValue, Func<T, bool> invariant, string? message)
+    static T ValidateInitialValue(T initialValue, Func<T, bool> invariant, string? message)
     {
         ArgumentNullException.ThrowIfNull(invariant);
 
@@ -34,8 +34,8 @@ public sealed class InvariantGuard<T>(T initialValue, Func<T, bool> invariant, s
 
     #region Public properties
     ///<summary>
-    ///Gets or sets the guarded value. Setting a value that violates the configured invariant throws instead of storing
-    ///it.
+    ///Gets or sets the guarded value. Setting a value that violates the configured invariant throws instead of
+    ///storing it.
     ///</summary>
     ///<exception cref="InvalidOperationException">The assigned value does not satisfy the invariant.</exception>
     public T Value

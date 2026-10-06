@@ -11,10 +11,10 @@ namespace Catharsis.Diagnostics;
 public sealed class SafeSequenceParser
 {
     #region Fields
-    private int _failureCount;
-    private readonly Services.ISequenceParser _inner;
-    private int _parseAttempts;
-    private int _successCount;
+    int _failureCount;
+    readonly Services.ISequenceParser _inner;
+    int _parseAttempts;
+    int _successCount;
     #endregion
 
     #region Constructors

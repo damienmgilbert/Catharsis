@@ -11,7 +11,7 @@ namespace Catharsis.DataStructures;
 public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> where TKey : notnull
 {
     #region Fields
-    private readonly Dictionary<TKey, List<TValue>> _map;
+    readonly Dictionary<TKey, List<TValue>> _map;
     #endregion
 
     #region Constructors
@@ -34,7 +34,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _map = [ with(comparer) ];
+        _map = [with(comparer)];
     }
     #endregion
 
@@ -50,7 +50,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Public methods
@@ -95,22 +95,20 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<summary>
     ///Removes all keys and values from the multimap.
     ///</summary>
-    public void Clear() => _map.Clear();
-
+    public void Clear() { _map.Clear(); }
     ///<summary>
     ///Determines whether a specific value exists under the specified key.
     ///</summary>
     ///<param name="key">The key.</param>
     ///<param name="value">The value to look for.</param>
     ///<returns><c>true</c> if the key/value pair exists; otherwise <c>false</c>.</returns>
-    public bool Contains(TKey key, TValue value) => _map.TryGetValue(key, out List<TValue>? list) && list.Contains(value);
-
+    public bool Contains(TKey key, TValue value) { return _map.TryGetValue(key, out List<TValue>? list) && list.Contains(value); }
     ///<summary>
     ///Determines whether the multimap contains the specified key.
     ///</summary>
     ///<param name="key">The key to look for.</param>
     ///<returns><c>true</c> if the key exists; otherwise <c>false</c>.</returns>
-    public bool ContainsKey(TKey key) => _map.ContainsKey(key);
+    public bool ContainsKey(TKey key) { return _map.ContainsKey(key); }
 
     ///<summary>
     ///Enumerates all key-to-values groupings.
@@ -156,7 +154,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///</summary>
     ///<param name="key">The key to remove.</param>
     ///<returns><c>true</c> if the key was found and removed; otherwise <c>false</c>.</returns>
-    public bool RemoveAll(TKey key) => _map.Remove(key);
+    public bool RemoveAll(TKey key) { return _map.Remove(key); }
 
     ///<summary>
     ///Attempts to get the values associated with the specified key.

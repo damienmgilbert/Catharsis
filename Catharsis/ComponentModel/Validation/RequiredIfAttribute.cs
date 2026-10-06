@@ -16,7 +16,6 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class RequiredIfAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="RequiredIfAttribute"/>.
     ///</summary>
@@ -27,6 +26,8 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     ///The value that <paramref name="dependentProperty"/> must equal for this property to become required.
     ///</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="dependentProperty"/> is <c>null</c>.
+    ///</exception>
     public RequiredIfAttribute(string dependentProperty, object? targetValue) : base("The field {0} is required when {1} equals {2}.")
     {
         ArgumentNullException.ThrowIfNull(dependentProperty);
@@ -36,7 +37,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     #endregion
 
     #region Private methods
-    private bool IsConditionMet(ValidationContext context)
+    bool IsConditionMet(ValidationContext context)
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
@@ -70,7 +71,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DependentProperty, TargetValue ?? "null");
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, DependentProperty, TargetValue ?? "null"); }
     #endregion
 
     #region Public properties

@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Catharsis.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -111,7 +111,7 @@ public sealed class QueryableFilterBuilder<T>
 
         ConstantExpression substringConstant = Expression.Constant(substring, typeof(string));
 
-        MethodCallExpression containsCall = Expression.Call(selector.Body, typeof(string).GetMethod(nameof(string.Contains), [ typeof(string) ])!, substringConstant);
+        MethodCallExpression containsCall = Expression.Call(selector.Body, typeof(string).GetMethod(nameof(string.Contains), [typeof(string)])!, substringConstant);
 
         _predicates.Add(Expression.Lambda<Func<T, bool>>(containsCall, selector.Parameters));
         return this;
@@ -128,7 +128,7 @@ public sealed class QueryableFilterBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        if(condition)
+        if (condition)
         {
             _predicates.Add(predicate);
         }
@@ -148,7 +148,7 @@ public sealed class QueryableFilterBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(predicateFactory, nameof(predicateFactory));
 
-        if(value is not null)
+        if (value is not null)
         {
             _predicates.Add(predicateFactory(value));
         }
@@ -168,7 +168,7 @@ public sealed class QueryableFilterBuilder<T>
     {
         ArgumentNullException.ThrowIfNull(predicateFactory, nameof(predicateFactory));
 
-        if(value.HasValue)
+        if (value.HasValue)
         {
             _predicates.Add(predicateFactory(value.Value));
         }
@@ -178,15 +178,22 @@ public sealed class QueryableFilterBuilder<T>
 
     ///<summary>
     ///Adds a predicate that filters by a property extracted with <paramref name="selector"/> being contained in
+    ///<paramref name="allowedValues"/>. Builds a <c>Contains</c> call expression.
+    ///</summary>
+    ///<typeparam name="TProperty">The property type.</typeparam>
+    ///<param name="selector">An expression selecting the property.</param>
+    ///<param name="allowedValues">The set of allowed values.</param>
+    ///<returns>The current builder for fluent chaining.</returns>
+    ///<exception cref="ArgumentNullException">Any argument is <c>null</c>.</exception>
     public QueryableFilterBuilder<T> WhereIn<TProperty>(Expression<Func<T, TProperty>> selector, IEnumerable<TProperty> allowedValues)
     {
         ArgumentNullException.ThrowIfNull(selector, nameof(selector));
         ArgumentNullException.ThrowIfNull(allowedValues, nameof(allowedValues));
 
-        List<TProperty> values = allowedValues as List<TProperty> ?? [ .. allowedValues ];
+        List<TProperty> values = allowedValues as List<TProperty> ?? [.. allowedValues];
         ConstantExpression valuesConstant = Expression.Constant(values, typeof(List<TProperty>));
 
-        MethodCallExpression containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), [ typeof(TProperty) ], valuesConstant, selector.Body);
+        MethodCallExpression containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), [typeof(TProperty)], valuesConstant, selector.Body);
 
         _predicates.Add(Expression.Lambda<Func<T, bool>>(containsCall, selector.Parameters));
         return this;

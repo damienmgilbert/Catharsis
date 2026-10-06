@@ -10,13 +10,13 @@ public static class SlidingLookup
     #region Private methods
     private static IEnumerable<(TKey Key, T Element)> KeyedSlidingPairs<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = [ .. source ];
+        List<T> buffer = [.. source];
 
-        for(int w = 0; w <= buffer.Count - windowSize; w++)
+        for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
             TKey key = keySelector(buffer[w]);
 
-            for(int i = 0; i < windowSize; i++)
+            for (int i = 0; i < windowSize; i++)
             {
                 yield return (key, buffer[w + i]);
             }
@@ -28,11 +28,11 @@ public static class SlidingLookup
         List<T> accumulated = [];
         int step = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             accumulated.Add(item);
 
-            foreach(T element in accumulated)
+            foreach (T element in accumulated)
             {
                 yield return (step, element);
             }
@@ -43,11 +43,11 @@ public static class SlidingLookup
 
     private static IEnumerable<(int WindowIndex, T Element)> SlidingWindowPairs<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = [ .. source ];
+        List<T> buffer = [.. source];
 
-        for(int w = 0; w <= buffer.Count - windowSize; w++)
+        for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
-            for(int i = 0; i < windowSize; i++)
+            for (int i = 0; i < windowSize; i++)
             {
                 yield return (w, buffer[w + i]);
             }
@@ -59,19 +59,19 @@ public static class SlidingLookup
         List<T> accumulated = [];
         int step = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             accumulated.Add(item);
-            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)[ .. accumulated ]);
+            yield return SequenceFactory.Grouping(step, (IEnumerable<T>)[.. accumulated]);
             step++;
         }
     }
 
     private static IEnumerable<IGrouping<TKey, T>> ToSlidingGroupingsByIterator<T, TKey>(IEnumerable<T> source, int windowSize, Func<T, TKey> keySelector)
     {
-        List<T> buffer = [ .. source ];
+        List<T> buffer = [.. source];
 
-        for(int w = 0; w <= buffer.Count - windowSize; w++)
+        for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
             TKey key = keySelector(buffer[w]);
             IEnumerable<T> window = buffer.GetRange(w, windowSize);
@@ -81,9 +81,9 @@ public static class SlidingLookup
 
     private static IEnumerable<IGrouping<int, T>> ToSlidingGroupingsIterator<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = [ .. source ];
+        List<T> buffer = [.. source];
 
-        for(int w = 0; w <= buffer.Count - windowSize; w++)
+        for (int w = 0; w <= buffer.Count - windowSize; w++)
         {
             IEnumerable<T> window = buffer.GetRange(w, windowSize);
             yield return SequenceFactory.Grouping(w, window);
@@ -92,22 +92,22 @@ public static class SlidingLookup
 
     private static IEnumerable<IGrouping<int, T>> ToTumblingGroupingsIterator<T>(IEnumerable<T> source, int windowSize)
     {
-        List<T> buffer = [ with(windowSize) ];
+        List<T> buffer = [with(windowSize)];
         int windowIndex = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             buffer.Add(item);
 
-            if(buffer.Count == windowSize)
+            if (buffer.Count == windowSize)
             {
                 yield return SequenceFactory.Grouping(windowIndex, (IEnumerable<T>)buffer);
-                buffer = [ with(windowSize) ];
+                buffer = [with(windowSize)];
                 windowIndex++;
             }
         }
 
-        if(buffer.Count > 0)
+        if (buffer.Count > 0)
         {
             yield return SequenceFactory.Grouping(windowIndex, (IEnumerable<T>)buffer);
         }
@@ -118,12 +118,12 @@ public static class SlidingLookup
         int windowIndex = 0;
         int count = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             yield return (windowIndex, item);
             count++;
 
-            if(count == windowSize)
+            if (count == windowSize)
             {
                 windowIndex++;
                 count = 0;

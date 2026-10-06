@@ -3,55 +3,14 @@ using System.Numerics;
 namespace Catharsis.Numerics;
 
 ///<summary>
-///Provides SIMD-accelerated aggregate operations over spans of numeric values, using the portable ///<see
-///cref="Vector{T}"/> API (which JITs to whatever instruction-set extension is actually available on the running
-///hardware) rather than any specific instruction set. Automatically falls back to a scalar loop for element counts too
-///small to fill a vector, or for element types <see cref="Vector{T}"/> does not support (e.g. ///<see cref="decimal"/>
-///or <see cref="System.Numerics.BigInteger"/>).
+///Provides SIMD-accelerated aggregate operations over spans of numeric values, using the portable
+///<see cref="Vector{T}"/> API (which JITs to whatever instruction-set extension is actually available on the
+///running hardware) rather than any specific instruction set. Automatically falls back to a scalar loop for
+///element counts too small to fill a vector, or for element types <see cref="Vector{T}"/> does not support (e.g.
+///<see cref="decimal"/> or <see cref="System.Numerics.BigInteger"/>).
 ///</summary>
 public static class SimdAggregator
 {
-    #region Private methods
-    private static T Reduce<T>(ReadOnlySpan<T> values, Func<Vector<T>, Vector<T>, Vector<T>> vectorReduce, Func<T, T, T> scalarReduce) where T : struct, INumber<T>
-    {
-        if(values.IsEmpty)
-        {
-            throw new ArgumentException("Values must not be empty.", nameof(values));
-        }
-
-        int index = 1;
-        T result = values[0];
-
-        if(Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
-        {
-            int vectorSize = Vector<T>.Count;
-            Vector<T> accumulator = new(values[..vectorSize]);
-
-            for(index = vectorSize; index <= (values.Length - vectorSize); index += vectorSize)
-            {
-                accumulator = vectorReduce(accumulator, new Vector<T>(values.Slice(index, vectorSize)));
-            }
-
-            T[] lanes = new T[vectorSize];
-            accumulator.CopyTo(lanes);
-
-            result = lanes[0];
-
-            for(int lane = 1; lane < vectorSize; lane++)
-            {
-                result = scalarReduce(result, lanes[lane]);
-            }
-        }
-
-        for(; index < values.Length; index++)
-        {
-            result = scalarReduce(result, values[index]);
-        }
-
-        return result;
-    }
-    #endregion
-
     #region Public methods
     ///<summary>
     ///Computes the dot product of two equal-length sequences.
@@ -140,6 +99,47 @@ public static class SimdAggregator
         }
 
         return sum;
+    }
+    #endregion
+
+    #region Private methods
+    static T Reduce<T>(ReadOnlySpan<T> values, Func<Vector<T>, Vector<T>, Vector<T>> vectorReduce, Func<T, T, T> scalarReduce) where T : struct, INumber<T>
+    {
+        if(values.IsEmpty)
+        {
+            throw new ArgumentException("Values must not be empty.", nameof(values));
+        }
+
+        int index = 1;
+        T result = values[0];
+
+        if(Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
+        {
+            int vectorSize = Vector<T>.Count;
+            Vector<T> accumulator = new(values[..vectorSize]);
+
+            for(index = vectorSize; index <= (values.Length - vectorSize); index += vectorSize)
+            {
+                accumulator = vectorReduce(accumulator, new Vector<T>(values.Slice(index, vectorSize)));
+            }
+
+            T[] lanes = new T[vectorSize];
+            accumulator.CopyTo(lanes);
+
+            result = lanes[0];
+
+            for(int lane = 1; lane < vectorSize; lane++)
+            {
+                result = scalarReduce(result, lanes[lane]);
+            }
+        }
+
+        for(; index < values.Length; index++)
+        {
+            result = scalarReduce(result, values[index]);
+        }
+
+        return result;
     }
     #endregion
 }

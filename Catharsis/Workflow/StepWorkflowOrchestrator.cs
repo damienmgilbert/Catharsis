@@ -1,27 +1,27 @@
-using System.Collections.Concurrent;
 using Catharsis.ComponentModel;
 using Catharsis.ComponentModel.Lifecycle;
 using Catharsis.Events;
 using Catharsis.Resilience;
+using System.Collections.Concurrent;
 
 namespace Catharsis.Workflow;
 
 ///<summary>
-///Executes a set of named async steps in dependency order, reusing <see cref="ComponentGraph"/>/ ///<see
-///cref="ComponentGraphBuilder"/> for the dependency graph and topological ordering rather than implementing a new one.
-///Steps with no dependency relationship between them run concurrently, grouped into successive waves by dependency
-///depth. Each step's lifecycle is tracked through its <see cref="ComponentGraphNode.State"/> (<see
-///cref="ComponentState.Activating"/> → <see cref="ComponentState.Active"/> or ///<see cref="ComponentState.Faulted"/>),
-///optionally retried through a caller-supplied <see cref="IAsyncPolicy"/>, and published as a <see
-///cref="WorkflowStepEvent"/> on an <see cref="EventBus"/>. A faulted step fails only the steps that (transitively)
-///depend on it; unrelated branches still run.
+///Executes a set of named async steps in dependency order, reusing <see cref="ComponentGraph"/>/
+///<see cref="ComponentGraphBuilder"/> for the dependency graph and topological ordering rather than implementing a
+///new one. Steps with no dependency relationship between them run concurrently, grouped into successive waves by
+///dependency depth. Each step's lifecycle is tracked through its <see cref="ComponentGraphNode.State"/>
+///(<see cref="ComponentState.Activating"/> → <see cref="ComponentState.Active"/> or
+///<see cref="ComponentState.Faulted"/>), optionally retried through a caller-supplied <see cref="IAsyncPolicy"/>, and
+///published as a <see cref="WorkflowStepEvent"/> on an <see cref="EventBus"/>. A faulted step fails only the steps
+///that (transitively) depend on it; unrelated branches still run.
 ///</summary>
 public sealed class StepWorkflowOrchestrator
 {
     #region Fields
-    private readonly ComponentGraphBuilder _builder = new();
-    private readonly EventBus _eventBus;
-    private readonly Dictionary<string, WorkflowStepComponent> _steps = new(StringComparer.Ordinal);
+    readonly ComponentGraphBuilder _builder = new();
+    readonly Dictionary<string, WorkflowStepComponent> _steps = new(StringComparer.Ordinal);
+    readonly EventBus _eventBus;
     #endregion
 
     #region Constructors
@@ -38,9 +38,34 @@ public sealed class StepWorkflowOrchestrator
     #endregion
 
     #region Private methods
-    private static int ComputeWave(ComponentGraphNode node, IReadOnlyDictionary<ComponentGraphNode, int> waveByNode) { return (node.Dependencies.Count == 0) ? 0 : (node.Dependencies.Max(dependency => waveByNode[dependency]) + 1); }
+    static int ComputeWave(ComponentGraphNode node, IReadOnlyDictionary<ComponentGraphNode, int> waveByNode)
+    {
+        return (node.Dependencies.Count == 0) ? 0 : (node.Dependencies.Max(dependency => waveByNode[dependency]) + 1);
+    }
 
-    private async Task ExecuteNodeAsync(ComponentGraphNode node, ConcurrentDictionary<ComponentGraphNode, bool> faulted, CancellationToken cancellationToken)
+    ///<summary>
+    ///Unwraps an <see cref="AggregateException"/> (as thrown by <see cref="RetryPolicy"/> on exhaustion) down to its
+    ///single inner exception, when there is exactly one distinct cause. <see cref="RetryPolicy"/> records one entry
+    ///per attempt, so a persistent failure that throws the same exception instance on every attempt still produces
+    ///one entry per attempt; comparing by reference (rather than by count) correctly collapses that common case. A
+    ///genuinely multi-cause aggregate is returned as-is, since collapsing it to one exception would lose information.
+    ///</summary>
+    static Exception UnwrapSingleFailure(Exception exception)
+    {
+        if(exception is AggregateException aggregate)
+        {
+            Exception[] distinctCauses = [.. aggregate.Flatten().InnerExceptions.Distinct()];
+
+            if(distinctCauses.Length == 1)
+            {
+                return distinctCauses[0];
+            }
+        }
+
+        return exception;
+    }
+
+    async Task ExecuteNodeAsync(ComponentGraphNode node, ConcurrentDictionary<ComponentGraphNode, bool> faulted, CancellationToken cancellationToken)
     {
         WorkflowStepComponent step = (WorkflowStepComponent)node.Component;
 
@@ -59,15 +84,11 @@ public sealed class StepWorkflowOrchestrator
         {
             if(step.RetryPolicy is not null)
             {
-                await step.RetryPolicy
-                    .ExecuteAsync(
-                      async ct =>
-                      {
-                          await step.Action(ct).ConfigureAwait(false);
-                          return true;
-                      },
-                      cancellationToken)
-                    .ConfigureAwait(false);
+                await step.RetryPolicy.ExecuteAsync(async ct =>
+                {
+                    await step.Action(ct).ConfigureAwait(false);
+                    return true;
+                }, cancellationToken).ConfigureAwait(false);
             } else
             {
                 await step.Action(cancellationToken).ConfigureAwait(false);
@@ -81,28 +102,6 @@ public sealed class StepWorkflowOrchestrator
             faulted[node] = true;
             await _eventBus.PublishAsync(new WorkflowStepEvent(step.Name, ComponentState.Faulted, UnwrapSingleFailure(ex), DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);
         }
-    }
-
-    ///<summary>
-    ///Unwraps an <see cref="AggregateException"/> (as thrown by <see cref="RetryPolicy"/> on exhaustion) down to its
-    ///single inner exception, when there is exactly one distinct cause. <see cref="RetryPolicy"/> records one entry per
-    ///attempt, so a persistent failure that throws the same exception instance on every attempt still produces one
-    ///entry per attempt; comparing by reference (rather than by count) correctly collapses that common case. A
-    ///genuinely multi-cause aggregate is returned as-is, since collapsing it to one exception would lose information.
-    ///</summary>
-    private static Exception UnwrapSingleFailure(Exception exception)
-    {
-        if(exception is AggregateException aggregate)
-        {
-            Exception[] distinctCauses = [ .. aggregate.Flatten().InnerExceptions.Distinct() ];
-
-            if(distinctCauses.Length == 1)
-            {
-                return distinctCauses[0];
-            }
-        }
-
-        return exception;
     }
     #endregion
 
@@ -118,8 +117,8 @@ public sealed class StepWorkflowOrchestrator
     ///<exception cref="ArgumentException"><paramref name="name"/> is <c>null</c>, empty, or whitespace.</exception>
     ///<exception cref="ArgumentNullException"><paramref name="action"/> or <paramref name="dependsOn"/> is <c>null</c>.</exception>
     ///<exception cref="InvalidOperationException">
-    ///A step named <paramref name="name"/> is already registered, or <paramref name="dependsOn"/> names a step that is
-    ///not yet registered.
+    ///A step named <paramref name="name"/> is already registered, or <paramref name="dependsOn"/> names a step that
+    ///is not yet registered.
     ///</exception>
     public StepWorkflowOrchestrator AddStep(string name, Func<CancellationToken, Task> action, IAsyncPolicy? retryPolicy = null, params string[] dependsOn)
     {
@@ -195,21 +194,19 @@ public sealed class StepWorkflowOrchestrator
     ///<summary>
     ///The names of every currently registered step.
     ///</summary>
-    public IReadOnlyList<string> StepNames => [ .. _steps.Keys ];
+    public IReadOnlyList<string> StepNames => [.. _steps.Keys];
     #endregion
 
     ///<summary>
-    ///Wraps a step's name, action, and optional retry policy as an <see cref="ComponentModel.ComponentBase"/> so it can
-    ///be registered as a node in a <see cref="ComponentGraph"/>.
+    ///Wraps a step's name, action, and optional retry policy as an <see cref="ComponentModel.ComponentBase"/> so it
+    ///can be registered as a node in a <see cref="ComponentGraph"/>.
     ///</summary>
-    private sealed class WorkflowStepComponent(string name, Func<CancellationToken, Task> action, IAsyncPolicy? retryPolicy) : ComponentBase
+    sealed class WorkflowStepComponent(string name, Func<CancellationToken, Task> action, IAsyncPolicy? retryPolicy) : ComponentBase
     {
-        #region Public properties
         public Func<CancellationToken, Task> Action { get; } = action;
 
         public string Name { get; } = name;
 
         public IAsyncPolicy? RetryPolicy { get; } = retryPolicy;
-        #endregion
     }
 }

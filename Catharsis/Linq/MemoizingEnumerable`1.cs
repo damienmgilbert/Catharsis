@@ -21,13 +21,18 @@ namespace Catharsis.Linq;
 public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
 {
     #region Fields
-    private readonly List<T> _cache = [];
-    private bool _completed;
-    private readonly Lock _gate = new();
-    private IEnumerator<T>? _source;
+    readonly Lock _gate = new();
+    readonly List<T> _cache = [];
+    IEnumerator<T>? _source;
+    bool _completed;
     #endregion
 
-    #region Constructors
+    #region Explicit interface implementations
+    ///<inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    #endregion
+
+    #region Public methods
     ///<summary>
     ///Wraps the specified source sequence.
     ///</summary>
@@ -38,47 +43,10 @@ public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         _source = source.GetEnumerator();
     }
-    #endregion
 
-    #region Explicit interface implementations
-    ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    #endregion
-
-    #region Private methods
-    private (bool HasItem, T Item, bool Done) TryGetAt(int index)
-    {
-        lock(_gate)
-        {
-            if(index < _cache.Count)
-            {
-                return (true, _cache[index], false);
-            }
-
-            if(_completed || _source is null)
-            {
-                return (false, default!, true);
-            }
-
-            if(_source.MoveNext())
-            {
-                T item = _source.Current;
-                _cache.Add(item);
-                return (true, item, false);
-            }
-
-            _completed = true;
-            _source.Dispose();
-            _source = null;
-            return (false, default!, true);
-        }
-    }
-    #endregion
-
-    #region Public methods
     ///<summary>
-    ///Disposes the underlying source enumerator, if it has not already run to completion. Already-cached items remain
-    ///available to enumerate.
+    ///Disposes the underlying source enumerator, if it has not already run to completion. Already-cached items
+    ///remain available to enumerate.
     ///</summary>
     public void Dispose()
     {
@@ -108,6 +76,34 @@ public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
                 yield return item;
                 index++;
             }
+        }
+    }
+
+    (bool HasItem, T Item, bool Done) TryGetAt(int index)
+    {
+        lock(_gate)
+        {
+            if(index < _cache.Count)
+            {
+                return (true, _cache[index], false);
+            }
+
+            if(_completed || _source is null)
+            {
+                return (false, default!, true);
+            }
+
+            if(_source.MoveNext())
+            {
+                T item = _source.Current;
+                _cache.Add(item);
+                return (true, item, false);
+            }
+
+            _completed = true;
+            _source.Dispose();
+            _source = null;
+            return (false, default!, true);
         }
     }
     #endregion

@@ -7,7 +7,6 @@ namespace Catharsis.Linq;
 public sealed class GroupJoinBuilderInner<TOuter>(IEnumerable<TOuter> outer)
 {
     #region Public methods
-
     ///<summary>
     ///Specifies the inner sequence to join against.
     ///</summary>

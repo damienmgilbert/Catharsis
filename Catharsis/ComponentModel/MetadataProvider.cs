@@ -39,7 +39,7 @@ public sealed class MetadataProvider
         EventDescriptorCollection descriptors = _cache.GetEvents(componentType);
         EventMetadata[] result = new EventMetadata[descriptors.Count];
 
-        for(int i = 0; i < descriptors.Count; i++)
+        for (int i = 0; i < descriptors.Count; i++)
         {
             result[i] = DescriptorToEventMetadata(componentType, descriptors[i]!);
         }
@@ -52,7 +52,7 @@ public sealed class MetadataProvider
         PropertyDescriptorCollection descriptors = _cache.GetProperties(componentType);
         PropertyMetadata[] result = new PropertyMetadata[descriptors.Count];
 
-        for(int i = 0; i < descriptors.Count; i++)
+        for (int i = 0; i < descriptors.Count; i++)
         {
             result[i] = DescriptorToPropertyMetadata(componentType, descriptors[i]);
         }
@@ -64,7 +64,7 @@ public sealed class MetadataProvider
     {
         Attribute[] attrs = new Attribute[descriptor.Attributes.Count];
 
-        for(int i = 0; i < descriptor.Attributes.Count; i++)
+        for (int i = 0; i < descriptor.Attributes.Count; i++)
         {
             attrs[i] = descriptor.Attributes[i];
         }
@@ -76,7 +76,7 @@ public sealed class MetadataProvider
     {
         Attribute[] attrs = new Attribute[descriptor.Attributes.Count];
 
-        for(int i = 0; i < descriptor.Attributes.Count; i++)
+        for (int i = 0; i < descriptor.Attributes.Count; i++)
         {
             attrs[i] = descriptor.Attributes[i];
         }
@@ -99,14 +99,14 @@ public sealed class MetadataProvider
         ArgumentNullException.ThrowIfNull(componentType);
         ArgumentException.ThrowIfNullOrWhiteSpace(eventName);
 
-        if(_registry.TryGetEvent(componentType, eventName, out EventMetadata? metadata))
+        if (_registry.TryGetEvent(componentType, eventName, out EventMetadata? metadata))
         {
             return metadata;
         }
 
         EventDescriptor? descriptor = _cache.FindEvent(componentType, eventName);
 
-        if(descriptor is null)
+        if (descriptor is null)
         {
             return null;
         }
@@ -127,14 +127,14 @@ public sealed class MetadataProvider
         ArgumentNullException.ThrowIfNull(componentType);
         ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
 
-        if(_registry.TryGetProperty(componentType, propertyName, out PropertyMetadata? metadata))
+        if (_registry.TryGetProperty(componentType, propertyName, out PropertyMetadata? metadata))
         {
             return metadata;
         }
 
         PropertyDescriptor? descriptor = _cache.FindProperty(componentType, propertyName);
 
-        if(descriptor is null)
+        if (descriptor is null)
         {
             return null;
         }
@@ -154,7 +154,7 @@ public sealed class MetadataProvider
 
         IReadOnlyList<EventMetadata> registered = _registry.GetEvents(componentType);
 
-        if(registered.Count > 0)
+        if (registered.Count > 0)
         {
             return registered;
         }
@@ -174,7 +174,7 @@ public sealed class MetadataProvider
 
         IReadOnlyList<PropertyMetadata> registered = _registry.GetProperties(componentType);
 
-        if(registered.Count > 0)
+        if (registered.Count > 0)
         {
             return registered;
         }

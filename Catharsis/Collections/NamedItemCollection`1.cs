@@ -10,7 +10,6 @@ namespace Catharsis.Collections;
 public sealed class NamedItemCollection<T>(IEqualityComparer<string>? comparer = null) : KeyedCollection<string, T>(comparer ?? StringComparer.Ordinal) where T : INamedItem
 {
     #region Protected methods
-
     ///<inheritdoc/>
     protected override string GetKeyForItem(T item)
     {

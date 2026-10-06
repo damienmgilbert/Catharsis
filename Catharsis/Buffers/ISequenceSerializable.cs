@@ -8,7 +8,6 @@ namespace Catharsis.Buffers;
 public interface ISequenceSerializable
 {
     #region Public methods
-
     ///<summary>
     ///Gets the number of bytes required to serialize this instance.
     ///</summary>

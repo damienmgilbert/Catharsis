@@ -3,23 +3,32 @@ using System.Collections.Concurrent;
 namespace Catharsis.Caching;
 
 ///<summary>
-///A two-level cache: a fast in-memory layer in front of a pluggable <see cref="ICacheLayer{TKey, TValue}"/>, such as a
-///distributed cache. Reads check the in-memory layer first and populate it from the backing layer on a miss; writes go
-///to both layers.
+///A two-level cache: a fast in-memory layer in front of a pluggable <see cref="ICacheLayer{TKey, TValue}"/>, such as
+///a distributed cache. Reads check the in-memory layer first and populate it from the backing layer on a miss;
+///writes go to both layers.
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
 ///<typeparam name="TValue">The type of the cached values.</typeparam>
 ///<example>
+///<code>
+///LayeredCache&lt;string, Product&gt; cache = new(new RedisCacheLayer(connection));
+///(bool found, Product? value) = await cache.TryGetAsync(productId);
+///</code>
+///</example>
 public sealed class LayeredCache<TKey, TValue> where TKey : notnull
 {
     #region Fields
-    private readonly ICacheLayer<TKey, TValue> _backing;
-    private readonly ConcurrentDictionary<TKey, TValue> _local;
+    readonly ConcurrentDictionary<TKey, TValue> _local;
+    readonly ICacheLayer<TKey, TValue> _backing;
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a layered cache in front of the specified backing layer, using the default equality comparer for
+    ///<typeparamref name="TKey"/>.
+    ///</summary>
+    ///<param name="backing">The backing cache layer.</param>
+    ///<exception cref="ArgumentNullException"><paramref name="backing"/> is <c>null</c>.</exception>
     public LayeredCache(ICacheLayer<TKey, TValue> backing) : this(backing, null)
     {
     }
@@ -36,9 +45,7 @@ public sealed class LayeredCache<TKey, TValue> where TKey : notnull
         _backing = backing;
         _local = new ConcurrentDictionary<TKey, TValue>(comparer);
     }
-    #endregion
 
-    #region Public methods
     ///<summary>
     ///Removes all entries from the local layer, without affecting the backing layer.
     ///</summary>

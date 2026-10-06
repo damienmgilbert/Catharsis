@@ -7,13 +7,11 @@ namespace Catharsis.Operators;
 public sealed class Matrix : IEquatable<Matrix>
 {
     #region Fields
-    private readonly double[] _values;
+    readonly double[] _values;
     #endregion
 
     #region Constructors
-    ///<summary>
-    ///Initializes a new zero-filled matrix.
-    ///</summary>
+    ///<summary>Initializes a new zero-filled matrix.</summary>
     ///<param name="rows">The row count. Must be positive.</param>
     ///<param name="columns">The column count. Must be positive.</param>
     ///<exception cref="ArgumentOutOfRangeException">A dimension is not positive.</exception>
@@ -27,9 +25,7 @@ public sealed class Matrix : IEquatable<Matrix>
         _values = new double[checked(rows * columns)];
     }
 
-    ///<summary>
-    ///Initializes a new matrix from row-major values.
-    ///</summary>
+    ///<summary>Initializes a new matrix from row-major values.</summary>
     ///<param name="rows">The row count. Must be positive.</param>
     ///<param name="columns">The column count. Must be positive.</param>
     ///<param name="values">Exactly <c>rows * columns</c> values in row-major order. They are copied.</param>
@@ -46,26 +42,15 @@ public sealed class Matrix : IEquatable<Matrix>
     #endregion
 
     #region Operators
-    ///<summary>
-    ///Subtracts one matrix from another of the same shape.
-    ///</summary>
+    ///<summary>Adds two matrices of the same shape.</summary>
     ///<exception cref="ArgumentException">The shapes differ.</exception>
-    public static Matrix operator -(Matrix left, Matrix right)
-    {
-        return Combine(left, right, static(a, b) => a - b);
-    }
+    public static Matrix operator +(Matrix left, Matrix right) => Combine(left, right, static (a, b) => a + b);
 
-    ///<summary>
-    ///Determines whether two matrices differ.
-    ///</summary>
-    public static bool operator !=(Matrix? left, Matrix? right)
-    {
-        return !(left == right);
-    }
+    ///<summary>Subtracts one matrix from another of the same shape.</summary>
+    ///<exception cref="ArgumentException">The shapes differ.</exception>
+    public static Matrix operator -(Matrix left, Matrix right) => Combine(left, right, static (a, b) => a - b);
 
-    ///<summary>
-    ///Scales every element.
-    ///</summary>
+    ///<summary>Scales every element.</summary>
     public static Matrix operator *(Matrix matrix, double scalar)
     {
         ArgumentNullException.ThrowIfNull(matrix);
@@ -79,9 +64,8 @@ public sealed class Matrix : IEquatable<Matrix>
 
         return result;
     }
-    ///<summary>
-    ///Multiplies two matrices.
-    ///</summary>
+
+    ///<summary>Multiplies two matrices.</summary>
     ///<exception cref="ArgumentException">The left column count differs from the right row count.</exception>
     public static Matrix operator *(Matrix left, Matrix right)
     {
@@ -114,28 +98,92 @@ public sealed class Matrix : IEquatable<Matrix>
 
         return result;
     }
-    ///<summary>
-    ///Adds two matrices of the same shape.
-    ///</summary>
-    ///<exception cref="ArgumentException">The shapes differ.</exception>
-    public static Matrix operator +(Matrix left, Matrix right)
+
+    ///<summary>Determines whether two matrices are equal.</summary>
+    public static bool operator ==(Matrix? left, Matrix? right) => left is null ? right is null : left.Equals(right);
+
+    ///<summary>Determines whether two matrices differ.</summary>
+    public static bool operator !=(Matrix? left, Matrix? right) => !(left == right);
+    #endregion
+
+    #region Public methods
+    ///<summary>Creates an identity matrix.</summary>
+    ///<param name="size">The row and column count. Must be positive.</param>
+    public static Matrix Identity(int size)
     {
-        return Combine(left, right, static(a, b) => a + b);
+        Matrix result = new(size, size);
+
+        for(int i = 0; i < size; i++)
+        {
+            result._values[(i * size) + i] = 1;
+        }
+
+        return result;
     }
 
-    ///<summary>
-    ///Determines whether two matrices are equal.
-    ///</summary>
-    public static bool operator ==(Matrix? left, Matrix? right)
+    ///<summary>Returns the transpose of this matrix.</summary>
+    public Matrix Transpose()
     {
-        return left is null ? right is null : left.Equals(right);
+        Matrix result = new(Columns, Rows);
+
+        for(int r = 0; r < Rows; r++)
+        {
+            for(int c = 0; c < Columns; c++)
+            {
+                result._values[(c * Rows) + r] = _values[(r * Columns) + c];
+            }
+        }
+
+        return result;
+    }
+
+    ///<summary>Returns a read-only view of every element in row-major order, without copying.</summary>
+    public ReadOnlySpan<double> AsSpan() => _values;
+
+    ///<summary>Copies every element, in row-major order, into <paramref name="destination"/>.</summary>
+    ///<exception cref="ArgumentException"><paramref name="destination"/> is shorter than <c>Rows * Columns</c>.</exception>
+    public void CopyTo(Span<double> destination) => _values.CopyTo(destination);
+
+    ///<summary>Returns a read-only view of one row without copying.</summary>
+    ///<exception cref="ArgumentOutOfRangeException"><paramref name="row"/> is out of range.</exception>
+    public ReadOnlySpan<double> Row(int row)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(row);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(row, Rows);
+
+        return _values.AsSpan(row * Columns, Columns);
+    }
+
+    ///<inheritdoc/>
+    public bool Equals(Matrix? other) => other is not null && Rows == other.Rows && Columns == other.Columns && _values.AsSpan().SequenceEqual(other._values);
+
+    ///<inheritdoc/>
+    public override bool Equals(object? obj) => Equals(obj as Matrix);
+
+    ///<inheritdoc/>
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(Rows);
+        hash.Add(Columns);
+
+        foreach(double value in _values)
+        {
+            hash.Add(value);
+        }
+
+        return hash.ToHashCode();
     }
     #endregion
 
-    #region Indexers
-    ///<summary>
-    ///Gets the element at <paramref name="row"/>, <paramref name="column"/>.
-    ///</summary>
+    #region Public properties
+    ///<summary>Gets the row count.</summary>
+    public int Rows { get; }
+
+    ///<summary>Gets the column count.</summary>
+    public int Columns { get; }
+
+    ///<summary>Gets the element at <paramref name="row"/>, <paramref name="column"/>.</summary>
     ///<exception cref="ArgumentOutOfRangeException">An index is out of range.</exception>
     public double this[int row, int column]
     {
@@ -171,97 +219,5 @@ public sealed class Matrix : IEquatable<Matrix>
 
         return result;
     }
-    #endregion
-
-    #region Public methods
-    ///<summary>
-    ///Returns a read-only view of every element in row-major order, without copying.
-    ///</summary>
-    public ReadOnlySpan<double> AsSpan() => _values;
-
-    ///<summary>
-    ///Copies every element, in row-major order, into <paramref name="destination"/>.
-    ///</summary>
-    ///<exception cref="ArgumentException"><paramref name="destination"/> is shorter than <c>Rows * Columns</c>.</exception>
-    public void CopyTo(Span<double> destination) => _values.CopyTo(destination);
-
-    ///<inheritdoc/>
-    public bool Equals(Matrix? other) => other is not null && Rows == other.Rows && Columns == other.Columns && _values.AsSpan().SequenceEqual(other._values);
-
-    ///<inheritdoc/>
-    public override bool Equals(object? obj) => Equals(obj as Matrix);
-
-    ///<inheritdoc/>
-    public override int GetHashCode()
-    {
-        HashCode hash = new();
-        hash.Add(Rows);
-        hash.Add(Columns);
-
-        foreach(double value in _values)
-        {
-            hash.Add(value);
-        }
-
-        return hash.ToHashCode();
-    }
-
-        ///<summary>
-///Creates an identity matrix.
-///</summary>
-    ///<param name="size">The row and column count. Must be positive.</param>
-    public static Matrix Identity(int size)
-    {
-        Matrix result = new(size, size);
-
-        for(int i = 0; i < size; i++)
-        {
-            result._values[(i * size) + i] = 1;
-        }
-
-        return result;
-    }
-
-    ///<summary>
-    ///Returns a read-only view of one row without copying.
-    ///</summary>
-    ///<exception cref="ArgumentOutOfRangeException"><paramref name="row"/> is out of range.</exception>
-    public ReadOnlySpan<double> Row(int row)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(row);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(row, Rows);
-
-        return _values.AsSpan(row * Columns, Columns);
-    }
-
-    ///<summary>
-    ///Returns the transpose of this matrix.
-    ///</summary>
-    public Matrix Transpose()
-    {
-        Matrix result = new(Columns, Rows);
-
-        for(int r = 0; r < Rows; r++)
-        {
-            for(int c = 0; c < Columns; c++)
-            {
-                result._values[(c * Rows) + r] = _values[(r * Columns) + c];
-            }
-        }
-
-        return result;
-    }
-    #endregion
-
-    #region Public properties
-    ///<summary>
-    ///Gets the column count.
-    ///</summary>
-    public int Columns { get; }
-
-        ///<summary>
-///Gets the row count.
-///</summary>
-    public int Rows { get; }
     #endregion
 }

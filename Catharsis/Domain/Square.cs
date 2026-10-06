@@ -8,10 +8,7 @@ namespace Catharsis.Domain;
 public sealed class Square(double side) : Rectangle(side, side)
 {
     #region Public properties
-
-    ///<summary>
-    ///Gets the side length.
-    ///</summary>
+    ///<summary>Gets the side length.</summary>
     public double Side => Width;
     #endregion
 }

@@ -3,21 +3,33 @@ using System.IO.Compression;
 namespace Catharsis.IO;
 
 ///<summary>
-///Pipes <see cref="AtomicFileWriter"/>'s safe-write step through a compression stream: data is compressed while being
-///written to a temporary file in the target's directory, then the temporary file is renamed into place, so a reader
-///never observes a partially written or partially compressed file.
+///The compression format used by <see cref="CompressingFileWriter"/>.
+///</summary>
+public enum CompressionFormat
+{
+    ///<summary>The GZip format.</summary>
+    GZip,
+
+    ///<summary>The Brotli format.</summary>
+    Brotli
+}
+
+///<summary>
+///Pipes <see cref="AtomicFileWriter"/>'s safe-write step through a compression stream: data is compressed while
+///being written to a temporary file in the target's directory, then the temporary file is renamed into place, so a
+///reader never observes a partially written or partially compressed file.
 ///</summary>
 public static class CompressingFileWriter
 {
     #region Private methods
-    private static Stream CreateCompressionStream(Stream destination, CompressionFormat format) => format switch
+    static string CreateTempPath(string path) => $"{path}.{Guid.NewGuid():N}.tmp";
+
+    static Stream CreateCompressionStream(Stream destination, CompressionFormat format) => format switch
     {
         CompressionFormat.GZip => new GZipStream(destination, CompressionLevel.Optimal),
         CompressionFormat.Brotli => new BrotliStream(destination, CompressionLevel.Optimal),
         _ => throw new ArgumentOutOfRangeException(nameof(format), format, "Unrecognized compression format.")
     };
-
-    private static string CreateTempPath(string path) => $"{path}.{Guid.NewGuid():N}.tmp";
     #endregion
 
     #region Public methods
@@ -37,11 +49,9 @@ public static class CompressingFileWriter
         try
         {
             using(FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using(Stream compressionStream = CreateCompressionStream(fileStream, format))
             {
-                using(Stream compressionStream = CreateCompressionStream(fileStream, format))
-                {
-                    compressionStream.Write(data);
-                }
+                compressionStream.Write(data);
             }
 
             File.Move(tempPath, path, overwrite: true);
@@ -74,11 +84,9 @@ public static class CompressingFileWriter
         try
         {
             await using(FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            await using(Stream compressionStream = CreateCompressionStream(fileStream, format))
             {
-                await using(Stream compressionStream = CreateCompressionStream(fileStream, format))
-                {
-                    await compressionStream.WriteAsync(data, cancellationToken).ConfigureAwait(false);
-                }
+                await compressionStream.WriteAsync(data, cancellationToken).ConfigureAwait(false);
             }
 
             File.Move(tempPath, path, overwrite: true);

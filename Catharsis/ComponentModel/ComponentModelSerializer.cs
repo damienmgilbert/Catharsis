@@ -8,10 +8,14 @@ namespace Catharsis.ComponentModel;
 ///cref="TypeDescriptor"/> property descriptors and their associated <see cref="TypeConverter"/> instances.
 ///</summary>
 ///<remarks>
+///<para> Each readable property whose <see cref="TypeConverter"/> supports conversion to <see cref="string"/> is
+///included in the output dictionary. Properties that are read-only, have no string converter, or match the default
+///value (when<see cref="SkipDefaultValues"/> is <c>true</c>) are excluded.</para>
+///</remarks>
 public sealed class ComponentModelSerializer
 {
     #region Private methods
-    private bool ShouldSerialize(PropertyDescriptor property, object component)
+    bool ShouldSerialize(PropertyDescriptor property, object component)
     {
         if((PropertyFilter is not null) && !PropertyFilter(property))
         {
@@ -37,6 +41,8 @@ public sealed class ComponentModelSerializer
     ///A dictionary mapping property names to their string-converted values.
     ///</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public Dictionary<string, string?> Serialize(object component)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -71,6 +77,8 @@ public sealed class ComponentModelSerializer
     ///A dictionary mapping property names to their raw values.
     ///</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public Dictionary<string, object?> SerializeRaw(object component)
     {
         ArgumentNullException.ThrowIfNull(component);

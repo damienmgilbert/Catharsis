@@ -1,54 +1,36 @@
 namespace Catharsis.Mathematics;
 
-///<summary>
-///Provides the complete Greek alphabet as an ordered catalogue of <see cref="GreekLetter"/> entries.
-///</summary>
+/// <summary>
+/// Provides the complete Greek alphabet as an ordered catalogue of <see cref="GreekLetter"/> entries.
+/// </summary>
 public static class GreekAlphabet
 {
-    #region Public properties
-    ///<summary>
-    ///Gets all 24 letters of the Greek alphabet in traditional order.
-    ///</summary>
-    public static IReadOnlyList<GreekLetter> All
-    {
-        get;
-    } =[ new("Alpha", 'Α', 'α'), new("Beta", 'Β', 'β'), new("Gamma", 'Γ', 'γ'), new("Delta", 'Δ', 'δ'), new("Epsilon", 'Ε', 'ε'), new("Zeta", 'Ζ', 'ζ'), new("Eta", 'Η', 'η'), new("Theta", 'Θ', 'θ'), new("Iota", 'Ι', 'ι'), new("Kappa", 'Κ', 'κ'), new("Lambda", 'Λ', 'λ'), new("Mu", 'Μ', 'μ'), new(
-                                                                                                                                                                                                                                                                                                    "Nu",
-                                                                                                                                                                                                                                                                                                    'Ν',
-                                                                                                                                                                                                                                                                                                    'ν'), new(
-                                                                                                                                                                                                                                                                                                          "Xi",
-                                                                                                                                                                                                                                                                                                          'Ξ',
-                                                                                                                                                                                                                                                                                                          'ξ'), new(
-                                                                                                                                                                                                                                                                                                                "Omicron",
-                                                                                                                                                                                                                                                                                                                'Ο',
-                                                                                                                                                                                                                                                                                                                'ο'), new(
-                                                                                                                                                                                                                                                                                                                      "Pi",
-                                                                                                                                                                                                                                                                                                                      'Π',
-                                                                                                                                                                                                                                                                                                                      'π'), new(
-                                                                                                                                                                                                                                                                                                                            "Rho",
-                                                                                                                                                                                                                                                                                                                            'Ρ',
-                                                                                                                                                                                                                                                                                                                            'ρ'), new(
-                                                                                                                                                                                                                                                                                                                                  "Sigma",
-                                                                                                                                                                                                                                                                                                                                  'Σ',
-                                                                                                                                                                                                                                                                                                                                  'σ'), new(
-                                                                                                                                                                                                                                                                                                                                        "Tau",
-                                                                                                                                                                                                                                                                                                                                        'Τ',
-                                                                                                                                                                                                                                                                                                                                        'τ'), new(
-                                                                                                                                                                                                                                                                                                                                              "Upsilon",
-                                                                                                                                                                                                                                                                                                                                              'Υ',
-                                                                                                                                                                                                                                                                                                                                              'υ'), new(
-                                                                                                                                                                                                                                                                                                                                                    "Phi",
-                                                                                                                                                                                                                                                                                                                                                    'Φ',
-                                                                                                                                                                                                                                                                                                                                                    'φ',
-                                                                                                                                                                                                                                                                                                                                                    'ϕ'), new(
-                                                                                                                                                                                                                                                                                                                                                          "Chi",
-                                                                                                                                                                                                                                                                                                                                                          'Χ',
-                                                                                                                                                                                                                                                                                                                                                          'χ'), new(
-                                                                                                                                                                                                                                                                                                                                                                "Psi",
-                                                                                                                                                                                                                                                                                                                                                                'Ψ',
-                                                                                                                                                                                                                                                                                                                                                                'ψ'), new(
-                                                                                                                                                                                                                                                                                                                                                                      "Omega",
-                                                                                                                                                                                                                                                                                                                                                                      'Ω',
-                                                                                                                                                                                                                                                                                                                                                                      'ω'), ];
-    #endregion
+    /// <summary>Gets all 24 letters of the Greek alphabet in traditional order.</summary>
+    public static IReadOnlyList<GreekLetter> All { get; } =
+    [
+        new("Alpha",   'Α', 'α'),
+        new("Beta",    'Β', 'β'),
+        new("Gamma",   'Γ', 'γ'),
+        new("Delta",   'Δ', 'δ'),
+        new("Epsilon", 'Ε', 'ε'),
+        new("Zeta",    'Ζ', 'ζ'),
+        new("Eta",     'Η', 'η'),
+        new("Theta",   'Θ', 'θ'),
+        new("Iota",    'Ι', 'ι'),
+        new("Kappa",   'Κ', 'κ'),
+        new("Lambda",  'Λ', 'λ'),
+        new("Mu",      'Μ', 'μ'),
+        new("Nu",      'Ν', 'ν'),
+        new("Xi",      'Ξ', 'ξ'),
+        new("Omicron", 'Ο', 'ο'),
+        new("Pi",      'Π', 'π'),
+        new("Rho",     'Ρ', 'ρ'),
+        new("Sigma",   'Σ', 'σ'),
+        new("Tau",     'Τ', 'τ'),
+        new("Upsilon", 'Υ', 'υ'),
+        new("Phi",     'Φ', 'φ', 'ϕ'),
+        new("Chi",     'Χ', 'χ'),
+        new("Psi",     'Ψ', 'ψ'),
+        new("Omega",   'Ω', 'ω'),
+    ];
 }

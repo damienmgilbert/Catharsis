@@ -18,7 +18,10 @@ namespace Catharsis.ComponentModel.DTO;
 public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyDataErrorInfo where T : class
 {
     #region Fields
-    private readonly Dictionary<string, List<string>> _errors = [ with(StringComparer.Ordinal) ];
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Events
@@ -29,7 +32,7 @@ public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyData
     #region Private methods
     private void AddError(string propertyName, string error)
     {
-        if(!_errors.TryGetValue(propertyName, out List<string>? list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
@@ -41,10 +44,10 @@ public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyData
 
     private void ClearAllErrors()
     {
-        string[] keys = [ .. _errors.Keys ];
+        string[] keys = [.. _errors.Keys];
         _errors.Clear();
 
-        foreach(string key in keys)
+        foreach (string key in keys)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(key));
         }
@@ -57,7 +60,7 @@ public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyData
     {
         base.OnPropertyChanged(propertyName);
 
-        if(string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
+        if (string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
         {
             Validate();
         }
@@ -68,7 +71,7 @@ public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyData
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }
@@ -89,16 +92,17 @@ public class ValidatedRecord<T>(T value) : BindableRecord<T>(value), INotifyData
 
         Validator.TryValidateObject(Value, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
-            List<string> members = [ .. result.MemberNames ];
+            List<string> members = [.. result.MemberNames];
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(string.Empty, result.ErrorMessage ?? "Validation failed.");
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(member, result.ErrorMessage ?? "Validation failed.");
                 }

@@ -8,11 +8,16 @@ namespace Catharsis.ComponentModel;
 ///cref="EventDescriptorCollection"/> instances, keyed by component type.
 ///</summary>
 ///<remarks>
+///<para> Reflection and <see cref="TypeDescriptor"/> calls can be expensive when performed repeatedly. This cache
+///stores the results of property and event descriptor lookups so they are computed at most once per type.</para> <para>
+///Call <see cref="Invalidate(Type)"/> or <see cref="Clear"/> when the descriptor shape of a type changes at runtime
+///(e.g., via<see cref="TypeDescriptor.AddProvider"/>).</para>
+///</remarks>
 public sealed class ComponentReflectionCache
 {
     #region Fields
-    private readonly ConcurrentDictionary<Type, EventDescriptorCollection> _eventCache = new();
-    private readonly ConcurrentDictionary<Type, PropertyDescriptorCollection> _propertyCache = new();
+    readonly ConcurrentDictionary<Type, EventDescriptorCollection> _eventCache = new();
+    readonly ConcurrentDictionary<Type, PropertyDescriptorCollection> _propertyCache = new();
     #endregion
 
     #region Public methods
@@ -63,6 +68,8 @@ public sealed class ComponentReflectionCache
     ///<param name="componentType">The type to retrieve event descriptors for.</param>
     ///<returns>The cached event descriptor collection.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="componentType"/> is <c>null</c>.
+    ///</exception>
     public EventDescriptorCollection GetEvents(Type componentType)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -78,6 +85,8 @@ public sealed class ComponentReflectionCache
     ///<param name="attributes">Attributes to filter by.</param>
     ///<returns>The filtered event descriptor collection (not cached).</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="componentType"/> is <c>null</c>.
+    ///</exception>
     public EventDescriptorCollection GetEvents(Type componentType, Attribute[] attributes)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -108,6 +117,8 @@ public sealed class ComponentReflectionCache
     ///<param name="componentType">The type to retrieve property descriptors for.</param>
     ///<returns>The cached property descriptor collection.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="componentType"/> is <c>null</c>.
+    ///</exception>
     public PropertyDescriptorCollection GetProperties(Type componentType)
     {
         ArgumentNullException.ThrowIfNull(componentType);
@@ -123,6 +134,8 @@ public sealed class ComponentReflectionCache
     ///<param name="attributes">Attributes to filter by.</param>
     ///<returns>The filtered property descriptor collection (not cached).</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="componentType"/> is <c>null</c>.
+    ///</exception>
     public PropertyDescriptorCollection GetProperties(Type componentType, Attribute[] attributes)
     {
         ArgumentNullException.ThrowIfNull(componentType);

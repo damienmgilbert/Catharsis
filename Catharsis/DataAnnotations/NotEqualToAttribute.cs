@@ -16,9 +16,9 @@ namespace Catharsis.DataAnnotations;
 public sealed class NotEqualToAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
-    ///Initializes a new instance of <see cref="NotEqualToAttribute"/> with the name of the property to compare against.
+    ///Initializes a new instance of <see cref="NotEqualToAttribute"/> with the name of the property to compare
+    ///against.
     ///</summary>
     ///<param name="otherProperty">The name of the property whose value must differ.</param>
     ///<exception cref="ArgumentNullException"><paramref name="otherProperty"/> is <c>null</c>.</exception>
@@ -53,7 +53,7 @@ public sealed class NotEqualToAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, OtherPropertyDisplayName ?? OtherProperty);
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, OtherPropertyDisplayName ?? OtherProperty); }
     #endregion
 
     #region Public properties

@@ -8,16 +8,20 @@ namespace Catharsis.ComponentModel;
 ///state management for transactional editing.
 ///</summary>
 ///<remarks>
+///<para> Call <see cref="BeginEdit"/> to capture a snapshot of all editable property values.<see cref="CancelEdit"/>
+///restores the snapshot; <see cref="EndEdit"/> discards it and accepts the current values.</para> <para> Override <see
+///cref="GetEditableProperties"/> to control which properties participate in edit transactions.</para>
+///</remarks>
 public abstract class EditableComponent : ObservableComponent, IEditableObject
 {
     #region Fields
-    private Dictionary<string, object?>? _snapshot;
+    Dictionary<string, object?>? _snapshot;
     #endregion
 
     #region Private methods
-    private Dictionary<string, object?> CaptureSnapshot()
+    Dictionary<string, object?> CaptureSnapshot()
     {
-        Dictionary<string, object?> snapshot = [ with(StringComparer.Ordinal) ];
+        Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
 
         foreach(PropertyInfo property in GetEditableProperties())
         {
@@ -27,7 +31,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
         return snapshot;
     }
 
-    private void RestoreSnapshot(Dictionary<string, object?> snapshot)
+    void RestoreSnapshot(Dictionary<string, object?> snapshot)
     {
         foreach(PropertyInfo property in GetEditableProperties())
         {
@@ -65,7 +69,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     ///<returns>
     ///An enumerable of <see cref="PropertyInfo"/> instances representing the properties to include in snapshots.
     ///</returns>
-    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0) && (p.Name != nameof(Site)) && (p.Name != nameof(IsEditing)));
+    protected virtual IEnumerable<PropertyInfo> GetEditableProperties() { return GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.CanRead && p.CanWrite && (p.GetIndexParameters().Length == 0) && (p.Name != nameof(Site)) && (p.Name != nameof(IsEditing))); }
     #endregion
 
     #region Public methods

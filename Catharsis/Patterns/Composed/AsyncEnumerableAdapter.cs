@@ -3,41 +3,11 @@ using System.Runtime.CompilerServices;
 namespace Catharsis.Patterns.Composed;
 
 ///<summary>
-///Adapts between <see cref="IEnumerable{T}"/> and <see cref="IAsyncEnumerable{T}"/>, so a synchronous source can feed
-///an asynchronous consumer and the reverse.
+///Adapts between <see cref="IEnumerable{T}"/> and <see cref="IAsyncEnumerable{T}"/>, so a synchronous source can feed an
+///asynchronous consumer and the reverse.
 ///</summary>
 public static class AsyncEnumerableAdapter
 {
-    #region Private methods
-    private static async IAsyncEnumerable<T> Iterate<T>(IEnumerable<T> source, [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        foreach(T item in source)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            yield return item;
-        }
-
-        await Task.CompletedTask.ConfigureAwait(false);
-    }
-
-    private static IEnumerable<T> IterateBlocking<T>(IAsyncEnumerable<T> source, CancellationToken cancellationToken)
-    {
-        IAsyncEnumerator<T> enumerator = source.GetAsyncEnumerator(cancellationToken);
-
-        try
-        {
-            while(enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
-            {
-                yield return enumerator.Current;
-            }
-        } finally
-        {
-            enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        }
-    }
-    #endregion
-
     #region Public methods
     ///<summary>
     ///Presents a synchronous sequence as an asynchronous one. The source is read lazily, one element per step, and
@@ -60,8 +30,8 @@ public static class AsyncEnumerableAdapter
     ///</summary>
     ///<remarks>
     ///Blocking on asynchronous work can deadlock under a single-threaded synchronization context and ties up a thread
-    ///while waiting; prefer consuming the asynchronous sequence with <c>await foreach</c> where you can. This exists
-    ///for code that genuinely cannot be asynchronous, such as a synchronous interface implementation.
+    ///while waiting; prefer consuming the asynchronous sequence with <c>await foreach</c> where you can. This exists for
+    ///code that genuinely cannot be asynchronous, such as a synchronous interface implementation.
     ///</remarks>
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="source">The asynchronous sequence to adapt.</param>
@@ -73,6 +43,37 @@ public static class AsyncEnumerableAdapter
         ArgumentNullException.ThrowIfNull(source);
 
         return IterateBlocking(source, cancellationToken);
+    }
+    #endregion
+
+    #region Private methods
+    static async IAsyncEnumerable<T> Iterate<T>(IEnumerable<T> source, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        foreach(T item in source)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            yield return item;
+        }
+
+        await Task.CompletedTask.ConfigureAwait(false);
+    }
+
+    static IEnumerable<T> IterateBlocking<T>(IAsyncEnumerable<T> source, CancellationToken cancellationToken)
+    {
+        IAsyncEnumerator<T> enumerator = source.GetAsyncEnumerator(cancellationToken);
+
+        try
+        {
+            while(enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
+            {
+                yield return enumerator.Current;
+            }
+        }
+        finally
+        {
+            enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
     }
     #endregion
 }

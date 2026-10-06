@@ -10,15 +10,13 @@ namespace Catharsis.Domain;
 public sealed class Circle(double radius) : Shape
 {
     #region Public properties
+    ///<summary>Gets the radius.</summary>
+    public double Radius { get; } = RequirePositive(radius, nameof(radius));
+
     ///<inheritdoc/>
     public override double Area => GeometryFormulas.Circle.Area(Radius);
 
     ///<inheritdoc/>
     public override double Perimeter => GeometryFormulas.Circle.Circumference(Radius);
-
-    ///<summary>
-    ///Gets the radius.
-    ///</summary>
-    public double Radius { get; } = RequirePositive(radius, nameof(radius));
     #endregion
 }

@@ -6,7 +6,6 @@ namespace Catharsis.Extensions;
 public static class TaskExtensions
 {
     #region Private methods
-
     ///<remarks>
     ///Validation lives in the synchronous <see cref="FireAndForget"/> wrapper because an <c>async void</c> method
     ///cannot throw synchronously to its caller: an exception thrown here would instead surface as an unhandled
@@ -17,7 +16,8 @@ public static class TaskExtensions
         try
         {
             await task.ConfigureAwait(false);
-        } catch(Exception ex) when(onException is not null)
+        }
+        catch(Exception ex) when(onException is not null)
         {
             onException(ex);
         }
@@ -25,9 +25,10 @@ public static class TaskExtensions
     #endregion
 
     #region Public methods
+
     ///<summary>
-    ///Observes the task's outcome without awaiting it, invoking <paramref name="onException"/> if it faults instead of
-    ///leaving the exception unobserved. If <paramref name="onException"/> is <c>null</c>, a fault propagates as an
+    ///Observes the task's outcome without awaiting it, invoking <paramref name="onException"/> if it faults instead
+    ///of leaving the exception unobserved. If <paramref name="onException"/> is <c>null</c>, a fault propagates as an
     ///unhandled exception rather than being silently swallowed.
     ///</summary>
     ///<remarks>
@@ -49,8 +50,8 @@ public static class TaskExtensions
     }
 
     ///<summary>
-    ///Waits for every task to complete, throwing the first exception encountered as soon as any task faults instead of
-    ///waiting for all of them and wrapping the failures in an <see cref="AggregateException"/>.
+    ///Waits for every task to complete, throwing the first exception encountered as soon as any task faults instead
+    ///of waiting for all of them and wrapping the failures in an <see cref="AggregateException"/>.
     ///</summary>
     ///<param name="tasks">The tasks to wait for.</param>
     ///<returns>A task that completes when every input task completes, or faults with the first observed exception.</returns>
@@ -62,7 +63,7 @@ public static class TaskExtensions
             throw new ArgumentNullException(nameof(tasks), "Tasks must not be null.");
         }
 
-        List<Task> remaining = [ .. tasks ];
+        List<Task> remaining = [.. tasks];
 
         while(remaining.Count > 0)
         {

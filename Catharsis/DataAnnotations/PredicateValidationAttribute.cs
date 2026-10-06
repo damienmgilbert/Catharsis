@@ -10,17 +10,22 @@ namespace Catharsis.DataAnnotations;
 ///cref="bool"/>.
 ///</summary>
 ///<remarks>
+///<para> The referenced method must be <c>public static</c> and have one of these signatures:</para> <list
+///type="bullet"><item><c>static bool MethodName(object? value)</c></item><item><c>static bool MethodName(T value)</c>
+///where T matches the property type</item></list> <para>A <c>null</c> value is passed through to the predicate.</para>
+///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = true)]
 public sealed class PredicateValidationAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="PredicateValidationAttribute"/>.
     ///</summary>
     ///<param name="validatorType">The type containing the predicate method.</param>
     ///<param name="methodName">The name of the <c>public static bool</c> method.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="validatorType"/> or <paramref name="methodName"/> is <c>null</c>.
+    ///</exception>
     public PredicateValidationAttribute(Type validatorType, string methodName) : base("The field {0} failed predicate validation ({1}.{2}).")
     {
         ArgumentNullException.ThrowIfNull(validatorType);
@@ -69,7 +74,7 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, ValidatorType.Name, MethodName);
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, ValidatorType.Name, MethodName); }
     #endregion
 
     #region Public properties

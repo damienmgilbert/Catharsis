@@ -6,7 +6,7 @@ namespace Catharsis.Buffers;
 ///A linked-list segment node used to construct a <see cref="ReadOnlySequence{T}"/>.
 ///</summary>
 ///<typeparam name="T">The element type.</typeparam>
-internal sealed class SequenceSegment<T> : ReadOnlySequenceSegment<T>
+sealed class SequenceSegment<T> : ReadOnlySequenceSegment<T>
 {
     #region Constructors
     public SequenceSegment(ReadOnlyMemory<T> memory, SequenceSegment<T>? previous)

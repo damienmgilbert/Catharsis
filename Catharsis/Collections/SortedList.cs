@@ -11,8 +11,8 @@ namespace Catharsis.Collections;
 public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
 {
     #region Fields
-    private readonly IComparer<T> _comparer;
-    private readonly List<T> _items = [];
+    readonly IComparer<T> _comparer;
+    readonly List<T> _items = [];
     #endregion
 
     #region Constructors
@@ -51,7 +51,7 @@ public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Public methods
@@ -72,16 +72,16 @@ public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
     }
 
     ///<inheritdoc/>
-    public void Clear() => _items.Clear();
+    public void Clear() { _items.Clear(); }
 
     ///<inheritdoc/>
-    public bool Contains(T item) => _items.BinarySearch(item, _comparer) >= 0;
+    public bool Contains(T item) { return _items.BinarySearch(item, _comparer) >= 0; }
 
     ///<inheritdoc/>
-    public void CopyTo(T[] array, int arrayIndex) => _items.CopyTo(array, arrayIndex);
+    public void CopyTo(T[] array, int arrayIndex) { _items.CopyTo(array, arrayIndex); }
 
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() { return _items.GetEnumerator(); }
 
     ///<summary>
     ///Returns the zero-based index of the first occurrence of the specified element using binary search.

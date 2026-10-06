@@ -9,8 +9,8 @@ namespace Catharsis.ComponentModel;
 public sealed class ComponentContainerSlim : IContainer
 {
     #region Fields
-    private bool _disposed;
-    private readonly List<ISite> _sites = [];
+    bool _disposed;
+    readonly List<ISite> _sites = [];
     #endregion
 
     #region Public methods
@@ -18,7 +18,7 @@ public sealed class ComponentContainerSlim : IContainer
     ///Adds a component to the container without a name.
     ///</summary>
     ///<param name="component">The component to add.</param>
-    public void Add(IComponent? component) => Add(component, null);
+    public void Add(IComponent? component) { Add(component, null); }
 
     ///<summary>
     ///Adds a component to the container with an optional name.
@@ -118,9 +118,9 @@ public sealed class ComponentContainerSlim : IContainer
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            IComponent[] components = [ .. _sites
+            IComponent[] components = [.. _sites
                 .Select(static s => s.Component)
-                .Where(static c => c is not null) ];
+                .Where(static c => c is not null)];
 
             return new ComponentCollection(components!);
         }
@@ -132,7 +132,7 @@ public sealed class ComponentContainerSlim : IContainer
     public int Count => _sites.Count;
     #endregion
 
-    private sealed class SlimSite(IContainer container, IComponent component, string? name) : ISite
+    sealed class SlimSite(IContainer container, IComponent component, string? name) : ISite
     {
         #region Public methods
         public object? GetService(Type serviceType)

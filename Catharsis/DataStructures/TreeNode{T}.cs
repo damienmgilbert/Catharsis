@@ -14,12 +14,15 @@ namespace Catharsis.DataStructures;
 public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
 {
     #region Fields
-    private readonly List<TreeNode<T>> _children = [];
+    readonly List<TreeNode<T>> _children = [];
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Public methods
@@ -104,7 +107,7 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
     ///Default enumeration uses pre-order depth-first traversal.
     ///</summary>
     ///<inheritdoc/>
-    public IEnumerator<TreeNode<T>> GetEnumerator() => DepthFirst().GetEnumerator();
+    public IEnumerator<TreeNode<T>> GetEnumerator() { return DepthFirst().GetEnumerator(); }
 
     ///<summary>
     ///Determines whether this node is a descendant of the specified <paramref name="ancestor"/>.

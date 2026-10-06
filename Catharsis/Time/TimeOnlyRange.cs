@@ -1,14 +1,13 @@
 namespace Catharsis.Time;
 
 ///<summary>
-///Represents a closed, inclusive range [<see cref="Start"/>, <see cref="End"/>] of <see cref="TimeOnly"/> values within
-///a single day. This does not model a range that wraps past midnight; <paramref name="start"/> and ///<paramref
-///name="end"/> are simply ordered like any other comparable bound.
+///Represents a closed, inclusive range [<see cref="Start"/>, <see cref="End"/>] of <see cref="TimeOnly"/> values
+///within a single day. This does not model a range that wraps past midnight; <paramref name="start"/> and
+///<paramref name="end"/> are simply ordered like any other comparable bound.
 ///</summary>
 public readonly struct TimeOnlyRange : IEquatable<TimeOnlyRange>
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new <see cref="TimeOnlyRange"/> with the specified bounds. If <paramref name="start"/> is later
     ///than <paramref name="end"/>, the values are swapped so the range is always well-formed.
@@ -31,20 +30,14 @@ public readonly struct TimeOnlyRange : IEquatable<TimeOnlyRange>
 
     #region Operators
     ///<summary>
-    ///Determines whether two ranges are not equal.
-    ///</summary>
-    public static bool operator !=(TimeOnlyRange left, TimeOnlyRange right)
-    {
-        return !left.Equals(right);
-    }
-
-    ///<summary>
     ///Determines whether two ranges are equal.
     ///</summary>
-    public static bool operator ==(TimeOnlyRange left, TimeOnlyRange right)
-    {
-        return left.Equals(right);
-    }
+    public static bool operator ==(TimeOnlyRange left, TimeOnlyRange right) => left.Equals(right);
+
+    ///<summary>
+    ///Determines whether two ranges are not equal.
+    ///</summary>
+    public static bool operator !=(TimeOnlyRange left, TimeOnlyRange right) => !left.Equals(right);
     #endregion
 
     #region Public methods
@@ -52,10 +45,7 @@ public readonly struct TimeOnlyRange : IEquatable<TimeOnlyRange>
     ///Determines whether the range contains the specified time.
     ///</summary>
     ///<param name="value">The time to test.</param>
-    ///<returns>
-    ///<c>true</c> if <paramref name="value"/> is within [<see cref="Start"/>, <see cref="End"/>]; otherwise
-    ///<c>false</c>.
-    ///</returns>
+    ///<returns><c>true</c> if <paramref name="value"/> is within [<see cref="Start"/>, <see cref="End"/>]; otherwise <c>false</c>.</returns>
     public bool Contains(TimeOnly value) => (Start <= value) && (value <= End);
 
     ///<inheritdoc/>

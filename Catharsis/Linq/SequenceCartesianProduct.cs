@@ -1,15 +1,15 @@
 namespace Catharsis.Linq;
 
 ///<summary>
-///Provides a cartesian product extension over a sequence of sequences: every combination formed by picking one element
-///from each.
+///Provides a cartesian product extension over a sequence of sequences: every combination formed by picking one
+///element from each.
 ///</summary>
 public static class SequenceCartesianProduct
 {
     #region Private methods
     private static IEnumerable<IReadOnlyList<T>> CartesianProductIterator<T>(IEnumerable<IEnumerable<T>> sequences)
     {
-        IReadOnlyList<T>[] materialized = [ .. sequences.Select(static s => (IReadOnlyList<T>)[ .. s ]) ];
+        IReadOnlyList<T>[] materialized = [.. sequences.Select(static s => (IReadOnlyList<T>)[.. s])];
 
         if(materialized.Length == 0)
         {
@@ -62,9 +62,9 @@ public static class SequenceCartesianProduct
 
     #region Public methods
     ///<summary>
-    ///Computes the cartesian product of the specified sequences: every combination formed by picking one element from
-    ///each sequence, in the order the sequences were supplied. Each source sequence is fully materialized since every
-    ///combination revisits every sequence; if any sequence is empty, the result is empty.
+    ///Computes the cartesian product of the specified sequences: every combination formed by picking one element
+    ///from each sequence, in the order the sequences were supplied. Each source sequence is fully materialized
+    ///since every combination revisits every sequence; if any sequence is empty, the result is empty.
     ///</summary>
     ///<typeparam name="T">The element type shared by every sequence.</typeparam>
     ///<param name="sequences">The sequences to combine.</param>

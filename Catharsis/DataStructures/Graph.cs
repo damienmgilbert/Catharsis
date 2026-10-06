@@ -10,7 +10,7 @@ namespace Catharsis.DataStructures;
 public sealed class Graph<T> : IEnumerable<T> where T : notnull
 {
     #region Fields
-    private readonly Dictionary<T, HashSet<T>> _adjacency;
+    readonly Dictionary<T, HashSet<T>> _adjacency;
     #endregion
 
     #region Constructors
@@ -33,13 +33,13 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
 
-        _adjacency = [ with(comparer) ];
+        _adjacency = [with(comparer)];
     }
     #endregion
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Public methods
@@ -69,7 +69,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
             return false;
         }
 
-        _adjacency[vertex] = [ with(_adjacency.Comparer) ];
+        _adjacency[vertex] = [with(_adjacency.Comparer)];
         return true;
     }
 
@@ -86,7 +86,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
 
-        HashSet<T> visited = [ with(_adjacency.Comparer) ];
+        HashSet<T> visited = [with(_adjacency.Comparer)];
         Queue<T> queue = new();
         queue.Enqueue(start);
         visited.Add(start);
@@ -109,14 +109,13 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<summary>
     ///Removes all vertices and edges from the graph.
     ///</summary>
-    public void Clear() => _adjacency.Clear();
-
+    public void Clear() { _adjacency.Clear(); }
     ///<summary>
     ///Determines whether the graph contains the specified vertex.
     ///</summary>
     ///<param name="vertex">The vertex to look for.</param>
     ///<returns><c>true</c> if the vertex exists; otherwise <c>false</c>.</returns>
-    public bool ContainsVertex(T vertex) => _adjacency.ContainsKey(vertex);
+    public bool ContainsVertex(T vertex) { return _adjacency.ContainsKey(vertex); }
 
     ///<summary>
     ///Enumerates vertices reachable from <paramref name="start"/> in depth-first order.
@@ -131,7 +130,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
 
-        HashSet<T> visited = [ with(_adjacency.Comparer) ];
+        HashSet<T> visited = [with(_adjacency.Comparer)];
         Stack<T> stack = new();
         stack.Push(start);
 
@@ -160,15 +159,14 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///Default enumeration returns all vertices.
     ///</summary>
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() => _adjacency.Keys.GetEnumerator();
-
+    public IEnumerator<T> GetEnumerator() { return _adjacency.Keys.GetEnumerator(); }
     ///<summary>
     ///Determines whether an edge exists from <paramref name="from"/> to <paramref name="to"/>.
     ///</summary>
     ///<param name="from">The source vertex.</param>
     ///<param name="to">The destination vertex.</param>
     ///<returns><c>true</c> if the edge exists; otherwise <c>false</c>.</returns>
-    public bool HasEdge(T from, T to) => _adjacency.TryGetValue(from, out HashSet<T>? edges) && edges.Contains(to);
+    public bool HasEdge(T from, T to) { return _adjacency.TryGetValue(from, out HashSet<T>? edges) && edges.Contains(to); }
 
     ///<summary>
     ///Returns the direct neighbors (successors) of the specified vertex.

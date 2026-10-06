@@ -15,10 +15,13 @@ namespace Catharsis.Patterns;
 public sealed class ImmutablePooledHybrid<T>(int initialCapacity = 256) : IDisposable
 {
     #region Fields
-    private bool _disposed;
-    private ImmutableBuffer<T> _frozen = ImmutableBuffer<T>.Empty;
-    private bool _isFrozen;
-    private readonly PooledBuffer<T> _mutableBuffer = new PooledBuffer<T>(initialCapacity);
+    bool _disposed;
+    ImmutableBuffer<T> _frozen = ImmutableBuffer<T>.Empty;
+    bool _isFrozen;
+    readonly PooledBuffer<T> _mutableBuffer = new PooledBuffer<T>(initialCapacity);
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Public methods

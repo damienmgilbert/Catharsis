@@ -31,8 +31,8 @@ public static class DictionaryExtensions
     }
 
     ///<summary>
-    ///Adds or updates the entry for <paramref name="key"/> using a factory for new values and an updater for existing
-    ///values.
+    ///Adds or updates the entry for <paramref name="key"/> using a factory for new values and an updater for
+    ///existing values.
     ///</summary>
     ///<typeparam name="TKey">The key type.</typeparam>
     ///<typeparam name="TValue">The value type.</typeparam>
@@ -146,7 +146,7 @@ public static class DictionaryExtensions
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        List<TKey> keys = [ .. source.Keys ];
+        List<TKey> keys = [.. source.Keys];
         foreach(TKey key in keys)
         {
             source[key] = modifier(key, source[key]);
@@ -182,7 +182,7 @@ public static class DictionaryExtensions
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        List<TKey> keysToModify = [ .. source.Where(predicate).Select(static kvp => kvp.Key) ];
+        List<TKey> keysToModify = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
         foreach(TKey key in keysToModify)
         {
             source[key] = modifier(key, source[key]);
@@ -245,7 +245,7 @@ public static class DictionaryExtensions
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        List<TKey> keysToRemove = [ .. source.Where(predicate).Select(static kvp => kvp.Key) ];
+        List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
         int removed = 0;
         foreach(TKey key in keysToRemove)
         {

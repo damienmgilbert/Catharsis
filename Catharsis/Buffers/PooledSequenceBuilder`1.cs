@@ -6,15 +6,18 @@ namespace Catharsis.Buffers;
 
 ///<summary>
 ///Builds a <see cref="ReadOnlySequence{T}"/> incrementally from pooled segments, minimizing allocations by renting from
+///<see cref="ArrayPool{T}"/>.
+///</summary>
+///<typeparam name="T">The type of elements in the sequence.</typeparam>
 public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
 {
     #region Fields
-    private T[]? _currentBuffer;
-    private int _currentOffset;
-    private readonly int _defaultSegmentSize;
-    private bool _disposed;
-    private readonly ArrayPool<T> _pool;
-    private readonly List<PooledSegment> _segments = [];
+    T[]? _currentBuffer;
+    int _currentOffset;
+    readonly int _defaultSegmentSize;
+    bool _disposed;
+    readonly ArrayPool<T> _pool;
+    readonly List<PooledSegment> _segments = [];
     #endregion
 
     #region Constructors
@@ -43,7 +46,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
 
     #region Private methods
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void EnsureBuffer(int sizeHint)
+    void EnsureBuffer(int sizeHint)
     {
         int required = Math.Max(sizeHint, 1);
         if((_currentBuffer is not null) && (_currentOffset + required <= _currentBuffer.Length))
@@ -57,7 +60,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         _currentOffset = 0;
     }
 
-    private void FlushCurrent()
+    void FlushCurrent()
     {
         if((_currentBuffer is not null) && (_currentOffset > 0))
         {
@@ -71,7 +74,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         }
     }
 
-    private void ReturnSegments()
+    void ReturnSegments()
     {
         foreach(PooledSegment seg in _segments)
         {
@@ -196,5 +199,5 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
     }
     #endregion
 
-    private readonly record struct PooledSegment(T[] Array, int Length);
+    readonly record struct PooledSegment(T[] Array, int Length);
 }

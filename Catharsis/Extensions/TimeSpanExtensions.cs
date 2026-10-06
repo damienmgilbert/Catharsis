@@ -4,8 +4,8 @@ using System.Text;
 namespace Catharsis.Extensions;
 
 ///<summary>
-///Provides extension methods for <see cref="TimeSpan"/>: clamping to a range and formatting as a short human-readable
-///duration.
+///Provides extension methods for <see cref="TimeSpan"/>: clamping to a range and formatting as a short
+///human-readable duration.
 ///</summary>
 public static class TimeSpanExtensions
 {
@@ -35,8 +35,8 @@ public static class TimeSpanExtensions
     }
 
     ///<summary>
-    ///Formats the duration as a short human-readable string using its two largest non-zero units, e.g. ///<c>"2h
-    ///15m"</c> or <c>"3d 4h"</c>. A zero duration formats as <c>"0s"</c>.
+    ///Formats the duration as a short human-readable string using its two largest non-zero units, e.g.
+    ///<c>"2h 15m"</c> or <c>"3d 4h"</c>. A zero duration formats as <c>"0s"</c>.
     ///</summary>
     ///<param name="value">The duration to format.</param>
     ///<returns>The formatted duration.</returns>
@@ -44,7 +44,13 @@ public static class TimeSpanExtensions
     {
         TimeSpan absolute = value.Duration();
 
-        (int Amount, string Unit)[] parts =[ ((int)absolute.TotalDays, "d"), (absolute.Hours, "h"), (absolute.Minutes, "m"), (absolute.Seconds, "s"), ];
+        (int Amount, string Unit)[] parts =
+        [
+            ((int)absolute.TotalDays, "d"),
+            (absolute.Hours, "h"),
+            (absolute.Minutes, "m"),
+            (absolute.Seconds, "s"),
+        ];
 
         StringBuilder builder = new();
         int used = 0;

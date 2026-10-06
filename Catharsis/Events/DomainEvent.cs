@@ -7,7 +7,6 @@ namespace Catharsis.Events;
 public abstract record DomainEvent
 {
     #region Public properties
-
     ///<summary>
     ///Gets the instant this event occurred. Defaults to the moment the event is constructed.
     ///</summary>

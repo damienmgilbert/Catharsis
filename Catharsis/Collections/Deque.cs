@@ -9,13 +9,13 @@ namespace Catharsis.Collections;
 public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     #region Constants
-    private const int DefaultCapacity = 4;
+    const int DefaultCapacity = 4;
     #endregion
 
     #region Fields
-    private T[] _buffer;
-    private int _count;
-    private int _head;
+    T[] _buffer;
+    int _count;
+    int _head;
     #endregion
 
     #region Constructors
@@ -65,11 +65,11 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Private methods
-    private void EnsureCapacity()
+    void EnsureCapacity()
     {
         if(_count < _buffer.Length)
         {

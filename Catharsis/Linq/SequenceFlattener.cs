@@ -11,16 +11,16 @@ public static class SequenceFlattener
     {
         Stack<T> stack = new(source.Reverse());
 
-        while(stack.Count > 0)
+        while (stack.Count > 0)
         {
             T current = stack.Pop();
             yield return current;
 
             IEnumerable<T>? children = childrenSelector(current);
 
-            if(children is not null)
+            if (children is not null)
             {
-                foreach(T child in children.Reverse())
+                foreach (T child in children.Reverse())
                 {
                     stack.Push(child);
                 }
@@ -32,16 +32,16 @@ public static class SequenceFlattener
     {
         Queue<T> queue = new(source);
 
-        while(queue.Count > 0)
+        while (queue.Count > 0)
         {
             T current = queue.Dequeue();
             yield return current;
 
             IEnumerable<T>? children = childrenSelector(current);
 
-            if(children is not null)
+            if (children is not null)
             {
-                foreach(T child in children)
+                foreach (T child in children)
                 {
                     queue.Enqueue(child);
                 }
@@ -53,21 +53,21 @@ public static class SequenceFlattener
     {
         Queue<(T Element, int Depth)> queue = new();
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             queue.Enqueue((item, 0));
         }
 
-        while(queue.Count > 0)
+        while (queue.Count > 0)
         {
             (T current, int depth) = queue.Dequeue();
             yield return (current, depth);
 
             IEnumerable<T>? children = childrenSelector(current);
 
-            if(children is not null)
+            if (children is not null)
             {
-                foreach(T child in children)
+                foreach (T child in children)
                 {
                     queue.Enqueue((child, depth + 1));
                 }

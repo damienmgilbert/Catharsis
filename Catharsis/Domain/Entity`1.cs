@@ -6,13 +6,11 @@ namespace Catharsis.Domain;
 ///reassigned, which keeps it stable for use as a dictionary key.
 ///</summary>
 ///<typeparam name="TId">The identity type.</typeparam>
-public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull, IEquatable<TId>
+public abstract class Entity<TId> : IEquatable<Entity<TId>>
+    where TId : notnull, IEquatable<TId>
 {
     #region Constructors
-
-    ///<summary>
-    ///Initializes a new entity.
-    ///</summary>
+    ///<summary>Initializes a new entity.</summary>
     ///<param name="id">The identity. Must not be <c>null</c>.</param>
     ///<exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
     protected Entity(TId id)
@@ -24,21 +22,11 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull,
     #endregion
 
     #region Operators
-    ///<summary>
-    ///Determines whether two entities are different entities.
-    ///</summary>
-    public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
-    {
-        return !(left == right);
-    }
+    ///<summary>Determines whether two entities are the same entity.</summary>
+    public static bool operator ==(Entity<TId>? left, Entity<TId>? right) => left is null ? right is null : left.Equals(right);
 
-    ///<summary>
-    ///Determines whether two entities are the same entity.
-    ///</summary>
-    public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
-    {
-        return left is null ? right is null : left.Equals(right);
-    }
+    ///<summary>Determines whether two entities are different entities.</summary>
+    public static bool operator !=(Entity<TId>? left, Entity<TId>? right) => !(left == right);
     #endregion
 
     #region Public methods
@@ -53,9 +41,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull,
     #endregion
 
     #region Public properties
-    ///<summary>
-    ///Gets the identity.
-    ///</summary>
+    ///<summary>Gets the identity.</summary>
     public TId Id { get; }
     #endregion
 }

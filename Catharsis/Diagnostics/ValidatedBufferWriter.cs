@@ -11,9 +11,9 @@ namespace Catharsis.Diagnostics;
 public sealed class ValidatedBufferWriter<T> : IBufferWriter<T>
 {
     #region Fields
-    private readonly IBufferWriter<T> _inner;
-    private int _lastSpanSize;
-    private int _pendingAdvance;
+    readonly IBufferWriter<T> _inner;
+    int _lastSpanSize;
+    int _pendingAdvance;
     #endregion
 
     #region Constructors

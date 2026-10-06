@@ -9,7 +9,7 @@ namespace Catharsis.Collections;
 public sealed class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
 {
     #region Fields
-    private readonly List<T> _items = [];
+    readonly List<T> _items = [];
     #endregion
 
     #region Events
@@ -31,7 +31,7 @@ public sealed class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     #endregion
 
     #region Public methods
@@ -55,13 +55,11 @@ public sealed class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     }
 
     ///<inheritdoc/>
-    public bool Contains(T item) => _items.Contains(item);
-
+    public bool Contains(T item) { return _items.Contains(item); }
     ///<inheritdoc/>
-    public void CopyTo(T[] array, int arrayIndex) => _items.CopyTo(array, arrayIndex);
-
+    public void CopyTo(T[] array, int arrayIndex) { _items.CopyTo(array, arrayIndex); }
     ///<inheritdoc/>
-    public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() { return _items.GetEnumerator(); }
 
     ///<summary>
     ///Removes the first occurrence of an item from the collection and raises <see cref="ItemRemoved"/> if successful.

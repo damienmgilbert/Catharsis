@@ -9,11 +9,11 @@ namespace Catharsis.HighPerformance;
 public sealed class MemoryMappedSpanAccessor : IDisposable
 {
     #region Fields
-    private readonly MemoryMappedViewAccessor _accessor;
-    private bool _disposed;
-    private readonly MemoryMappedFile _file;
-    private readonly int _length;
-    private readonly long _offset;
+    readonly MemoryMappedViewAccessor _accessor;
+    bool _disposed;
+    readonly MemoryMappedFile _file;
+    readonly int _length;
+    readonly long _offset;
     #endregion
 
     #region Constructors

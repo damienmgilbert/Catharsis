@@ -1,19 +1,24 @@
 namespace Catharsis.Resilience;
 
 ///<summary>
-///Wraps an operation with a fallback value or delegate that runs when the operation fails, so that callers can degrade
-///gracefully instead of propagating the failure.
+///Wraps an operation with a fallback value or delegate that runs when the operation fails, so that callers can
+///degrade gracefully instead of propagating the failure.
 ///</summary>
 ///<typeparam name="TResult">The result type produced by the operation and its fallback.</typeparam>
-///<param name="predicate">
-///A predicate that returns <c>true</c> if the exception should trigger the fallback, or <c>null</c> to fall back on any
-///exception.
-///</param>
+///<param name="predicate">A predicate that returns <c>true</c> if the exception should trigger the fallback, or <c>null</c> to fall back on any exception.</param>
 ///<example>
+///<code>
+///FallbackPolicy&lt;string&gt; policy = new();
+///string result = await policy.ExecuteAsync(
+///    async ct => await httpClient.GetStringAsync(url, ct),
+///    ex => Task.FromResult("(unavailable)"),
+///    cancellationToken);
+///</code>
+///</example>
 public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = null)
 {
     #region Fields
-    private readonly Func<Exception, bool> _predicate = predicate ?? (static _ => true);
+    readonly Func<Exception, bool> _predicate = predicate ?? (static _ => true);
     #endregion
 
     #region Public methods
@@ -41,7 +46,8 @@ public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = n
         try
         {
             return operation();
-        } catch(Exception ex) when(_predicate(ex))
+        }
+        catch(Exception ex) when(_predicate(ex))
         {
             return fallback(ex);
         }
@@ -55,7 +61,8 @@ public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = n
     ///<param name="cancellationToken">A cancellation token passed to the operation.</param>
     ///<returns>The result of the operation, or <paramref name="fallbackValue"/> on a matching failure.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="operation"/> is <c>null</c>.</exception>
-    public Task<TResult> ExecuteAsync(Func<CancellationToken, Task<TResult>> operation, TResult fallbackValue, CancellationToken cancellationToken = default) => ExecuteAsync(operation, _ => Task.FromResult(fallbackValue), cancellationToken);
+    public Task<TResult> ExecuteAsync(Func<CancellationToken, Task<TResult>> operation, TResult fallbackValue, CancellationToken cancellationToken = default) =>
+        ExecuteAsync(operation, _ => Task.FromResult(fallbackValue), cancellationToken);
 
     ///<summary>
     ///Asynchronously executes the specified operation, invoking the fallback delegate on a matching failure.
@@ -73,7 +80,8 @@ public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = n
         try
         {
             return await operation(cancellationToken).ConfigureAwait(false);
-        } catch(Exception ex) when(ex is not OperationCanceledException && _predicate(ex))
+        }
+        catch(Exception ex) when(ex is not OperationCanceledException && _predicate(ex))
         {
             return await fallback(ex).ConfigureAwait(false);
         }

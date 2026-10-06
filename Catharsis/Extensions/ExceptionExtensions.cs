@@ -1,13 +1,13 @@
 namespace Catharsis.Extensions;
 
 ///<summary>
-///Provides extension methods for <see cref="Exception"/> that walk or flatten exception chains, useful for logging and
-///root-cause analysis.
+///Provides extension methods for <see cref="Exception"/> that walk or flatten exception chains, useful for logging
+///and root-cause analysis.
 ///</summary>
 public static class ExceptionExtensions
 {
     #region Private methods
-    private static IEnumerable<Exception> FlattenIterator(Exception exception)
+    static IEnumerable<Exception> FlattenIterator(Exception exception)
     {
         yield return exception;
 
@@ -31,6 +31,7 @@ public static class ExceptionExtensions
     #endregion
 
     #region Public methods
+
     ///<summary>
     ///Flattens an exception into itself plus every exception it wraps: for an <see cref="AggregateException"/>, its
     ///flattened inner exceptions; otherwise, the chain of <see cref="Exception.InnerException"/> values.
@@ -71,8 +72,9 @@ public static class ExceptionExtensions
     }
 
     ///<summary>
-    ///Walks to the innermost exception in the chain: for an <see cref="AggregateException"/>, the innermost exception
-    ///of its first flattened inner exception; otherwise, the end of the <see cref="Exception.InnerException"/> chain.
+    ///Walks to the innermost exception in the chain: for an <see cref="AggregateException"/>, the innermost
+    ///exception of its first flattened inner exception; otherwise, the end of the <see
+    ///cref="Exception.InnerException"/> chain.
     ///</summary>
     ///<param name="exception">The exception to walk.</param>
     ///<returns>The innermost (root cause) exception.</returns>

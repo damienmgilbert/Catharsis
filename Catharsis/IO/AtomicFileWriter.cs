@@ -1,15 +1,15 @@
 namespace Catharsis.IO;
 
 ///<summary>
-///Writes a file "atomically" by first writing to a temporary file in the same directory as the target, then renaming it
-///into place. A reader can never observe a partially written file: it either sees the previous contents or the complete
-///new contents, never something in between. If the write fails, the target file is left untouched and the temporary
-///file is cleaned up.
+///Writes a file "atomically" by first writing to a temporary file in the same directory as the target, then
+///renaming it into place. A reader can never observe a partially written file: it either sees the previous
+///contents or the complete new contents, never something in between. If the write fails, the target file is left
+///untouched and the temporary file is cleaned up.
 ///</summary>
 public static class AtomicFileWriter
 {
     #region Private methods
-    private static string CreateTempPath(string path) => $"{path}.{Guid.NewGuid():N}.tmp";
+    static string CreateTempPath(string path) => $"{path}.{Guid.NewGuid():N}.tmp";
     #endregion
 
     #region Public methods

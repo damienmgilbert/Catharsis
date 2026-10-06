@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Structural;
 public class CompositePattern
 {
     #region Public methods
-
     ///<summary>
     ///Composite — applies <paramref name="action"/> to <paramref name="obj"/> and recursively to all descendants
     ///returned by <paramref name="getChildren"/> in a pre-order depth-first traversal.

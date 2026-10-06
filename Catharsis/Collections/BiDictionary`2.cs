@@ -3,18 +3,19 @@ using System.Diagnostics.CodeAnalysis;
 namespace Catharsis.Collections;
 
 ///<summary>
-///A two-way dictionary that maps left values to right values and right values back to left values, with both directions
-///kept in sync. Each value may appear at most once on its side.
+///A two-way dictionary that maps left values to right values and right values back to left values, with both
+///directions kept in sync. Each value may appear at most once on its side.
 ///</summary>
 ///<typeparam name="TLeft">The type of the left-side values.</typeparam>
 ///<typeparam name="TRight">The type of the right-side values.</typeparam>
 ///<param name="leftComparer">The equality comparer used to match left values, or <c>null</c> to use the default comparer.</param>
 ///<param name="rightComparer">The equality comparer used to match right values, or <c>null</c> to use the default comparer.</param>
-public sealed class BiDictionary<TLeft, TRight>(IEqualityComparer<TLeft>? leftComparer = null, IEqualityComparer<TRight>? rightComparer = null) where TLeft : notnull where TRight : notnull
+public sealed class BiDictionary<TLeft, TRight>(IEqualityComparer<TLeft>? leftComparer = null, IEqualityComparer<TRight>? rightComparer = null)
+    where TLeft : notnull where TRight : notnull
 {
     #region Fields
-    private readonly Dictionary<TLeft, TRight> _forward = new(leftComparer);
-    private readonly Dictionary<TRight, TLeft> _reverse = new(rightComparer);
+    readonly Dictionary<TLeft, TRight> _forward = new(leftComparer);
+    readonly Dictionary<TRight, TLeft> _reverse = new(rightComparer);
     #endregion
 
     #region Public methods

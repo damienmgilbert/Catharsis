@@ -5,10 +5,14 @@ namespace Catharsis.ComponentModel;
 ///components to be returned to a pool and reused without reallocation.
 ///</summary>
 ///<remarks>
+///<para> When a component is returned to the pool, <see cref="Reset"/> is called to restore it to a clean state.
+///Subclasses must override<see cref="OnReset"/> to clear instance-specific state.</para> <para> The <see
+///cref="IsActive"/> property indicates whether the component is currently leased from the pool.</para>
+///</remarks>
 public abstract class PooledComponent : ComponentBase
 {
     #region Fields
-    private int _leaseVersion;
+    int _leaseVersion;
     #endregion
 
     #region Protected methods

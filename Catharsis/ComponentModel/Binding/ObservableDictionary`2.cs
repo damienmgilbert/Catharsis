@@ -12,11 +12,15 @@ namespace Catharsis.ComponentModel.Binding;
 ///<typeparam name="TKey">The type of keys in the dictionary.</typeparam>
 ///<typeparam name="TValue">The type of values in the dictionary.</typeparam>
 ///<remarks>
+///<para> This class wraps a standard <see cref="Dictionary{TKey, TValue}"/> and raises <see cref="CollectionChanged"/>
+///for each mutation. For bulk updates, use <see cref="SuppressNotifications"/> to defer a single<see
+///cref="NotifyCollectionChangedAction.Reset"/> until the scope is disposed.</para>
+///</remarks>
 public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged where TKey : notnull
 {
     #region Fields
-    private readonly Dictionary<TKey, TValue> _dictionary;
-    private int _suppressionCount;
+    readonly Dictionary<TKey, TValue> _dictionary;
+    int _suppressionCount;
     #endregion
 
     #region Constructors
@@ -28,7 +32,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///Initializes a new instance of <see cref="ObservableDictionary{TKey, TValue}"/> with the specified comparer.
     ///</summary>
     ///<param name="comparer">The key comparer.</param>
-    public ObservableDictionary(IEqualityComparer<TKey> comparer) { _dictionary = [ with(comparer) ]; }
+    public ObservableDictionary(IEqualityComparer<TKey> comparer) { _dictionary = [with(comparer)]; }
 
     ///<summary>
     ///Initializes a new instance of <see cref="ObservableDictionary{TKey, TValue}"/> with entries copied from the
@@ -36,10 +40,12 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///</summary>
     ///<param name="dictionary">The source dictionary.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="dictionary"/> is <c>null</c>.
+    ///</exception>
     public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
     {
         ArgumentNullException.ThrowIfNull(dictionary);
-        _dictionary = [ with(dictionary) ];
+        _dictionary = [with(dictionary)];
     }
     #endregion
 
@@ -79,13 +85,11 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
 
     #region Explicit interface implementations
     ///<inheritdoc/>
-    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
-
+    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) { Add(item.Key, item.Value); }
     ///<inheritdoc/>
-    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
-
+    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) { return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item); }
     ///<inheritdoc/>
-    void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex); }
 
     ///<inheritdoc/>
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
@@ -104,7 +108,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
     ///<inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
     ///<inheritdoc/>
     IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => _dictionary.Keys;
@@ -114,7 +118,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     #endregion
 
     #region Private methods
-    private void OnCountChanged()
+    void OnCountChanged()
     {
         OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         OnPropertyChanged(new PropertyChangedEventArgs(nameof(Keys)));
@@ -171,10 +175,9 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     }
 
     ///<inheritdoc/>
-    public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
-
+    public bool ContainsKey(TKey key) { return _dictionary.ContainsKey(key); }
     ///<inheritdoc/>
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return _dictionary.GetEnumerator(); }
 
     ///<inheritdoc/>
     public bool Remove(TKey key)
@@ -195,10 +198,9 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///cref="NotifyCollectionChangedAction.Reset"/> is raised when the outermost scope ends.
     ///</summary>
     ///<returns>An <see cref="IDisposable"/> suppression scope.</returns>
-    public IDisposable SuppressNotifications() => new SuppressionScope(this);
-
+    public IDisposable SuppressNotifications() { return new SuppressionScope(this); }
     ///<inheritdoc/>
-    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) { return _dictionary.TryGetValue(key, out value); }
     #endregion
 
     #region Public properties
@@ -212,11 +214,11 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     public ICollection<TValue> Values => _dictionary.Values;
     #endregion
 
-    private sealed class SuppressionScope : IDisposable
+    sealed class SuppressionScope : IDisposable
     {
         #region Fields
-        private bool _disposed;
-        private readonly ObservableDictionary<TKey, TValue> _owner;
+        bool _disposed;
+        readonly ObservableDictionary<TKey, TValue> _owner;
         #endregion
 
         #region Constructors

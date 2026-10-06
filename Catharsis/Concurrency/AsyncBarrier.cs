@@ -1,20 +1,20 @@
 namespace Catharsis.Concurrency;
 
 ///<summary>
-///An async-friendly cyclic barrier, analogous to <see cref="Barrier"/> but awaitable without blocking a thread. Once
-///every participant has called <see cref="SignalAndWaitAsync"/> for the current phase, all of them are released
-///together and the barrier automatically resets for the next phase.
+///An async-friendly cyclic barrier, analogous to <see cref="Barrier"/> but awaitable without blocking a thread.
+///Once every participant has called <see cref="SignalAndWaitAsync"/> for the current phase, all of them are
+///released together and the barrier automatically resets for the next phase.
 ///</summary>
 public sealed class AsyncBarrier
 {
     #region Fields
-    private readonly Lock _gate = new();
-    private readonly int _participantCount;
-    private TaskCompletionSource _phase = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private int _remaining;
+    readonly Lock _gate = new();
+    readonly int _participantCount;
+    int _remaining;
+    TaskCompletionSource _phase = new(TaskCreationOptions.RunContinuationsAsynchronously);
     #endregion
 
-    #region Constructors
+    #region Public methods
     ///<summary>
     ///Creates a barrier for the specified number of participants.
     ///</summary>
@@ -30,9 +30,7 @@ public sealed class AsyncBarrier
         _participantCount = participantCount;
         _remaining = participantCount;
     }
-    #endregion
 
-    #region Public methods
     ///<summary>
     ///Signals arrival at the current phase and waits for every other participant to arrive. The last participant to
     ///arrive releases everyone and starts the next phase.

@@ -10,7 +10,7 @@ namespace Catharsis.Advanced;
 public readonly struct SequenceSlice<T>
 {
     #region Struct fields
-    private readonly ReadOnlySequence<T> _source;
+    readonly ReadOnlySequence<T> _source;
     #endregion
 
     #region Constructors
@@ -33,7 +33,7 @@ public readonly struct SequenceSlice<T>
     ///Copies the slice data to the specified span.
     ///</summary>
     ///<param name="destination">The destination span.</param>
-    public void CopyTo(Span<T> destination) => _source.CopyTo(destination);
+    public void CopyTo(Span<T> destination) { _source.CopyTo(destination); }
 
     ///<summary>
     ///Returns a sub-slice of this slice.

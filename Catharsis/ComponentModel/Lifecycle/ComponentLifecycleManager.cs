@@ -7,13 +7,17 @@ namespace Catharsis.ComponentModel.Lifecycle;
 ///deactivation, and disposal in dependency-aware topological order.
 ///</summary>
 ///<remarks>
+///<para> Each component is associated with a <see cref="ComponentStateMachine"/>. The manager walks the graph in
+///topological order for activation and in reverse topological order for deactivation and disposal, invoking lifecycle
+///callbacks on components that implement <see cref="ISupportInitialize"/>.</para>
+///</remarks>
 public sealed class ComponentLifecycleManager : IDisposable
 {
     #region Fields
-    private bool _disposed;
-    private readonly ComponentGraph _graph;
-    private readonly Dictionary<IComponent, ComponentStateMachine> _machines = [];
-    private readonly IServiceProvider? _serviceProvider;
+    bool _disposed;
+    readonly ComponentGraph _graph;
+    readonly Dictionary<IComponent, ComponentStateMachine> _machines = [];
+    readonly IServiceProvider? _serviceProvider;
     #endregion
 
     #region Constructors
@@ -23,6 +27,8 @@ public sealed class ComponentLifecycleManager : IDisposable
     ///<param name="graph">The component dependency graph.</param>
     ///<param name="serviceProvider">An optional service provider for activation contexts.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="graph"/> is <c>null</c>.
+    ///</exception>
     public ComponentLifecycleManager(ComponentGraph graph, IServiceProvider? serviceProvider = null)
     {
         ArgumentNullException.ThrowIfNull(graph);
@@ -38,7 +44,7 @@ public sealed class ComponentLifecycleManager : IDisposable
     #endregion
 
     #region Private methods
-    private void ActivateNode(ComponentGraphNode node)
+    void ActivateNode(ComponentGraphNode node)
     {
         ComponentStateMachine machine = _machines[node.Component];
 
@@ -54,9 +60,9 @@ public sealed class ComponentLifecycleManager : IDisposable
         node.State = ComponentState.Active;
     }
 
-    private ComponentActivationContext CreateContext(ComponentGraphNode node, ComponentState targetState) => new ComponentActivationContext(node.Component, _serviceProvider) { CurrentState = node.State, TargetState = targetState };
+    ComponentActivationContext CreateContext(ComponentGraphNode node, ComponentState targetState) { return new ComponentActivationContext(node.Component, _serviceProvider) { CurrentState = node.State, TargetState = targetState }; }
 
-    private void DeactivateNode(ComponentGraphNode node)
+    void DeactivateNode(ComponentGraphNode node)
     {
         ComponentStateMachine machine = _machines[node.Component];
 
@@ -72,7 +78,7 @@ public sealed class ComponentLifecycleManager : IDisposable
         node.State = ComponentState.Deactivated;
     }
 
-    private void InitializeNode(ComponentGraphNode node)
+    void InitializeNode(ComponentGraphNode node)
     {
         ComponentStateMachine machine = _machines[node.Component];
 
@@ -98,6 +104,11 @@ public sealed class ComponentLifecycleManager : IDisposable
     ///</summary>
     ///<param name="component">The component to activate.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
+    ///<exception cref="InvalidOperationException">
+    ///The component's dependencies are not satisfied.
+    ///</exception>
     public void Activate(IComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);
@@ -224,6 +235,8 @@ public sealed class ComponentLifecycleManager : IDisposable
     ///</summary>
     ///<param name="component">The component to initialize.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public void Initialize(IComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);

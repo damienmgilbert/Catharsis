@@ -10,14 +10,10 @@ namespace Catharsis.Patterns.Composed;
 public sealed record PolicyMetrics(long Executions, long Failures, long Cancellations, TimeSpan TotalDuration)
 {
     #region Public properties
-    ///<summary>
-    ///Gets the mean running time, or <see cref="TimeSpan.Zero"/> when nothing has run.
-    ///</summary>
-    public TimeSpan AverageDuration => Executions == 0 ? TimeSpan.Zero : TotalDuration / Executions;
-
-    ///<summary>
-    ///Gets the executions that completed normally.
-    ///</summary>
+    ///<summary>Gets the executions that completed normally.</summary>
     public long Successes => Executions - Failures - Cancellations;
+
+    ///<summary>Gets the mean running time, or <see cref="TimeSpan.Zero"/> when nothing has run.</summary>
+    public TimeSpan AverageDuration => Executions == 0 ? TimeSpan.Zero : TotalDuration / Executions;
     #endregion
 }

@@ -2,6 +2,8 @@ namespace Catharsis.Extensions;
 
 ///<summary>
 ///Provides fluent <c>Map</c>/<c>Match</c> extension methods for <see cref="Nullable{T}"/>, in the style of an
+///<c>Option</c> type from functional languages.
+///</summary>
 public static class NullableExtensions
 {
     #region Public methods
@@ -13,10 +15,7 @@ public static class NullableExtensions
     ///<typeparam name="TResult">The projected value type.</typeparam>
     ///<param name="value">The nullable source value.</param>
     ///<param name="map">A function projecting the value, if present.</param>
-    ///<returns>
-    ///The projected value wrapped in a <see cref="Nullable{TResult}"/>, or <c>null</c> if <paramref name="value"/> has
-    ///no value.
-    ///</returns>
+    ///<returns>The projected value wrapped in a <see cref="Nullable{TResult}"/>, or <c>null</c> if <paramref name="value"/> has no value.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="map"/> is <c>null</c>.</exception>
     public static TResult? Map<T, TResult>(this T? value, Func<T, TResult> map) where T : struct where TResult : struct
     {

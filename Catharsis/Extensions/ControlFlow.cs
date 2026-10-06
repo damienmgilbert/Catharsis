@@ -1,4 +1,4 @@
-namespace Catharsis.Extensions;
+﻿namespace Catharsis.Extensions;
 
 ///<summary>
 ///Provides fluent flow-control extension methods for any type. These helpers allow conditional execution and loop-style
@@ -447,7 +447,7 @@ public static class ControlFlow
     ///The result of <paramref name="action"/> when the condition is <c>true</c>; otherwise the original <paramref
     ///name="obj"/>.
     ///</returns>
-    public static T ReturnIf<T>(this T obj, Func<T, bool> condition, Func<T, T> action) => condition(obj) ? action(obj) : obj;
+    public static T ReturnIf<T>(this T obj, Func<T, bool> condition, Func<T, T> action) { return condition(obj) ? action(obj) : obj; }
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
@@ -503,7 +503,7 @@ public static class ControlFlow
     ///<param name="ifAction">The function to execute when the condition is <c>true</c>.</param>
     ///<param name="elseAction">The function to execute when the condition is <c>false</c>.</param>
     ///<returns>The result of the selected function.</returns>
-    public static T ReturnIfElse<T>(this T obj, Func<T, bool> condition, Func<T, T> ifAction, Func<T, T> elseAction) => condition(obj) ? ifAction(obj) : elseAction(obj);
+    public static T ReturnIfElse<T>(this T obj, Func<T, bool> condition, Func<T, T> ifAction, Func<T, T> elseAction) { return condition(obj) ? ifAction(obj) : elseAction(obj); }
 
     ///<summary>
     ///Asynchronously returns the result of either <paramref name="ifAction"/> or <paramref name="elseAction"/>
@@ -576,7 +576,7 @@ public static class ControlFlow
     ///The result of <paramref name="action"/> when the condition is <c>false</c>; otherwise the original <paramref
     ///name="obj"/>.
     ///</returns>
-    public static T ReturnIfNot<T>(this T obj, Func<T, bool> condition, Func<T, T> action) => (!condition(obj)) ? action(obj) : obj;
+    public static T ReturnIfNot<T>(this T obj, Func<T, bool> condition, Func<T, T> action) { return (!condition(obj)) ? action(obj) : obj; }
 
     ///<summary>
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
@@ -635,7 +635,7 @@ public static class ControlFlow
     ///<remarks>
     ///This method is constrained to reference types by <c>where T : class</c>.
     ///</remarks>
-    public static T ReturnIfNull<T>(this T obj, Func<T> action) where T : class? => obj ?? action();
+    public static T ReturnIfNull<T>(this T obj, Func<T> action) where T : class? { return obj ?? action(); }
 
     ///<summary>
     ///Asynchronously returns the original object if it is not <c>null</c>; otherwise returns the result of <paramref

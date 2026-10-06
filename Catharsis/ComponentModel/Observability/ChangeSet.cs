@@ -5,11 +5,15 @@ namespace Catharsis.ComponentModel.Observability;
 ///filtered, and applied as a unit.
 ///</summary>
 ///<remarks>
+///<see cref="ChangeSet"/> supports undo/redo by maintaining separate stacks for uncommitted and undone changes. Use
+///<see cref="Record"/> to add changes, <see cref="Undo"/> and <see cref="Redo"/> to navigate the history, and <see
+///cref="AcceptAll"/> to commit changes.
+///</remarks>
 public sealed class ChangeSet
 {
     #region Fields
-    private readonly Stack<ChangeEntry> _redoStack = new();
-    private readonly Stack<ChangeEntry> _undoStack = new();
+    readonly Stack<ChangeEntry> _redoStack = new();
+    readonly Stack<ChangeEntry> _undoStack = new();
     #endregion
 
     #region Public methods
@@ -35,7 +39,7 @@ public sealed class ChangeSet
     ///Gets all uncommitted changes in chronological order (oldest first).
     ///</summary>
     ///<returns>A read-only list of change entries.</returns>
-    public IReadOnlyList<ChangeEntry> GetAll() => [ .. _undoStack.Reverse() ];
+    public IReadOnlyList<ChangeEntry> GetAll() { return [.. _undoStack.Reverse()]; }
 
     ///<summary>
     ///Gets all uncommitted changes for the specified property.
@@ -46,9 +50,9 @@ public sealed class ChangeSet
     {
         ArgumentNullException.ThrowIfNull(propertyName);
 
-        return[ .. _undoStack
+        return [.. _undoStack
             .Where(e => string.Equals(e.PropertyName, propertyName, StringComparison.Ordinal))
-            .Reverse() ];
+            .Reverse()];
     }
 
     ///<summary>
@@ -56,6 +60,8 @@ public sealed class ChangeSet
     ///</summary>
     ///<param name="entry">The change entry to record.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="entry"/> is <c>null</c>.
+    ///</exception>
     public void Record(ChangeEntry entry)
     {
         ArgumentNullException.ThrowIfNull(entry);

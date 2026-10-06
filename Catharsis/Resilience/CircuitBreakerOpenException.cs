@@ -5,14 +5,14 @@ namespace Catharsis.Resilience;
 ///</summary>
 public sealed class CircuitBreakerOpenException : Exception
 {
-    #region Constructors
-
+    #region Public methods
     ///<summary>
     ///Creates an instance with a default message.
     ///</summary>
     public CircuitBreakerOpenException() : base("The circuit breaker is open.")
     {
     }
+
     ///<summary>
     ///Creates an instance with the specified message.
     ///</summary>
@@ -20,6 +20,7 @@ public sealed class CircuitBreakerOpenException : Exception
     public CircuitBreakerOpenException(string message) : base(message)
     {
     }
+
     ///<summary>
     ///Creates an instance with the specified message and inner exception.
     ///</summary>

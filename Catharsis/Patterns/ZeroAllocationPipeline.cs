@@ -11,7 +11,6 @@ namespace Catharsis.Patterns;
 public static class ZeroAllocationPipeline
 {
     #region Public methods
-
     ///<summary>
     ///Parses a sequence of fixed-format records from a byte span with zero heap allocation. Each record is: [int32
     ///Id][double Value][int64 Timestamp] = 20 bytes.

@@ -6,10 +6,9 @@ namespace Catharsis.DesignPatterns.Enterprise;
 public class NullObjectPattern
 {
     #region Public methods
-
     ///<summary>
-    ///Null Object — returns <paramref name="value"/> if it is not <c>null</c>, otherwise a do-nothing stand-in produced
-    ///by <paramref name="nullObjectFactory"/>, so callers never need to null-check the result.
+    ///Null Object — returns <paramref name="value"/> if it is not <c>null</c>, otherwise a do-nothing stand-in
+    ///produced by <paramref name="nullObjectFactory"/>, so callers never need to null-check the result.
     ///</summary>
     ///<typeparam name="T">The type of the value.</typeparam>
     ///<param name="value">The value to use, or <c>null</c> to fall back to the null object.</param>

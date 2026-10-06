@@ -6,10 +6,18 @@ namespace Catharsis.ComponentModel.Binding;
 
 ///<summary>
 ///An observable list that implements <see cref="INotifyCollectionChanged"/>, <see cref="INotifyPropertyChanged"/>, and
+///<see cref="IBindingList"/> to support data-binding in UI frameworks.
+///</summary>
+///<typeparam name="T">The type of elements in the list.</typeparam>
+///<remarks>
+///<para><see cref="ObservableList{T}"/> extends <see cref="ObservableCollection{T}"/> with batch-add operations, range-
+///remove operations, and suppression of change notifications during bulk updates via <see
+///cref="SuppressNotifications"/>.</para>
+///</remarks>
 public class ObservableList<T> : ObservableCollection<T>
 {
     #region Fields
-    private int _suppressionCount;
+    int _suppressionCount;
     #endregion
 
     #region Constructors
@@ -24,6 +32,8 @@ public class ObservableList<T> : ObservableCollection<T>
     ///</summary>
     ///<param name="collection">The items to copy into the list.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="collection"/> is <c>null</c>.
+    ///</exception>
     public ObservableList(IEnumerable<T> collection) : base(collection)
     {
     }
@@ -56,6 +66,8 @@ public class ObservableList<T> : ObservableCollection<T>
     ///</summary>
     ///<param name="items">The items to add.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="items"/> is <c>null</c>.
+    ///</exception>
     public void AddRange(IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(items);
@@ -76,6 +88,8 @@ public class ObservableList<T> : ObservableCollection<T>
     ///<param name="predicate">The condition to match.</param>
     ///<returns>The number of items removed.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="predicate"/> is <c>null</c>.
+    ///</exception>
     public int RemoveAll(Predicate<T> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
@@ -103,6 +117,8 @@ public class ObservableList<T> : ObservableCollection<T>
     ///</summary>
     ///<param name="items">The replacement items.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="items"/> is <c>null</c>.
+    ///</exception>
     public void ReplaceAll(IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(items);
@@ -127,7 +143,7 @@ public class ObservableList<T> : ObservableCollection<T>
     ///An <see cref="IDisposable"/> that, when disposed, decrements the suppression counter and raises a <see
     ///cref="NotifyCollectionChangedAction.Reset"/> notification if the counter reaches zero.
     ///</returns>
-    public IDisposable SuppressNotifications() => new SuppressionScope(this);
+    public IDisposable SuppressNotifications() { return new SuppressionScope(this); }
     #endregion
 
     #region Public properties
@@ -137,11 +153,11 @@ public class ObservableList<T> : ObservableCollection<T>
     public bool IsNotificationSuppressed => _suppressionCount > 0;
     #endregion
 
-    private sealed class SuppressionScope : IDisposable
+    sealed class SuppressionScope : IDisposable
     {
         #region Fields
-        private bool _disposed;
-        private readonly ObservableList<T> _owner;
+        bool _disposed;
+        readonly ObservableList<T> _owner;
         #endregion
 
         #region Constructors

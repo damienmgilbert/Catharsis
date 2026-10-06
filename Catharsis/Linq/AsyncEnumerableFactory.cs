@@ -11,7 +11,7 @@ public static class AsyncEnumerableFactory
     #region Private methods
     private static async IAsyncEnumerable<T> CreateAsyncIterator<T>(int count, Func<int, CancellationToken, ValueTask<T>> factory, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return await factory(i, cancellationToken).ConfigureAwait(false);
@@ -20,7 +20,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<T> CreateIterator<T>(int count, Func<int, T> factory, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return factory(i);
@@ -29,7 +29,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<T> DeferIterator<T>(Func<CancellationToken, IAsyncEnumerable<T>> factory, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach(T item in factory(cancellationToken).WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (T item in factory(cancellationToken).WithCancellation(cancellationToken).ConfigureAwait(false))
         {
             yield return item;
         }
@@ -43,7 +43,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<T> FromEnumerableIterator<T>(IEnumerable<T> source, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        foreach(T item in source)
+        foreach (T item in source)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return item;
@@ -54,7 +54,7 @@ public static class AsyncEnumerableFactory
     {
         T current = seed;
 
-        while(predicate(current))
+        while (predicate(current))
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return current;
@@ -64,7 +64,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<T> GenerateIterator<T>(T seed, Func<T, bool> predicate, Func<T, T> generator, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(T current = seed; predicate(current); current = generator(current))
+        for (T current = seed; predicate(current); current = generator(current))
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return current;
@@ -73,7 +73,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<int> RangeIterator(int start, int count, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return start + i;
@@ -82,7 +82,7 @@ public static class AsyncEnumerableFactory
 
     private static async IAsyncEnumerable<T> RepeatIterator<T>(T value, int count, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return value;
@@ -150,7 +150,7 @@ public static class AsyncEnumerableFactory
     ///</summary>
     ///<typeparam name="T">The element type.</typeparam>
     ///<returns>An async sequence with no elements.</returns>
-    public static IAsyncEnumerable<T> Empty<T>() => EmptyIterator<T>();
+    public static IAsyncEnumerable<T> Empty<T>() { return EmptyIterator<T>(); }
 
     ///<summary>
     ///Wraps a synchronous <see cref="IEnumerable{T}"/> as an <see cref="IAsyncEnumerable{T}"/>.
@@ -235,6 +235,6 @@ public static class AsyncEnumerableFactory
     ///<typeparam name="T">The element type.</typeparam>
     ///<param name="value">The single element to yield.</param>
     ///<returns>An async sequence containing one element.</returns>
-    public static IAsyncEnumerable<T> Return<T>(T value) => ReturnIterator(value);
+    public static IAsyncEnumerable<T> Return<T>(T value) { return ReturnIterator(value); }
     #endregion
 }

@@ -7,10 +7,15 @@ namespace Catharsis.ComponentModel.Licensing;
 ///Windows Forms designer infrastructure.
 ///</summary>
 ///<remarks>
+///<para> Derived classes override <see cref="OnInitialize"/> to perform design-time setup, <see
+///cref="CreateActionList"/> to provide verbs, and <see cref="OnComponentChanged"/> to react to property changes.</para>
+///<para> Call <see cref="Initialize"/> with a component to begin the design session, and <see cref="Dispose()"/> when
+///the designer is no longer needed.</para>
+///</remarks>
 public abstract class ComponentDesignerBase : IDisposable
 {
     #region Fields
-    private bool _disposed;
+    bool _disposed;
     #endregion
 
     #region Protected methods
@@ -21,12 +26,14 @@ public abstract class ComponentDesignerBase : IDisposable
     ///<returns>
     ///A <see cref="ComponentActionList"/>, or <c>null</c> if no actions are needed.
     ///</returns>
-    protected virtual ComponentActionList? CreateActionList(ComponentDesignContext context) => null;
+    protected virtual ComponentActionList? CreateActionList(ComponentDesignContext context) { return null; }
 
     ///<summary>
     ///Releases resources used by the designer.
     ///</summary>
     ///<param name="disposing">
+    ///<c>true</c> to release managed resources; <c>false</c> for unmanaged resources only.
+    ///</param>
     protected virtual void Dispose(bool disposing)
     {
         if(_disposed)
@@ -86,6 +93,11 @@ public abstract class ComponentDesignerBase : IDisposable
     ///An optional service provider for design-time service resolution.
     ///</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="component"/> is <c>null</c>.
+    ///</exception>
+    ///<exception cref="InvalidOperationException">
+    ///The designer has already been initialized.
+    ///</exception>
     public void Initialize(IComponent component, IContainer? container = null, IServiceProvider? serviceProvider = null)
     {
         ArgumentNullException.ThrowIfNull(component);

@@ -10,11 +10,15 @@ namespace Catharsis.DataAnnotations;
 ///not both").
 ///</summary>
 ///<remarks>
+///<para> Apply this attribute to a class and supply two or more property names. Validation fails when more than one of
+///those properties has a non-null value. For strings, empty/whitespace-only values are treated as absent.</para> <para>
+///This attribute works in conjunction with <see cref="Validator.TryValidateObject"/> when <c>validateAllProperties</c>
+///is <c>true</c>.</para>
+///</remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class MutuallyExclusiveAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="MutuallyExclusiveAttribute"/> with the property names that must be
     ///mutually exclusive.
@@ -37,7 +41,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
     #endregion
 
     #region Private methods
-    private static bool HasValue(object? value)
+    static bool HasValue(object? value)
     {
         return value switch
         {
@@ -87,7 +91,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
 
     #region Public methods
     ///<inheritdoc/>
-    public override string FormatErrorMessage(string name) => string.Format(CultureInfo.CurrentCulture, ErrorMessageString, GroupName ?? string.Join(", ", PropertyNames));
+    public override string FormatErrorMessage(string name) { return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, GroupName ?? string.Join(", ", PropertyNames)); }
     #endregion
 
     #region Public properties

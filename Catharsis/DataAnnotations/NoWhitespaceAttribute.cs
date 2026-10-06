@@ -6,21 +6,18 @@ namespace Catharsis.DataAnnotations;
 ///Validates that a string contains no whitespace characters at all, anywhere in the string.
 ///</summary>
 ///<remarks>
-///A <c>null</c> or empty value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow missing
-///values). This differs from <see cref="TrimmedAttribute"/>, which only forbids leading and trailing whitespace:
-///<c>"user name"</c> fails this attribute but passes <see cref="TrimmedAttribute"/>.
+///A <c>null</c> or empty value is considered valid (combine with <see cref="RequiredAttribute"/> to disallow
+///missing values). This differs from <see cref="TrimmedAttribute"/>, which only forbids leading and trailing
+///whitespace: <c>"user name"</c> fails this attribute but passes <see cref="TrimmedAttribute"/>.
 ///</remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 public sealed class NoWhitespaceAttribute : ValidationAttribute
 {
     #region Constructors
-
     ///<summary>
     ///Initializes a new instance of <see cref="NoWhitespaceAttribute"/>.
     ///</summary>
-    public NoWhitespaceAttribute() : base("The field {0} must not contain whitespace.")
-    {
-    }
+    public NoWhitespaceAttribute() : base("The field {0} must not contain whitespace.") { }
     #endregion
 
     #region Protected methods

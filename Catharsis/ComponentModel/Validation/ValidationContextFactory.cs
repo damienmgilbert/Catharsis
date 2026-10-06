@@ -18,12 +18,15 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class ValidationContextFactory(IServiceProvider? serviceProvider = null, IDictionary<object, object?>? items = null)
 {
     #region Fields
-    private readonly IDictionary<object, object?>? _items = items;
-    private readonly IServiceProvider? _serviceProvider = serviceProvider;
+    readonly IDictionary<object, object?>? _items = items;
+    readonly IServiceProvider? _serviceProvider = serviceProvider;
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Private methods
-    private ValidationContext CreateCore(object instance, string? memberName)
+    ValidationContext CreateCore(object instance, string? memberName)
     {
         ValidationContext context = (_serviceProvider is not null) ? (new ValidationContext(instance, _serviceProvider, _items)) : ((_items is not null) ? (new ValidationContext(instance, _items)) : (new ValidationContext(instance)));
 
@@ -43,6 +46,8 @@ public sealed class ValidationContextFactory(IServiceProvider? serviceProvider =
     ///<param name="instance">The object to validate.</param>
     ///<returns>A configured <see cref="ValidationContext"/>.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/> is <c>null</c>.
+    ///</exception>
     public ValidationContext CreateContext(object instance)
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -56,6 +61,8 @@ public sealed class ValidationContextFactory(IServiceProvider? serviceProvider =
     ///<param name="memberName">The property name.</param>
     ///<returns>A configured <see cref="ValidationContext"/>.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/> or <paramref name="memberName"/> is <c>null</c>.
+    ///</exception>
     public ValidationContext CreatePropertyContext(object instance, string memberName)
     {
         ArgumentNullException.ThrowIfNull(instance);
@@ -72,6 +79,8 @@ public sealed class ValidationContextFactory(IServiceProvider? serviceProvider =
     ///<param name="displayName">The display name used in error messages.</param>
     ///<returns>A configured <see cref="ValidationContext"/>.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="instance"/>, <paramref name="memberName"/>, or <paramref name="displayName"/> is <c>null</c>.
+    ///</exception>
     public ValidationContext CreatePropertyContext(object instance, string memberName, string displayName)
     {
         ArgumentNullException.ThrowIfNull(instance);

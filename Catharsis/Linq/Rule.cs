@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Catharsis.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -52,13 +52,12 @@ public sealed class Rule<T>
     ///</summary>
     ///<param name="element">The element to test.</param>
     ///<returns><c>true</c> if the element satisfies the condition; otherwise <c>false</c>.</returns>
-    public bool Evaluate(T element) => CompiledCondition(element);
-
+    public bool Evaluate(T element) { return CompiledCondition(element); }
     ///<summary>
     ///Creates a new rule whose condition is the negation of this rule's condition.
     ///</summary>
     ///<returns>A new rule with a negated condition.</returns>
-    public Rule<T> Negate() => new($"NOT({Name})", ExpressionComposer.Not(Condition)) { Priority = Priority, Tags = Tags };
+    public Rule<T> Negate() { return new($"NOT({Name})", ExpressionComposer.Not(Condition)) { Priority = Priority, Tags = Tags }; }
 
     ///<summary>
     ///Creates a new rule whose condition is the logical OR of this rule's condition and ///<paramref name="other"/>'s
@@ -74,7 +73,7 @@ public sealed class Rule<T>
     }
 
     ///<inheritdoc/>
-    public override string ToString() => $"Rule '{Name}' (Priority={Priority}, Enabled={IsEnabled})";
+    public override string ToString() { return $"Rule '{Name}' (Priority={Priority}, Enabled={IsEnabled})"; }
     #endregion
 
     #region Public properties

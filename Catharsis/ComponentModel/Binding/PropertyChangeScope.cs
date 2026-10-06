@@ -7,12 +7,16 @@ namespace Catharsis.ComponentModel.Binding;
 ///collected during the scope and a single notification per unique property is raised when the scope is disposed.
 ///</summary>
 ///<remarks>
+///<para> Wrap code that modifies multiple properties in a <c>using</c> block with <see cref="PropertyChangeScope"/> to
+///batch the resulting notifications.</para> <para> This class is designed to work with any <see
+///cref="INotifyPropertyChanged"/> source by accepting a notification callback at construction time.</para>
+///</remarks>
 public sealed class PropertyChangeScope : IDisposable
 {
     #region Fields
-    private bool _disposed;
-    private readonly HashSet<string> _pendingProperties = [ with(StringComparer.Ordinal) ];
-    private readonly Action<string> _raisePropertyChanged;
+    bool _disposed;
+    readonly HashSet<string> _pendingProperties = [with(StringComparer.Ordinal)];
+    readonly Action<string> _raisePropertyChanged;
     #endregion
 
     #region Constructors
@@ -23,6 +27,8 @@ public sealed class PropertyChangeScope : IDisposable
     ///A callback that raises <see cref="INotifyPropertyChanged.PropertyChanged"/> for the specified property name.
     ///</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="raisePropertyChanged"/> is <c>null</c>.
+    ///</exception>
     public PropertyChangeScope(Action<string> raisePropertyChanged)
     {
         ArgumentNullException.ThrowIfNull(raisePropertyChanged);
@@ -54,6 +60,11 @@ public sealed class PropertyChangeScope : IDisposable
     ///</summary>
     ///<param name="propertyName">The name of the changed property.</param>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="propertyName"/> is <c>null</c>.
+    ///</exception>
+    ///<exception cref="ObjectDisposedException">
+    ///The scope has already been disposed.
+    ///</exception>
     public void RecordChange(string propertyName)
     {
         ArgumentNullException.ThrowIfNull(propertyName);

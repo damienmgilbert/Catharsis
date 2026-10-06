@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Catharsis.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Catharsis.Linq;
 
@@ -58,6 +58,9 @@ public static class QueryableProjector
     ///<returns>The projected query, or the original query cast when the condition is <c>false</c>.</returns>
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="selector"/> is <c>null</c>.</exception>
     ///<exception cref="InvalidCastException">
+    ///<typeparamref name="T"/> is not assignable to <typeparamref name="TResult"/> when <paramref name="condition"/> is
+    ///<c>false</c>.
+    ///</exception>
     public static IQueryable<TResult> ProjectIf<T, TResult>(this IQueryable<T> source, bool condition, Expression<Func<T, TResult>> selector)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
@@ -109,13 +112,13 @@ public static class QueryableProjector
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(projections, nameof(projections));
 
-        List<KeyValuePair<string, Func<T, object?>>> compiled = [ .. projections.Select(static kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile())) ];
+        List<KeyValuePair<string, Func<T, object?>>> compiled = [.. projections.Select(static kvp => KeyValuePair.Create(kvp.Key, kvp.Value.Compile()))];
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
-            Dictionary<string, object?> row = [ with(compiled.Count) ];
+            Dictionary<string, object?> row = [with(compiled.Count)];
 
-            foreach(KeyValuePair<string, Func<T, object?>> kvp in compiled)
+            foreach (KeyValuePair<string, Func<T, object?>> kvp in compiled)
             {
                 row[kvp.Key] = kvp.Value(item);
             }
@@ -134,7 +137,7 @@ public static class QueryableProjector
     public static IQueryable<(int Index, T Element)> ProjectWithIndex<T>(this IQueryable<T> source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        return source.Select(static(item, index) => new ValueTuple<int, T>(index, item));
+        return source.Select(static (item, index) => new ValueTuple<int, T>(index, item));
     }
     #endregion
 }

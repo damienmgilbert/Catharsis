@@ -13,7 +13,7 @@ namespace Catharsis.ComponentModel.Validation;
 public sealed class ValidationPipeline
 {
     #region Fields
-    private readonly List<IValidationRule> _rules = [];
+    readonly List<IValidationRule> _rules = [];
     #endregion
 
     #region Public methods
@@ -23,6 +23,8 @@ public sealed class ValidationPipeline
     ///<param name="rule">The rule to add.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="rule"/> is <c>null</c>.
+    ///</exception>
     public ValidationPipeline AddRule(IValidationRule rule)
     {
         ArgumentNullException.ThrowIfNull(rule);
@@ -36,6 +38,8 @@ public sealed class ValidationPipeline
     ///<param name="rules">The rules to add.</param>
     ///<returns>This instance, for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="rules"/> is <c>null</c>.
+    ///</exception>
     public ValidationPipeline AddRules(IEnumerable<IValidationRule> rules)
     {
         ArgumentNullException.ThrowIfNull(rules);
@@ -52,7 +56,7 @@ public sealed class ValidationPipeline
     ///<summary>
     ///Removes all rules from the pipeline.
     ///</summary>
-    public void Clear() => _rules.Clear();
+    public void Clear() { _rules.Clear(); }
 
     ///<summary>
     ///Executes all rules against the specified value and context.
@@ -63,6 +67,8 @@ public sealed class ValidationPipeline
     ///A <see cref="ValidationResultAggregator"/> containing all results.
     ///</returns>
     ///<exception cref="ArgumentNullException">
+    ///<paramref name="context"/> is <c>null</c>.
+    ///</exception>
     public ValidationResultAggregator Execute(object? value, ValidationContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -89,7 +95,7 @@ public sealed class ValidationPipeline
     ///<param name="value">The value to validate.</param>
     ///<param name="context">The validation context.</param>
     ///<returns><c>true</c> if no errors were produced; otherwise, <c>false</c>.</returns>
-    public bool IsValid(object? value, ValidationContext context) => !Execute(value, context).HasErrors;
+    public bool IsValid(object? value, ValidationContext context) { return !Execute(value, context).HasErrors; }
     #endregion
 
     #region Public properties

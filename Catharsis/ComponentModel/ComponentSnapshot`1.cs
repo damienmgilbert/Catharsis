@@ -4,21 +4,22 @@ namespace Catharsis.ComponentModel;
 
 ///<summary>
 ///Captures the value of every public, readable and writable, non-indexer property of a <typeparamref name="T"/>
-///instance, and can later restore that state — a building block for undo/redo. Complements ///<see
-///cref="ChangeTracker{T}"/>, which tracks a single value rather than an object's full property set.
+///instance, and can later restore that state — a building block for undo/redo. Complements
+///<see cref="ChangeTracker{T}"/>, which tracks a single value rather than an object's full property set.
 ///</summary>
 ///<typeparam name="T">The type of object to snapshot.</typeparam>
 public sealed class ComponentSnapshot<T> where T : class
 {
     #region Fields
-    private static readonly PropertyInfo[] _properties = [ .. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead && property.CanWrite && (property.GetIndexParameters().Length == 0)) ];
-    private readonly Dictionary<PropertyInfo, object?> _values;
+    static readonly PropertyInfo[] _properties = [.. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static property => property.CanRead && property.CanWrite && (property.GetIndexParameters().Length == 0))];
+
+    readonly Dictionary<PropertyInfo, object?> _values;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new <see cref="ComponentSnapshot{T}"/> and immediately captures the current state of ///<paramref
-    ///name="source"/>.
+    ///Initializes a new <see cref="ComponentSnapshot{T}"/> and immediately captures the current state of
+    ///<paramref name="source"/>.
     ///</summary>
     ///<param name="source">The object to snapshot.</param>
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>

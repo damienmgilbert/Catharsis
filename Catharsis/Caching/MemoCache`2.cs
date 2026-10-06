@@ -5,31 +5,37 @@ namespace Catharsis.Caching;
 
 ///<summary>
 ///A thread-safe memoization cache that computes a value for a key at most once, even under concurrent access, and
-///reuses the cached result for subsequent lookups until the entry is removed or the cache is cleared. Unlike ///<see
-///cref="Catharsis.DataStructures.LruCache{TKey, TValue}"/>, this cache is unbounded and centers on the atomic "get or
-///compute" pattern rather than manual insertion with LRU eviction.
+///reuses the cached result for subsequent lookups until the entry is removed or the cache is cleared. Unlike
+///<see cref="Catharsis.DataStructures.LruCache{TKey, TValue}"/>, this cache is unbounded and centers on the atomic
+///"get or compute" pattern rather than manual insertion with LRU eviction.
 ///</summary>
 ///<typeparam name="TKey">The type of the cache keys.</typeparam>
 ///<typeparam name="TValue">The type of the cached values.</typeparam>
 ///<example>
+///<code>
+///MemoCache&lt;string, Regex&gt; compiledPatterns = new();
+///Regex regex = compiledPatterns.GetOrAdd(pattern, static p => new Regex(p));
+///</code>
+///</example>
+///<param name="comparer">The equality comparer used to match keys, or <c>null</c> to use the default comparer.</param>
 public sealed class MemoCache<TKey, TValue>(IEqualityComparer<TKey>? comparer = null) where TKey : notnull
 {
     #region Fields
-    private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _entries = new(comparer);
+    readonly ConcurrentDictionary<TKey, Lazy<TValue>> _entries = new(comparer);
     #endregion
 
     #region Public methods
     ///<summary>
-    ///Removes all entries from the cache.
+    ///Determines whether the cache contains the specified key.
     ///</summary>
-    public void Clear() => _entries.Clear();
-
-        ///<summary>
-///Determines whether the cache contains the specified key.
-///</summary>
     ///<param name="key">The key to look for.</param>
     ///<returns><c>true</c> if the key exists; otherwise <c>false</c>.</returns>
     public bool ContainsKey(TKey key) => _entries.ContainsKey(key);
+
+    ///<summary>
+    ///Removes all entries from the cache.
+    ///</summary>
+    public void Clear() => _entries.Clear();
 
     ///<summary>
     ///Gets the cached value for the specified key, computing and caching it via <paramref name="valueFactory"/> if
@@ -44,8 +50,19 @@ public sealed class MemoCache<TKey, TValue>(IEqualityComparer<TKey>? comparer = 
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(valueFactory);
 
-        Lazy<TValue> lazy = _entries.GetOrAdd(key, static(k, factory) => new Lazy<TValue>(() => factory(k)), valueFactory);
+        Lazy<TValue> lazy = _entries.GetOrAdd(key, static (k, factory) => new Lazy<TValue>(() => factory(k)), valueFactory);
         return lazy.Value;
+    }
+
+    ///<summary>
+    ///Removes the entry with the specified key.
+    ///</summary>
+    ///<param name="key">The key to remove.</param>
+    ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
+    public bool TryRemove(TKey key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        return _entries.TryRemove(key, out _);
     }
 
     ///<summary>
@@ -66,17 +83,6 @@ public sealed class MemoCache<TKey, TValue>(IEqualityComparer<TKey>? comparer = 
 
         value = default;
         return false;
-    }
-
-    ///<summary>
-    ///Removes the entry with the specified key.
-    ///</summary>
-    ///<param name="key">The key to remove.</param>
-    ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
-    public bool TryRemove(TKey key)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-        return _entries.TryRemove(key, out _);
     }
     #endregion
 

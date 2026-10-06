@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class Iterator
 {
     #region Public methods
-
     ///<summary>
     ///Iterator — extracts elements from <paramref name="obj"/> via <paramref name="getElements"/> and applies <paramref
     ///name="action"/> to each.

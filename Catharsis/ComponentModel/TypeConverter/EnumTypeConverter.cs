@@ -10,20 +10,24 @@ namespace Catharsis.ComponentModel.TypeConverter;
 ///</summary>
 ///<typeparam name="TEnum">The enum type. Must be a value type and an enum.</typeparam>
 ///<remarks>
+///<para> This converter handles conversion between <typeparamref name="TEnum"/> and<see cref="string"/>, as well as
+///underlying integer types. For<see cref="FlagsAttribute"/> enums, comma-separated flag names are supported.</para>
+///<para> Use <see cref="TryParseSpan"/> for zero-allocation parsing from a<see cref="ReadOnlySpan{T}"/> of <see
+///cref="char"/>.</para>
+///</remarks>
 public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConverter where TEnum : struct, Enum
 {
     #region Fields
-    private static readonly Type s_enumType = typeof(TEnum);
-    private static readonly bool s_isFlags = s_enumType.IsDefined(typeof(FlagsAttribute), inherit: false);
-    private static readonly Type s_underlyingType = Enum.GetUnderlyingType(s_enumType);
+    static readonly Type s_enumType = typeof(TEnum);
+    static readonly bool s_isFlags = s_enumType.IsDefined(typeof(FlagsAttribute), inherit: false);
+    static readonly Type s_underlyingType = Enum.GetUnderlyingType(s_enumType);
     #endregion
 
     #region Public methods
     ///<inheritdoc/>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => (sourceType == typeof(string)) || (sourceType == s_underlyingType) || base.CanConvertFrom(context, sourceType);
-
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) { return (sourceType == typeof(string)) || (sourceType == s_underlyingType) || base.CanConvertFrom(context, sourceType); }
     ///<inheritdoc/>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => (destinationType == typeof(string)) || (destinationType == s_underlyingType) || base.CanConvertTo(context, destinationType);
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) { return (destinationType == typeof(string)) || (destinationType == s_underlyingType) || base.CanConvertTo(context, destinationType); }
 
     ///<inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
@@ -80,16 +84,13 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///</summary>
     ///<param name="value">The enum value to format.</param>
     ///<returns>The string representation.</returns>
-    public static string FormatEnum(TEnum value) => value.ToString();
-
+    public static string FormatEnum(TEnum value) { return value.ToString(); }
     ///<inheritdoc/>
-    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext? context) => new(Enum.GetValues<TEnum>());
-
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext? context) { return new(Enum.GetValues<TEnum>()); }
     ///<inheritdoc/>
-    public override bool GetStandardValuesExclusive(ITypeDescriptorContext? context) => !s_isFlags;
-
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext? context) { return !s_isFlags; }
     ///<inheritdoc/>
-    public override bool GetStandardValuesSupported(ITypeDescriptorContext? context) => true;
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext? context) { return true; }
 
     ///<inheritdoc/>
     public override bool IsValid(ITypeDescriptorContext? context, object? value)
@@ -113,6 +114,8 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///<param name="span">The character span to parse.</param>
     ///<returns>The parsed enum value.</returns>
     ///<exception cref="FormatException">
+    ///<paramref name="span"/> is not a valid representation of <typeparamref name="TEnum"/>.
+    ///</exception>
     public static TEnum ParseSpan(ReadOnlySpan<char> span)
     {
         if(TryParseSpan(span, out TEnum result))
@@ -132,8 +135,9 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///When this method returns, contains the number of characters written.
     ///</param>
     ///<returns>
-    public static bool TryFormatSpan(TEnum value, Span<char> destination, out int charsWritten) => Enum.TryFormat(value, destination, out charsWritten);
-
+    ///<c>true</c> if the value was successfully formatted into the destination; otherwise, <c>false</c>.
+    ///</returns>
+    public static bool TryFormatSpan(TEnum value, Span<char> destination, out int charsWritten) { return Enum.TryFormat(value, destination, out charsWritten); }
     ///<summary>
     ///Attempts to parse a <typeparamref name="TEnum"/> value from a <see cref="ReadOnlySpan{T}"/> of <see cref="char"/>
     ///without allocating a string.
@@ -141,7 +145,10 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///<param name="span">The character span to parse.</param>
     ///<param name="result">
     ///When this method returns, contains the parsed enum value if successful; otherwise, the default value of
-    public static bool TryParseSpan(ReadOnlySpan<char> span, out TEnum result) => Enum.TryParse(span, ignoreCase: true, out result);
+    ///<typeparamref name="TEnum"/>.
+    ///</param>
+    ///<returns><c>true</c> if parsing succeeded; otherwise, <c>false</c>.</returns>
+    public static bool TryParseSpan(ReadOnlySpan<char> span, out TEnum result) { return Enum.TryParse(span, ignoreCase: true, out result); }
     #endregion
 
     #region Public properties

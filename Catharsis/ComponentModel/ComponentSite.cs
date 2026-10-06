@@ -14,17 +14,26 @@ namespace Catharsis.ComponentModel;
 public sealed class ComponentSite : ISite
 {
     #region Fields
-    private readonly IServiceProvider? _serviceProvider;
+    readonly IServiceProvider? _serviceProvider;
     #endregion
 
     #region Constructors
     ///<summary>
-    ///Initializes a new instance of <see cref="ComponentSite"/> binding the specified component to the given container.
+    ///Initializes a new instance of <see cref="ComponentSite"/> binding the specified component to the given
+    ///container.
     ///</summary>
     ///<param name="container">The container hosting the component.</param>
     ///<param name="component">The component being sited.</param>
     ///<param name="name">An optional name for the component.</param>
     ///<param name="designMode">
+    ///<c>true</c> if the component is in design mode; otherwise, <c>false</c>.
+    ///</param>
+    ///<param name="serviceProvider">
+    ///An optional service provider for resolving additional services.
+    ///</param>
+    ///<exception cref="ArgumentNullException">
+    ///<paramref name="container"/> or <paramref name="component"/> is <c>null</c>.
+    ///</exception>
     public ComponentSite(IContainer container, IComponent component, string? name = null, bool designMode = false, IServiceProvider? serviceProvider = null)
     {
         ArgumentNullException.ThrowIfNull(container);

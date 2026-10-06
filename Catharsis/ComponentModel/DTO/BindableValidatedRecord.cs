@@ -21,9 +21,12 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
 {
     #region Fields
     private T? _acceptedValue = value;
-    private readonly Dictionary<string, List<string>> _errors = [ with(StringComparer.Ordinal) ];
+    private readonly Dictionary<string, List<string>> _errors = [with(StringComparer.Ordinal)];
     private bool _isEditing;
     private T? _snapshot;
+
+    #endregion
+    #region Constructors
     #endregion
 
     #region Events
@@ -34,13 +37,13 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     #region Private methods
     private void AddError(string propertyName, string message)
     {
-        if(!_errors.TryGetValue(propertyName, out List<string>? list))
+        if (!_errors.TryGetValue(propertyName, out List<string>? list))
         {
             list = [];
             _errors[propertyName] = list;
         }
 
-        if(!list.Contains(message))
+        if (!list.Contains(message))
         {
             list.Add(message);
             OnErrorsChanged(propertyName);
@@ -49,10 +52,10 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
 
     private void ClearAllErrors()
     {
-        List<string> properties = [ .. _errors.Keys ];
+        List<string> properties = [.. _errors.Keys];
         _errors.Clear();
 
-        foreach(string property in properties)
+        foreach (string property in properties)
         {
             OnErrorsChanged(property);
         }
@@ -64,14 +67,14 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///Raises the <see cref="ErrorsChanged"/> event.
     ///</summary>
     ///<param name="propertyName">The property name.</param>
-    protected virtual void OnErrorsChanged(string? propertyName) => ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    protected virtual void OnErrorsChanged(string? propertyName) { ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName)); }
 
     ///<inheritdoc/>
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
 
-        if(string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
+        if (string.Equals(propertyName, nameof(Value), StringComparison.Ordinal))
         {
             Validate();
         }
@@ -89,17 +92,18 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
 
         Validator.TryValidateObject(value, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
-            List<string> members = [ .. result.MemberNames ];
+            List<string> members = [.. result.MemberNames];
             string message = result.ErrorMessage ?? "Validation failed.";
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 AddError(string.Empty, message);
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     AddError(member, message);
                 }
@@ -121,7 +125,7 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///</summary>
     public void BeginEdit()
     {
-        if(_isEditing)
+        if (_isEditing)
         {
             return;
         }
@@ -135,12 +139,12 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///</summary>
     public void CancelEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             Value = _snapshot;
         }
@@ -154,7 +158,7 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///</summary>
     public void EndEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
@@ -166,7 +170,7 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///<inheritdoc/>
     public IEnumerable GetErrors(string? propertyName)
     {
-        if(string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName))
         {
             return _errors.Values.SelectMany(static e => e);
         }
@@ -177,7 +181,7 @@ public class BindableValidatedRecord<T>(T value) : BindableRecord<T>(value), INo
     ///<inheritdoc/>
     public void RejectChanges()
     {
-        if(_acceptedValue is not null)
+        if (_acceptedValue is not null)
         {
             Value = _acceptedValue;
         }

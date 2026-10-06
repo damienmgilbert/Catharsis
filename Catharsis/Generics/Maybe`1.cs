@@ -1,19 +1,19 @@
 namespace Catharsis.Generics;
 
 ///<summary>
-///A value that may or may not be present, as an explicit alternative to <c>null</c>. Unlike ///<see
-///cref="Nullable{T}"/> it works for reference types and value types alike, and it distinguishes "absent" from "present
-///but <c>null</c>-like" by refusing to wrap <c>null</c> as a value.
+///A value that may or may not be present, as an explicit alternative to <c>null</c>. Unlike
+///<see cref="Nullable{T}"/> it works for reference types and value types alike, and it distinguishes "absent" from
+///"present but <c>null</c>-like" by refusing to wrap <c>null</c> as a value.
 ///</summary>
 ///<typeparam name="T">The type of the wrapped value.</typeparam>
 public readonly struct Maybe<T> : IEquatable<Maybe<T>>
 {
-    #region Struct fields
-    private readonly T? _value;
+    #region Fields
+    readonly T? _value;
     #endregion
 
     #region Constructors
-    private Maybe(T value)
+    Maybe(T value)
     {
         _value = value;
         HasValue = true;
@@ -21,67 +21,33 @@ public readonly struct Maybe<T> : IEquatable<Maybe<T>>
     #endregion
 
     #region Operators
-    ///<summary>
-    ///Determines whether two maybes differ.
-    ///</summary>
-    public static bool operator !=(Maybe<T> left, Maybe<T> right)
-    {
-        return !left.Equals(right);
-    }
+    ///<summary>Determines whether two maybes are equal.</summary>
+    public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
 
-    ///<summary>
-    ///Determines whether two maybes are equal.
-    ///</summary>
-    public static bool operator ==(Maybe<T> left, Maybe<T> right)
-    {
-        return left.Equals(right);
-    }
+    ///<summary>Determines whether two maybes differ.</summary>
+    public static bool operator !=(Maybe<T> left, Maybe<T> right) => !left.Equals(right);
 
-    ///<summary>
-    ///Wraps a value, treating <c>null</c> as <see cref="None"/>.
-    ///</summary>
-    public static implicit operator Maybe<T>(T? value)
-    {
-        return From(value);
-    }
+    ///<summary>Wraps a value, treating <c>null</c> as <see cref="None"/>.</summary>
+    public static implicit operator Maybe<T>(T? value) => From(value);
     #endregion
 
     #region Public methods
-    ///<summary>
-    ///Chains an operation that itself returns a maybe.
-    ///</summary>
-    ///<typeparam name="TResult">The next value type.</typeparam>
-    ///<param name="binder">Produces the next option from the value.</param>
-    ///<exception cref="ArgumentNullException"><paramref name="binder"/> is <c>null</c>.</exception>
-    public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
-    {
-        ArgumentNullException.ThrowIfNull(binder);
+    ///<summary>Gets the empty option.</summary>
+    public static Maybe<T> None => default;
 
-        return HasValue ? binder(_value!) : default;
+    ///<summary>Wraps a value that must not be <c>null</c>.</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+    public static Maybe<T> Some(T value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        return new Maybe<T>(value);
     }
 
-    ///<inheritdoc/>
-    public bool Equals(Maybe<T> other) => HasValue == other.HasValue && EqualityComparer<T?>.Default.Equals(_value, other._value);
-
-    ///<inheritdoc/>
-    public override bool Equals(object? obj) => (obj is Maybe<T> other) && Equals(other);
-
-    ///<summary>
-    ///Wraps a value, returning <see cref="None"/> if it is <c>null</c>.
-    ///</summary>
+    ///<summary>Wraps a value, returning <see cref="None"/> if it is <c>null</c>.</summary>
     public static Maybe<T> From(T? value) => value is null ? default : new Maybe<T>(value);
 
-    ///<inheritdoc/>
-    public override int GetHashCode() => HasValue ? HashCode.Combine(true, _value) : 0;
-
-    ///<summary>
-    ///Gets the value, or <paramref name="fallback"/> when absent.
-    ///</summary>
-    public T GetValueOrDefault(T fallback) => HasValue ? _value! : fallback;
-
-    ///<summary>
-    ///Transforms the value if present.
-    ///</summary>
+    ///<summary>Transforms the value if present.</summary>
     ///<typeparam name="TResult">The new value type.</typeparam>
     ///<param name="mapper">Converts the value. A <c>null</c> result becomes <see cref="Maybe{T}.None"/>.</param>
     ///<exception cref="ArgumentNullException"><paramref name="mapper"/> is <c>null</c>.</exception>
@@ -92,9 +58,27 @@ public readonly struct Maybe<T> : IEquatable<Maybe<T>>
         return HasValue ? Maybe<TResult>.From(mapper(_value!)) : default;
     }
 
-    ///<summary>
-    ///Collapses the maybe into one value by handling both cases.
-    ///</summary>
+    ///<summary>Chains an operation that itself returns a maybe.</summary>
+    ///<typeparam name="TResult">The next value type.</typeparam>
+    ///<param name="binder">Produces the next option from the value.</param>
+    ///<exception cref="ArgumentNullException"><paramref name="binder"/> is <c>null</c>.</exception>
+    public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
+    {
+        ArgumentNullException.ThrowIfNull(binder);
+
+        return HasValue ? binder(_value!) : default;
+    }
+
+    ///<summary>Keeps the value only if it satisfies <paramref name="predicate"/>.</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="predicate"/> is <c>null</c>.</exception>
+    public Maybe<T> Where(Func<T, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return HasValue && predicate(_value!) ? this : default;
+    }
+
+    ///<summary>Collapses the maybe into one value by handling both cases.</summary>
     ///<typeparam name="TOut">The type produced.</typeparam>
     ///<param name="onSome">Handles a present value.</param>
     ///<param name="onNone">Handles absence.</param>
@@ -107,23 +91,10 @@ public readonly struct Maybe<T> : IEquatable<Maybe<T>>
         return HasValue ? onSome(_value!) : onNone();
     }
 
-    ///<summary>
-    ///Wraps a value that must not be <c>null</c>.
-    ///</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-    public static Maybe<T> Some(T value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
+    ///<summary>Gets the value, or <paramref name="fallback"/> when absent.</summary>
+    public T GetValueOrDefault(T fallback) => HasValue ? _value! : fallback;
 
-        return new Maybe<T>(value);
-    }
-
-    ///<inheritdoc/>
-    public override string ToString() => HasValue ? $"Some({_value})" : "None";
-
-    ///<summary>
-    ///Attempts to read the value.
-    ///</summary>
+    ///<summary>Attempts to read the value.</summary>
     ///<returns><c>true</c> if a value is present.</returns>
     public bool TryGetValue(out T value)
     {
@@ -131,32 +102,24 @@ public readonly struct Maybe<T> : IEquatable<Maybe<T>>
         return HasValue;
     }
 
-    ///<summary>
-    ///Keeps the value only if it satisfies <paramref name="predicate"/>.
-    ///</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="predicate"/> is <c>null</c>.</exception>
-    public Maybe<T> Where(Func<T, bool> predicate)
-    {
-        ArgumentNullException.ThrowIfNull(predicate);
+    ///<inheritdoc/>
+    public bool Equals(Maybe<T> other) => HasValue == other.HasValue && EqualityComparer<T?>.Default.Equals(_value, other._value);
 
-        return HasValue && predicate(_value!) ? this : default;
-    }
+    ///<inheritdoc/>
+    public override bool Equals(object? obj) => (obj is Maybe<T> other) && Equals(other);
+
+    ///<inheritdoc/>
+    public override int GetHashCode() => HasValue ? HashCode.Combine(true, _value) : 0;
+
+    ///<inheritdoc/>
+    public override string ToString() => HasValue ? $"Some({_value})" : "None";
     #endregion
 
     #region Public properties
-    ///<summary>
-    ///Gets a value indicating whether a value is present.
-    ///</summary>
+    ///<summary>Gets a value indicating whether a value is present.</summary>
     public bool HasValue { get; }
 
-        ///<summary>
-///Gets the empty option.
-///</summary>
-    public static Maybe<T> None => default;
-
-    ///<summary>
-    ///Gets the value.
-    ///</summary>
+    ///<summary>Gets the value.</summary>
     ///<exception cref="InvalidOperationException">The maybe is empty.</exception>
     public T Value => HasValue ? _value! : throw new InvalidOperationException("The maybe has no value.");
     #endregion

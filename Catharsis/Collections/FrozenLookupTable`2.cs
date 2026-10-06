@@ -13,29 +13,8 @@ namespace Catharsis.Collections;
 public sealed class FrozenLookupTable<TKey, TValue>(IEqualityComparer<TKey>? comparer = null) where TKey : notnull
 {
     #region Fields
-    private Dictionary<TKey, TValue>? _building = new(comparer);
-    private FrozenDictionary<TKey, TValue>? _built;
-    #endregion
-
-    #region Indexers
-    ///<summary>
-    ///Gets the value associated with the specified key.
-    ///</summary>
-    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
-    ///<exception cref="InvalidOperationException"><see cref="Build"/> has not been called yet.</exception>
-    ///<exception cref="KeyNotFoundException">The key was not found.</exception>
-    public TValue this[TKey key]
-    {
-        get
-        {
-            ArgumentNullException.ThrowIfNull(key);
-            return RequireBuilt()[key];
-        }
-    }
-    #endregion
-
-    #region Private methods
-    private FrozenDictionary<TKey, TValue> RequireBuilt() => _built ?? throw new InvalidOperationException("Call Build() before looking up entries.");
+    Dictionary<TKey, TValue>? _building = new(comparer);
+    FrozenDictionary<TKey, TValue>? _built;
     #endregion
 
     #region Public methods
@@ -91,15 +70,34 @@ public sealed class FrozenLookupTable<TKey, TValue>(IEqualityComparer<TKey>? com
     }
     #endregion
 
+    #region Private methods
+    FrozenDictionary<TKey, TValue> RequireBuilt() => _built ?? throw new InvalidOperationException("Call Build() before looking up entries.");
+    #endregion
+
     #region Public properties
+    ///<summary>
+    ///Whether <see cref="Build"/> has been called.
+    ///</summary>
+    public bool IsBuilt => _built is not null;
+
     ///<summary>
     ///The number of entries in the table.
     ///</summary>
     public int Count => _built?.Count ?? _building!.Count;
 
-        ///<summary>
-///Whether <see cref="Build"/> has been called.
-///</summary>
-    public bool IsBuilt => _built is not null;
+    ///<summary>
+    ///Gets the value associated with the specified key.
+    ///</summary>
+    ///<exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
+    ///<exception cref="InvalidOperationException"><see cref="Build"/> has not been called yet.</exception>
+    ///<exception cref="KeyNotFoundException">The key was not found.</exception>
+    public TValue this[TKey key]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            return RequireBuilt()[key];
+        }
+    }
     #endregion
 }

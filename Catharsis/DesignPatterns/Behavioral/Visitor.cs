@@ -6,7 +6,6 @@ namespace Catharsis.DesignPatterns.Behavioral;
 public class Visitor
 {
     #region Public methods
-
     ///<summary>
     ///Visitor — applies <paramref name="visitor"/> to <paramref name="obj"/> via the supplied <paramref name="visit"/>
     ///action.
