@@ -74,7 +74,7 @@ public class AsyncProducerConsumerQueueTests
 
         List<int> items = [];
 
-        await foreach(int item in queue.DequeueAllAsync())
+        await foreach (int item in queue.DequeueAllAsync())
         {
             items.Add(item);
         }

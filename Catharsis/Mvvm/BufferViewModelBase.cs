@@ -23,9 +23,9 @@ public abstract class BufferViewModelBase : ObservableObject, IDisposable
     ///<param name="disposing">Whether managed resources should be disposed.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if(!_disposed)
+        if (!_disposed)
         {
-            if(disposing)
+            if (disposing)
             {
                 ClearData();
             }
@@ -77,14 +77,17 @@ public abstract class BufferViewModelBase : ObservableObject, IDisposable
         {
             await LoadCoreAsync(cancellationToken);
             HasData = DataSize > 0;
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
             ErrorMessage = "Operation was cancelled.";
-        } catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ErrorMessage = ex.Message;
             HasData = false;
-        } finally
+        }
+        finally
         {
             IsLoading = false;
         }

@@ -49,7 +49,7 @@ public sealed class RegexIfAttribute : ValidationAttribute
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
-        if(dependentProp is null)
+        if (dependentProp is null)
         {
             return false;
         }
@@ -63,24 +63,24 @@ public sealed class RegexIfAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(!IsConditionMet(validationContext))
+        if (!IsConditionMet(validationContext))
         {
             return ValidationResult.Success;
         }
 
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
         string? text = value as string ?? value.ToString();
 
-        if((text is not null) && _regex.IsMatch(text))
+        if ((text is not null) && _regex.IsMatch(text))
         {
             return ValidationResult.Success;
         }
 
-        return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+        return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
     }
     #endregion
 

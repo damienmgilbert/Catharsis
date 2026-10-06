@@ -18,7 +18,7 @@ public static class SequenceZipper
         bool firstHasNext = firstEnumerator.MoveNext();
         bool secondHasNext = secondEnumerator.MoveNext();
 
-        while(firstHasNext || secondHasNext)
+        while (firstHasNext || secondHasNext)
         {
             TFirst? firstValue = firstHasNext ? firstEnumerator.Current : default;
             TSecond? secondValue = secondHasNext ? secondEnumerator.Current : default;
@@ -38,7 +38,7 @@ public static class SequenceZipper
         bool firstHasNext = firstEnumerator.MoveNext();
         bool secondHasNext = secondEnumerator.MoveNext();
 
-        while(firstHasNext || secondHasNext)
+        while (firstHasNext || secondHasNext)
         {
             TFirst firstValue = firstHasNext ? firstEnumerator.Current : firstDefault;
             TSecond secondValue = secondHasNext ? secondEnumerator.Current : secondDefault;

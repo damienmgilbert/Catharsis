@@ -24,12 +24,12 @@ public sealed class TemplateEngine
     ///<exception cref="ArgumentNullException"><paramref name="template"/> or <paramref name="values"/> is <c>null</c>.</exception>
     public string Render(string template, IReadOnlyDictionary<string, string?> values)
     {
-        if(template is null)
+        if (template is null)
         {
             throw new ArgumentNullException(nameof(template), "Template must not be null.");
         }
 
-        if(values is null)
+        if (values is null)
         {
             throw new ArgumentNullException(nameof(values), "Values must not be null.");
         }

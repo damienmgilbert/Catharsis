@@ -25,7 +25,7 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="maxCapacity"/> is not positive.</exception>
     public CheckedDictionary(int? maxCapacity = null, ValidationMode mode = ValidationMode.Full, IEqualityComparer<TKey>? comparer = null)
     {
-        if(maxCapacity.HasValue)
+        if (maxCapacity.HasValue)
         {
             Guard.IsGreaterThan(maxCapacity.Value, 0);
         }
@@ -39,7 +39,7 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     #region Private methods
     void CheckCapacityForNewKey()
     {
-        if((Mode == ValidationMode.Full) && MaxCapacity.HasValue && (_inner.Count >= MaxCapacity.Value))
+        if ((Mode == ValidationMode.Full) && MaxCapacity.HasValue && (_inner.Count >= MaxCapacity.Value))
         {
             throw new InvalidOperationException($"Adding this key would exceed the maximum capacity of {MaxCapacity.Value}.");
         }
@@ -77,7 +77,7 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     ///<exception cref="InvalidOperationException">Adding the entry would exceed <see cref="MaxCapacity"/>.</exception>
     public void Add(TKey key, TValue value)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsNotNull(key);
         }
@@ -130,7 +130,7 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
     {
         get
         {
-            if(Mode >= ValidationMode.BoundsOnly)
+            if (Mode >= ValidationMode.BoundsOnly)
             {
                 Guard.IsNotNull(key);
             }
@@ -139,12 +139,12 @@ public sealed class CheckedDictionary<TKey, TValue> : IDictionary<TKey, TValue> 
         }
         set
         {
-            if(Mode >= ValidationMode.BoundsOnly)
+            if (Mode >= ValidationMode.BoundsOnly)
             {
                 Guard.IsNotNull(key);
             }
 
-            if(!_inner.ContainsKey(key))
+            if (!_inner.ContainsKey(key))
             {
                 CheckCapacityForNewKey();
             }

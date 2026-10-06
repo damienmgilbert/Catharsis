@@ -21,7 +21,7 @@ public sealed class LazyComponent<T>(Func<T> factory) : IDisposable where T : IC
     ///</summary>
     public void Dispose()
     {
-        if(_lazy.IsValueCreated)
+        if (_lazy.IsValueCreated)
         {
             _lazy.Value.Dispose();
         }

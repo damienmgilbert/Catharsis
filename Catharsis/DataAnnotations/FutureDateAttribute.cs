@@ -33,7 +33,7 @@ public sealed class FutureDateAttribute : ValidationAttribute
             _ => false
         };
 
-        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
     }
     #endregion
 

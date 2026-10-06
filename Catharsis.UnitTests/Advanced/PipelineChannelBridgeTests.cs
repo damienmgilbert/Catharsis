@@ -23,7 +23,7 @@ public class PipelineChannelBridgeTests
 
         MemoryBackedChannel<byte>.OwnedSegment segment = await bridge.Reader.ReadAsync();
 
-        using(segment)
+        using (segment)
         {
             Assert.AreEqual("hello", Encoding.UTF8.GetString(segment.Memory.Span));
         }
@@ -45,15 +45,15 @@ public class PipelineChannelBridgeTests
 
         List<byte> received = [];
 
-        await foreach(MemoryBackedChannel<byte>.OwnedSegment segment in bridge.Reader.ReadAllAsync())
+        await foreach (MemoryBackedChannel<byte>.OwnedSegment segment in bridge.Reader.ReadAllAsync())
         {
-            using(segment)
+            using (segment)
             {
                 received.AddRange(segment.Memory.ToArray());
             }
         }
 
-        Assert.AreEqual("firstsecond", Encoding.UTF8.GetString(received.ToArray()));
+        Assert.AreEqual("firstsecond", Encoding.UTF8.GetString([.. received]));
     }
 
     [TestMethod]

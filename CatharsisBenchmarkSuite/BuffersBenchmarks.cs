@@ -19,7 +19,7 @@ public class PooledBufferBenchmarks
     {
         List<int> list = [];
 
-        for(int i = 0; i < ItemCount; i++)
+        for (int i = 0; i < ItemCount; i++)
         {
             list.Add(i);
         }
@@ -32,7 +32,7 @@ public class PooledBufferBenchmarks
     {
         using PooledBuffer<int> buffer = new();
 
-        for(int i = 0; i < ItemCount; i++)
+        for (int i = 0; i < ItemCount; i++)
         {
             Span<int> span = buffer.GetSpan(1);
             span[0] = i;
@@ -57,7 +57,7 @@ public class PooledStringBuilderBenchmarks
     {
         StringBuilder builder = new();
 
-        for(int i = 0; i < AppendCount; i++)
+        for (int i = 0; i < AppendCount; i++)
         {
             builder.Append("item-");
             builder.Append(i);
@@ -72,7 +72,7 @@ public class PooledStringBuilderBenchmarks
     {
         using PooledStringBuilder builder = new();
 
-        for(int i = 0; i < AppendCount; i++)
+        for (int i = 0; i < AppendCount; i++)
         {
             builder.Append("item-");
             builder.Append(i);

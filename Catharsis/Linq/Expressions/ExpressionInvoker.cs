@@ -271,7 +271,8 @@ public static class ExpressionInvoker
         {
             result = expression.Compile().Invoke();
             return true;
-        } catch
+        }
+        catch
         {
             result = default;
             return false;
@@ -296,7 +297,8 @@ public static class ExpressionInvoker
         {
             result = expression.Compile().Invoke(arg);
             return true;
-        } catch
+        }
+        catch
         {
             result = default;
             return false;

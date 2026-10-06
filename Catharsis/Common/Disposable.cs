@@ -23,7 +23,7 @@ public static class Disposable
         IDisposable[] snapshot = [.. disposables];
         return Create(() =>
         {
-            foreach(IDisposable disposable in snapshot)
+            foreach (IDisposable disposable in snapshot)
             {
                 disposable.Dispose();
             }

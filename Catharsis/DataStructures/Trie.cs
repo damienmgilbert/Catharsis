@@ -14,9 +14,9 @@ public sealed class Trie
     {
         TrieNode current = _root;
 
-        foreach(char c in prefix)
+        foreach (char c in prefix)
         {
-            if(!current.Children.TryGetValue(c, out TrieNode? child))
+            if (!current.Children.TryGetValue(c, out TrieNode? child))
             {
                 return null;
             }
@@ -29,9 +29,9 @@ public sealed class Trie
 
     static bool Remove(TrieNode node, string word, int index)
     {
-        if(index == word.Length)
+        if (index == word.Length)
         {
-            if(!node.IsEndOfWord)
+            if (!node.IsEndOfWord)
             {
                 return false;
             }
@@ -42,14 +42,14 @@ public sealed class Trie
 
         char c = word[index];
 
-        if(!node.Children.TryGetValue(c, out TrieNode? child))
+        if (!node.Children.TryGetValue(c, out TrieNode? child))
         {
             return false;
         }
 
         bool removed = Remove(child, word, index + 1);
 
-        if(removed && !child.IsEndOfWord && (child.Children.Count == 0))
+        if (removed && !child.IsEndOfWord && (child.Children.Count == 0))
         {
             node.Children.Remove(c);
         }
@@ -77,14 +77,14 @@ public sealed class Trie
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="prefix"/> is <c>null</c>.</exception>
     public IEnumerable<string> GetWordsWithPrefix(string prefix)
     {
-        if(prefix is null)
+        if (prefix is null)
         {
             throw new ArgumentNullException(nameof(prefix), "Prefix must not be null.");
         }
 
         TrieNode? node = FindNode(prefix);
 
-        if(node is null)
+        if (node is null)
         {
             yield break;
         }
@@ -92,11 +92,11 @@ public sealed class Trie
         Stack<(TrieNode Node, string Word)> stack = new();
         stack.Push((node, prefix));
 
-        while(stack.Count > 0)
+        while (stack.Count > 0)
         {
             var (current, word) = stack.Pop();
 
-            if(current.IsEndOfWord)
+            if (current.IsEndOfWord)
             {
                 yield return word;
             }
@@ -115,16 +115,16 @@ public sealed class Trie
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="word"/> is <c>null</c>.</exception>
     public void Insert(string word)
     {
-        if(word is null)
+        if (word is null)
         {
             throw new ArgumentNullException(nameof(word), "Word must not be null.");
         }
 
         TrieNode current = _root;
 
-        foreach(char c in word)
+        foreach (char c in word)
         {
-            if(!current.Children.TryGetValue(c, out TrieNode? child))
+            if (!current.Children.TryGetValue(c, out TrieNode? child))
             {
                 child = new TrieNode();
                 current.Children[c] = child;
@@ -133,7 +133,7 @@ public sealed class Trie
             current = child;
         }
 
-        if(!current.IsEndOfWord)
+        if (!current.IsEndOfWord)
         {
             current.IsEndOfWord = true;
             Count++;
@@ -148,12 +148,12 @@ public sealed class Trie
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="word"/> is <c>null</c>.</exception>
     public bool Remove(string word)
     {
-        if(word is null)
+        if (word is null)
         {
             throw new ArgumentNullException(nameof(word), "Word must not be null.");
         }
 
-        if(Remove(_root, word, 0))
+        if (Remove(_root, word, 0))
         {
             Count--;
             return true;
@@ -170,7 +170,7 @@ public sealed class Trie
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="word"/> is <c>null</c>.</exception>
     public bool Search(string word)
     {
-        if(word is null)
+        if (word is null)
         {
             throw new ArgumentNullException(nameof(word), "Word must not be null.");
         }
@@ -187,7 +187,7 @@ public sealed class Trie
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="prefix"/> is <c>null</c>.</exception>
     public bool StartsWith(string prefix)
     {
-        if(prefix is null)
+        if (prefix is null)
         {
             throw new ArgumentNullException(nameof(prefix), "Prefix must not be null.");
         }

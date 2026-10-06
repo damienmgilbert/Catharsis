@@ -28,15 +28,15 @@ public sealed class CreditCardLuhnAttribute : ValidationAttribute
         int sum = 0;
         bool doubleDigit = false;
 
-        for(int index = digits.Length - 1; index >= 0; index--)
+        for (int index = digits.Length - 1; index >= 0; index--)
         {
             int digit = digits[index] - '0';
 
-            if(doubleDigit)
+            if (doubleDigit)
             {
                 digit *= 2;
 
-                if(digit > 9)
+                if (digit > 9)
                 {
                     digit -= 9;
                 }
@@ -54,21 +54,21 @@ public sealed class CreditCardLuhnAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null or string { Length: 0 })
+        if (value is null or string { Length: 0 })
         {
             return ValidationResult.Success;
         }
 
-        if((value is not string text) || !text.All(static c => char.IsDigit(c) || (c == ' ') || (c == '-')))
+        if ((value is not string text) || !text.All(static c => char.IsDigit(c) || (c == ' ') || (c == '-')))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         string digits = new([.. text.Where(char.IsDigit)]);
 
         bool isValid = (digits.Length >= 2) && PassesLuhnCheck(digits);
 
-        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
     }
     #endregion
 }

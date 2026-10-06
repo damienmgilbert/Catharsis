@@ -36,17 +36,17 @@ public sealed class JitteredDelayCalculator
     ///</exception>
     public JitteredDelayCalculator(TimeSpan baseDelay, TimeSpan maxDelay, double multiplier = 2.0, JitterStrategy jitter = JitterStrategy.Full, Random? random = null)
     {
-        if(baseDelay < TimeSpan.Zero)
+        if (baseDelay < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(baseDelay), "Base delay must not be negative.");
         }
 
-        if(maxDelay < baseDelay)
+        if (maxDelay < baseDelay)
         {
             throw new ArgumentOutOfRangeException(nameof(maxDelay), "Maximum delay must not be less than the base delay.");
         }
 
-        if(multiplier < 1.0)
+        if (multiplier < 1.0)
         {
             throw new ArgumentOutOfRangeException(nameof(multiplier), "Multiplier must be at least 1.0.");
         }
@@ -66,7 +66,7 @@ public sealed class JitteredDelayCalculator
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="attempt"/> is negative.</exception>
     public TimeSpan ComputeDelay(int attempt)
     {
-        if(attempt < 0)
+        if (attempt < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(attempt), "Attempt must not be negative.");
         }

@@ -1,4 +1,4 @@
-﻿using Catharsis.ComponentModel;
+using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
 
@@ -176,10 +176,10 @@ public partial class PooledComponentTests
         TestPooledComponent component = new();
 
         // Act
-        for(int i = 0; i < activationCount; i++)
+        for (int i = 0; i < activationCount; i++)
         {
             component.Activate();
-            if(i < activationCount - 1)
+            if (i < activationCount - 1)
             {
                 component.Reset();
             }

@@ -65,10 +65,10 @@ public class Base32CodecTests
     [TestMethod]
     public void RoundTrip_VariousLengths_ReturnsOriginalBytes()
     {
-        for(int length = 0; length <= 20; length++)
+        for (int length = 0; length <= 20; length++)
         {
             byte[] original = new byte[length];
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 original[i] = (byte)(i * 7);
             }

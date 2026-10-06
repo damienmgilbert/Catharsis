@@ -102,7 +102,7 @@ public sealed class ImageBuffer<TPixel> : IDisposable where TPixel : unmanaged
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

@@ -18,7 +18,7 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static T[] Add<T>(this T[] source, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
@@ -39,12 +39,12 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static T[] AddRange<T>(this T[] source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
@@ -68,24 +68,24 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid insert range.</exception>
     public static T[] InsertAt<T>(this T[] source, int index, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if((index < 0) || (index > source.Length))
+        if ((index < 0) || (index > source.Length))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the valid insert range.");
         }
 
         T[] result = new T[source.Length + 1];
-        if(index > 0)
+        if (index > 0)
         {
             Array.Copy(source, 0, result, 0, index);
         }
 
         result[index] = item;
-        if(index < source.Length)
+        if (index < source.Length)
         {
             Array.Copy(source, index, result, index + 1, source.Length - index);
         }
@@ -106,30 +106,30 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid insert range.</exception>
     public static T[] InsertRange<T>(this T[] source, int index, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        if((index < 0) || (index > source.Length))
+        if ((index < 0) || (index > source.Length))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the valid insert range.");
         }
 
         T[] itemArray = items as T[] ?? [.. items];
         T[] result = new T[source.Length + itemArray.Length];
-        if(index > 0)
+        if (index > 0)
         {
             Array.Copy(source, 0, result, 0, index);
         }
 
         Array.Copy(itemArray, 0, result, index, itemArray.Length);
-        if(index < source.Length)
+        if (index < source.Length)
         {
             Array.Copy(source, index, result, index + itemArray.Length, source.Length - index);
         }
@@ -147,18 +147,18 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static T[] ModifyAll<T>(this T[] source, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         T[] result = new T[source.Length];
-        for(int i = 0; i < source.Length; i++)
+        for (int i = 0; i < source.Length; i++)
         {
             result[i] = modifier(source[i]);
         }
@@ -178,23 +178,23 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="predicate"/>, or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static T[] ModifyWhere<T>(this T[] source, Func<T, bool> predicate, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         T[] result = new T[source.Length];
-        for(int i = 0; i < source.Length; i++)
+        for (int i = 0; i < source.Length; i++)
         {
             result[i] = predicate(source[i]) ? modifier(source[i]) : source[i];
         }
@@ -212,7 +212,7 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static T[] Remove<T>(this T[] source, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
@@ -231,12 +231,12 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static T[] RemoveAll<T>(this T[] source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -255,23 +255,23 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of the array.</exception>
     public static T[] RemoveAt<T>(this T[] source, int index)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if((index < 0) || (index >= source.Length))
+        if ((index < 0) || (index >= source.Length))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the bounds of the array.");
         }
 
         T[] result = new T[source.Length - 1];
-        if(index > 0)
+        if (index > 0)
         {
             Array.Copy(source, 0, result, 0, index);
         }
 
-        if(index < source.Length - 1)
+        if (index < source.Length - 1)
         {
             Array.Copy(source, index + 1, result, index, source.Length - index - 1);
         }
@@ -291,12 +291,12 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of the array.</exception>
     public static T[] SetAt<T>(this T[] source, int index, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if((index < 0) || (index >= source.Length))
+        if ((index < 0) || (index >= source.Length))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the bounds of the array.");
         }
@@ -319,23 +319,23 @@ public static class ArrayExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is negative or the replacement extends beyond the array.</exception>
     public static T[] SetRange<T>(this T[] source, int index, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source array must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        if(index < 0)
+        if (index < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index must not be negative.");
         }
 
         T[] itemArray = items as T[] ?? [.. items];
-        if(index + itemArray.Length > source.Length)
+        if (index + itemArray.Length > source.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Replacement range extends beyond the array bounds.");
         }

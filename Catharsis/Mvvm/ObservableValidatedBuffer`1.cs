@@ -40,7 +40,7 @@ public sealed class ObservableValidatedBuffer<T> : ObservablePooledBuffer<T>, IN
     #region Private methods
     void OnBufferPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if(args.PropertyName == nameof(Count))
+        if (args.PropertyName == nameof(Count))
         {
             Revalidate();
         }

@@ -27,7 +27,7 @@ public sealed class AsyncProducerConsumerQueue<T>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 1.</exception>
     public AsyncProducerConsumerQueue(int capacity, BoundedChannelFullMode fullMode = BoundedChannelFullMode.Wait)
     {
-        if(capacity < 1)
+        if (capacity < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be at least 1.");
         }

@@ -28,7 +28,8 @@ public class AtomicFileWriterTests
             AtomicFileWriter.Write(path, Encoding.UTF8.GetBytes("hello"));
 
             Assert.AreEqual("hello", File.ReadAllText(path));
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -45,7 +46,8 @@ public class AtomicFileWriterTests
             AtomicFileWriter.Write(path, Encoding.UTF8.GetBytes("new content"));
 
             Assert.AreEqual("new content", File.ReadAllText(path));
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -64,7 +66,8 @@ public class AtomicFileWriterTests
 
             string[] leftovers = Directory.GetFiles(directory, $"{prefix}.*.tmp");
             Assert.IsEmpty(leftovers);
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -87,7 +90,8 @@ public class AtomicFileWriterTests
             await AtomicFileWriter.WriteAsync(path, Encoding.UTF8.GetBytes("hello async"));
 
             Assert.AreEqual("hello async", await File.ReadAllTextAsync(path));
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }

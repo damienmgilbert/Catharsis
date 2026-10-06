@@ -43,7 +43,8 @@ public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDela
             await Task.Delay(debounceDelay, cancellationToken).ConfigureAwait(false);
             _pending.TryRemove(args.FullPath, out _);
             Changed?.Invoke(this, args);
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
     }
@@ -69,7 +70,7 @@ public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDela
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -83,7 +84,7 @@ public sealed class DirectoryWatcherDebounced(string path, TimeSpan debounceDela
         _watcher.Renamed -= OnRawEvent;
         _watcher.Dispose();
 
-        foreach(CancellationTokenSource source in _pending.Values)
+        foreach (CancellationTokenSource source in _pending.Values)
         {
             source.Cancel();
             source.Dispose();

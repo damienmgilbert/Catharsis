@@ -28,7 +28,7 @@ public sealed class CompositeValidationResult
     ///<exception cref="ValidationException">Validation failed.</exception>
     public void ThrowIfInvalid()
     {
-        if(_results.Count > 0)
+        if (_results.Count > 0)
         {
             throw new ValidationException(_results[0], validatingAttribute: null, value: null);
         }

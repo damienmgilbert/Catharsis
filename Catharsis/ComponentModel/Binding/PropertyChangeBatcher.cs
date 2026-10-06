@@ -51,17 +51,18 @@ public sealed class PropertyChangeBatcher : IDisposable
     #region Private methods
     void OnSourcePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         string name = e.PropertyName ?? string.Empty;
 
-        if(_batchDepth > 0)
+        if (_batchDepth > 0)
         {
             _pending.Add(name);
-        } else
+        }
+        else
         {
             _raisePropertyChanged(name);
         }
@@ -94,7 +95,7 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -112,13 +113,13 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///</exception>
     public void EndBatch()
     {
-        if(Interlocked.Decrement(ref _batchDepth) < 0)
+        if (Interlocked.Decrement(ref _batchDepth) < 0)
         {
             Interlocked.Increment(ref _batchDepth);
             throw new InvalidOperationException("EndBatch was called without a matching BeginBatch.");
         }
 
-        if(_batchDepth == 0)
+        if (_batchDepth == 0)
         {
             Flush();
         }
@@ -129,7 +130,7 @@ public sealed class PropertyChangeBatcher : IDisposable
     ///</summary>
     public void Flush()
     {
-        if(_pending.Count == 0)
+        if (_pending.Count == 0)
         {
             return;
         }
@@ -137,7 +138,7 @@ public sealed class PropertyChangeBatcher : IDisposable
         string[] names = [.. _pending];
         _pending.Clear();
 
-        foreach(string name in names)
+        foreach (string name in names)
         {
             _raisePropertyChanged(name);
         }

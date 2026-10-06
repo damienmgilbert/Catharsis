@@ -32,12 +32,12 @@ public sealed class TieredPricingStrategy<TItem> : IPricingStrategy<TItem>
 
         _tiers = [.. tiers.OrderBy(static t => t.MinQuantity)];
 
-        if(_tiers.Length == 0 || _tiers[0].MinQuantity > 1)
+        if (_tiers.Length == 0 || _tiers[0].MinQuantity > 1)
         {
             throw new ArgumentException("Tiers must be non-empty and the lowest minimum quantity must be 0 or 1.", nameof(tiers));
         }
 
-        if(_tiers.Select(static t => t.MinQuantity).Distinct().Count() != _tiers.Length)
+        if (_tiers.Select(static t => t.MinQuantity).Distinct().Count() != _tiers.Length)
         {
             throw new ArgumentException("Tiers must not share a minimum quantity.", nameof(tiers));
         }

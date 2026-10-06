@@ -93,7 +93,7 @@ public class BindableRecord<T> : INotifyPropertyChanged, INotifyPropertyChanging
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            if(ReferenceEquals(_value, value))
+            if (ReferenceEquals(_value, value))
             {
                 return;
             }

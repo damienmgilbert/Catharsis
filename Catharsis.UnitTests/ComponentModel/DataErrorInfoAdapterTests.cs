@@ -83,7 +83,7 @@ public class DataErrorInfoAdapterTests
         #region Public methods
         public void AddError(string propertyName, string error)
         {
-            if(!_errors.TryGetValue(propertyName, out List<string>? list))
+            if (!_errors.TryGetValue(propertyName, out List<string>? list))
             {
                 list = [];
                 _errors[propertyName] = list;
@@ -97,7 +97,7 @@ public class DataErrorInfoAdapterTests
 
         public IEnumerable GetErrors(string? propertyName)
         {
-            if(string.IsNullOrEmpty(propertyName))
+            if (string.IsNullOrEmpty(propertyName))
             {
                 return _errors.SelectMany(static kvp => kvp.Value);
             }

@@ -44,14 +44,14 @@ public static class OptionalDependencyResolver
         ParameterInfo[] parameters = constructor.GetParameters();
         object?[] arguments = new object?[parameters.Length];
 
-        for(int i = 0; i < parameters.Length; i++)
+        for (int i = 0; i < parameters.Length; i++)
         {
             ParameterInfo parameter = parameters[i];
             object? value = services.GetService(parameter.ParameterType);
 
-            if(value is null)
+            if (value is null)
             {
-                if(parameter.IsDefined(typeof(OptionalDependencyAttribute), inherit: false) || parameter.HasDefaultValue)
+                if (parameter.IsDefined(typeof(OptionalDependencyAttribute), inherit: false) || parameter.HasDefaultValue)
                 {
                     value = parameter.HasDefaultValue ? parameter.DefaultValue : DefaultOf(parameter.ParameterType);
                 }

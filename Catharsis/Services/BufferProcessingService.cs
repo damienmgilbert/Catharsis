@@ -50,7 +50,7 @@ public sealed partial class BufferProcessingService : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -117,12 +117,13 @@ public sealed partial class BufferProcessingService : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false)) > 0)
+            while ((bytesRead = await inputStream.ReadAsync(readBuffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
                 byte[] result = await ProcessAsync(readBuffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
                 await outputStream.WriteAsync(result, cancellationToken).ConfigureAwait(false);
             }
-        } finally
+        }
+        finally
         {
             _pool.Return(readBuffer);
         }

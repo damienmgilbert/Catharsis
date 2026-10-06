@@ -45,7 +45,7 @@ public sealed class ObservableListTests
         int collectionChangedCount = 0;
         list.CollectionChanged += (s, e) => collectionChangedCount++;
 
-        list.AddRange([ 1, 2, 3 ]);
+        list.AddRange([1, 2, 3]);
 
         Assert.AreEqual(1, collectionChangedCount);
     }
@@ -61,7 +61,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Constructor_WithCollection_CopiesItems()
     {
-        ObservableList<int> list = [with([ 1, 2, 3 ])];
+        ObservableList<int> list = [with([1, 2, 3])];
 
         Assert.HasCount(3, list);
     }
@@ -71,7 +71,7 @@ public sealed class ObservableListTests
     {
         ObservableList<int> list = [];
 
-        using(list.SuppressNotifications())
+        using (list.SuppressNotifications())
         {
             Assert.IsTrue(list.IsNotificationSuppressed);
         }
@@ -82,7 +82,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void Remove_RaisesCollectionChanged()
     {
-        ObservableList<int> list = [with([ 1, 2, 3 ])];
+        ObservableList<int> list = [with([1, 2, 3])];
         NotifyCollectionChangedAction? action = null;
         list.CollectionChanged += (s, e) => action = e.Action;
 
@@ -94,7 +94,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_NoMatches_ReturnsZero()
     {
-        ObservableList<int> list = [with([ 1, 2, 3 ])];
+        ObservableList<int> list = [with([1, 2, 3])];
 
         int removed = list.RemoveAll(static x => x > 10);
 
@@ -112,7 +112,7 @@ public sealed class ObservableListTests
     [TestMethod]
     public void RemoveAll_RemovesMatchingItems()
     {
-        ObservableList<int> list = [with([ 1, 2, 3, 4, 5 ])];
+        ObservableList<int> list = [with([1, 2, 3, 4, 5])];
 
         int removed = list.RemoveAll(static x => x > 3);
 
@@ -131,9 +131,9 @@ public sealed class ObservableListTests
     [TestMethod]
     public void ReplaceAll_ReplacesContent()
     {
-        ObservableList<int> list = [with([ 1, 2, 3 ])];
+        ObservableList<int> list = [with([1, 2, 3])];
 
-        list.ReplaceAll([ 10, 20 ]);
+        list.ReplaceAll([10, 20]);
 
         Assert.HasCount(2, list);
         Assert.AreEqual(10, list[0]);
@@ -147,15 +147,15 @@ public sealed class ObservableListTests
         int resetCount = 0;
         list.CollectionChanged += (s, e) =>
         {
-            if(e.Action == NotifyCollectionChangedAction.Reset)
+            if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 resetCount++;
             }
         };
 
-        using(list.SuppressNotifications())
+        using (list.SuppressNotifications())
         {
-            using(list.SuppressNotifications())
+            using (list.SuppressNotifications())
             {
                 list.Add(1);
             }
@@ -172,7 +172,7 @@ public sealed class ObservableListTests
         int collectionChangedCount = 0;
         list.CollectionChanged += (s, e) => collectionChangedCount++;
 
-        using(list.SuppressNotifications())
+        using (list.SuppressNotifications())
         {
             list.Add(1);
             list.Add(2);

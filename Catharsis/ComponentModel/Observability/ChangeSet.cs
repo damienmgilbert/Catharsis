@@ -89,7 +89,7 @@ public sealed class ChangeSet
     ///</returns>
     public ChangeEntry? Redo()
     {
-        if(_redoStack.Count == 0)
+        if (_redoStack.Count == 0)
         {
             return null;
         }
@@ -107,7 +107,7 @@ public sealed class ChangeSet
     ///</returns>
     public ChangeEntry? Undo()
     {
-        if(_undoStack.Count == 0)
+        if (_undoStack.Count == 0)
         {
             return null;
         }

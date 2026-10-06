@@ -39,7 +39,7 @@ public sealed class ComponentSnapshot<T> where T : class
     ///</summary>
     public void Capture()
     {
-        foreach(PropertyInfo property in _properties)
+        foreach (PropertyInfo property in _properties)
         {
             _values[property] = property.GetValue(Source);
         }
@@ -50,7 +50,7 @@ public sealed class ComponentSnapshot<T> where T : class
     ///</summary>
     public void Restore()
     {
-        foreach(KeyValuePair<PropertyInfo, object?> entry in _values)
+        foreach (KeyValuePair<PropertyInfo, object?> entry in _values)
         {
             entry.Key.SetValue(Source, entry.Value);
         }

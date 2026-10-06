@@ -66,29 +66,29 @@ public sealed class ComponentSite : ISite
     {
         ArgumentNullException.ThrowIfNull(serviceType);
 
-        if(serviceType == typeof(ISite))
+        if (serviceType == typeof(ISite))
         {
             return this;
         }
 
-        if(serviceType == typeof(IContainer))
+        if (serviceType == typeof(IContainer))
         {
             return Container;
         }
 
-        if(serviceType == typeof(IComponent))
+        if (serviceType == typeof(IComponent))
         {
             return Component;
         }
 
         object? service = _serviceProvider?.GetService(serviceType);
 
-        if(service is not null)
+        if (service is not null)
         {
             return service;
         }
 
-        if(Container is IServiceProvider containerProvider)
+        if (Container is IServiceProvider containerProvider)
         {
             return containerProvider.GetService(serviceType);
         }

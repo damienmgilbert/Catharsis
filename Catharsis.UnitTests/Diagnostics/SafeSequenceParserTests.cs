@@ -89,7 +89,7 @@ public class SafeSequenceParserTests
 
         public SequenceParseStatus TryParse(in ReadOnlySequence<byte> sequence, out SequencePosition consumed, out SequencePosition examined)
         {
-            if(ThrowOnParse)
+            if (ThrowOnParse)
             {
                 throw new InvalidOperationException("Parse error");
             }

@@ -45,7 +45,7 @@ public class ShuffleExtensionsTests
     [TestMethod]
     public void Shuffle_List_ChangesOrderForNonTrivialInput()
     {
-        List<int> original = Enumerable.Range(0, 50).ToList();
+        List<int> original = [.. Enumerable.Range(0, 50)];
         List<int> shuffled = [.. original];
 
         shuffled.Shuffle(new Random(1));

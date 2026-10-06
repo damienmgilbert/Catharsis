@@ -13,7 +13,7 @@ public class ObservablePooledBufferTests
     public void Clear_ResetsCount()
     {
         using ObservablePooledBuffer<byte> buf = new();
-        buf.Write([ 1, 2, 3 ]);
+        buf.Write([1, 2, 3]);
         buf.Clear();
         Assert.AreEqual(0, buf.Count);
     }
@@ -41,7 +41,7 @@ public class ObservablePooledBufferTests
         List<string> changedProps = [];
         buf.PropertyChanged += (_, e) => changedProps.Add(e.PropertyName!);
 
-        buf.Write([ 42 ]);
+        buf.Write([42]);
 
         Assert.Contains("Count", changedProps);
     }
@@ -50,7 +50,7 @@ public class ObservablePooledBufferTests
     public void ToArray_ReturnsCopy()
     {
         using ObservablePooledBuffer<int> buf = new();
-        buf.Write([ 10, 20, 30 ]);
+        buf.Write([10, 20, 30]);
         int[] arr = buf.ToArray();
         CollectionAssert.AreEqual(new[] { 10, 20, 30 }, arr);
     }
@@ -68,7 +68,7 @@ public class ObservablePooledBufferTests
     public void Write_IncreasesCount()
     {
         using ObservablePooledBuffer<byte> buf = new();
-        buf.Write([ 1, 2, 3 ]);
+        buf.Write([1, 2, 3]);
         Assert.AreEqual(3, buf.Count);
     }
 
@@ -76,7 +76,7 @@ public class ObservablePooledBufferTests
     public void WrittenMemory_ReturnsWrittenData()
     {
         using ObservablePooledBuffer<byte> buf = new();
-        buf.Write([ 10, 20 ]);
+        buf.Write([10, 20]);
         ReadOnlyMemory<byte> mem = buf.WrittenMemory;
         Assert.AreEqual(2, mem.Length);
         Assert.AreEqual(10, mem.Span[0]);

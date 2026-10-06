@@ -19,7 +19,7 @@ public class LruCacheBenchmarks
     {
         Dictionary<int, int> dictionary = [];
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             dictionary[i % KeySpace] = i;
             dictionary.TryGetValue(i % KeySpace, out _);
@@ -33,7 +33,7 @@ public class LruCacheBenchmarks
     {
         LruCache<int, int> cache = new(KeySpace);
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             cache.AddOrUpdate(i % KeySpace, i);
             cache.TryGetValue(i % KeySpace, out _);
@@ -60,7 +60,7 @@ public class MinMaxHeapBenchmarks
         Random random = new(42);
         _data = new int[ItemCount];
 
-        for(int i = 0; i < ItemCount; i++)
+        for (int i = 0; i < ItemCount; i++)
         {
             _data[i] = random.Next();
         }
@@ -73,12 +73,12 @@ public class MinMaxHeapBenchmarks
         int min = 0;
         int max = 0;
 
-        while(list.Count > 0)
+        while (list.Count > 0)
         {
             min = list.Min();
             list.Remove(min);
 
-            if(list.Count > 0)
+            if (list.Count > 0)
             {
                 max = list.Max();
                 list.Remove(max);
@@ -95,11 +95,11 @@ public class MinMaxHeapBenchmarks
         int min = 0;
         int max = 0;
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             min = heap.ExtractMin();
 
-            if(heap.Count > 0)
+            if (heap.Count > 0)
             {
                 max = heap.ExtractMax();
             }
@@ -131,14 +131,14 @@ public class SkipListBenchmarks
     {
         SortedSet<int> set = [];
 
-        foreach(int value in _data)
+        foreach (int value in _data)
         {
             set.Add(value);
         }
 
         long sum = 0;
 
-        foreach(int value in set)
+        foreach (int value in set)
         {
             sum += value;
         }
@@ -151,14 +151,14 @@ public class SkipListBenchmarks
     {
         SkipList<int> list = new();
 
-        foreach(int value in _data)
+        foreach (int value in _data)
         {
             list.Add(value);
         }
 
         long sum = 0;
 
-        foreach(int value in list)
+        foreach (int value in list)
         {
             sum += value;
         }
@@ -187,7 +187,7 @@ public class BloomFilterBenchmarks
         _bloomFilter = new BloomFilter<int>(ItemCount);
         _hashSet = [];
 
-        for(int i = 0; i < ItemCount; i++)
+        for (int i = 0; i < ItemCount; i++)
         {
             _bloomFilter.Add(i);
             _hashSet.Add(i);
@@ -196,7 +196,7 @@ public class BloomFilterBenchmarks
         Random random = new(3);
         _lookups = new int[LookupCount];
 
-        for(int i = 0; i < _lookups.Length; i++)
+        for (int i = 0; i < _lookups.Length; i++)
         {
             _lookups[i] = random.Next(0, ItemCount * 2);
         }
@@ -207,9 +207,9 @@ public class BloomFilterBenchmarks
     {
         int hits = 0;
 
-        foreach(int value in _lookups)
+        foreach (int value in _lookups)
         {
-            if(_hashSet.Contains(value))
+            if (_hashSet.Contains(value))
             {
                 hits++;
             }
@@ -223,9 +223,9 @@ public class BloomFilterBenchmarks
     {
         int hits = 0;
 
-        foreach(int value in _lookups)
+        foreach (int value in _lookups)
         {
-            if(_bloomFilter.MightContain(value))
+            if (_bloomFilter.MightContain(value))
             {
                 hits++;
             }

@@ -49,7 +49,7 @@ public class CircuitBreakerPatternTests
     {
         CircuitBreakerPattern breaker = new(failureThreshold: 2);
 
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             Assert.ThrowsExactly<InvalidOperationException>(() => breaker.Execute<int>(static () => throw new InvalidOperationException()));
         }

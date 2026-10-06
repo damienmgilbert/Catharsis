@@ -31,12 +31,12 @@ public abstract class ComponentBase : IComponent, IServiceProvider
     ///</param>
     protected virtual void Dispose(bool disposing)
     {
-        if(IsDisposed)
+        if (IsDisposed)
         {
             return;
         }
 
-        if(disposing)
+        if (disposing)
         {
             _site?.Container?.Remove(this);
             _site = null;
@@ -91,17 +91,17 @@ public abstract class ComponentBase : IComponent, IServiceProvider
     {
         ArgumentNullException.ThrowIfNull(serviceType);
 
-        if(serviceType == typeof(IComponent))
+        if (serviceType == typeof(IComponent))
         {
             return this;
         }
 
-        if(serviceType == typeof(ISite))
+        if (serviceType == typeof(ISite))
         {
             return _site;
         }
 
-        if(serviceType == typeof(IContainer))
+        if (serviceType == typeof(IContainer))
         {
             return _site?.Container;
         }

@@ -15,7 +15,7 @@ public class PrototypePattern
     ///<returns>A clone of <paramref name="obj"/>.</returns>
     public static T Prototype<T>(T obj, Func<T, T> clone)
     {
-        if(clone is null)
+        if (clone is null)
         {
             throw new ArgumentNullException(nameof(clone), "Clone function must not be null.");
         }

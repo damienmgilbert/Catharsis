@@ -19,7 +19,7 @@ public static class DateTimeExtensions
     {
         int direction = Math.Sign(days);
 
-        if(direction == 0)
+        if (direction == 0)
         {
             return value;
         }
@@ -27,11 +27,11 @@ public static class DateTimeExtensions
         DateTime result = value;
         int remaining = Math.Abs(days);
 
-        while(remaining > 0)
+        while (remaining > 0)
         {
             result = result.AddDays(direction);
 
-            if(!result.IsWeekend())
+            if (!result.IsWeekend())
             {
                 remaining--;
             }

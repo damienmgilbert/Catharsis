@@ -34,7 +34,7 @@ public class MemoizingEnumerableTests
 
         IEnumerable<int> Source()
         {
-            foreach(int value in new[] { 1, 2, 3 })
+            foreach (int value in new[] { 1, 2, 3 })
             {
                 callCount++;
                 yield return value;

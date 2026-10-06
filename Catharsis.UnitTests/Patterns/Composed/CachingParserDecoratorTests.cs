@@ -27,7 +27,7 @@ public class CachingParserDecoratorTests
         {
             Calls++;
 
-            if(Status == SequenceParseStatus.Cancelled)
+            if (Status == SequenceParseStatus.Cancelled)
             {
                 consumed = sequence.Start;
                 examined = sequence.Start;
@@ -36,7 +36,7 @@ public class CachingParserDecoratorTests
 
             SequencePosition? newline = sequence.PositionOf((byte)'\n');
 
-            if(newline is null)
+            if (newline is null)
             {
                 consumed = sequence.Start;
                 examined = sequence.End;

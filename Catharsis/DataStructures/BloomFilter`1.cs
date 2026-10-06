@@ -38,12 +38,12 @@ public sealed class BloomFilter<T>
     ///</exception>
     public BloomFilter(int expectedItemCount, double falsePositiveRate = 0.01)
     {
-        if(expectedItemCount < 1)
+        if (expectedItemCount < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(expectedItemCount), "Expected item count must be at least 1.");
         }
 
-        if(falsePositiveRate <= 0 || falsePositiveRate >= 1)
+        if (falsePositiveRate <= 0 || falsePositiveRate >= 1)
         {
             throw new ArgumentOutOfRangeException(nameof(falsePositiveRate), "False-positive rate must be strictly between 0 and 1.");
         }
@@ -61,7 +61,7 @@ public sealed class BloomFilter<T>
     ///<param name="item">The item to add.</param>
     public void Add(T item)
     {
-        foreach(int index in GetIndices(item))
+        foreach (int index in GetIndices(item))
         {
             _bits[index] = true;
         }
@@ -79,9 +79,9 @@ public sealed class BloomFilter<T>
     ///<returns><c>false</c> if the item was definitely never added; <c>true</c> if it probably was.</returns>
     public bool MightContain(T item)
     {
-        foreach(int index in GetIndices(item))
+        foreach (int index in GetIndices(item))
         {
-            if(!_bits[index])
+            if (!_bits[index])
             {
                 return false;
             }
@@ -95,17 +95,17 @@ public sealed class BloomFilter<T>
         int h1 = item?.GetHashCode() ?? 0;
         int h2 = unchecked((int)(h1 * 0x9E3779B9));
 
-        if(h2 == 0)
+        if (h2 == 0)
         {
             h2 = 1;
         }
 
-        for(int i = 0; i < _hashFunctionCount; i++)
+        for (int i = 0; i < _hashFunctionCount; i++)
         {
             int combined = unchecked(h1 + (i * h2));
             int index = combined % _bits.Count;
 
-            if(index < 0)
+            if (index < 0)
             {
                 index += _bits.Count;
             }

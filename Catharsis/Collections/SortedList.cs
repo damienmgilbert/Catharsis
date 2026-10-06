@@ -30,7 +30,7 @@ public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public SortedList(IComparer<T> comparer)
     {
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Comparer must not be null.");
         }
@@ -63,7 +63,7 @@ public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
     {
         int index = _items.BinarySearch(item, _comparer);
 
-        if(index < 0)
+        if (index < 0)
         {
             index = ~index;
         }
@@ -99,7 +99,7 @@ public sealed class SortedList<T> : ICollection<T>, IReadOnlyList<T>
     {
         int index = _items.BinarySearch(item, _comparer);
 
-        if(index < 0)
+        if (index < 0)
         {
             return false;
         }

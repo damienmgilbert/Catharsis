@@ -19,12 +19,12 @@ public class Mediator
     ///<returns>The result produced by the mediator.</returns>
     public static TResult Mediate<T, TMediator, TResult>(T obj, TMediator mediator, Func<TMediator, T, TResult> route)
     {
-        if(mediator is null)
+        if (mediator is null)
         {
             throw new ArgumentNullException(nameof(mediator), "Mediator must not be null.");
         }
 
-        if(route is null)
+        if (route is null)
         {
             throw new ArgumentNullException(nameof(route), "Route function must not be null.");
         }
@@ -44,12 +44,12 @@ public class Mediator
     ///<returns>The original <paramref name="obj"/>.</returns>
     public static T Mediate<T, TMediator>(T obj, TMediator mediator, Action<TMediator, T> route)
     {
-        if(mediator is null)
+        if (mediator is null)
         {
             throw new ArgumentNullException(nameof(mediator), "Mediator must not be null.");
         }
 
-        if(route is null)
+        if (route is null)
         {
             throw new ArgumentNullException(nameof(route), "Route action must not be null.");
         }

@@ -47,9 +47,9 @@ public sealed class ComponentModelInspector
 
         List<string> result = [];
 
-        foreach(Type iface in relevant)
+        foreach (Type iface in relevant)
         {
-            if(iface.IsAssignableFrom(componentType))
+            if (iface.IsAssignableFrom(componentType))
             {
                 result.Add(iface.Name);
             }
@@ -73,11 +73,11 @@ public sealed class ComponentModelInspector
         EventDescriptorCollection events = TypeDescriptor.GetEvents(component);
         List<EventReport> reports = [with(events.Count)];
 
-        foreach(EventDescriptor evt in events)
+        foreach (EventDescriptor evt in events)
         {
             List<Attribute> attributes = [];
 
-            foreach(Attribute attr in evt.Attributes)
+            foreach (Attribute attr in evt.Attributes)
             {
                 attributes.Add(attr);
             }
@@ -104,13 +104,13 @@ public sealed class ComponentModelInspector
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
         List<PropertyReport> reports = [with(properties.Count)];
 
-        foreach(PropertyDescriptor property in properties)
+        foreach (PropertyDescriptor property in properties)
         {
             object? value = property.GetValue(component);
             System.ComponentModel.TypeConverter converter = property.Converter;
             List<Attribute> attributes = [];
 
-            foreach(Attribute attr in property.Attributes)
+            foreach (Attribute attr in property.Attributes)
             {
                 attributes.Add(attr);
             }
@@ -151,22 +151,22 @@ public sealed class ComponentModelInspector
     {
         ArgumentNullException.ThrowIfNull(component);
 
-        if((component is INotifyDataErrorInfo errorInfo) && errorInfo.HasErrors)
+        if ((component is INotifyDataErrorInfo errorInfo) && errorInfo.HasErrors)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
             Dictionary<string, IReadOnlyList<string>> dict = [with(StringComparer.Ordinal)];
 
-            foreach(PropertyDescriptor prop in properties)
+            foreach (PropertyDescriptor prop in properties)
             {
                 List<string> propErrors = [.. errorInfo.GetErrors(prop.Name).Cast<object>().Select(static e => e.ToString() ?? string.Empty).Where(static e => !string.IsNullOrWhiteSpace(e))];
 
-                if(propErrors.Count > 0)
+                if (propErrors.Count > 0)
                 {
                     dict[prop.Name] = propErrors;
                 }
             }
 
-            if(dict.Count > 0)
+            if (dict.Count > 0)
             {
                 errors = dict;
                 return true;

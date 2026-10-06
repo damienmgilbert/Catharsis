@@ -24,7 +24,7 @@ public sealed class FrequencyCounter<T>(IEqualityComparer<T>? comparer = null) w
     {
         ArgumentNullException.ThrowIfNull(item);
 
-        if(count < 1)
+        if (count < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 1.");
         }
@@ -53,20 +53,21 @@ public sealed class FrequencyCounter<T>(IEqualityComparer<T>? comparer = null) w
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 1.</exception>
     public bool Remove(T item, int count = 1)
     {
-        if(count < 1)
+        if (count < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 1.");
         }
 
-        if(!_counts.TryGetValue(item, out int current))
+        if (!_counts.TryGetValue(item, out int current))
         {
             return false;
         }
 
-        if(count >= current)
+        if (count >= current)
         {
             _counts.Remove(item);
-        } else
+        }
+        else
         {
             _counts[item] = current - count;
         }
@@ -82,7 +83,7 @@ public sealed class FrequencyCounter<T>(IEqualityComparer<T>? comparer = null) w
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="n"/> is less than 1.</exception>
     public IEnumerable<(T Item, int Count)> Top(int n)
     {
-        if(n < 1)
+        if (n < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(n), "Count must be at least 1.");
         }

@@ -27,7 +27,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
     bool MoveToNextSegment()
     {
         SequencePosition nextPos = _sequence.GetPosition(_currentIndex, _position);
-        if(_sequence.TryGet(ref nextPos, out ReadOnlyMemory<T> memory))
+        if (_sequence.TryGet(ref nextPos, out ReadOnlyMemory<T> memory))
         {
             _position = nextPos;
             _currentSpan = memory.Span;
@@ -40,7 +40,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
 
     bool TryReadNextSegment(out T value)
     {
-        if(MoveToNextSegment() && (_currentSpan.Length > 0))
+        if (MoveToNextSegment() && (_currentSpan.Length > 0))
         {
             value = _currentSpan[_currentIndex++];
             Consumed++;
@@ -61,10 +61,10 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
     {
         Guard.IsGreaterThanOrEqualTo(count, 0);
 
-        while(count > 0)
+        while (count > 0)
         {
             int available = _currentSpan.Length - _currentIndex;
-            if(count <= available)
+            if (count <= available)
             {
                 _currentIndex += (int)count;
                 Consumed += count;
@@ -74,7 +74,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
             count -= available;
             Consumed += available;
 
-            if(!MoveToNextSegment())
+            if (!MoveToNextSegment())
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(count), "Cannot advance past the end of the sequence.");
             }
@@ -90,7 +90,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
     {
         ReadOnlySequence<T> remaining = _sequence.Slice(Position);
         SequencePosition? found = remaining.PositionOf(value);
-        if(found is null)
+        if (found is null)
         {
             return -1;
         }
@@ -116,7 +116,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
     ///<returns><c>true</c> if an element is available; <c>false</c> if the end was reached.</returns>
     public readonly bool TryPeek(out T value)
     {
-        if(_currentIndex < _currentSpan.Length)
+        if (_currentIndex < _currentSpan.Length)
         {
             value = _currentSpan[_currentIndex];
             return true;
@@ -133,7 +133,7 @@ public ref struct SequenceCursor<T>(in ReadOnlySequence<T> sequence) where T : I
     ///<returns><c>true</c> if an element was read; <c>false</c> if the end was reached.</returns>
     public bool TryRead(out T value)
     {
-        if(_currentIndex < _currentSpan.Length)
+        if (_currentIndex < _currentSpan.Length)
         {
             value = _currentSpan[_currentIndex++];
             Consumed++;

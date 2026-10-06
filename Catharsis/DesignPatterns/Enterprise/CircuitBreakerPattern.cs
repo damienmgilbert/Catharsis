@@ -25,12 +25,12 @@ public sealed class CircuitBreakerPattern(int failureThreshold = 3)
     ///<exception cref="InvalidOperationException">The breaker is currently open.</exception>
     public T Execute<T>(Func<T> action)
     {
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
-        if(IsOpen)
+        if (IsOpen)
         {
             throw new InvalidOperationException("The circuit breaker is open.");
         }
@@ -40,7 +40,8 @@ public sealed class CircuitBreakerPattern(int failureThreshold = 3)
             T result = action();
             _consecutiveFailures = 0;
             return result;
-        } catch
+        }
+        catch
         {
             _consecutiveFailures++;
             throw;

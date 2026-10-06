@@ -24,12 +24,12 @@ public sealed class ComponentModelBinder : IDisposable
     #region Private methods
     static void DetachEntry(BindingEntry entry)
     {
-        if(entry.Source is INotifyPropertyChanged sourceNpc)
+        if (entry.Source is INotifyPropertyChanged sourceNpc)
         {
             sourceNpc.PropertyChanged -= entry.OnSourceChanged;
         }
 
-        if(entry.IsTwoWay && (entry.Target is INotifyPropertyChanged targetNpc))
+        if (entry.IsTwoWay && (entry.Target is INotifyPropertyChanged targetNpc))
         {
             targetNpc.PropertyChanged -= entry.OnTargetChanged;
         }
@@ -44,7 +44,7 @@ public sealed class ComponentModelBinder : IDisposable
 
     void SynchronizeProperty(BindingEntry entry, object sender, PropertyChangedEventArgs e)
     {
-        if(_isSynchronizing)
+        if (_isSynchronizing)
         {
             return;
         }
@@ -53,14 +53,16 @@ public sealed class ComponentModelBinder : IDisposable
 
         try
         {
-            if(ReferenceEquals(sender, entry.Source) && string.Equals(e.PropertyName, entry.SourceDescriptor.Name, StringComparison.Ordinal))
+            if (ReferenceEquals(sender, entry.Source) && string.Equals(e.PropertyName, entry.SourceDescriptor.Name, StringComparison.Ordinal))
             {
                 TransferValue(entry.SourceDescriptor, entry.Source, entry.TargetDescriptor, entry.Target);
-            } else if(entry.IsTwoWay && ReferenceEquals(sender, entry.Target) && string.Equals(e.PropertyName, entry.TargetDescriptor.Name, StringComparison.Ordinal))
+            }
+            else if (entry.IsTwoWay && ReferenceEquals(sender, entry.Target) && string.Equals(e.PropertyName, entry.TargetDescriptor.Name, StringComparison.Ordinal))
             {
                 TransferValue(entry.TargetDescriptor, entry.Target, entry.SourceDescriptor, entry.Source);
             }
-        } finally
+        }
+        finally
         {
             _isSynchronizing = false;
         }
@@ -68,14 +70,14 @@ public sealed class ComponentModelBinder : IDisposable
 
     void TransferValue(PropertyDescriptor fromProp, object fromObj, PropertyDescriptor toProp, object toObj)
     {
-        if(toProp.IsReadOnly)
+        if (toProp.IsReadOnly)
         {
             return;
         }
 
         object? value = fromProp.GetValue(fromObj);
 
-        if((value is null) || toProp.PropertyType.IsInstanceOfType(value))
+        if ((value is null) || toProp.PropertyType.IsInstanceOfType(value))
         {
             toProp.SetValue(toObj, value);
             return;
@@ -83,7 +85,7 @@ public sealed class ComponentModelBinder : IDisposable
 
         System.ComponentModel.TypeConverter converter = toProp.Converter;
 
-        if(converter.CanConvertFrom(value.GetType()))
+        if (converter.CanConvertFrom(value.GetType()))
         {
             object? converted = converter.ConvertFrom(null, Culture, value);
             toProp.SetValue(toObj, converted);
@@ -170,7 +172,7 @@ public sealed class ComponentModelBinder : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -189,11 +191,11 @@ public sealed class ComponentModelBinder : IDisposable
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(target);
 
-        for(int i = _bindings.Count - 1; i >= 0; i--)
+        for (int i = _bindings.Count - 1; i >= 0; i--)
         {
             BindingEntry entry = _bindings[i];
 
-            if(ReferenceEquals(entry.Source, source) && ReferenceEquals(entry.Target, target))
+            if (ReferenceEquals(entry.Source, source) && ReferenceEquals(entry.Target, target))
             {
                 DetachEntry(entry);
                 _bindings.RemoveAt(i);
@@ -206,7 +208,7 @@ public sealed class ComponentModelBinder : IDisposable
     ///</summary>
     public void UnbindAll()
     {
-        foreach(BindingEntry entry in _bindings)
+        foreach (BindingEntry entry in _bindings)
         {
             DetachEntry(entry);
         }

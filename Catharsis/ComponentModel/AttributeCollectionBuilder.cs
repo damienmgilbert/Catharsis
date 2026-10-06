@@ -37,7 +37,7 @@ public sealed class AttributeCollectionBuilder
     {
         ArgumentNullException.ThrowIfNull(existing);
 
-        foreach(Attribute attr in existing)
+        foreach (Attribute attr in existing)
         {
             _attributes[attr.GetType()] = attr;
         }
@@ -72,7 +72,7 @@ public sealed class AttributeCollectionBuilder
     {
         ArgumentNullException.ThrowIfNull(attributes);
 
-        foreach(Attribute attr in attributes)
+        foreach (Attribute attr in attributes)
         {
             _attributes[attr.GetType()] = attr;
         }
@@ -86,12 +86,12 @@ public sealed class AttributeCollectionBuilder
     ///<returns>A new <see cref="AttributeCollection"/>.</returns>
     public AttributeCollection Build()
     {
-        if(_attributes.Count == 0)
+        if (_attributes.Count == 0)
         {
             return AttributeCollection.Empty;
         }
 
-        return new AttributeCollection([ .. _attributes.Values ]);
+        return new AttributeCollection([.. _attributes.Values]);
     }
 
     ///<summary>
@@ -124,7 +124,7 @@ public sealed class AttributeCollectionBuilder
     {
         ArgumentNullException.ThrowIfNull(other);
 
-        foreach(Attribute attr in other)
+        foreach (Attribute attr in other)
         {
             _attributes[attr.GetType()] = attr;
         }
@@ -145,7 +145,7 @@ public sealed class AttributeCollectionBuilder
     {
         ArgumentNullException.ThrowIfNull(attributes);
 
-        foreach(Attribute attr in attributes)
+        foreach (Attribute attr in attributes)
         {
             _attributes[attr.GetType()] = attr;
         }

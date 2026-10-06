@@ -32,7 +32,7 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(!_map.TryGetValue(key, out List<TValue>? values))
+        if (!_map.TryGetValue(key, out List<TValue>? values))
         {
             values = [];
             _map[key] = values;
@@ -56,7 +56,7 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
     ///<inheritdoc/>
     public IEnumerator<KeyValuePair<TKey, IReadOnlyCollection<TValue>>> GetEnumerator()
     {
-        foreach(KeyValuePair<TKey, List<TValue>> entry in _map)
+        foreach (KeyValuePair<TKey, List<TValue>> entry in _map)
         {
             yield return new KeyValuePair<TKey, IReadOnlyCollection<TValue>>(entry.Key, entry.Value);
         }
@@ -73,14 +73,14 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(!_map.TryGetValue(key, out List<TValue>? values))
+        if (!_map.TryGetValue(key, out List<TValue>? values))
         {
             return false;
         }
 
         bool removed = values.Remove(value);
 
-        if(removed && values.Count == 0)
+        if (removed && values.Count == 0)
         {
             _map.Remove(key);
         }
@@ -103,7 +103,7 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
     ///<returns><c>true</c> if the key was found; otherwise <c>false</c>.</returns>
     public bool TryGetValues(TKey key, out IReadOnlyCollection<TValue> values)
     {
-        if(_map.TryGetValue(key, out List<TValue>? list))
+        if (_map.TryGetValue(key, out List<TValue>? list))
         {
             values = list;
             return true;
@@ -145,7 +145,7 @@ public sealed class MultiValueDictionary<TKey, TValue>(IEqualityComparer<TKey>? 
         {
             int total = 0;
 
-            foreach(List<TValue> values in _map.Values)
+            foreach (List<TValue> values in _map.Values)
             {
                 total += values.Count;
             }

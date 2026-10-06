@@ -40,14 +40,14 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         _disposed = true;
 
-        while(_pool.TryTake(out T? item))
+        while (_pool.TryTake(out T? item))
         {
             (item as IDisposable)?.Dispose();
         }
@@ -63,7 +63,7 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_pool.TryTake(out T? item))
+        if (_pool.TryTake(out T? item))
         {
             LogRented(typeof(T).Name);
             return item;
@@ -84,13 +84,14 @@ public sealed partial class PooledObjectFactory<T> : IDisposable where T : class
         Guard.IsNotNull(item);
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_pool.Count < _maxPoolSize)
+        if (_pool.Count < _maxPoolSize)
         {
             _pool.Add(item);
             Interlocked.Increment(ref _totalReturned);
 
             LogReturned(typeof(T).Name);
-        } else
+        }
+        else
         {
             LogPoolFull(typeof(T).Name);
             (item as IDisposable)?.Dispose();

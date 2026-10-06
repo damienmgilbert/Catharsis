@@ -19,7 +19,7 @@ public static class ShuffleExtensions
 
         Random rng = random ?? Random.Shared;
 
-        for(int i = list.Count - 1; i > 0; i--)
+        for (int i = list.Count - 1; i > 0; i--)
         {
             int j = rng.Next(i + 1);
             (list[i], list[j]) = (list[j], list[i]);

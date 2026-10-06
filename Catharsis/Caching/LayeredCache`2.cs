@@ -91,14 +91,14 @@ public sealed class LayeredCache<TKey, TValue> where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(_local.TryGetValue(key, out TValue? localValue))
+        if (_local.TryGetValue(key, out TValue? localValue))
         {
             return (true, localValue);
         }
 
         (bool found, TValue backingValue) = await _backing.TryGetAsync(key, cancellationToken).ConfigureAwait(false);
 
-        if(found)
+        if (found)
         {
             _local[key] = backingValue;
             return (true, backingValue);

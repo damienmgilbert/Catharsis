@@ -16,12 +16,12 @@ public class Builder
     ///<returns>The configured <paramref name="obj"/>.</returns>
     public static T Build<T>(T obj, params Action<T>[] steps)
     {
-        if(steps is null)
+        if (steps is null)
         {
             throw new ArgumentNullException(nameof(steps), "Build steps must not be null.");
         }
 
-        foreach(Action<T> step in steps)
+        foreach (Action<T> step in steps)
         {
             step(obj);
         }
@@ -41,17 +41,17 @@ public class Builder
     ///<returns>The product created by <paramref name="finalizer"/> after all steps are applied.</returns>
     public static TResult Build<T, TResult>(T obj, Func<T, TResult> finalizer, params Action<T>[] steps)
     {
-        if(finalizer is null)
+        if (finalizer is null)
         {
             throw new ArgumentNullException(nameof(finalizer), "Finalizer function must not be null.");
         }
 
-        if(steps is null)
+        if (steps is null)
         {
             throw new ArgumentNullException(nameof(steps), "Build steps must not be null.");
         }
 
-        foreach(Action<T> step in steps)
+        foreach (Action<T> step in steps)
         {
             step(obj);
         }

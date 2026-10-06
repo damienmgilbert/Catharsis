@@ -10,9 +10,9 @@ namespace Catharsis.Domain;
 [AutoNotify]
 public sealed partial class OrderDraftViewModel
 {
-    #pragma warning disable IDE0044, CS0649 // Fields are read and written through the generated properties.
+#pragma warning disable IDE0044, CS0649 // Fields are read and written through the generated properties.
     private string _customerName = string.Empty;
     private string _notes = string.Empty;
     private bool _giftWrap;
-    #pragma warning restore IDE0044, CS0649
+#pragma warning restore IDE0044, CS0649
 }

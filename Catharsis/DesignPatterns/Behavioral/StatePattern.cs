@@ -18,7 +18,7 @@ public class StatePattern
     ///<returns>The original <paramref name="obj"/> after the state-specific behavior executes.</returns>
     public static T State<T, TState>(T obj, TState state, Func<TState, Action<T>> behaviorSelector)
     {
-        if(behaviorSelector is null)
+        if (behaviorSelector is null)
         {
             throw new ArgumentNullException(nameof(behaviorSelector), "Behavior selector must not be null.");
         }
@@ -41,7 +41,7 @@ public class StatePattern
     ///<returns>The result of the state-specific behavior.</returns>
     public static TResult State<T, TState, TResult>(T obj, TState state, Func<TState, Func<T, TResult>> behaviorSelector)
     {
-        if(behaviorSelector is null)
+        if (behaviorSelector is null)
         {
             throw new ArgumentNullException(nameof(behaviorSelector), "Behavior selector must not be null.");
         }

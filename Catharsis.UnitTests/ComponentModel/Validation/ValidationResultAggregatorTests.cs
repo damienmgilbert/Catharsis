@@ -35,7 +35,7 @@ public sealed class ValidationResultAggregatorTests
     {
         ValidationResultAggregator agg = new();
 
-        agg.Add(new ValidationResult("Bad value.", [ "Name" ]));
+        agg.Add(new ValidationResult("Bad value.", ["Name"]));
 
         Assert.AreEqual(1, agg.Count);
         Assert.IsTrue(agg.HasResults);
@@ -45,7 +45,7 @@ public sealed class ValidationResultAggregatorTests
     public void AddRange_AddsMultipleResults()
     {
         ValidationResultAggregator agg = new();
-        ValidationResult[] results = [new ValidationResult("err1", [ "A" ]), new ValidationResult("err2", [ "B" ])];
+        ValidationResult[] results = [new ValidationResult("err1", ["A"]), new ValidationResult("err2", ["B"])];
 
         agg.AddRange(results, ValidationSeverity.Warning);
 
@@ -77,9 +77,9 @@ public sealed class ValidationResultAggregatorTests
     public void GetAffectedMembers_ReturnsDistinctNames()
     {
         ValidationResultAggregator agg = new();
-        agg.Add(new ValidationResult("e1", [ "Name" ]));
-        agg.Add(new ValidationResult("e2", [ "Age" ]));
-        agg.Add(new ValidationResult("e3", [ "Name" ]));
+        agg.Add(new ValidationResult("e1", ["Name"]));
+        agg.Add(new ValidationResult("e2", ["Age"]));
+        agg.Add(new ValidationResult("e3", ["Name"]));
 
         IReadOnlyList<string> members = agg.GetAffectedMembers();
 
@@ -104,9 +104,9 @@ public sealed class ValidationResultAggregatorTests
     public void GetByMember_FiltersByMemberName()
     {
         ValidationResultAggregator agg = new();
-        agg.Add(new ValidationResult("e1", [ "Name" ]));
-        agg.Add(new ValidationResult("e2", [ "Age" ]));
-        agg.Add(new ValidationResult("e3", [ "Name" ]));
+        agg.Add(new ValidationResult("e1", ["Name"]));
+        agg.Add(new ValidationResult("e2", ["Age"]));
+        agg.Add(new ValidationResult("e3", ["Name"]));
 
         IReadOnlyList<ValidationResult> nameErrors = agg.GetByMember("Name");
 
@@ -166,7 +166,7 @@ public sealed class ValidationResultAggregatorTests
     public void ToErrorInfos_ConvertsCorrectly()
     {
         ValidationResultAggregator agg = new();
-        agg.Add(new ValidationResult("err1", [ "Name" ]), ValidationSeverity.Error);
+        agg.Add(new ValidationResult("err1", ["Name"]), ValidationSeverity.Error);
         agg.Add(new ValidationResult("warn1"), ValidationSeverity.Warning);
 
         IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
@@ -183,7 +183,7 @@ public sealed class ValidationResultAggregatorTests
     public void ToErrorInfos_MultipleMembers_CreatesOnePerMember()
     {
         ValidationResultAggregator agg = new();
-        agg.Add(new ValidationResult("cross", [ "A", "B" ]));
+        agg.Add(new ValidationResult("cross", ["A", "B"]));
 
         IReadOnlyList<ErrorInfo> infos = agg.ToErrorInfos();
 

@@ -50,7 +50,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -58,7 +58,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
         _disposed = true;
         _channel.Writer.TryComplete();
 
-        while(_channel.Reader.TryRead(out OwnedSegment? segment))
+        while (_channel.Reader.TryRead(out OwnedSegment? segment))
         {
             segment.Dispose();
         }
@@ -123,7 +123,7 @@ public sealed class MemoryBackedChannel<T> : IDisposable
         ///<inheritdoc/>
         public void Dispose()
         {
-            if(_disposed)
+            if (_disposed)
             {
                 return;
             }

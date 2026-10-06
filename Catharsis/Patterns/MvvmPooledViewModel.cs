@@ -31,7 +31,7 @@ public class MvvmPooledViewModel : BufferViewModelBase
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             _dataBuffer.Dispose();
         }

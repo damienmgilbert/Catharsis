@@ -70,7 +70,8 @@ public class ActivityScopeTests
 
             Assert.IsNotNull(scope.Activity);
             Assert.AreEqual("operation", scope.Activity!.OperationName);
-        } finally
+        }
+        finally
         {
             listener.Dispose();
         }
@@ -110,7 +111,8 @@ public class ActivityScopeTests
 
             Assert.AreEqual(ActivityStatusCode.Error, scope.Activity!.Status);
             Assert.IsTrue(scope.Activity.Events.Any(static e => e.Name == "exception"));
-        } finally
+        }
+        finally
         {
             listener.Dispose();
         }
@@ -142,7 +144,8 @@ public class ActivityScopeTests
             scope.Dispose();
 
             Assert.AreNotEqual(TimeSpan.Zero, activity.Duration);
-        } finally
+        }
+        finally
         {
             listener.Dispose();
         }

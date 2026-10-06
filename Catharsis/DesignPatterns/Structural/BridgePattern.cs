@@ -19,7 +19,7 @@ public class BridgePattern
     ///<returns>The result of applying the bridged operation.</returns>
     public static TResult Bridge<T, TImpl, TResult>(T obj, TImpl implementation, Func<T, TImpl, TResult> operation)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Bridge operation must not be null.");
         }

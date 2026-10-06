@@ -28,9 +28,9 @@ public sealed class DomainEventDispatcher
 
         List<Func<DomainEvent, Task>> snapshot;
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(!_handlers.TryGetValue(domainEvent.GetType(), out List<Func<DomainEvent, Task>>? handlers))
+            if (!_handlers.TryGetValue(domainEvent.GetType(), out List<Func<DomainEvent, Task>>? handlers))
             {
                 return;
             }
@@ -38,7 +38,7 @@ public sealed class DomainEventDispatcher
             snapshot = [.. handlers];
         }
 
-        foreach(Func<DomainEvent, Task> handler in snapshot)
+        foreach (Func<DomainEvent, Task> handler in snapshot)
         {
             cancellationToken.ThrowIfCancellationRequested();
             await handler(domainEvent).ConfigureAwait(false);
@@ -55,7 +55,7 @@ public sealed class DomainEventDispatcher
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        lock(_gate)
+        lock (_gate)
         {
             List<Func<DomainEvent, Task>> handlers = _handlers.GetOrAdd(typeof(TEvent), static _ => []);
             handlers.Add(domainEvent => handler((TEvent)domainEvent));

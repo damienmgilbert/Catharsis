@@ -22,7 +22,7 @@ public static class SpanSerializerPattern
         int count = 0;
         int offset = 0;
 
-        while((offset + SensorReading.SerializedSizeValue <= data.Length) && (count < destination.Length))
+        while ((offset + SensorReading.SerializedSizeValue <= data.Length) && (count < destination.Length))
         {
             destination[count++] = SensorReading.Deserialize(data[offset..]);
             offset += SensorReading.SerializedSizeValue;
@@ -40,7 +40,7 @@ public static class SpanSerializerPattern
     {
         using PooledBuffer<byte> buffer = new(readings.Length * SensorReading.SerializedSizeValue);
 
-        foreach(SensorReading reading in readings)
+        foreach (SensorReading reading in readings)
         {
             reading.Serialize(buffer);
         }

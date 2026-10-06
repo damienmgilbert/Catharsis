@@ -62,7 +62,7 @@ public sealed class RangeIfAttribute : ValidationAttribute
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
-        if(dependentProp is null)
+        if (dependentProp is null)
         {
             return false;
         }
@@ -76,19 +76,19 @@ public sealed class RangeIfAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(!IsConditionMet(validationContext))
+        if (!IsConditionMet(validationContext))
         {
             return ValidationResult.Success;
         }
 
         ValidationResult? innerResult = _inner.GetValidationResult(value, validationContext);
 
-        if((innerResult is null) || (innerResult == ValidationResult.Success))
+        if ((innerResult is null) || (innerResult == ValidationResult.Success))
         {
             return ValidationResult.Success;
         }
 
-        return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+        return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
     }
     #endregion
 

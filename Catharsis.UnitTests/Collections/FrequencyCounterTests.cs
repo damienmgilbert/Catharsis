@@ -122,7 +122,7 @@ public class FrequencyCounterTests
         counter.Add("common", 10);
         counter.Add("medium", 5);
 
-        List<(string Item, int Count)> top = counter.Top(2).ToList();
+        List<(string Item, int Count)> top = [.. counter.Top(2)];
 
         Assert.HasCount(2, top);
         Assert.AreEqual("common", top[0].Item);

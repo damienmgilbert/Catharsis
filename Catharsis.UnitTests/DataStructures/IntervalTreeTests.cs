@@ -94,7 +94,7 @@ public class IntervalTreeTests
     {
         IntervalTree<int> tree = new();
 
-        for(int i = 0; i < 100; i += 10)
+        for (int i = 0; i < 100; i += 10)
         {
             tree.Add(new Interval<int>(i, i + 5));
         }

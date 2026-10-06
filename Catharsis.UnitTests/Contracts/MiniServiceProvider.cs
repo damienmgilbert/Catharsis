@@ -12,24 +12,24 @@ internal sealed class MiniServiceProvider(IServiceCollection services) : IServic
 
     public object? GetService(Type serviceType)
     {
-        if(serviceType == typeof(IServiceProvider))
+        if (serviceType == typeof(IServiceProvider))
         {
             return this;
         }
 
         ServiceDescriptor? descriptor = services.LastOrDefault(d => d.ServiceType == serviceType);
 
-        if(descriptor is null)
+        if (descriptor is null)
         {
             return null;
         }
 
-        if(descriptor.Lifetime == ServiceLifetime.Transient)
+        if (descriptor.Lifetime == ServiceLifetime.Transient)
         {
             return Create(descriptor);
         }
 
-        if(!_singletons.TryGetValue(descriptor, out object? instance))
+        if (!_singletons.TryGetValue(descriptor, out object? instance))
         {
             instance = Create(descriptor);
             _singletons[descriptor] = instance;
@@ -40,12 +40,12 @@ internal sealed class MiniServiceProvider(IServiceCollection services) : IServic
 
     object Create(ServiceDescriptor descriptor)
     {
-        if(descriptor.ImplementationInstance is not null)
+        if (descriptor.ImplementationInstance is not null)
         {
             return descriptor.ImplementationInstance;
         }
 
-        if(descriptor.ImplementationFactory is not null)
+        if (descriptor.ImplementationFactory is not null)
         {
             return descriptor.ImplementationFactory(this);
         }

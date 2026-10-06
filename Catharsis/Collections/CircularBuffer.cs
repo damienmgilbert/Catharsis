@@ -23,7 +23,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is less than or equal to zero.</exception>
     public CircularBuffer(int capacity)
     {
-        if(capacity <= 0)
+        if (capacity <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be greater than zero.");
         }
@@ -43,7 +43,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         get
         {
-            if((index < 0) || (index >= _count))
+            if ((index < 0) || (index >= _count))
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -67,11 +67,12 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         int index = (_head + _count) % _buffer.Length;
 
-        if(IsFull)
+        if (IsFull)
         {
             _buffer[index] = item;
             _head = (_head + 1) % _buffer.Length;
-        } else
+        }
+        else
         {
             _buffer[index] = item;
             _count++;
@@ -91,7 +92,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
-        for(int i = 0; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
             yield return _buffer[(_head + i) % _buffer.Length];
         }
@@ -104,7 +105,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the buffer is empty.</exception>
     public T Peek()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The buffer is empty.");
         }
@@ -119,7 +120,7 @@ public sealed class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the buffer is empty.</exception>
     public T Remove()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The buffer is empty.");
         }

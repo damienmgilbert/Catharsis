@@ -25,7 +25,7 @@ public sealed class TaskDebouncer : IDisposable
     ///<exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
     public TaskDebouncer(TimeSpan delay, Func<CancellationToken, Task> action)
     {
-        if(delay < TimeSpan.Zero)
+        if (delay < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(delay), "Delay must not be negative.");
         }
@@ -46,7 +46,7 @@ public sealed class TaskDebouncer : IDisposable
 
         CancellationTokenSource cts = new();
 
-        lock(_gate)
+        lock (_gate)
         {
             _pending?.Cancel();
             _pending?.Dispose();
@@ -63,15 +63,15 @@ public sealed class TaskDebouncer : IDisposable
             await Task.Delay(_delay, cts.Token).ConfigureAwait(false);
             await _action(cts.Token).ConfigureAwait(false);
         }
-        catch(OperationCanceledException)
+        catch (OperationCanceledException)
         {
             // Superseded by a later trigger; nothing to do.
         }
         finally
         {
-            lock(_gate)
+            lock (_gate)
             {
-                if(_pending == cts)
+                if (_pending == cts)
                 {
                     _pending = null;
                 }
@@ -84,7 +84,7 @@ public sealed class TaskDebouncer : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -93,7 +93,7 @@ public sealed class TaskDebouncer : IDisposable
 
         CancellationTokenSource? pending;
 
-        lock(_gate)
+        lock (_gate)
         {
             pending = _pending;
             _pending = null;

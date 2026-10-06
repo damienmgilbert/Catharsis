@@ -32,7 +32,7 @@ public sealed class Matrix : IEquatable<Matrix>
     ///<exception cref="ArgumentException"><paramref name="values"/> has the wrong length.</exception>
     public Matrix(int rows, int columns, ReadOnlySpan<double> values) : this(rows, columns)
     {
-        if(values.Length != _values.Length)
+        if (values.Length != _values.Length)
         {
             throw new ArgumentException($"Expected {_values.Length} values but got {values.Length}.", nameof(values));
         }
@@ -57,7 +57,7 @@ public sealed class Matrix : IEquatable<Matrix>
 
         Matrix result = new(matrix.Rows, matrix.Columns);
 
-        for(int i = 0; i < matrix._values.Length; i++)
+        for (int i = 0; i < matrix._values.Length; i++)
         {
             result._values[i] = matrix._values[i] * scalar;
         }
@@ -72,24 +72,24 @@ public sealed class Matrix : IEquatable<Matrix>
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        if(left.Columns != right.Rows)
+        if (left.Columns != right.Rows)
         {
             throw new ArgumentException($"Cannot multiply {left.Rows}x{left.Columns} by {right.Rows}x{right.Columns}.");
         }
 
         Matrix result = new(left.Rows, right.Columns);
 
-        for(int r = 0; r < left.Rows; r++)
+        for (int r = 0; r < left.Rows; r++)
         {
             ReadOnlySpan<double> leftRow = left.Row(r);
             Span<double> resultRow = result._values.AsSpan(r * result.Columns, result.Columns);
 
-            for(int k = 0; k < left.Columns; k++)
+            for (int k = 0; k < left.Columns; k++)
             {
                 double factor = leftRow[k];
                 ReadOnlySpan<double> rightRow = right.Row(k);
 
-                for(int c = 0; c < resultRow.Length; c++)
+                for (int c = 0; c < resultRow.Length; c++)
                 {
                     resultRow[c] += factor * rightRow[c];
                 }
@@ -113,7 +113,7 @@ public sealed class Matrix : IEquatable<Matrix>
     {
         Matrix result = new(size, size);
 
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             result._values[(i * size) + i] = 1;
         }
@@ -126,9 +126,9 @@ public sealed class Matrix : IEquatable<Matrix>
     {
         Matrix result = new(Columns, Rows);
 
-        for(int r = 0; r < Rows; r++)
+        for (int r = 0; r < Rows; r++)
         {
-            for(int c = 0; c < Columns; c++)
+            for (int c = 0; c < Columns; c++)
             {
                 result._values[(c * Rows) + r] = _values[(r * Columns) + c];
             }
@@ -167,7 +167,7 @@ public sealed class Matrix : IEquatable<Matrix>
         hash.Add(Rows);
         hash.Add(Columns);
 
-        foreach(double value in _values)
+        foreach (double value in _values)
         {
             hash.Add(value);
         }
@@ -205,14 +205,14 @@ public sealed class Matrix : IEquatable<Matrix>
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        if(left.Rows != right.Rows || left.Columns != right.Columns)
+        if (left.Rows != right.Rows || left.Columns != right.Columns)
         {
             throw new ArgumentException($"Shape mismatch: {left.Rows}x{left.Columns} vs {right.Rows}x{right.Columns}.");
         }
 
         Matrix result = new(left.Rows, left.Columns);
 
-        for(int i = 0; i < left._values.Length; i++)
+        for (int i = 0; i < left._values.Length; i++)
         {
             result._values[i] = op(left._values[i], right._values[i]);
         }

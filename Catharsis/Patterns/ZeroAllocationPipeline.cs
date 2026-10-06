@@ -27,7 +27,7 @@ public static class ZeroAllocationPipeline
         SpanReader reader = new(data);
         int count = 0;
 
-        while((reader.Remaining >= recordSize) && (count < destination.Length))
+        while ((reader.Remaining >= recordSize) && (count < destination.Length))
         {
             int id = reader.ReadInt32LittleEndian();
             double value = reader.ReadDoubleLittleEndian();
@@ -50,10 +50,10 @@ public static class ZeroAllocationPipeline
         SpanTokenizer tokenizer = new(csvLine, ',');
         long sum = 0;
 
-        while(tokenizer.TryGetNext(out ReadOnlySpan<char> token))
+        while (tokenizer.TryGetNext(out ReadOnlySpan<char> token))
         {
             ReadOnlySpan<char> trimmed = token.Trim();
-            if(!trimmed.IsEmpty && int.TryParse(trimmed, out int value))
+            if (!trimmed.IsEmpty && int.TryParse(trimmed, out int value))
             {
                 sum += value;
             }

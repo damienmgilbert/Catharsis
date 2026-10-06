@@ -32,7 +32,7 @@ public sealed class TypedRegistry<TKey, TValue>(IEqualityComparer<TKey>? compare
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(!_items.TryAdd(key, value))
+        if (!_items.TryAdd(key, value))
         {
             throw new InvalidOperationException($"'{key}' is already registered.");
         }

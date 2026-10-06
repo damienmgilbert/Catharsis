@@ -17,7 +17,7 @@ public class StrategyPattern
     ///<returns>The result of the strategy.</returns>
     public static TResult Strategy<T, TResult>(T obj, Func<T, TResult> strategy)
     {
-        if(strategy is null)
+        if (strategy is null)
         {
             throw new ArgumentNullException(nameof(strategy), "Strategy function must not be null.");
         }
@@ -35,7 +35,7 @@ public class StrategyPattern
     ///<returns>The original <paramref name="obj"/>.</returns>
     public static T Strategy<T>(T obj, Action<T> strategy)
     {
-        if(strategy is null)
+        if (strategy is null)
         {
             throw new ArgumentNullException(nameof(strategy), "Strategy action must not be null.");
         }

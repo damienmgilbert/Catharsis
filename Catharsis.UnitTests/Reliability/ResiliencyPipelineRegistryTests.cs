@@ -218,7 +218,8 @@ public class ResiliencyPipelineRegistryTests
                     await Task.Delay(10, ct).ConfigureAwait(false);
                     throw new InvalidOperationException("downstream failure");
                 }).ConfigureAwait(false);
-            } catch(InvalidOperationException)
+            }
+            catch (InvalidOperationException)
             {
                 // Expected: no cached fallback exists yet.
             }

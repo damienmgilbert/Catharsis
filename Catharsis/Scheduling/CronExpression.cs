@@ -49,7 +49,7 @@ public sealed class CronExpression
 
         string[] fields = expression.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        if(fields.Length != 5)
+        if (fields.Length != 5)
         {
             throw new FormatException("A cron expression must have exactly 5 space-separated fields (minute hour day-of-month month day-of-week).");
         }
@@ -71,7 +71,7 @@ public sealed class CronExpression
     ///<returns><c>true</c> if the expression was parsed successfully; otherwise <c>false</c>.</returns>
     public static bool TryParse(string? expression, out CronExpression? result)
     {
-        if(string.IsNullOrWhiteSpace(expression))
+        if (string.IsNullOrWhiteSpace(expression))
         {
             result = null;
             return false;
@@ -82,7 +82,7 @@ public sealed class CronExpression
             result = Parse(expression);
             return true;
         }
-        catch(FormatException)
+        catch (FormatException)
         {
             result = null;
             return false;
@@ -100,9 +100,9 @@ public sealed class CronExpression
         DateTime candidate = new DateTime(after.Year, after.Month, after.Day, after.Hour, after.Minute, 0, after.Kind).AddMinutes(1);
         DateTime limit = candidate.AddYears(5);
 
-        while(candidate <= limit)
+        while (candidate <= limit)
         {
-            if(_month.Matches(candidate.Month) && DayMatches(candidate) && _hour.Matches(candidate.Hour) && _minute.Matches(candidate.Minute))
+            if (_month.Matches(candidate.Month) && DayMatches(candidate) && _hour.Matches(candidate.Hour) && _minute.Matches(candidate.Minute))
             {
                 return candidate;
             }
@@ -122,14 +122,14 @@ public sealed class CronExpression
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 1.</exception>
     public IEnumerable<DateTime> GetNextOccurrences(DateTime after, int count)
     {
-        if(count < 1)
+        if (count < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 1.");
         }
 
         DateTime current = after;
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             current = GetNextOccurrence(current);
             yield return current;
@@ -144,17 +144,17 @@ public sealed class CronExpression
         bool domRestricted = !_dayOfMonth.IsWildcard;
         bool dowRestricted = !_dayOfWeek.IsWildcard;
 
-        if(domRestricted && dowRestricted)
+        if (domRestricted && dowRestricted)
         {
             return _dayOfMonth.Matches(date.Day) || _dayOfWeek.Matches((int)date.DayOfWeek);
         }
 
-        if(domRestricted)
+        if (domRestricted)
         {
             return _dayOfMonth.Matches(date.Day);
         }
 
-        if(dowRestricted)
+        if (dowRestricted)
         {
             return _dayOfWeek.Matches((int)date.DayOfWeek);
         }
@@ -183,7 +183,7 @@ public sealed class CronExpression
         {
             bool[] allowed = new bool[max - min + 1];
 
-            foreach(string part in field.Split(','))
+            foreach (string part in field.Split(','))
             {
                 ParsePart(part, min, max, allowed);
             }
@@ -198,11 +198,11 @@ public sealed class CronExpression
 
             int slashIndex = part.IndexOf('/', StringComparison.Ordinal);
 
-            if(slashIndex >= 0)
+            if (slashIndex >= 0)
             {
                 rangePart = part[..slashIndex];
 
-                if(!int.TryParse(part[(slashIndex + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out step) || step < 1)
+                if (!int.TryParse(part[(slashIndex + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out step) || step < 1)
                 {
                     throw new FormatException($"Invalid step value in cron field part '{part}'.");
                 }
@@ -211,7 +211,7 @@ public sealed class CronExpression
             int rangeStart;
             int rangeEnd;
 
-            if(rangePart == "*")
+            if (rangePart == "*")
             {
                 rangeStart = min;
                 rangeEnd = max;
@@ -220,9 +220,9 @@ public sealed class CronExpression
             {
                 int dashIndex = rangePart.IndexOf('-', StringComparison.Ordinal);
 
-                if(dashIndex >= 0)
+                if (dashIndex >= 0)
                 {
-                    if(!int.TryParse(rangePart[..dashIndex], NumberStyles.Integer, CultureInfo.InvariantCulture, out rangeStart) ||
+                    if (!int.TryParse(rangePart[..dashIndex], NumberStyles.Integer, CultureInfo.InvariantCulture, out rangeStart) ||
                        !int.TryParse(rangePart[(dashIndex + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out rangeEnd))
                     {
                         throw new FormatException($"Invalid range in cron field part '{part}'.");
@@ -230,7 +230,7 @@ public sealed class CronExpression
                 }
                 else
                 {
-                    if(!int.TryParse(rangePart, NumberStyles.Integer, CultureInfo.InvariantCulture, out rangeStart))
+                    if (!int.TryParse(rangePart, NumberStyles.Integer, CultureInfo.InvariantCulture, out rangeStart))
                     {
                         throw new FormatException($"Invalid value in cron field part '{part}'.");
                     }
@@ -239,12 +239,12 @@ public sealed class CronExpression
                 }
             }
 
-            if(rangeStart < min || rangeEnd > max || rangeStart > rangeEnd)
+            if (rangeStart < min || rangeEnd > max || rangeStart > rangeEnd)
             {
                 throw new FormatException($"Cron field part '{part}' is out of the valid range [{min}, {max}].");
             }
 
-            for(int value = rangeStart; value <= rangeEnd; value += step)
+            for (int value = rangeStart; value <= rangeEnd; value += step)
             {
                 allowed[value - min] = true;
             }

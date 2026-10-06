@@ -37,7 +37,7 @@ public sealed class ChangeTokenBufferWatcher : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -53,7 +53,7 @@ public sealed class ChangeTokenBufferWatcher : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_registration is not null)
+        if (_registration is not null)
         {
             return;
         }

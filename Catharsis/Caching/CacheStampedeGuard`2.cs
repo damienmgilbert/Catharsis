@@ -47,14 +47,14 @@ public sealed class CacheStampedeGuard<TKey, TValue>(IEqualityComparer<TKey>? co
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(valueFactory);
 
-        if(_cache.TryGetValue(key, out TValue? cached))
+        if (_cache.TryGetValue(key, out TValue? cached))
         {
             return cached;
         }
 
         return await _singleFlight.ExecuteAsync(key, async () =>
         {
-            if(_cache.TryGetValue(key, out TValue? existing))
+            if (_cache.TryGetValue(key, out TValue? existing))
             {
                 return existing;
             }

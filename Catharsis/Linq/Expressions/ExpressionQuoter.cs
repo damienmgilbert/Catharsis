@@ -21,7 +21,7 @@ public static class ExpressionQuoter
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
-        while(expression is UnaryExpression { NodeType: ExpressionType.Quote } unary)
+        while (expression is UnaryExpression { NodeType: ExpressionType.Quote } unary)
         {
             expression = unary.Operand;
         }
@@ -84,7 +84,7 @@ public static class ExpressionQuoter
     {
         int depth = 0;
 
-        while(expression is UnaryExpression { NodeType: ExpressionType.Quote } unary)
+        while (expression is UnaryExpression { NodeType: ExpressionType.Quote } unary)
         {
             depth++;
             expression = unary.Operand;
@@ -109,7 +109,7 @@ public static class ExpressionQuoter
 
         Expression body = lambda.Body;
 
-        foreach(KeyValuePair<ParameterExpression, Expression> kvp in replacements)
+        foreach (KeyValuePair<ParameterExpression, Expression> kvp in replacements)
         {
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
@@ -177,12 +177,12 @@ public static class ExpressionQuoter
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
-        if(expression is not UnaryExpression { NodeType: ExpressionType.Quote } unary)
+        if (expression is not UnaryExpression { NodeType: ExpressionType.Quote } unary)
         {
             throw new InvalidOperationException($"Expression of NodeType '{expression.NodeType}' is not a Quote expression.");
         }
 
-        if(unary.Operand is not Expression<TDelegate> typed)
+        if (unary.Operand is not Expression<TDelegate> typed)
         {
             throw new InvalidOperationException($"Quoted operand is of type '{unary.Operand.GetType().Name}', expected 'Expression<{typeof(TDelegate).Name}>'.");
         }
@@ -207,7 +207,7 @@ public static class ExpressionQuoter
         #region Protected methods
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if(node.NodeType is ExpressionType.Quote)
+            if (node.NodeType is ExpressionType.Quote)
             {
                 _quotes.Add(node);
             }
@@ -226,7 +226,7 @@ public static class ExpressionQuoter
         #region Protected methods
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if(node.NodeType is ExpressionType.Quote)
+            if (node.NodeType is ExpressionType.Quote)
             {
                 return Visit(node.Operand);
             }

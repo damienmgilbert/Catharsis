@@ -22,7 +22,7 @@ public sealed class TcpLineClient : IAsyncDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if((_reader is null) || (_writer is null))
+        if ((_reader is null) || (_writer is null))
         {
             throw new InvalidOperationException("Not connected. Call ConnectAsync first.");
         }
@@ -81,7 +81,7 @@ public sealed class TcpLineClient : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -90,7 +90,7 @@ public sealed class TcpLineClient : IAsyncDisposable
 
         _reader?.Dispose();
 
-        if(_writer is not null)
+        if (_writer is not null)
         {
             await _writer.DisposeAsync().ConfigureAwait(false);
         }

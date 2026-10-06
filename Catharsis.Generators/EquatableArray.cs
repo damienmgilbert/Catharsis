@@ -9,13 +9,11 @@ namespace Catharsis.Generators
     /// An immutable list of <see cref="GeneratorDiagnostic"/> that compares by content, so a pipeline stage that carries
     /// it stays cacheable (an <see cref="ImmutableArray{T}"/> compares by reference).
     /// </summary>
-    internal readonly struct EquatableArray : System.IEquatable<EquatableArray>, IEnumerable<GeneratorDiagnostic>
+    internal readonly struct EquatableArray(ImmutableArray<GeneratorDiagnostic> items) : System.IEquatable<EquatableArray>, IEnumerable<GeneratorDiagnostic>
     {
         public static readonly EquatableArray Empty = new EquatableArray(ImmutableArray<GeneratorDiagnostic>.Empty);
 
-        private readonly ImmutableArray<GeneratorDiagnostic> _items;
-
-        public EquatableArray(ImmutableArray<GeneratorDiagnostic> items) { _items = items; }
+        private readonly ImmutableArray<GeneratorDiagnostic> _items = items;
 
         public bool Equals(EquatableArray other) => Items.SequenceEqual(other.Items);
 
@@ -25,7 +23,7 @@ namespace Catharsis.Generators
         {
             int hash = 17;
 
-            foreach(GeneratorDiagnostic item in Items)
+            foreach (GeneratorDiagnostic item in Items)
             {
                 hash = (hash * 31) + item.GetHashCode();
             }

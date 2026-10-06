@@ -34,7 +34,7 @@ public class SkipListTests
         SkipList<int> list1 = new(null, new Random(42));
         SkipList<int> list2 = new(null, new Random(42));
 
-        for(int i = 0; i < 50; i++)
+        for (int i = 0; i < 50; i++)
         {
             list1.Add(i);
             list2.Add(i);
@@ -61,7 +61,7 @@ public class SkipListTests
     {
         SkipList<int> list = new();
 
-        foreach(int value in new[] { 5, 3, 8, 1, 9, 2 })
+        foreach (int value in new[] { 5, 3, 8, 1, 9, 2 })
         {
             list.Add(value);
         }
@@ -150,12 +150,12 @@ public class SkipListTests
     {
         SkipList<int> list = new();
 
-        foreach(int value in new[] { 5, 3, 8, 1, 9 })
+        foreach (int value in new[] { 5, 3, 8, 1, 9 })
         {
             list.Add(value);
         }
 
-        foreach(int value in new[] { 5, 3, 8, 1, 9 })
+        foreach (int value in new[] { 5, 3, 8, 1, 9 })
         {
             Assert.IsTrue(list.Remove(value));
         }
@@ -203,7 +203,7 @@ public class SkipListTests
         List<int> reference = [];
         SkipList<int> list = new();
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             int value = random.Next(-5000, 5000);
             reference.Add(value);
@@ -221,14 +221,15 @@ public class SkipListTests
         List<int> reference = [];
         SkipList<int> list = new();
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
-            if(reference.Count == 0 || random.Next(2) == 0)
+            if (reference.Count == 0 || random.Next(2) == 0)
             {
                 int value = random.Next(0, 200);
                 reference.Add(value);
                 list.Add(value);
-            } else
+            }
+            else
             {
                 int index = random.Next(reference.Count);
                 int value = reference[index];

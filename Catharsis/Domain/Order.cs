@@ -28,12 +28,12 @@ public sealed partial class Order(Guid id, string currency) : AggregateRoot<Guid
     {
         ArgumentNullException.ThrowIfNull(line);
 
-        if(Status != OrderStatus.Draft)
+        if (Status != OrderStatus.Draft)
         {
             throw new InvalidOperationException($"Lines cannot be added to a {Status.ToStringFast()} order.");
         }
 
-        if(line.UnitPrice.Currency != Currency)
+        if (line.UnitPrice.Currency != Currency)
         {
             throw new InvalidOperationException($"The order is in {Currency} but the line is priced in {line.UnitPrice.Currency}.");
         }

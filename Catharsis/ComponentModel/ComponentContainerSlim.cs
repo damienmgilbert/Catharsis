@@ -32,12 +32,12 @@ public sealed class ComponentContainerSlim : IContainer
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(component is null)
+        if (component is null)
         {
             return;
         }
 
-        if((name is not null) && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
+        if ((name is not null) && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
         {
             throw new ArgumentException($"A component named '{name}' already exists in the container.", nameof(name));
         }
@@ -52,7 +52,7 @@ public sealed class ComponentContainerSlim : IContainer
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -60,7 +60,7 @@ public sealed class ComponentContainerSlim : IContainer
         _disposed = true;
 
         // Dispose in reverse order (last added first)
-        for(int i = _sites.Count - 1; i >= 0; i--)
+        for (int i = _sites.Count - 1; i >= 0; i--)
         {
             IComponent component = _sites[i].Component;
             component.Site = null;
@@ -93,14 +93,14 @@ public sealed class ComponentContainerSlim : IContainer
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(component is null)
+        if (component is null)
         {
             return;
         }
 
         ISite? site = _sites.FirstOrDefault(s => ReferenceEquals(s.Component, component));
 
-        if(site is null)
+        if (site is null)
         {
             return;
         }
@@ -137,12 +137,12 @@ public sealed class ComponentContainerSlim : IContainer
         #region Public methods
         public object? GetService(Type serviceType)
         {
-            if(serviceType == typeof(ISite))
+            if (serviceType == typeof(ISite))
             {
                 return this;
             }
 
-            if(serviceType == typeof(IContainer))
+            if (serviceType == typeof(IContainer))
             {
                 return Container;
             }

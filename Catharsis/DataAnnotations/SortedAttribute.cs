@@ -27,38 +27,38 @@ public sealed class SortedAttribute(SortDirection direction = SortDirection.Asce
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
-        if(value is not IEnumerable enumerable)
+        if (value is not IEnumerable enumerable)
         {
-            return new ValidationResult($"The field {validationContext.DisplayName} must be a collection.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult($"The field {validationContext.DisplayName} must be a collection.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         IComparable? previous = null;
         bool first = true;
         int index = 0;
 
-        foreach(object? element in enumerable)
+        foreach (object? element in enumerable)
         {
-            if(element is not IComparable current)
+            if (element is not IComparable current)
             {
-                return new ValidationResult($"The field {validationContext.DisplayName} contains a non-comparable element at index {index}.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+                return new ValidationResult($"The field {validationContext.DisplayName} contains a non-comparable element at index {index}.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
             }
 
-            if(!first)
+            if (!first)
             {
                 int comparison = previous!.CompareTo(current);
 
                 bool invalid = (Direction == SortDirection.Ascending) ? (AllowDuplicates ? (comparison > 0) : (comparison >= 0)) : (AllowDuplicates ? (comparison < 0) : (comparison <= 0));
 
-                if(invalid)
+                if (invalid)
                 {
                     string directionText = (Direction == SortDirection.Ascending) ? "ascending" : "descending";
 
-                    return new ValidationResult($"The field {validationContext.DisplayName} is not sorted in {directionText} order at index {index}.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+                    return new ValidationResult($"The field {validationContext.DisplayName} is not sorted in {directionText} order at index {index}.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
                 }
             }
 

@@ -24,7 +24,7 @@ public sealed class RetryableHttpMessageHandler(RetryPolicy retryPolicy) : Deleg
     {
         HttpRequestMessage clone = new(request.Method, request.RequestUri) { Version = request.Version };
 
-        if(request.Content is not null)
+        if (request.Content is not null)
         {
             MemoryStream contentStream = new();
             await request.Content.CopyToAsync(contentStream, cancellationToken).ConfigureAwait(false);
@@ -32,7 +32,7 @@ public sealed class RetryableHttpMessageHandler(RetryPolicy retryPolicy) : Deleg
 
             StreamContent content = new(contentStream);
 
-            foreach(KeyValuePair<string, IEnumerable<string>> header in request.Content.Headers)
+            foreach (KeyValuePair<string, IEnumerable<string>> header in request.Content.Headers)
             {
                 content.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
@@ -40,12 +40,12 @@ public sealed class RetryableHttpMessageHandler(RetryPolicy retryPolicy) : Deleg
             clone.Content = content;
         }
 
-        foreach(KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+        foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
         {
             clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
         }
 
-        foreach(KeyValuePair<string, object?> option in request.Options)
+        foreach (KeyValuePair<string, object?> option in request.Options)
         {
             clone.Options.Set(new HttpRequestOptionsKey<object?>(option.Key), option.Value);
         }

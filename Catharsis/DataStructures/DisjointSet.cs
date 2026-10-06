@@ -31,7 +31,7 @@ public sealed class DisjointSet
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 1.</exception>
     public DisjointSet(int count)
     {
-        if(count < 1)
+        if (count < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 1.");
         }
@@ -39,7 +39,7 @@ public sealed class DisjointSet
         _parent = new int[count];
         _rank = new int[count];
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             _parent[i] = i;
         }
@@ -67,7 +67,7 @@ public sealed class DisjointSet
     {
         ValidateIndex(item);
 
-        if(_parent[item] != item)
+        if (_parent[item] != item)
         {
             _parent[item] = Find(_parent[item]);
         }
@@ -87,19 +87,19 @@ public sealed class DisjointSet
         int rootA = Find(a);
         int rootB = Find(b);
 
-        if(rootA == rootB)
+        if (rootA == rootB)
         {
             return false;
         }
 
-        if(_rank[rootA] < _rank[rootB])
+        if (_rank[rootA] < _rank[rootB])
         {
             (rootA, rootB) = (rootB, rootA);
         }
 
         _parent[rootB] = rootA;
 
-        if(_rank[rootA] == _rank[rootB])
+        if (_rank[rootA] == _rank[rootB])
         {
             _rank[rootA]++;
         }
@@ -110,7 +110,7 @@ public sealed class DisjointSet
 
     void ValidateIndex(int item)
     {
-        if(item < 0 || item >= _parent.Length)
+        if (item < 0 || item >= _parent.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(item), "Item is out of range.");
         }

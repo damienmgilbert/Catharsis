@@ -22,7 +22,7 @@ public sealed class ResilientWebSocketClient(RetryPolicy retryPolicy) : IAsyncDi
     #region Private methods
     async Task ReconnectAsync(CancellationToken cancellationToken)
     {
-        if(_uri is null)
+        if (_uri is null)
         {
             throw new InvalidOperationException("Not connected. Call ConnectAsync first.");
         }
@@ -66,7 +66,7 @@ public sealed class ResilientWebSocketClient(RetryPolicy retryPolicy) : IAsyncDi
 
         return _retryPolicy.ExecuteAsync(async token =>
         {
-            if(_socket.State != WebSocketState.Open)
+            if (_socket.State != WebSocketState.Open)
             {
                 await ReconnectAsync(token).ConfigureAwait(false);
             }
@@ -92,19 +92,20 @@ public sealed class ResilientWebSocketClient(RetryPolicy retryPolicy) : IAsyncDi
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         _disposed = true;
 
-        if(_socket.State == WebSocketState.Open)
+        if (_socket.State == WebSocketState.Open)
         {
             try
             {
                 await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(false);
-            } catch(WebSocketException)
+            }
+            catch (WebSocketException)
             {
             }
         }

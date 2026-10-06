@@ -45,27 +45,27 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     ///typeof(string) ]</c>.
     ///</summary>
     ///<returns>An array of supported destination types.</returns>
-    protected virtual Type[] GetSupportedDestinationTypes() { return[ typeof(string), typeof(InstanceDescriptor) ]; }
+    protected virtual Type[] GetSupportedDestinationTypes() { return [typeof(string), typeof(InstanceDescriptor)]; }
     ///<summary>
     ///Gets the set of source types that <see cref="ConvertFrom"/> supports. The default implementation returns <c>[
     ///typeof(string) ]</c>.
     ///</summary>
     ///<returns>An array of supported source types.</returns>
-    protected virtual Type[] GetSupportedSourceTypes() { return[ typeof(string) ]; }
+    protected virtual Type[] GetSupportedSourceTypes() { return [typeof(string)]; }
     #endregion
 
     #region Public methods
     ///<inheritdoc/>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
-        if(_convertFrom is null)
+        if (_convertFrom is null)
         {
             return base.CanConvertFrom(context, sourceType);
         }
 
-        foreach(Type supported in GetSupportedSourceTypes())
+        foreach (Type supported in GetSupportedSourceTypes())
         {
-            if(supported.IsAssignableFrom(sourceType))
+            if (supported.IsAssignableFrom(sourceType))
             {
                 return true;
             }
@@ -77,19 +77,19 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     ///<inheritdoc/>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
     {
-        if(destinationType is null)
+        if (destinationType is null)
         {
             return false;
         }
 
-        if(_convertTo is null)
+        if (_convertTo is null)
         {
             return base.CanConvertTo(context, destinationType);
         }
 
-        foreach(Type supported in GetSupportedDestinationTypes())
+        foreach (Type supported in GetSupportedDestinationTypes())
         {
-            if(supported.IsAssignableFrom(destinationType))
+            if (supported.IsAssignableFrom(destinationType))
             {
                 return true;
             }
@@ -101,7 +101,7 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     ///<inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if((_convertFrom is not null) && CanConvertFrom(context, value.GetType()))
+        if ((_convertFrom is not null) && CanConvertFrom(context, value.GetType()))
         {
             return _convertFrom(context, culture ?? CultureInfo.CurrentCulture, value);
         }
@@ -114,7 +114,7 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     {
         ArgumentNullException.ThrowIfNull(destinationType);
 
-        if((_convertTo is not null) && (value is T typed) && CanConvertTo(context, destinationType))
+        if ((_convertTo is not null) && (value is T typed) && CanConvertTo(context, destinationType))
         {
             return _convertTo(context, culture ?? CultureInfo.CurrentCulture, typed, destinationType);
         }
@@ -125,12 +125,12 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
     ///<inheritdoc/>
     public override bool IsValid(ITypeDescriptorContext? context, object? value)
     {
-        if(value is T)
+        if (value is T)
         {
             return true;
         }
 
-        if(value is null)
+        if (value is null)
         {
             return false;
         }
@@ -139,7 +139,8 @@ public class GenericTypeConverter<T>(Func<ITypeDescriptorContext?, CultureInfo?,
         {
             ConvertFrom(context, CultureInfo.CurrentCulture, value);
             return true;
-        } catch
+        }
+        catch
         {
             return false;
         }

@@ -34,7 +34,7 @@ public class MetadataAnnotatedRecord<T>(T value) : BindableRecord<T>(value) wher
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
         List<PropertyMetadataEntry> entries = [with(properties.Count)];
 
-        foreach(PropertyDescriptor prop in properties)
+        foreach (PropertyDescriptor prop in properties)
         {
             DisplayAttribute? displayAttr = prop.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
             RequiredAttribute? requiredAttr = prop.Attributes.OfType<RequiredAttribute>().FirstOrDefault();
@@ -65,9 +65,9 @@ public class MetadataAnnotatedRecord<T>(T value) : BindableRecord<T>(value) wher
     {
         ArgumentNullException.ThrowIfNull(propertyName);
 
-        foreach(PropertyMetadataEntry entry in _metadata)
+        foreach (PropertyMetadataEntry entry in _metadata)
         {
-            if(string.Equals(entry.PropertyName, propertyName, StringComparison.Ordinal))
+            if (string.Equals(entry.PropertyName, propertyName, StringComparison.Ordinal))
             {
                 return entry;
             }

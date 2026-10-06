@@ -28,7 +28,7 @@ public sealed class Inventory
         ArgumentException.ThrowIfNullOrWhiteSpace(sku);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
 
-        lock(_gate)
+        lock (_gate)
         {
             return _stock[sku] = StockOfLocked(sku) + quantity;
         }
@@ -44,7 +44,7 @@ public sealed class Inventory
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(sku);
 
-        lock(_gate)
+        lock (_gate)
         {
             return StockOfLocked(sku);
         }
@@ -65,24 +65,24 @@ public sealed class Inventory
 
         Dictionary<string, int> needed = new(StringComparer.OrdinalIgnoreCase);
 
-        foreach(OrderLine line in order.Lines)
+        foreach (OrderLine line in order.Lines)
         {
             needed[line.Sku] = needed.GetValueOrDefault(line.Sku) + line.Quantity;
         }
 
-        lock(_gate)
+        lock (_gate)
         {
-            foreach((string sku, int quantity) in needed)
+            foreach ((string sku, int quantity) in needed)
             {
                 int available = StockOfLocked(sku);
 
-                if(available < quantity)
+                if (available < quantity)
                 {
                     return Result<int, string>.Fail($"Insufficient stock for '{sku}': need {quantity}, have {available}.");
                 }
             }
 
-            foreach((string sku, int quantity) in needed)
+            foreach ((string sku, int quantity) in needed)
             {
                 _stock[sku] -= quantity;
             }

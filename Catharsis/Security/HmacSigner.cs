@@ -21,7 +21,7 @@ public sealed class HmacSigner(byte[] key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(key.Length == 0)
+        if (key.Length == 0)
         {
             throw new ArgumentException("Key must not be empty.", nameof(key));
         }

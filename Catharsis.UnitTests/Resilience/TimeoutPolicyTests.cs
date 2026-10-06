@@ -58,7 +58,7 @@ public class TimeoutPolicyTests
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5), ct);
                 }
-                catch(OperationCanceledException)
+                catch (OperationCanceledException)
                 {
                     observedCancellation = true;
                     throw;

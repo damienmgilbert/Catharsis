@@ -68,7 +68,7 @@ public class JitteredDelayCalculatorTests
         JitteredDelayCalculator calculator = new(
             TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(30), multiplier: 2.0, jitter: JitterStrategy.Full, random: new Random(1));
 
-        for(int attempt = 0; attempt < 5; attempt++)
+        for (int attempt = 0; attempt < 5; attempt++)
         {
             TimeSpan delay = calculator.ComputeDelay(attempt);
             Assert.IsTrue(delay >= TimeSpan.Zero);

@@ -110,11 +110,11 @@ public static class ExpressionReducer
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
         ArgumentOutOfRangeException.ThrowIfLessThan(maxPasses, 1, nameof(maxPasses));
 
-        for(int i = 0; i < maxPasses; i++)
+        for (int i = 0; i < maxPasses; i++)
         {
             Expression reduced = new DeepReducingVisitor().Visit(expression);
 
-            if(ReferenceEquals(reduced, expression))
+            if (ReferenceEquals(reduced, expression))
             {
                 break;
             }
@@ -147,7 +147,7 @@ public static class ExpressionReducer
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
-        if(!expression.CanReduce)
+        if (!expression.CanReduce)
         {
             throw new InvalidOperationException($"Expression of NodeType '{expression.NodeType}' is not reducible.");
         }
@@ -168,7 +168,7 @@ public static class ExpressionReducer
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
         ArgumentOutOfRangeException.ThrowIfLessThan(maxIterations, 1, nameof(maxIterations));
 
-        for(int i = 0; i < maxIterations && expression.CanReduce; i++)
+        for (int i = 0; i < maxIterations && expression.CanReduce; i++)
         {
             expression = expression.Reduce();
         }
@@ -238,12 +238,12 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(FoundReducible || node is null)
+            if (FoundReducible || node is null)
             {
                 return node!;
             }
 
-            if(node.CanReduce)
+            if (node.CanReduce)
             {
                 FoundReducible = true;
                 return node;
@@ -263,12 +263,12 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(node is null)
+            if (node is null)
             {
                 return null!;
             }
 
-            if(node.CanReduce)
+            if (node.CanReduce)
             {
                 Count++;
             }
@@ -287,7 +287,7 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(node is null)
+            if (node is null)
             {
                 return null!;
             }
@@ -307,12 +307,12 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(node is null)
+            if (node is null)
             {
                 return null!;
             }
 
-            if(node.CanReduce)
+            if (node.CanReduce)
             {
                 _reducibleNodes.Add(node);
             }
@@ -331,7 +331,7 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(node is null)
+            if (node is null)
             {
                 return null!;
             }
@@ -347,7 +347,7 @@ public static class ExpressionReducer
         #region Public methods
         public override Expression Visit(Expression? node)
         {
-            if(node is null)
+            if (node is null)
             {
                 return null!;
             }

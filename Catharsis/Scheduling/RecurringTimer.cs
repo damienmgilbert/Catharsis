@@ -24,7 +24,7 @@ public sealed class RecurringTimer : IAsyncDisposable
     ///<exception cref="ArgumentNullException"><paramref name="callback"/> is <c>null</c>.</exception>
     public RecurringTimer(TimeSpan period, Func<CancellationToken, Task> callback)
     {
-        if(period <= TimeSpan.Zero)
+        if (period <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(period), "Period must be greater than zero.");
         }
@@ -41,7 +41,7 @@ public sealed class RecurringTimer : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -65,7 +65,7 @@ public sealed class RecurringTimer : IAsyncDisposable
 
     async Task RunAsync(Func<CancellationToken, Task> callback, CancellationToken cancellationToken)
     {
-        while(await _timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
+        while (await _timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
         {
             await callback(cancellationToken).ConfigureAwait(false);
         }

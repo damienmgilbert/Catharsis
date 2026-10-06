@@ -25,7 +25,7 @@ public sealed class EndpointHealthTracker
     {
         ArgumentNullException.ThrowIfNull(endpoint);
 
-        if(!_stats.TryGetValue(endpoint, out (long Successes, long Failures) stat))
+        if (!_stats.TryGetValue(endpoint, out (long Successes, long Failures) stat))
         {
             return 1.0;
         }

@@ -18,7 +18,7 @@ public class MemoryBackedChannelTests
         channel.Complete();
 
         List<byte> segments = [];
-        while(channel.Reader.TryRead(out MemoryBackedChannel<byte>.OwnedSegment? seg))
+        while (channel.Reader.TryRead(out MemoryBackedChannel<byte>.OwnedSegment? seg))
         {
             segments.Add(seg.Memory.Span[0]);
             seg.Dispose();
@@ -39,7 +39,7 @@ public class MemoryBackedChannelTests
     public async Task WriteAsync_And_ReadAsync_RoundTrips()
     {
         using MemoryBackedChannel<byte> channel = new();
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
 
         await channel.WriteAsync(data);
         using MemoryBackedChannel<byte>.OwnedSegment segment = await channel.ReadAsync();

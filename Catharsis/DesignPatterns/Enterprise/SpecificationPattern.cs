@@ -20,12 +20,12 @@ public class SpecificationPattern
     ///<returns>A specification satisfied when both <paramref name="left"/> and <paramref name="right"/> are.</returns>
     public static Func<T, bool> And<T>(Func<T, bool> left, Func<T, bool> right)
     {
-        if(left is null)
+        if (left is null)
         {
             throw new ArgumentNullException(nameof(left), "Left specification must not be null.");
         }
 
-        if(right is null)
+        if (right is null)
         {
             throw new ArgumentNullException(nameof(right), "Right specification must not be null.");
         }
@@ -41,7 +41,7 @@ public class SpecificationPattern
     ///<returns>A specification satisfied when <paramref name="specification"/> is not.</returns>
     public static Func<T, bool> Not<T>(Func<T, bool> specification)
     {
-        if(specification is null)
+        if (specification is null)
         {
             throw new ArgumentNullException(nameof(specification), "Specification must not be null.");
         }
@@ -58,12 +58,12 @@ public class SpecificationPattern
     ///<returns>A specification satisfied when either <paramref name="left"/> or <paramref name="right"/> is.</returns>
     public static Func<T, bool> Or<T>(Func<T, bool> left, Func<T, bool> right)
     {
-        if(left is null)
+        if (left is null)
         {
             throw new ArgumentNullException(nameof(left), "Left specification must not be null.");
         }
 
-        if(right is null)
+        if (right is null)
         {
             throw new ArgumentNullException(nameof(right), "Right specification must not be null.");
         }

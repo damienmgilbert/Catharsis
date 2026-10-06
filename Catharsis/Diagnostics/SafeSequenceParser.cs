@@ -54,7 +54,7 @@ public sealed class SafeSequenceParser
     {
         Interlocked.Increment(ref _parseAttempts);
 
-        if((Mode == ValidationMode.Full) && sequence.IsEmpty)
+        if ((Mode == ValidationMode.Full) && sequence.IsEmpty)
         {
             consumed = sequence.Start;
             examined = sequence.Start;
@@ -66,15 +66,16 @@ public sealed class SafeSequenceParser
         {
             SequenceParseStatus status = _inner.TryParse(in sequence, out consumed, out examined);
 
-            if(status == SequenceParseStatus.Success)
+            if (status == SequenceParseStatus.Success)
             {
                 Interlocked.Increment(ref _successCount);
-            } else if(status == SequenceParseStatus.InvalidData)
+            }
+            else if (status == SequenceParseStatus.InvalidData)
             {
                 Interlocked.Increment(ref _failureCount);
             }
 
-            if(Mode >= ValidationMode.BoundsOnly)
+            if (Mode >= ValidationMode.BoundsOnly)
             {
                 long seqLength = sequence.Length;
                 long consumedOffset = sequence.Slice(sequence.Start, consumed).Length;
@@ -82,7 +83,8 @@ public sealed class SafeSequenceParser
             }
 
             return status;
-        } catch(Exception)
+        }
+        catch (Exception)
         {
             Interlocked.Increment(ref _failureCount);
             consumed = sequence.Start;

@@ -19,7 +19,7 @@ public static class StringExtensions
     ///<exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
     public static string Capitalize(this string value)
     {
-        if(value is null)
+        if (value is null)
         {
             throw new ArgumentNullException(nameof(value), "Value must not be null.");
         }
@@ -43,7 +43,7 @@ public static class StringExtensions
     ///<exception cref="ArgumentNullException"><paramref name="fallback"/> is <c>null</c>.</exception>
     public static string OrDefault(this string? value, string fallback)
     {
-        if(fallback is null)
+        if (fallback is null)
         {
             throw new ArgumentNullException(nameof(fallback), "Fallback must not be null.");
         }
@@ -60,7 +60,7 @@ public static class StringExtensions
     ///<exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
     public static string Slugify(this string value)
     {
-        if(value is null)
+        if (value is null)
         {
             throw new ArgumentNullException(nameof(value), "Value must not be null.");
         }
@@ -68,20 +68,21 @@ public static class StringExtensions
         StringBuilder builder = new(value.Length);
         bool lastWasHyphen = true;
 
-        foreach(char c in value)
+        foreach (char c in value)
         {
-            if(char.IsLetterOrDigit(c))
+            if (char.IsLetterOrDigit(c))
             {
                 builder.Append(char.ToLowerInvariant(c));
                 lastWasHyphen = false;
-            } else if(!lastWasHyphen)
+            }
+            else if (!lastWasHyphen)
             {
                 builder.Append('-');
                 lastWasHyphen = true;
             }
         }
 
-        if(builder.Length > 0 && builder[^1] == '-')
+        if (builder.Length > 0 && builder[^1] == '-')
         {
             builder.Length--;
         }
@@ -102,27 +103,27 @@ public static class StringExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="maxLength"/> is negative or shorter than <paramref name="ellipsis"/>.</exception>
     public static string Truncate(this string value, int maxLength, string ellipsis = "...")
     {
-        if(value is null)
+        if (value is null)
         {
             throw new ArgumentNullException(nameof(value), "Value must not be null.");
         }
 
-        if(ellipsis is null)
+        if (ellipsis is null)
         {
             throw new ArgumentNullException(nameof(ellipsis), "Ellipsis must not be null.");
         }
 
-        if(maxLength < 0)
+        if (maxLength < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(maxLength), "Maximum length must not be negative.");
         }
 
-        if(value.Length <= maxLength)
+        if (value.Length <= maxLength)
         {
             return value;
         }
 
-        if(maxLength < ellipsis.Length)
+        if (maxLength < ellipsis.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(maxLength), "Maximum length must be at least as long as the ellipsis.");
         }

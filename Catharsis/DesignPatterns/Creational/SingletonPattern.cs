@@ -20,7 +20,7 @@ public class SingletonPattern
     ///<returns>The cached singleton instance for <paramref name="key"/>.</returns>
     public static T Singleton<T, TKey>(T obj, TKey key, ConcurrentDictionary<TKey, T> cache) where TKey : notnull
     {
-        if(cache is null)
+        if (cache is null)
         {
             throw new ArgumentNullException(nameof(cache), "Singleton cache must not be null.");
         }

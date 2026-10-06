@@ -29,7 +29,7 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public OrderedSet(IEqualityComparer<T> comparer)
     {
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
@@ -76,7 +76,7 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<inheritdoc/>
     public bool Remove(T item)
     {
-        if(!_set.Remove(item))
+        if (!_set.Remove(item))
         {
             return false;
         }
@@ -92,7 +92,7 @@ public sealed class OrderedSet<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<returns><c>true</c> if the item was added; <c>false</c> if it was already in the set.</returns>
     public bool TryAdd(T item)
     {
-        if(!_set.Add(item))
+        if (!_set.Add(item))
         {
             return false;
         }

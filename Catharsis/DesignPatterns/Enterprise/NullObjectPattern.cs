@@ -16,7 +16,7 @@ public class NullObjectPattern
     ///<returns><paramref name="value"/>, or the result of <paramref name="nullObjectFactory"/> if it was <c>null</c>.</returns>
     public static T NullObject<T>(T? value, Func<T> nullObjectFactory) where T : class
     {
-        if(nullObjectFactory is null)
+        if (nullObjectFactory is null)
         {
             throw new ArgumentNullException(nameof(nullObjectFactory), "Null object factory must not be null.");
         }

@@ -29,7 +29,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
         HashCode hash = new();
         hash.Add(GetType());
 
-        foreach(object? component in GetEqualityComponents())
+        foreach (object? component in GetEqualityComponents())
         {
             hash.Add(component);
         }

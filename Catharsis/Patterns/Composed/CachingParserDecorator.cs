@@ -58,7 +58,7 @@ public sealed partial class CachingParserDecorator : ISequenceParser
     ///</summary>
     public void Reset()
     {
-        lock(_gate)
+        lock (_gate)
         {
             _inner.Reset();
         }
@@ -67,9 +67,9 @@ public sealed partial class CachingParserDecorator : ISequenceParser
     ///<inheritdoc/>
     public SequenceParseStatus TryParse(in ReadOnlySequence<byte> sequence, out SequencePosition consumed, out SequencePosition examined)
     {
-        if(sequence.Length > MaxCacheableLength)
+        if (sequence.Length > MaxCacheableLength)
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _inner.TryParse(in sequence, out consumed, out examined);
             }
@@ -77,15 +77,15 @@ public sealed partial class CachingParserDecorator : ISequenceParser
 
         ByteKey key = ByteKey.From(sequence);
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(_cache.TryGetValue(key, out CachedResult cached))
+            if (_cache.TryGetValue(key, out CachedResult cached))
             {
                 Hits++;
                 consumed = sequence.GetPosition(cached.ConsumedOffset);
                 examined = sequence.GetPosition(cached.ExaminedOffset);
 
-                if(_logger is not null)
+                if (_logger is not null)
                 {
                     LogHit(_logger, (int)sequence.Length);
                 }
@@ -95,14 +95,14 @@ public sealed partial class CachingParserDecorator : ISequenceParser
 
             Misses++;
 
-            if(_logger is not null)
+            if (_logger is not null)
             {
                 LogMiss(_logger, (int)sequence.Length);
             }
 
             SequenceParseStatus status = _inner.TryParse(in sequence, out consumed, out examined);
 
-            if(status != SequenceParseStatus.Cancelled)
+            if (status != SequenceParseStatus.Cancelled)
             {
                 _cache.AddOrUpdate(key, new CachedResult(status, sequence.Slice(sequence.Start, consumed).Length, sequence.Slice(sequence.Start, examined).Length));
             }

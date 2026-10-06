@@ -18,17 +18,17 @@ public class Iterator
     ///<returns>The original <paramref name="obj"/> after all elements have been visited.</returns>
     public static T Iterate<T, TElement>(T obj, Func<T, IEnumerable<TElement>> getElements, Action<TElement> action)
     {
-        if(getElements is null)
+        if (getElements is null)
         {
             throw new ArgumentNullException(nameof(getElements), "GetElements function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
-        foreach(TElement element in getElements(obj))
+        foreach (TElement element in getElements(obj))
         {
             action(element);
         }

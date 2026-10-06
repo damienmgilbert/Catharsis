@@ -43,7 +43,7 @@ public class ObservableList<T> : ObservableCollection<T>
     ///<inheritdoc/>
     protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        if(_suppressionCount == 0)
+        if (_suppressionCount == 0)
         {
             base.OnCollectionChanged(e);
         }
@@ -52,7 +52,7 @@ public class ObservableList<T> : ObservableCollection<T>
     ///<inheritdoc/>
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if(_suppressionCount == 0)
+        if (_suppressionCount == 0)
         {
             base.OnPropertyChanged(e);
         }
@@ -72,9 +72,9 @@ public class ObservableList<T> : ObservableCollection<T>
     {
         ArgumentNullException.ThrowIfNull(items);
 
-        using(SuppressNotifications())
+        using (SuppressNotifications())
         {
-            foreach(T item in items)
+            foreach (T item in items)
             {
                 Items.Add(item);
             }
@@ -96,11 +96,11 @@ public class ObservableList<T> : ObservableCollection<T>
 
         int removed = 0;
 
-        using(SuppressNotifications())
+        using (SuppressNotifications())
         {
-            for(int i = Items.Count - 1; i >= 0; i--)
+            for (int i = Items.Count - 1; i >= 0; i--)
             {
-                if(predicate(Items[i]))
+                if (predicate(Items[i]))
                 {
                     Items.RemoveAt(i);
                     removed++;
@@ -123,11 +123,11 @@ public class ObservableList<T> : ObservableCollection<T>
     {
         ArgumentNullException.ThrowIfNull(items);
 
-        using(SuppressNotifications())
+        using (SuppressNotifications())
         {
             Items.Clear();
 
-            foreach(T item in items)
+            foreach (T item in items)
             {
                 Items.Add(item);
             }
@@ -171,14 +171,14 @@ public class ObservableList<T> : ObservableCollection<T>
         #region Public methods
         public void Dispose()
         {
-            if(_disposed)
+            if (_disposed)
             {
                 return;
             }
 
             _disposed = true;
 
-            if(Interlocked.Decrement(ref _owner._suppressionCount) == 0)
+            if (Interlocked.Decrement(ref _owner._suppressionCount) == 0)
             {
                 _owner.OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
                 _owner.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));

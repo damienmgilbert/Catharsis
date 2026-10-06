@@ -73,7 +73,7 @@ public sealed class PooledUtf8String : IDisposable, IEquatable<PooledUtf8String>
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -86,7 +86,7 @@ public sealed class PooledUtf8String : IDisposable, IEquatable<PooledUtf8String>
     ///<inheritdoc/>
     public bool Equals(PooledUtf8String? other)
     {
-        if(other is null)
+        if (other is null)
         {
             return false;
         }

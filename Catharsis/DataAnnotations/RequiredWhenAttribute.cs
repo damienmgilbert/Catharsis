@@ -30,7 +30,7 @@ public sealed class RequiredWhenAttribute : ValidationAttribute
         ArgumentNullException.ThrowIfNull(dependentProperty);
         ArgumentNullException.ThrowIfNull(targetValues);
 
-        if(targetValues.Length == 0)
+        if (targetValues.Length == 0)
         {
             throw new ArgumentException("At least one target value must be specified.", nameof(targetValues));
         }
@@ -46,21 +46,21 @@ public sealed class RequiredWhenAttribute : ValidationAttribute
     {
         PropertyInfo? dependentPropertyInfo = validationContext.ObjectType.GetProperty(DependentProperty);
 
-        if(dependentPropertyInfo is null)
+        if (dependentPropertyInfo is null)
         {
             return new ValidationResult($"Unknown property: {DependentProperty}.");
         }
 
         object? dependentValue = dependentPropertyInfo.GetValue(validationContext.ObjectInstance);
 
-        if(!TargetValues.Any(target => Equals(dependentValue, target)))
+        if (!TargetValues.Any(target => Equals(dependentValue, target)))
         {
             return ValidationResult.Success;
         }
 
-        if((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
+        if ((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

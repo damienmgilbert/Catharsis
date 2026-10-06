@@ -38,12 +38,12 @@ public sealed class RateLimiter
     ///</exception>
     public RateLimiter(double capacity, double tokensPerSecond, TimeProvider? timeProvider = null)
     {
-        if(capacity <= 0)
+        if (capacity <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be greater than zero.");
         }
 
-        if(tokensPerSecond <= 0)
+        if (tokensPerSecond <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(tokensPerSecond), "Token refill rate must be greater than zero.");
         }
@@ -63,16 +63,16 @@ public sealed class RateLimiter
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="tokens"/> is not greater than zero.</exception>
     public bool TryAcquire(double tokens = 1)
     {
-        if(tokens <= 0)
+        if (tokens <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(tokens), "Token count must be greater than zero.");
         }
 
-        lock(_gate)
+        lock (_gate)
         {
             Refill();
 
-            if(_availableTokens < tokens)
+            if (_availableTokens < tokens)
             {
                 return false;
             }
@@ -93,25 +93,25 @@ public sealed class RateLimiter
     ///</exception>
     public async Task AcquireAsync(double tokens = 1, CancellationToken cancellationToken = default)
     {
-        if(tokens <= 0)
+        if (tokens <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(tokens), "Token count must be greater than zero.");
         }
 
-        if(tokens > _capacity)
+        if (tokens > _capacity)
         {
             throw new ArgumentOutOfRangeException(nameof(tokens), "Token count must not exceed the bucket capacity.");
         }
 
-        while(true)
+        while (true)
         {
             TimeSpan waitTime;
 
-            lock(_gate)
+            lock (_gate)
             {
                 Refill();
 
-                if(_availableTokens >= tokens)
+                if (_availableTokens >= tokens)
                 {
                     _availableTokens -= tokens;
                     return;
@@ -130,7 +130,7 @@ public sealed class RateLimiter
         long now = _timeProvider.GetTimestamp();
         double elapsedSeconds = _timeProvider.GetElapsedTime(_lastRefillTimestamp, now).TotalSeconds;
 
-        if(elapsedSeconds <= 0)
+        if (elapsedSeconds <= 0)
         {
             return;
         }
@@ -153,7 +153,7 @@ public sealed class RateLimiter
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 Refill();
                 return _availableTokens;

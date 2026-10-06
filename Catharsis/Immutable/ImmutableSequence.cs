@@ -68,12 +68,12 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     ///<returns>A new immutable sequence.</returns>
     public static ImmutableSequence<T> Create(ReadOnlySpan<T> data)
     {
-        if(data.IsEmpty)
+        if (data.IsEmpty)
         {
             return Empty;
         }
 
-        return new ImmutableSequence<T>([ .. data ]);
+        return new ImmutableSequence<T>([.. data]);
     }
 
     ///<summary>
@@ -84,17 +84,17 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     ///<returns>A new immutable sequence.</returns>
     public static ImmutableSequence<T> CreateFrom(in ReadOnlySequence<T> sequence)
     {
-        if(sequence.IsEmpty)
+        if (sequence.IsEmpty)
         {
             return Empty;
         }
 
         ImmutableArray<T>.Builder builder = ImmutableArray.CreateBuilder<T>((int)sequence.Length);
 
-        foreach(ReadOnlyMemory<T> segment in sequence)
+        foreach (ReadOnlyMemory<T> segment in sequence)
         {
             ReadOnlySpan<T> span = segment.Span;
-            for(int i = 0; i < span.Length; i++)
+            for (int i = 0; i < span.Length; i++)
             {
                 builder.Add(span[i]);
             }
@@ -114,7 +114,7 @@ public readonly struct ImmutableSequence<T>(ImmutableArray<T> data) : IReadOnlyL
     public override int GetHashCode()
     {
         HashCode hash = new();
-        foreach(T item in _data)
+        foreach (T item in _data)
         {
             hash.Add(item);
         }

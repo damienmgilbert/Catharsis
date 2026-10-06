@@ -65,7 +65,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
         ObjectDisposedException.ThrowIf(_disposed, this);
         Guard.IsGreaterThanOrEqualTo(count, 0);
 
-        if(_position + count > _buffer.Length)
+        if (_position + count > _buffer.Length)
         {
             ThrowHelper.ThrowArgumentOutOfRangeException(nameof(count), "Cannot advance past the end of the buffer.");
         }
@@ -76,7 +76,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -91,7 +91,7 @@ public sealed class PooledBuffer<T> : IResizableBuffer<T>
     ///<inheritdoc/>
     public void EnsureCapacity(int capacity)
     {
-        if(capacity <= _buffer.Length)
+        if (capacity <= _buffer.Length)
         {
             return;
         }

@@ -17,7 +17,7 @@ public class FactoryMethodPattern
     ///<returns>The product created by <paramref name="factory"/>.</returns>
     public static TResult FactoryMethod<T, TResult>(T obj, Func<T, TResult> factory)
     {
-        if(factory is null)
+        if (factory is null)
         {
             throw new ArgumentNullException(nameof(factory), "Factory function must not be null.");
         }

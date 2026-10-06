@@ -24,15 +24,15 @@ public sealed class ComponentGraph
         HashSet<ComponentGraphNode> visited = [];
         HashSet<ComponentGraphNode> visiting = [];
 
-        foreach(ComponentGraphNode node in _nodes.Values)
+        foreach (ComponentGraphNode node in _nodes.Values)
         {
-            if(!visited.Contains(node))
+            if (!visited.Contains(node))
             {
                 Visit(node, visited, visiting, sorted);
             }
         }
 
-        if(reverse)
+        if (reverse)
         {
             sorted.Reverse();
         }
@@ -42,19 +42,19 @@ public sealed class ComponentGraph
 
     static void Visit(ComponentGraphNode node, HashSet<ComponentGraphNode> visited, HashSet<ComponentGraphNode> visiting, List<ComponentGraphNode> sorted)
     {
-        if(visiting.Contains(node))
+        if (visiting.Contains(node))
         {
             throw new InvalidOperationException($"Cycle detected involving node '{node.Name}'.");
         }
 
-        if(visited.Contains(node))
+        if (visited.Contains(node))
         {
             return;
         }
 
         visiting.Add(node);
 
-        foreach(ComponentGraphNode dependency in node.Dependencies)
+        foreach (ComponentGraphNode dependency in node.Dependencies)
         {
             Visit(dependency, visited, visiting, sorted);
         }
@@ -112,9 +112,9 @@ public sealed class ComponentGraph
     {
         List<ComponentGraphNode> leaves = [];
 
-        foreach(ComponentGraphNode node in _nodes.Values)
+        foreach (ComponentGraphNode node in _nodes.Values)
         {
-            if(node.Dependents.Count == 0)
+            if (node.Dependents.Count == 0)
             {
                 leaves.Add(node);
             }
@@ -141,9 +141,9 @@ public sealed class ComponentGraph
     {
         List<ComponentGraphNode> roots = [];
 
-        foreach(ComponentGraphNode node in _nodes.Values)
+        foreach (ComponentGraphNode node in _nodes.Values)
         {
-            if(node.Dependencies.Count == 0)
+            if (node.Dependencies.Count == 0)
             {
                 roots.Add(node);
             }

@@ -73,7 +73,7 @@ public class PolicyFactoryTests
 
         int result = await policy.ExecuteAsync(async ct =>
         {
-            if(++calls == 1)
+            if (++calls == 1)
             {
                 await Task.Delay(TimeSpan.FromSeconds(10), ct);
             }

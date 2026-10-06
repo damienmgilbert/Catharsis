@@ -25,7 +25,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     ///Initializes a new <see cref="ImmutableBuffer{T}"/> from the specified span by copying the data.
     ///</summary>
     ///<param name="data">The source span to copy from.</param>
-    public ImmutableBuffer(ReadOnlySpan<T> data) { _data = [ .. data ]; }
+    public ImmutableBuffer(ReadOnlySpan<T> data) { _data = [.. data]; }
     #endregion
 
     #region Operators
@@ -76,7 +76,7 @@ public readonly struct ImmutableBuffer<T> : IReadOnlyList<T>, IEquatable<Immutab
     public override int GetHashCode()
     {
         HashCode hash = new();
-        foreach(T item in _data)
+        foreach (T item in _data)
         {
             hash.Add(item);
         }

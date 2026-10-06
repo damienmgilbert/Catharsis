@@ -28,12 +28,12 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
     ///</exception>
     public BulkheadPolicy(int maxConcurrency, int maxQueueLength = 0)
     {
-        if(maxConcurrency < 1)
+        if (maxConcurrency < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(maxConcurrency), "Maximum concurrency must be at least 1.");
         }
 
-        if(maxQueueLength < 0)
+        if (maxQueueLength < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(maxQueueLength), "Maximum queue length must not be negative.");
         }
@@ -47,7 +47,7 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -71,7 +71,7 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
         ArgumentNullException.ThrowIfNull(operation);
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_executionSlots.Wait(0, cancellationToken))
+        if (_executionSlots.Wait(0, cancellationToken))
         {
             try
             {
@@ -83,7 +83,7 @@ public sealed class BulkheadPolicy : IAsyncPolicy, IDisposable
             }
         }
 
-        if(_queueSlots is null || !_queueSlots.Wait(0, cancellationToken))
+        if (_queueSlots is null || !_queueSlots.Wait(0, cancellationToken))
         {
             throw new BulkheadRejectedException();
         }

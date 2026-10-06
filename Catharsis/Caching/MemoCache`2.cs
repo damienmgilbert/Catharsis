@@ -75,7 +75,7 @@ public sealed class MemoCache<TKey, TValue>(IEqualityComparer<TKey>? comparer = 
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(_entries.TryGetValue(key, out Lazy<TValue>? lazy))
+        if (_entries.TryGetValue(key, out Lazy<TValue>? lazy))
         {
             value = lazy.Value;
             return true;

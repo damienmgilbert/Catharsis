@@ -16,14 +16,14 @@ public class Decorator
     ///<returns>The fully decorated object.</returns>
     public static T Decorate<T>(T obj, params Func<T, T>[] decorators)
     {
-        if(decorators is null)
+        if (decorators is null)
         {
             throw new ArgumentNullException(nameof(decorators), "Decorators must not be null.");
         }
 
         T? result = obj;
 
-        foreach(Func<T, T> decorator in decorators)
+        foreach (Func<T, T> decorator in decorators)
         {
             result = decorator(result);
         }

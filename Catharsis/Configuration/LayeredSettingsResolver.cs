@@ -28,7 +28,7 @@ public sealed class LayeredSettingsResolver(params IReadOnlyDictionary<string, s
 
         Dictionary<string, string?> environment = [];
 
-        foreach(System.Collections.DictionaryEntry entry in Environment.GetEnvironmentVariables())
+        foreach (System.Collections.DictionaryEntry entry in Environment.GetEnvironmentVariables())
         {
             environment[(string)entry.Key] = (string?)entry.Value;
         }
@@ -56,9 +56,9 @@ public sealed class LayeredSettingsResolver(params IReadOnlyDictionary<string, s
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
-        foreach(IReadOnlyDictionary<string, string?> layer in _layers)
+        foreach (IReadOnlyDictionary<string, string?> layer in _layers)
         {
-            if(layer.TryGetValue(key, out string? found))
+            if (layer.TryGetValue(key, out string? found))
             {
                 value = found;
                 return true;

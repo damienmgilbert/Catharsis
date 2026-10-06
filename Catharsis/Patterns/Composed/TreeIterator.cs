@@ -60,7 +60,7 @@ public static class TreeIterator
     #region Private methods
     static IEnumerable<TreeNode<T>> AncestorsIterator<T>(TreeNode<T> node)
     {
-        for(TreeNode<T>? current = node.Parent; current is not null; current = current.Parent)
+        for (TreeNode<T>? current = node.Parent; current is not null; current = current.Parent)
         {
             yield return current;
         }
@@ -70,7 +70,7 @@ public static class TreeIterator
     {
         List<TreeNode<T>> level = [root];
 
-        while(level.Count > 0)
+        while (level.Count > 0)
         {
             yield return level;
 
@@ -83,17 +83,17 @@ public static class TreeIterator
         Stack<(TreeNode<T> Node, List<T> Path)> pending = new();
         pending.Push((root, [root.Value]));
 
-        while(pending.Count > 0)
+        while (pending.Count > 0)
         {
             (TreeNode<T> node, List<T> path) = pending.Pop();
 
-            if(node.IsLeaf)
+            if (node.IsLeaf)
             {
                 yield return path;
                 continue;
             }
 
-            for(int i = node.Children.Count - 1; i >= 0; i--)
+            for (int i = node.Children.Count - 1; i >= 0; i--)
             {
                 TreeNode<T> child = node.Children[i];
                 pending.Push((child, [.. path, child.Value]));

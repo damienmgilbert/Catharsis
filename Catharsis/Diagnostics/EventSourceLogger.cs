@@ -32,7 +32,7 @@ public sealed class EventSourceLogger : EventSource
     [Event(3, Level = EventLevel.Error, Message = "{0} faulted: {1}")]
     public void OperationFault(string operationName, string errorMessage)
     {
-        if(IsEnabled())
+        if (IsEnabled())
         {
             WriteEvent(3, operationName, errorMessage);
         }
@@ -45,7 +45,7 @@ public sealed class EventSourceLogger : EventSource
     [Event(1, Level = EventLevel.Informational, Message = "{0} started.")]
     public void OperationStart(string operationName)
     {
-        if(IsEnabled())
+        if (IsEnabled())
         {
             WriteEvent(1, operationName);
         }
@@ -59,7 +59,7 @@ public sealed class EventSourceLogger : EventSource
     [Event(2, Level = EventLevel.Informational, Message = "{0} stopped after {1} ms.")]
     public void OperationStop(string operationName, double elapsedMilliseconds)
     {
-        if(IsEnabled())
+        if (IsEnabled())
         {
             WriteEvent(2, operationName, elapsedMilliseconds);
         }

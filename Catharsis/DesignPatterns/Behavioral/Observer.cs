@@ -15,12 +15,12 @@ public class Observer
     ///<returns>The original <paramref name="obj"/> after all observers have been notified.</returns>
     public static T Notify<T>(T obj, params Action<T>[] observers)
     {
-        if(observers is null)
+        if (observers is null)
         {
             throw new ArgumentNullException(nameof(observers), "Observers must not be null.");
         }
 
-        foreach(Action<T> observer in observers)
+        foreach (Action<T> observer in observers)
         {
             observer(obj);
         }

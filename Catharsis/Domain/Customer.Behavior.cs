@@ -46,7 +46,7 @@ public sealed partial class Customer
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(points);
 
-        if(points > LoyaltyPoints)
+        if (points > LoyaltyPoints)
         {
             return Result<int, string>.Fail($"Cannot redeem {points} points; only {LoyaltyPoints} are available.");
         }
@@ -71,7 +71,7 @@ public sealed partial class Customer
         string trimmed = email.Trim();
         int at = trimmed.IndexOf('@', StringComparison.Ordinal);
 
-        if(at <= 0 || at != trimmed.LastIndexOf('@') || at == trimmed.Length - 1 || trimmed.Contains(' ', StringComparison.Ordinal))
+        if (at <= 0 || at != trimmed.LastIndexOf('@') || at == trimmed.Length - 1 || trimmed.Contains(' ', StringComparison.Ordinal))
         {
             throw new ArgumentException($"'{email}' is not a valid email address.", nameof(email));
         }

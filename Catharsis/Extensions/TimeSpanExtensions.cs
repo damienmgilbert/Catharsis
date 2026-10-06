@@ -21,12 +21,12 @@ public static class TimeSpanExtensions
     ///<exception cref="ArgumentException"><paramref name="min"/> is greater than <paramref name="max"/>.</exception>
     public static TimeSpan Clamp(this TimeSpan value, TimeSpan min, TimeSpan max)
     {
-        if(min > max)
+        if (min > max)
         {
             throw new ArgumentException("Minimum must not be greater than maximum.", nameof(min));
         }
 
-        if(value < min)
+        if (value < min)
         {
             return min;
         }
@@ -55,14 +55,14 @@ public static class TimeSpanExtensions
         StringBuilder builder = new();
         int used = 0;
 
-        foreach((int amount, string unit) in parts)
+        foreach ((int amount, string unit) in parts)
         {
-            if(amount == 0)
+            if (amount == 0)
             {
                 continue;
             }
 
-            if(builder.Length > 0)
+            if (builder.Length > 0)
             {
                 builder.Append(' ');
             }
@@ -70,13 +70,13 @@ public static class TimeSpanExtensions
             builder.Append(amount.ToString(CultureInfo.InvariantCulture)).Append(unit);
             used++;
 
-            if(used == 2)
+            if (used == 2)
             {
                 break;
             }
         }
 
-        if(value < TimeSpan.Zero && builder.Length > 0)
+        if (value < TimeSpan.Zero && builder.Length > 0)
         {
             builder.Insert(0, '-');
         }

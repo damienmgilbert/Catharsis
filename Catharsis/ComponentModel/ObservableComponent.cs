@@ -25,7 +25,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             PropertyChanged = null;
             PropertyChanging = null;
@@ -65,7 +65,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
     ///</returns>
     protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(EqualityComparer<T>.Default.Equals(field, value))
+        if (EqualityComparer<T>.Default.Equals(field, value))
         {
             return false;
         }
@@ -98,7 +98,7 @@ public abstract class ObservableComponent : ComponentBase, INotifyPropertyChange
 
         T? oldValue = field;
 
-        if(!SetProperty(ref field, value, propertyName))
+        if (!SetProperty(ref field, value, propertyName))
         {
             return false;
         }

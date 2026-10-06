@@ -28,12 +28,12 @@ public sealed class PolicyWrap : IAsyncPolicy
     {
         ArgumentNullException.ThrowIfNull(policies);
 
-        if(policies.Length == 0)
+        if (policies.Length == 0)
         {
             throw new ArgumentException("At least one policy must be supplied.", nameof(policies));
         }
 
-        foreach(IAsyncPolicy policy in policies)
+        foreach (IAsyncPolicy policy in policies)
         {
             ArgumentNullException.ThrowIfNull(policy);
         }
@@ -74,7 +74,7 @@ public sealed class PolicyWrap : IAsyncPolicy
 
     Task<TResult> ExecuteFrom<TResult>(int index, Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken)
     {
-        if(index == _policies.Length)
+        if (index == _policies.Length)
         {
             return operation(cancellationToken);
         }

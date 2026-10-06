@@ -32,7 +32,7 @@ public class HttpClientMetricsListenerTests
         using MeterListener verificationListener = new();
         verificationListener.InstrumentPublished = (instrument, meterListener) =>
         {
-            if((instrument.Meter.Name == recorder.Name) && (instrument.Name == "http.client.request.count"))
+            if ((instrument.Meter.Name == recorder.Name) && (instrument.Name == "http.client.request.count"))
             {
                 meterListener.EnableMeasurementEvents(instrument);
             }
@@ -58,7 +58,7 @@ public class HttpClientMetricsListenerTests
         using MeterListener verificationListener = new();
         verificationListener.InstrumentPublished = (instrument, meterListener) =>
         {
-            if((instrument.Meter.Name == recorder.Name) && (instrument.Name == "http.client.request.duration"))
+            if ((instrument.Meter.Name == recorder.Name) && (instrument.Name == "http.client.request.duration"))
             {
                 meterListener.EnableMeasurementEvents(instrument);
             }
@@ -84,7 +84,7 @@ public class HttpClientMetricsListenerTests
         using MeterListener verificationListener = new();
         verificationListener.InstrumentPublished = (instrument, meterListener) =>
         {
-            if(instrument.Meter.Name == recorder.Name)
+            if (instrument.Meter.Name == recorder.Name)
             {
                 meterListener.EnableMeasurementEvents(instrument);
             }

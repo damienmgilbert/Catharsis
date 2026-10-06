@@ -54,15 +54,15 @@ public sealed class ComponentModelDebuggerView
 
         List<string> result = [];
 
-        foreach(Type iface in relevant)
+        foreach (Type iface in relevant)
         {
-            if(iface.IsAssignableFrom(type))
+            if (iface.IsAssignableFrom(type))
             {
                 result.Add(iface.Name);
             }
         }
 
-        return[ .. result ];
+        return [.. result];
     }
 
     PropertyEntry[] GetPropertyEntries()
@@ -70,7 +70,7 @@ public sealed class ComponentModelDebuggerView
         PropertyDescriptorCollection descriptors = TypeDescriptor.GetProperties(_component);
         PropertyEntry[] entries = new PropertyEntry[descriptors.Count];
 
-        for(int i = 0; i < descriptors.Count; i++)
+        for (int i = 0; i < descriptors.Count; i++)
         {
             PropertyDescriptor prop = descriptors[i];
             object? value;
@@ -78,7 +78,8 @@ public sealed class ComponentModelDebuggerView
             try
             {
                 value = prop.GetValue(_component);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 value = $"<error: {ex.Message}>";
             }
@@ -91,7 +92,7 @@ public sealed class ComponentModelDebuggerView
 
     ValidationErrorEntry[] GetValidationErrors()
     {
-        if((_component is not INotifyDataErrorInfo errorInfo) || !errorInfo.HasErrors)
+        if ((_component is not INotifyDataErrorInfo errorInfo) || !errorInfo.HasErrors)
         {
             return [];
         }
@@ -99,20 +100,20 @@ public sealed class ComponentModelDebuggerView
         List<ValidationErrorEntry> errors = [];
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(_component);
 
-        foreach(PropertyDescriptor prop in properties)
+        foreach (PropertyDescriptor prop in properties)
         {
-            foreach(object error in errorInfo.GetErrors(prop.Name))
+            foreach (object error in errorInfo.GetErrors(prop.Name))
             {
                 string? message = error?.ToString();
 
-                if(!string.IsNullOrWhiteSpace(message))
+                if (!string.IsNullOrWhiteSpace(message))
                 {
                     errors.Add(new ValidationErrorEntry(prop.Name, message));
                 }
             }
         }
 
-        return[ .. errors ];
+        return [.. errors];
     }
     #endregion
 

@@ -143,11 +143,11 @@ public class ResilientWebSocketClientTests
         {
             try
             {
-                while(!stoppingToken.IsCancellationRequested)
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     HttpListenerContext context = await _listener.GetContextAsync().WaitAsync(stoppingToken).ConfigureAwait(false);
 
-                    if(!context.Request.IsWebSocketRequest)
+                    if (!context.Request.IsWebSocketRequest)
                     {
                         context.Response.StatusCode = 400;
                         context.Response.Close();
@@ -156,7 +156,8 @@ public class ResilientWebSocketClientTests
 
                     _ = HandleWebSocketAsync(context, stoppingToken);
                 }
-            } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or HttpListenerException)
+            }
+            catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or HttpListenerException)
             {
             }
         }
@@ -170,11 +171,11 @@ public class ResilientWebSocketClientTests
             {
                 byte[] buffer = new byte[4096];
 
-                while(socket.State == WebSocketState.Open)
+                while (socket.State == WebSocketState.Open)
                 {
                     WebSocketReceiveResult result = await socket.ReceiveAsync(buffer, stoppingToken).ConfigureAwait(false);
 
-                    if(result.MessageType == WebSocketMessageType.Close)
+                    if (result.MessageType == WebSocketMessageType.Close)
                     {
                         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", stoppingToken).ConfigureAwait(false);
                         break;
@@ -182,9 +183,11 @@ public class ResilientWebSocketClientTests
 
                     await socket.SendAsync(buffer.AsMemory(0, result.Count), result.MessageType, result.EndOfMessage, stoppingToken).ConfigureAwait(false);
                 }
-            } catch(Exception exception) when(exception is WebSocketException or OperationCanceledException)
+            }
+            catch (Exception exception) when (exception is WebSocketException or OperationCanceledException)
             {
-            } finally
+            }
+            finally
             {
                 socket.Dispose();
             }
@@ -199,7 +202,8 @@ public class ResilientWebSocketClientTests
             try
             {
                 await _acceptLoop.ConfigureAwait(false);
-            } catch(OperationCanceledException)
+            }
+            catch (OperationCanceledException)
             {
             }
 

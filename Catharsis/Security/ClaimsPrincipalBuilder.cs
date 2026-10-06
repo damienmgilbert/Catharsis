@@ -102,7 +102,7 @@ public sealed class ClaimsPrincipalBuilder
     {
         ArgumentNullException.ThrowIfNull(roles);
 
-        foreach(string role in roles)
+        foreach (string role in roles)
         {
             WithRole(role);
         }

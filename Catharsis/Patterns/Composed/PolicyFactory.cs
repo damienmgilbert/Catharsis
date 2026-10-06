@@ -27,14 +27,14 @@ public static class PolicyFactory
 
         List<IAsyncPolicy> layers = [];
 
-        if(options.MaxAttempts > 1)
+        if (options.MaxAttempts > 1)
         {
             RetryPolicy retry = new RetryPolicy().MaxAttempts(options.MaxAttempts).InitialDelay(options.InitialRetryDelay);
 
             layers.Add(options.UseJitter ? retry.WithJitter() : retry);
         }
 
-        if(options.Timeout is TimeSpan timeout)
+        if (options.Timeout is TimeSpan timeout)
         {
             layers.Add(new TimeoutPolicy(timeout));
         }

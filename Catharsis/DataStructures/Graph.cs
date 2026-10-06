@@ -28,7 +28,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public Graph(IEqualityComparer<T> comparer)
     {
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
@@ -64,7 +64,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<returns><c>true</c> if the vertex was added; <c>false</c> if it already existed.</returns>
     public bool AddVertex(T vertex)
     {
-        if(_adjacency.ContainsKey(vertex))
+        if (_adjacency.ContainsKey(vertex))
         {
             return false;
         }
@@ -81,7 +81,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<exception cref="KeyNotFoundException">Thrown when <paramref name="start"/> is not in the graph.</exception>
     public IEnumerable<T> BreadthFirst(T start)
     {
-        if(!_adjacency.ContainsKey(start))
+        if (!_adjacency.ContainsKey(start))
         {
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
@@ -91,14 +91,14 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
         queue.Enqueue(start);
         visited.Add(start);
 
-        while(queue.Count > 0)
+        while (queue.Count > 0)
         {
             T current = queue.Dequeue();
             yield return current;
 
-            foreach(T neighbor in _adjacency[current])
+            foreach (T neighbor in _adjacency[current])
             {
-                if(visited.Add(neighbor))
+                if (visited.Add(neighbor))
                 {
                     queue.Enqueue(neighbor);
                 }
@@ -125,7 +125,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<exception cref="KeyNotFoundException">Thrown when <paramref name="start"/> is not in the graph.</exception>
     public IEnumerable<T> DepthFirst(T start)
     {
-        if(!_adjacency.ContainsKey(start))
+        if (!_adjacency.ContainsKey(start))
         {
             throw new KeyNotFoundException($"Vertex '{start}' is not in the graph.");
         }
@@ -134,20 +134,20 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
         Stack<T> stack = new();
         stack.Push(start);
 
-        while(stack.Count > 0)
+        while (stack.Count > 0)
         {
             T current = stack.Pop();
 
-            if(!visited.Add(current))
+            if (!visited.Add(current))
             {
                 continue;
             }
 
             yield return current;
 
-            foreach(T neighbor in _adjacency[current])
+            foreach (T neighbor in _adjacency[current])
             {
-                if(!visited.Contains(neighbor))
+                if (!visited.Contains(neighbor))
                 {
                     stack.Push(neighbor);
                 }
@@ -176,7 +176,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<exception cref="KeyNotFoundException">Thrown when <paramref name="vertex"/> is not in the graph.</exception>
     public IEnumerable<T> Neighbors(T vertex)
     {
-        if(!_adjacency.TryGetValue(vertex, out HashSet<T>? edges))
+        if (!_adjacency.TryGetValue(vertex, out HashSet<T>? edges))
         {
             throw new KeyNotFoundException($"Vertex '{vertex}' is not in the graph.");
         }
@@ -192,7 +192,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<returns><c>true</c> if the edge was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveEdge(T from, T to)
     {
-        if(!_adjacency.TryGetValue(from, out HashSet<T>? edges))
+        if (!_adjacency.TryGetValue(from, out HashSet<T>? edges))
         {
             return false;
         }
@@ -207,12 +207,12 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
     ///<returns><c>true</c> if the vertex was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveVertex(T vertex)
     {
-        if(!_adjacency.Remove(vertex))
+        if (!_adjacency.Remove(vertex))
         {
             return false;
         }
 
-        foreach(HashSet<T> edges in _adjacency.Values)
+        foreach (HashSet<T> edges in _adjacency.Values)
         {
             edges.Remove(vertex);
         }
@@ -231,7 +231,7 @@ public sealed class Graph<T> : IEnumerable<T> where T : notnull
         {
             int count = 0;
 
-            foreach(HashSet<T> edges in _adjacency.Values)
+            foreach (HashSet<T> edges in _adjacency.Values)
             {
                 count += edges.Count;
             }

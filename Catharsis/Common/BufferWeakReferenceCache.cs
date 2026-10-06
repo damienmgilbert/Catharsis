@@ -31,7 +31,7 @@ public sealed class BufferWeakReferenceCache<T> where T : class
         Guard.IsNotNullOrEmpty(key);
         Guard.IsNotNull(factory);
 
-        if(TryGet(key, out T? existing) && existing is not null)
+        if (TryGet(key, out T? existing) && existing is not null)
         {
             return existing;
         }
@@ -48,11 +48,11 @@ public sealed class BufferWeakReferenceCache<T> where T : class
     public int Purge()
     {
         int removed = 0;
-        foreach(string key in _cache.Keys)
+        foreach (string key in _cache.Keys)
         {
-            if(_cache.TryGetValue(key, out WeakReference<T>? weakRef) && !weakRef.TryGetTarget(out _))
+            if (_cache.TryGetValue(key, out WeakReference<T>? weakRef) && !weakRef.TryGetTarget(out _))
             {
-                if(_cache.TryRemove(key, out _))
+                if (_cache.TryRemove(key, out _))
                 {
                     removed++;
                 }
@@ -95,7 +95,7 @@ public sealed class BufferWeakReferenceCache<T> where T : class
     {
         Guard.IsNotNullOrEmpty(key);
 
-        if(_cache.TryGetValue(key, out WeakReference<T>? weakRef) && weakRef.TryGetTarget(out value))
+        if (_cache.TryGetValue(key, out WeakReference<T>? weakRef) && weakRef.TryGetTarget(out value))
         {
             return true;
         }

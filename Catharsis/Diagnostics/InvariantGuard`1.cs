@@ -23,7 +23,7 @@ public sealed class InvariantGuard<T>(T initialValue, Func<T, bool> invariant, s
     {
         ArgumentNullException.ThrowIfNull(invariant);
 
-        if(!invariant(initialValue))
+        if (!invariant(initialValue))
         {
             throw new ArgumentException(message ?? "Value violates the configured invariant.", nameof(initialValue));
         }
@@ -43,7 +43,7 @@ public sealed class InvariantGuard<T>(T initialValue, Func<T, bool> invariant, s
         get => _value;
         set
         {
-            if(!_invariant(value))
+            if (!_invariant(value))
             {
                 throw new InvalidOperationException(_message);
             }

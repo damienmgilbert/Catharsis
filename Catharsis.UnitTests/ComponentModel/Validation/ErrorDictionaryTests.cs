@@ -199,7 +199,7 @@ public sealed class ErrorDictionaryTests
     {
         ErrorDictionary dict = new();
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => dict.SetErrors(null!, [ new ErrorInfo("msg") ]));
+        Assert.ThrowsExactly<ArgumentNullException>(() => dict.SetErrors(null!, [new ErrorInfo("msg")]));
     }
 
     [TestMethod]
@@ -208,7 +208,7 @@ public sealed class ErrorDictionaryTests
         ErrorDictionary dict = new();
         dict.AddError("Name", new ErrorInfo("old"));
 
-        dict.SetErrors("Name", [ new ErrorInfo("new1"), new ErrorInfo("new2") ]);
+        dict.SetErrors("Name", [new ErrorInfo("new1"), new ErrorInfo("new2")]);
 
         IReadOnlyList<ErrorInfo> errors = dict.GetErrorInfos("Name");
         Assert.HasCount(2, errors);

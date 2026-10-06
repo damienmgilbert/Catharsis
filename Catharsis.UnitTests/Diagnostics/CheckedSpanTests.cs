@@ -12,7 +12,7 @@ public class CheckedSpanTests
     [TestMethod]
     public void AsSpan_ReturnsUnderlyingSpan()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         CheckedSpan<byte> span = new(data);
         Span<byte> raw = span.AsSpan();
         Assert.AreEqual(3, raw.Length);
@@ -21,7 +21,7 @@ public class CheckedSpanTests
     [TestMethod]
     public void Clear_ClearsToDefault()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         CheckedSpan<byte> span = new(data);
         span.Clear();
         Assert.AreEqual(0, data[0]);
@@ -30,7 +30,7 @@ public class CheckedSpanTests
     [TestMethod]
     public void CopyTo_CopiesData()
     {
-        byte[] src = [ 1, 2, 3 ];
+        byte[] src = [1, 2, 3];
         CheckedSpan<byte> span = new(src, ValidationMode.Full);
         byte[] dest = new byte[5];
         span.CopyTo(dest);
@@ -51,7 +51,7 @@ public class CheckedSpanTests
     [TestMethod]
     public void Indexer_ValidIndex_ReturnsElement()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         CheckedSpan<byte> span = new(data, ValidationMode.Full);
         Assert.AreEqual(2, span[1]);
     }
@@ -75,7 +75,7 @@ public class CheckedSpanTests
     [TestMethod]
     public void Slice_ReturnsCheckedSlice()
     {
-        byte[] data = [ 10, 20, 30, 40, 50 ];
+        byte[] data = [10, 20, 30, 40, 50];
         CheckedSpan<byte> span = new(data, ValidationMode.Full);
         CheckedSpan<byte> slice = span.Slice(1, 3);
         Assert.AreEqual(3, slice.Length);

@@ -40,14 +40,14 @@ public sealed class PropertyChangeScope : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         _disposed = true;
 
-        foreach(string propertyName in _pendingProperties)
+        foreach (string propertyName in _pendingProperties)
         {
             _raisePropertyChanged(propertyName);
         }

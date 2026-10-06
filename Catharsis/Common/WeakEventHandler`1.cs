@@ -44,20 +44,20 @@ public sealed class WeakEventHandler<TEventArgs>
     ///<returns><c>true</c> if the handler was invoked; <c>false</c> if the subscriber has been garbage collected.</returns>
     public bool Invoke(object? sender, TEventArgs args)
     {
-        if(_targetReference is null)
+        if (_targetReference is null)
         {
-            _method.Invoke(null, [ sender, args ]);
+            _method.Invoke(null, [sender, args]);
             return true;
         }
 
         object? target = _targetReference.Target;
 
-        if(target is null)
+        if (target is null)
         {
             return false;
         }
 
-        _method.Invoke(target, [ sender, args ]);
+        _method.Invoke(target, [sender, args]);
         return true;
     }
     #endregion

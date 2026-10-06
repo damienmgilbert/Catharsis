@@ -29,14 +29,14 @@ public sealed class PooledJsonDocument : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         _disposed = true;
         Document.Dispose();
-        if(_rentedBuffer is not null)
+        if (_rentedBuffer is not null)
         {
             _pool.Return(_rentedBuffer);
         }

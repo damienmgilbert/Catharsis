@@ -19,7 +19,7 @@ public class BoundedTransformBlockFactoryTests
     {
         TransformBlock<int, int> block = BoundedTransformBlockFactory.CreateForCpuBoundWork<int, int>(x => x * x);
 
-        foreach(int value in Enumerable.Range(1, 4))
+        foreach (int value in Enumerable.Range(1, 4))
         {
             await block.SendAsync(value);
         }
@@ -28,7 +28,7 @@ public class BoundedTransformBlockFactoryTests
 
         List<int> results = [];
 
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             results.Add(await block.ReceiveAsync());
         }
@@ -60,7 +60,7 @@ public class BoundedTransformBlockFactoryTests
             return x + 1;
         });
 
-        foreach(int value in Enumerable.Range(1, 3))
+        foreach (int value in Enumerable.Range(1, 3))
         {
             await block.SendAsync(value);
         }
@@ -69,7 +69,7 @@ public class BoundedTransformBlockFactoryTests
 
         List<int> results = [];
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             results.Add(await block.ReceiveAsync());
         }

@@ -32,7 +32,8 @@ public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan dela
         {
             await Task.Delay(delay, cancellationToken);
             DebouncedValueChanged?.Invoke(this, value);
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
     }
@@ -55,7 +56,7 @@ public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan dela
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -78,7 +79,7 @@ public sealed class DebouncedObservableProperty<T>(T initialValue, TimeSpan dela
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            if(SetProperty(ref _value, value))
+            if (SetProperty(ref _value, value))
             {
                 ScheduleDebounce(value);
             }

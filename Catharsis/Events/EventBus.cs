@@ -34,12 +34,12 @@ public sealed class EventBus
     {
         ArgumentNullException.ThrowIfNull(@event);
 
-        if(!_handlers.TryGetValue(typeof(TEvent), out ImmutableArray<Delegate> handlers))
+        if (!_handlers.TryGetValue(typeof(TEvent), out ImmutableArray<Delegate> handlers))
         {
             return;
         }
 
-        foreach(Delegate handler in handlers)
+        foreach (Delegate handler in handlers)
         {
             cancellationToken.ThrowIfCancellationRequested();
             await ((Func<TEvent, Task>)handler)(@event).ConfigureAwait(false);

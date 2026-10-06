@@ -25,7 +25,7 @@ public class WeightedPickBenchmarks
         _picker = new WeightedRandomPicker<int>();
         _list = [];
 
-        for(int i = 0; i < ItemCount; i++)
+        for (int i = 0; i < ItemCount; i++)
         {
             _picker.Add(i, i + 1);
             _list.Add(i, i + 1);
@@ -39,7 +39,7 @@ public class WeightedPickBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < PickCount; i++)
+        for (int i = 0; i < PickCount; i++)
         {
             sum += _picker.Pick(_random);
         }
@@ -52,7 +52,7 @@ public class WeightedPickBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < PickCount; i++)
+        for (int i = 0; i < PickCount; i++)
         {
             sum += _list.PickRandom(_random);
         }

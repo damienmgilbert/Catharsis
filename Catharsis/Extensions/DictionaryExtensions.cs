@@ -21,7 +21,7 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
@@ -44,27 +44,28 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="addFactory"/>, or <paramref name="updateFactory"/> is <c>null</c>.</exception>
     public static TValue AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> addFactory, Func<TKey, TValue, TValue> updateFactory)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(addFactory is null)
+        if (addFactory is null)
         {
             throw new ArgumentNullException(nameof(addFactory), "Add factory must not be null.");
         }
 
-        if(updateFactory is null)
+        if (updateFactory is null)
         {
             throw new ArgumentNullException(nameof(updateFactory), "Update factory must not be null.");
         }
 
-        if(source.TryGetValue(key, out TValue? existing))
+        if (source.TryGetValue(key, out TValue? existing))
         {
             TValue? updated = updateFactory(key, existing);
             source[key] = updated;
             return updated;
-        } else
+        }
+        else
         {
             TValue? added = addFactory(key);
             source[key] = added;
@@ -83,17 +84,17 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static IDictionary<TKey, TValue> AddRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(KeyValuePair<TKey, TValue> kvp in items)
+        foreach (KeyValuePair<TKey, TValue> kvp in items)
         {
             source[kvp.Key] = kvp.Value;
         }
@@ -105,17 +106,17 @@ public static class DictionaryExtensions
     ///Gets the value for <paramref name="key"/> if it exists; otherwise adds and returns the value produced by
     public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> factory)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(factory is null)
+        if (factory is null)
         {
             throw new ArgumentNullException(nameof(factory), "Factory function must not be null.");
         }
 
-        if(source.TryGetValue(key, out TValue? value))
+        if (source.TryGetValue(key, out TValue? value))
         {
             return value;
         }
@@ -136,18 +137,18 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static IDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this IDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         List<TKey> keys = [.. source.Keys];
-        foreach(TKey key in keys)
+        foreach (TKey key in keys)
         {
             source[key] = modifier(key, source[key]);
         }
@@ -167,23 +168,23 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="predicate"/>, or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static IDictionary<TKey, TValue> ModifyWhere<TKey, TValue>(this IDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate, Func<TKey, TValue, TValue> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         List<TKey> keysToModify = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
-        foreach(TKey key in keysToModify)
+        foreach (TKey key in keysToModify)
         {
             source[key] = modifier(key, source[key]);
         }
@@ -202,20 +203,20 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keys"/> is <c>null</c>.</exception>
     public static int RemoveRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keys)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(keys is null)
+        if (keys is null)
         {
             throw new ArgumentNullException(nameof(keys), "Keys must not be null.");
         }
 
         int removed = 0;
-        foreach(TKey key in keys)
+        foreach (TKey key in keys)
         {
-            if(source.Remove(key))
+            if (source.Remove(key))
             {
                 removed++;
             }
@@ -235,21 +236,21 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<TKey, TValue>(this IDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
         List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
         int removed = 0;
-        foreach(TKey key in keysToRemove)
+        foreach (TKey key in keysToRemove)
         {
-            if(source.Remove(key))
+            if (source.Remove(key))
             {
                 removed++;
             }
@@ -270,12 +271,12 @@ public static class DictionaryExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static bool ReplaceValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue newValue)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(!source.ContainsKey(key))
+        if (!source.ContainsKey(key))
         {
             return false;
         }

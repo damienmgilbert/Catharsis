@@ -40,7 +40,7 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     {
         ArgumentNullException.ThrowIfNull(initializer);
 
-        for(int i = 0; i < Members.Length; i++)
+        for (int i = 0; i < Members.Length; i++)
         {
             _values[i] = initializer(Members[i]);
         }
@@ -51,7 +51,7 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     ///<inheritdoc/>
     public IEnumerator<KeyValuePair<TEnum, TValue>> GetEnumerator()
     {
-        for(int i = 0; i < Members.Length; i++)
+        for (int i = 0; i < Members.Length; i++)
         {
             yield return new KeyValuePair<TEnum, TValue>(Members[i], _values[i]);
         }
@@ -78,11 +78,11 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
     {
         long value = ToLong(key);
 
-        if(Dense)
+        if (Dense)
         {
             long offset = value - MinKey;
 
-            if((ulong)offset < (ulong)Keys.Length)
+            if ((ulong)offset < (ulong)Keys.Length)
             {
                 return (int)offset;
             }
@@ -91,7 +91,7 @@ public sealed class EnumMap<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TVa
         {
             int index = Array.BinarySearch(Keys, value);
 
-            if(index >= 0)
+            if (index >= 0)
             {
                 return index;
             }

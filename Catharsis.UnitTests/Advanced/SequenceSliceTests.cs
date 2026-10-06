@@ -48,7 +48,7 @@ public class SequenceSliceTests
     [TestMethod]
     public void ToArray_ReturnsAllData()
     {
-        byte[] source = [ 1, 2, 3 ];
+        byte[] source = [1, 2, 3];
         ReadOnlySequence<byte> data = new(source);
         SequenceSlice<byte> slice = new(in data);
         CollectionAssert.AreEqual(source, slice.ToArray());

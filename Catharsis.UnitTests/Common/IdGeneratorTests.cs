@@ -28,7 +28,7 @@ public class IdGeneratorTests
         IdGenerator generator = new();
         HashSet<long> ids = [];
 
-        for(int i = 0; i < 5000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             Assert.IsTrue(ids.Add(generator.NextId()));
         }

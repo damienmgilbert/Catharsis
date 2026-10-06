@@ -22,7 +22,7 @@ public class DiBufferPipelineTests
         ILogger<DiBufferPipeline.PipelineRunner> runnerLogger = NullLoggerFactory.Instance.CreateLogger<DiBufferPipeline.PipelineRunner>();
         DiBufferPipeline.PipelineRunner runner = new(processingService, runnerLogger);
 
-        byte[] result = await runner.RunAsync([ 1, 2, 3 ]);
+        byte[] result = await runner.RunAsync([1, 2, 3]);
 
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, result);
     }

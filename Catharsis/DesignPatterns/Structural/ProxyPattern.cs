@@ -19,7 +19,7 @@ public class ProxyPattern
     ///<returns>The result of <paramref name="operation"/>.</returns>
     public static TResult Proxy<T, TResult>(T obj, Func<T, TResult> operation, Action<T>? before = null, Action<T>? after = null)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Proxy operation must not be null.");
         }

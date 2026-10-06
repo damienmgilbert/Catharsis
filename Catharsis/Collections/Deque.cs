@@ -33,7 +33,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="capacity"/> is negative.</exception>
     public Deque(int capacity)
     {
-        if(capacity < 0)
+        if (capacity < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must not be negative.");
         }
@@ -53,7 +53,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         get
         {
-            if((index < 0) || (index >= _count))
+            if ((index < 0) || (index >= _count))
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -71,7 +71,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     #region Private methods
     void EnsureCapacity()
     {
-        if(_count < _buffer.Length)
+        if (_count < _buffer.Length)
         {
             return;
         }
@@ -79,7 +79,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
         int newCapacity = _buffer.Length * 2;
         T[] newBuffer = new T[newCapacity];
 
-        for(int i = 0; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
             newBuffer[i] = _buffer[(_head + i) % _buffer.Length];
         }
@@ -127,7 +127,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
-        for(int i = 0; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
             yield return _buffer[(_head + i) % _buffer.Length];
         }
@@ -140,7 +140,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the deque is empty.</exception>
     public T PeekFirst()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The deque is empty.");
         }
@@ -155,7 +155,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the deque is empty.</exception>
     public T PeekLast()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The deque is empty.");
         }
@@ -171,7 +171,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the deque is empty.</exception>
     public T RemoveFirst()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The deque is empty.");
         }
@@ -190,7 +190,7 @@ public sealed class Deque<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the deque is empty.</exception>
     public T RemoveLast()
     {
-        if(_count == 0)
+        if (_count == 0)
         {
             throw new InvalidOperationException("The deque is empty.");
         }

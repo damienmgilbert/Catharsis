@@ -39,9 +39,9 @@ public sealed class SingleFlightExecutor<TKey, TResult>(IEqualityComparer<TKey>?
 
         TaskCompletionSource<TResult> tcs;
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(_inFlight.TryGetValue(key, out Task<TResult>? existing))
+            if (_inFlight.TryGetValue(key, out Task<TResult>? existing))
             {
                 return existing;
             }
@@ -61,19 +61,19 @@ public sealed class SingleFlightExecutor<TKey, TResult>(IEqualityComparer<TKey>?
             TResult result = await operation().ConfigureAwait(false);
             tcs.TrySetResult(result);
         }
-        catch(OperationCanceledException)
+        catch (OperationCanceledException)
         {
             tcs.TrySetCanceled();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             tcs.TrySetException(ex);
         }
         finally
         {
-            lock(_gate)
+            lock (_gate)
             {
-                if(_inFlight.TryGetValue(key, out Task<TResult>? current) && current == tcs.Task)
+                if (_inFlight.TryGetValue(key, out Task<TResult>? current) && current == tcs.Task)
                 {
                     _inFlight.Remove(key);
                 }
@@ -90,7 +90,7 @@ public sealed class SingleFlightExecutor<TKey, TResult>(IEqualityComparer<TKey>?
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _inFlight.Count;
             }

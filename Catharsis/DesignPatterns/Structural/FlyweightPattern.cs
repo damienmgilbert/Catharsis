@@ -20,12 +20,12 @@ public class FlyweightPattern
     ///<returns>The shared flyweight instance for <paramref name="key"/>.</returns>
     public static T Flyweight<TKey, T>(TKey key, ConcurrentDictionary<TKey, T> cache, Func<TKey, T> factory) where TKey : notnull
     {
-        if(cache is null)
+        if (cache is null)
         {
             throw new ArgumentNullException(nameof(cache), "Flyweight cache must not be null.");
         }
 
-        if(factory is null)
+        if (factory is null)
         {
             throw new ArgumentNullException(nameof(factory), "Flyweight factory must not be null.");
         }

@@ -17,12 +17,12 @@ public sealed class ComponentModelSerializer
     #region Private methods
     bool ShouldSerialize(PropertyDescriptor property, object component)
     {
-        if((PropertyFilter is not null) && !PropertyFilter(property))
+        if ((PropertyFilter is not null) && !PropertyFilter(property))
         {
             return false;
         }
 
-        if(SkipDefaultValues && !property.ShouldSerializeValue(component))
+        if (SkipDefaultValues && !property.ShouldSerializeValue(component))
         {
             return false;
         }
@@ -50,9 +50,9 @@ public sealed class ComponentModelSerializer
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
         Dictionary<string, string?> result = new(properties.Count, StringComparer.Ordinal);
 
-        foreach(PropertyDescriptor property in properties)
+        foreach (PropertyDescriptor property in properties)
         {
-            if(!ShouldSerialize(property, component))
+            if (!ShouldSerialize(property, component))
             {
                 continue;
             }
@@ -86,9 +86,9 @@ public sealed class ComponentModelSerializer
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(component);
         Dictionary<string, object?> result = new(properties.Count, StringComparer.Ordinal);
 
-        foreach(PropertyDescriptor property in properties)
+        foreach (PropertyDescriptor property in properties)
         {
-            if(!ShouldSerialize(property, component))
+            if (!ShouldSerialize(property, component))
             {
                 continue;
             }

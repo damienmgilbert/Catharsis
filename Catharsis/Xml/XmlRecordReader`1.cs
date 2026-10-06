@@ -35,15 +35,15 @@ public sealed class XmlRecordReader<T>(string recordElementName = "Record") wher
     {
         ArgumentNullException.ThrowIfNull(container);
 
-        foreach(XElement recordElement in container.Descendants(_recordElementName))
+        foreach (XElement recordElement in container.Descendants(_recordElementName))
         {
             T record = new();
 
-            foreach(PropertyInfo property in _properties)
+            foreach (PropertyInfo property in _properties)
             {
                 string? text = recordElement.Element(property.Name)?.Value ?? recordElement.Attribute(property.Name)?.Value;
 
-                if(text is not null)
+                if (text is not null)
                 {
                     property.SetValue(record, ConvertField(text, property.PropertyType));
                 }

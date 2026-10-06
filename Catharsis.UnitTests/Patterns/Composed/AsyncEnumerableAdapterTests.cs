@@ -11,7 +11,7 @@ public class AsyncEnumerableAdapterTests
 {
     static async IAsyncEnumerable<int> Numbers(int count, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        for(int i = 1; i <= count; i++)
+        for (int i = 1; i <= count; i++)
         {
             await Task.Yield();
             cancellationToken.ThrowIfCancellationRequested();
@@ -25,7 +25,7 @@ public class AsyncEnumerableAdapterTests
     {
         List<int> seen = [];
 
-        await foreach(int value in AsyncEnumerableAdapter.ToAsyncEnumerable([1, 2, 3]))
+        await foreach (int value in AsyncEnumerableAdapter.ToAsyncEnumerable([1, 2, 3]))
         {
             seen.Add(value);
         }
@@ -41,7 +41,7 @@ public class AsyncEnumerableAdapterTests
 
         await Assert.ThrowsExactlyAsync<OperationCanceledException>(async () =>
         {
-            await foreach(int value in AsyncEnumerableAdapter.ToAsyncEnumerable([1, 2, 3], cts.Token))
+            await foreach (int value in AsyncEnumerableAdapter.ToAsyncEnumerable([1, 2, 3], cts.Token))
             {
                 seen.Add(value);
                 cts.Cancel();

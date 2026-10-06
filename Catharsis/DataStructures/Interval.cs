@@ -16,11 +16,12 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     ///<param name="end">The other bound of the interval.</param>
     public Interval(T start, T end)
     {
-        if(start.CompareTo(end) > 0)
+        if (start.CompareTo(end) > 0)
         {
             Start = end;
             End = start;
-        } else
+        }
+        else
         {
             Start = start;
             End = end;
@@ -66,7 +67,7 @@ public readonly struct Interval<T> : IEquatable<Interval<T>> where T : IComparab
     ///<returns>The intersection interval, or <c>null</c> if no overlap exists.</returns>
     public Interval<T>? Intersect(Interval<T> other)
     {
-        if(!Overlaps(other))
+        if (!Overlaps(other))
         {
             return null;
         }

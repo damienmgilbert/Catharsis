@@ -18,7 +18,7 @@ public sealed class Triangle : Shape
         B = RequirePositive(b, nameof(b));
         C = RequirePositive(c, nameof(c));
 
-        if(a + b <= c || a + c <= b || b + c <= a)
+        if (a + b <= c || a + c <= b || b + c <= a)
         {
             throw new ArgumentException("Each side must be shorter than the other two combined.");
         }

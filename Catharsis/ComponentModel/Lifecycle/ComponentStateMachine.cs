@@ -27,9 +27,9 @@ public sealed class ComponentStateMachine
     #region Private methods
     ComponentTransition? FindTransition(ComponentState targetState)
     {
-        foreach(ComponentTransition transition in _transitions)
+        foreach (ComponentTransition transition in _transitions)
         {
-            if((transition.From == _currentState) && (transition.To == targetState))
+            if ((transition.From == _currentState) && (transition.To == targetState))
             {
                 return transition;
             }
@@ -102,7 +102,7 @@ public sealed class ComponentStateMachine
     ///</exception>
     public void TransitionTo(ComponentState targetState)
     {
-        if(!TryTransitionTo(targetState))
+        if (!TryTransitionTo(targetState))
         {
             throw new InvalidOperationException($"No valid transition from '{_currentState}' to '{targetState}'.");
         }
@@ -117,7 +117,7 @@ public sealed class ComponentStateMachine
     {
         ComponentTransition? transition = FindTransition(targetState);
 
-        if((transition is null) || !transition.CanExecute())
+        if ((transition is null) || !transition.CanExecute())
         {
             return false;
         }

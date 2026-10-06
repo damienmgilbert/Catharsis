@@ -50,7 +50,7 @@ public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
     ///</summary>
     public void Dispose()
     {
-        lock(_gate)
+        lock (_gate)
         {
             _source?.Dispose();
             _source = null;
@@ -62,16 +62,16 @@ public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
     {
         int index = 0;
 
-        while(true)
+        while (true)
         {
             (bool hasItem, T item, bool done) = TryGetAt(index);
 
-            if(done)
+            if (done)
             {
                 yield break;
             }
 
-            if(hasItem)
+            if (hasItem)
             {
                 yield return item;
                 index++;
@@ -81,19 +81,19 @@ public sealed class MemoizingEnumerable<T> : IEnumerable<T>, IDisposable
 
     (bool HasItem, T Item, bool Done) TryGetAt(int index)
     {
-        lock(_gate)
+        lock (_gate)
         {
-            if(index < _cache.Count)
+            if (index < _cache.Count)
             {
                 return (true, _cache[index], false);
             }
 
-            if(_completed || _source is null)
+            if (_completed || _source is null)
             {
                 return (false, default!, true);
             }
 
-            if(_source.MoveNext())
+            if (_source.MoveNext())
             {
                 T item = _source.Current;
                 _cache.Add(item);

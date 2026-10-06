@@ -18,11 +18,11 @@ public class CollectionsBenchmarks
     {
         Queue<int> queue = new();
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             queue.Enqueue(i);
 
-            if(queue.Count > WindowSize)
+            if (queue.Count > WindowSize)
             {
                 queue.Dequeue();
             }
@@ -36,11 +36,11 @@ public class CollectionsBenchmarks
     {
         Deque<int> deque = new();
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             deque.AddLast(i);
 
-            if(deque.Count > WindowSize)
+            if (deque.Count > WindowSize)
             {
                 deque.RemoveFirst();
             }
@@ -54,7 +54,7 @@ public class CollectionsBenchmarks
     {
         CircularBuffer<int> buffer = new(WindowSize);
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             buffer.Add(i);
         }

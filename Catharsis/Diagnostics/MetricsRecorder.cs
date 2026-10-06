@@ -74,7 +74,7 @@ public sealed class MetricsRecorder(string meterName, string? version = null) : 
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

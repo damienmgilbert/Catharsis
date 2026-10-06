@@ -37,12 +37,12 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public LruCache(int capacity, IEqualityComparer<TKey> comparer)
     {
-        if(capacity <= 0)
+        if (capacity <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be greater than zero.");
         }
 
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
@@ -64,7 +64,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     {
         get
         {
-            if(TryGetValue(key, out TValue? value))
+            if (TryGetValue(key, out TValue? value))
             {
                 return value;
             }
@@ -88,11 +88,12 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     ///<param name="value">The value to cache.</param>
     public void AddOrUpdate(TKey key, TValue value)
     {
-        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry>? existingNode))
+        if (_map.TryGetValue(key, out LinkedListNode<CacheEntry>? existingNode))
         {
             _order.Remove(existingNode);
             _map.Remove(key);
-        } else if(_map.Count >= _capacity)
+        }
+        else if (_map.Count >= _capacity)
         {
             LinkedListNode<CacheEntry> lru = _order.Last!;
             _order.RemoveLast();
@@ -128,7 +129,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     {
         LinkedListNode<CacheEntry>? current = _order.First;
 
-        while(current is not null)
+        while (current is not null)
         {
             yield return new KeyValuePair<TKey, TValue>(current.Value.Key, current.Value.Value);
             current = current.Next;
@@ -142,7 +143,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
     public bool Remove(TKey key)
     {
-        if(!_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
+        if (!_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
         {
             return false;
         }
@@ -161,7 +162,7 @@ public sealed class LruCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TVal
     ///<returns><c>true</c> if the key was found; otherwise <c>false</c>.</returns>
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        if(_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
+        if (_map.TryGetValue(key, out LinkedListNode<CacheEntry>? node))
         {
             _order.Remove(node);
             _order.AddFirst(node);

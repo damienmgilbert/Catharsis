@@ -85,7 +85,7 @@ public class MetricsRecorderTests
         using MeterListener listener = new();
         listener.InstrumentPublished = (instrument, meterListener) =>
         {
-            if((instrument.Meter.Name == meterName) && (instrument.Name == "requests"))
+            if ((instrument.Meter.Name == meterName) && (instrument.Name == "requests"))
             {
                 meterListener.EnableMeasurementEvents(instrument);
             }

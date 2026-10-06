@@ -16,7 +16,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void Advance_MovesForward()
     {
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -34,7 +34,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void Advance_NegativeCount_ThrowsArgumentOutOfRangeException()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -42,7 +42,8 @@ public class SequenceCursorTests
         {
             cursor.Advance(-1);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -53,7 +54,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void Advance_PastEnd_Throws()
     {
-        byte[] data = [ 1, 2 ];
+        byte[] data = [1, 2];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -61,7 +62,8 @@ public class SequenceCursorTests
         try
         {
             cursor.Advance(10);
-        } catch(Exception)
+        }
+        catch (Exception)
         {
             threw = true;
         }
@@ -89,7 +91,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void Constructor_SingleSegment_CorrectRemaining()
     {
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -104,7 +106,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void HasRemaining_AllConsumed_ReturnsFalse()
     {
-        byte[] data = [ 1, 2 ];
+        byte[] data = [1, 2];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
         cursor.Advance(2);
@@ -118,7 +120,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void IndexOf_AfterAdvance_SearchesFromCurrentPosition()
     {
-        byte[] data = [ 10, 20, 30, 20, 50 ];
+        byte[] data = [10, 20, 30, 20, 50];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
         cursor.Advance(2);
@@ -134,7 +136,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void IndexOf_ExistingValue_ReturnsCorrectOffset()
     {
-        byte[] data = [ 10, 20, 30, 40, 50 ];
+        byte[] data = [10, 20, 30, 40, 50];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -149,7 +151,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void IndexOf_NotFound_ReturnsNegativeOne()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -164,7 +166,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void Reset_MovesToStart()
     {
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
         cursor.Advance(3);
@@ -195,7 +197,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void TryPeek_ReturnsNextWithoutAdvancing()
     {
-        byte[] data = [ 42, 99 ];
+        byte[] data = [42, 99];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -248,7 +250,7 @@ public class SequenceCursorTests
         SequenceCursor<byte> cursor = new(in seq);
 
         byte[] results = new byte[8];
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             Assert.IsTrue(cursor.TryRead(out results[i]));
         }
@@ -263,7 +265,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void TryRead_ReadsElementsSequentially()
     {
-        byte[] data = [ 10, 20, 30 ];
+        byte[] data = [10, 20, 30];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 
@@ -285,7 +287,7 @@ public class SequenceCursorTests
     [TestMethod]
     public void TryRead_UpdatesConsumed()
     {
-        byte[] data = [ 1, 2, 3 ];
+        byte[] data = [1, 2, 3];
         ReadOnlySequence<byte> seq = new(data);
         SequenceCursor<byte> cursor = new(in seq);
 

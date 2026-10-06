@@ -18,7 +18,7 @@ public class Memento
     ///<returns>The restored <paramref name="obj"/>.</returns>
     public static T Restore<T, TMemento>(T obj, TMemento memento, Action<T, TMemento> restore)
     {
-        if(restore is null)
+        if (restore is null)
         {
             throw new ArgumentNullException(nameof(restore), "Restore action must not be null.");
         }
@@ -38,7 +38,7 @@ public class Memento
     ///<returns>A tuple containing the original <paramref name="obj"/> and the captured <typeparamref name="TMemento"/>.</returns>
     public static (T Object, TMemento Memento) Snapshot<T, TMemento>(T obj, Func<T, TMemento> capture)
     {
-        if(capture is null)
+        if (capture is null)
         {
             throw new ArgumentNullException(nameof(capture), "Capture function must not be null.");
         }

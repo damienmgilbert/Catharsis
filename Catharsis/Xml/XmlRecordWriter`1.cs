@@ -32,7 +32,7 @@ public sealed class XmlRecordWriter<T>(string recordElementName = "Record")
 
         XElement element = new(_recordElementName);
 
-        foreach(PropertyInfo property in _properties)
+        foreach (PropertyInfo property in _properties)
         {
             object? value = property.GetValue(record);
             element.Add(new XElement(property.Name, Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty));
@@ -56,7 +56,7 @@ public sealed class XmlRecordWriter<T>(string recordElementName = "Record")
 
         XElement container = new(containerElementName);
 
-        foreach(T record in records)
+        foreach (T record in records)
         {
             container.Add(WriteRecord(record));
         }

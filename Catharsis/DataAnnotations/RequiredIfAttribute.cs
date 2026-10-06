@@ -42,21 +42,21 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     {
         PropertyInfo? dependentPropertyInfo = validationContext.ObjectType.GetProperty(DependentProperty);
 
-        if(dependentPropertyInfo is null)
+        if (dependentPropertyInfo is null)
         {
             return new ValidationResult($"Unknown property: {DependentProperty}.");
         }
 
         object? dependentValue = dependentPropertyInfo.GetValue(validationContext.ObjectInstance);
 
-        if(!Equals(dependentValue, TargetValue))
+        if (!Equals(dependentValue, TargetValue))
         {
             return ValidationResult.Success;
         }
 
-        if((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
+        if ((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
         {
-            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DependentProperty, TargetValue ?? "null"), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DependentProperty, TargetValue ?? "null"), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

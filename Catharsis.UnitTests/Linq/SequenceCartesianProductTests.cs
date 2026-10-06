@@ -57,7 +57,7 @@ public class SequenceCartesianProductTests
 
         Assert.HasCount(4, result);
 
-        for(int i = 0; i < expected.Count; i++)
+        for (int i = 0; i < expected.Count; i++)
         {
             CollectionAssert.AreEqual(expected[i], result[i]);
         }

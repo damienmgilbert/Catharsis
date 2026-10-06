@@ -15,7 +15,7 @@ public class KeyedAsyncLockTests
     {
         KeyedAsyncLock<string> locks = new();
 
-        using(locks.Lock("a"))
+        using (locks.Lock("a"))
         {
             Assert.AreEqual(1, locks.ActiveKeyCount);
         }
@@ -28,7 +28,7 @@ public class KeyedAsyncLockTests
     {
         KeyedAsyncLock<string> locks = new();
 
-        using(await locks.LockAsync("a"))
+        using (await locks.LockAsync("a"))
         {
             Assert.AreEqual(1, locks.ActiveKeyCount);
         }
@@ -64,9 +64,9 @@ public class KeyedAsyncLockTests
 
         async Task RunAsync()
         {
-            using(await locks.LockAsync("shared"))
+            using (await locks.LockAsync("shared"))
             {
-                lock(gate)
+                lock (gate)
                 {
                     concurrent++;
                     maxObserved = Math.Max(maxObserved, concurrent);
@@ -74,7 +74,7 @@ public class KeyedAsyncLockTests
 
                 await Task.Delay(20);
 
-                lock(gate)
+                lock (gate)
                 {
                     concurrent--;
                 }

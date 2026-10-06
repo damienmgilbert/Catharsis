@@ -20,14 +20,14 @@ public sealed class AsyncCountdownEvent
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="initialCount"/> is negative.</exception>
     public AsyncCountdownEvent(int initialCount)
     {
-        if(initialCount < 0)
+        if (initialCount < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(initialCount), "Initial count must not be negative.");
         }
 
         _remaining = initialCount;
 
-        if(initialCount == 0)
+        if (initialCount == 0)
         {
             _tcs.TrySetResult();
         }
@@ -41,21 +41,21 @@ public sealed class AsyncCountdownEvent
     ///<exception cref="InvalidOperationException"><paramref name="count"/> exceeds the current count.</exception>
     public void Signal(int count = 1)
     {
-        if(count < 1)
+        if (count < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 1.");
         }
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(count > _remaining)
+            if (count > _remaining)
             {
                 throw new InvalidOperationException("Signal count exceeds the current count.");
             }
 
             _remaining -= count;
 
-            if(_remaining > 0)
+            if (_remaining > 0)
             {
                 return;
             }
@@ -80,7 +80,7 @@ public sealed class AsyncCountdownEvent
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _remaining;
             }

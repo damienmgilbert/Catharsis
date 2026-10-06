@@ -46,7 +46,7 @@ public sealed class StreamingSequenceReader : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -71,14 +71,15 @@ public sealed class StreamingSequenceReader : IDisposable
         try
         {
             int bytesRead;
-            while((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken).ConfigureAwait(false)) > 0)
+            while ((bytesRead = await stream.ReadAsync(readBuffer.AsMemory(0, _readBufferSize), cancellationToken).ConfigureAwait(false)) > 0)
             {
                 Span<byte> span = _builder.GetSpan(bytesRead);
                 readBuffer.AsSpan(0, bytesRead).CopyTo(span);
                 _builder.Advance(bytesRead);
                 TotalBytesRead += bytesRead;
             }
-        } finally
+        }
+        finally
         {
             _pool.Return(readBuffer);
         }

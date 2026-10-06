@@ -74,11 +74,11 @@ public sealed class ManagedRuleEngine<T>
         Dictionary<string, RuleContext<T>> results = new(StringComparer.Ordinal);
         T[] single = [element];
 
-        foreach((string name, RuleSet<T> ruleSet) in _ruleSets)
+        foreach ((string name, RuleSet<T> ruleSet) in _ruleSets)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if((_featureFlags is not null) && !_featureFlags.IsEnabled(name, stickyId))
+            if ((_featureFlags is not null) && !_featureFlags.IsEnabled(name, stickyId))
             {
                 continue;
             }
@@ -87,11 +87,11 @@ public sealed class ManagedRuleEngine<T>
             RuleContext<T> context = single.Evaluate(ruleSet).Single();
             _evaluationDuration.Record(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds);
 
-            if(context.HasMatch)
+            if (context.HasMatch)
             {
                 _matchCounter.Add(context.MatchCount);
 
-                foreach(Rule<T> rule in context.MatchedRules)
+                foreach (Rule<T> rule in context.MatchedRules)
                 {
                     await _eventBus.PublishAsync(new RuleMatchedEvent<T>(name, rule, element, DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);
                 }
@@ -117,7 +117,7 @@ public sealed class ManagedRuleEngine<T>
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(ruleSet);
 
-        if(!_ruleSets.TryAdd(name, ruleSet))
+        if (!_ruleSets.TryAdd(name, ruleSet))
         {
             throw new InvalidOperationException($"A rule set is already registered under the name '{name}'.");
         }

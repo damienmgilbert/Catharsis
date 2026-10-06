@@ -206,7 +206,7 @@ public class StepWorkflowOrchestratorTests
         {
             attempts++;
 
-            if(attempts < 2)
+            if (attempts < 2)
             {
                 throw new InvalidOperationException("transient failure");
             }

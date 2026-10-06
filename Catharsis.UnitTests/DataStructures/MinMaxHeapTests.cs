@@ -138,7 +138,7 @@ public class MinMaxHeapTests
         MinMaxHeap<int> heap = new(values);
         List<int> extracted = [];
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             extracted.Add(heap.ExtractMin());
         }
@@ -153,7 +153,7 @@ public class MinMaxHeapTests
         MinMaxHeap<int> heap = new(values);
         List<int> extracted = [];
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             extracted.Add(heap.ExtractMax());
         }
@@ -169,10 +169,10 @@ public class MinMaxHeapTests
         List<int> mins = [];
         List<int> maxes = [];
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             mins.Add(heap.ExtractMin());
-            if(heap.Count > 0)
+            if (heap.Count > 0)
             {
                 maxes.Add(heap.ExtractMax());
             }
@@ -193,7 +193,7 @@ public class MinMaxHeapTests
         MinMaxHeap<int> heap = new(values);
         List<int> extracted = [];
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             extracted.Add(heap.ExtractMin());
         }
@@ -211,7 +211,7 @@ public class MinMaxHeapTests
         Random random = new(12345);
         int[] values = new int[500];
 
-        for(int i = 0; i < values.Length; i++)
+        for (int i = 0; i < values.Length; i++)
         {
             values[i] = random.Next(-1000, 1000);
         }
@@ -220,13 +220,13 @@ public class MinMaxHeapTests
         MinMaxHeap<int> maxHeap = new(values);
 
         List<int> ascending = [];
-        while(minHeap.Count > 0)
+        while (minHeap.Count > 0)
         {
             ascending.Add(minHeap.ExtractMin());
         }
 
         List<int> descending = [];
-        while(maxHeap.Count > 0)
+        while (maxHeap.Count > 0)
         {
             descending.Add(maxHeap.ExtractMax());
         }
@@ -242,18 +242,20 @@ public class MinMaxHeapTests
         MinMaxHeap<int> heap = new();
         List<int> reference = [];
 
-        for(int i = 0; i < 2000; i++)
+        for (int i = 0; i < 2000; i++)
         {
-            if(reference.Count == 0 || random.Next(2) == 0)
+            if (reference.Count == 0 || random.Next(2) == 0)
             {
                 int value = random.Next(-10_000, 10_000);
                 heap.Add(value);
                 reference.Add(value);
-            } else if(random.Next(2) == 0)
+            }
+            else if (random.Next(2) == 0)
             {
                 Assert.AreEqual(reference.Min(), heap.ExtractMin());
                 reference.Remove(reference.Min());
-            } else
+            }
+            else
             {
                 Assert.AreEqual(reference.Max(), heap.ExtractMax());
                 reference.Remove(reference.Max());

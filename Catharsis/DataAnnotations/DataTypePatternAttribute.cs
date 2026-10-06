@@ -58,7 +58,7 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
     ///</exception>
     public DataTypePatternAttribute(DataType dataType) : base("The field {0} is not a valid {1}.")
     {
-        if(!Patterns.TryGetValue(dataType, out string? pattern))
+        if (!Patterns.TryGetValue(dataType, out string? pattern))
         {
             throw new ArgumentException($"No pattern is defined for DataType.{dataType}.", nameof(dataType));
         }
@@ -73,19 +73,19 @@ public sealed class DataTypePatternAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
-        if(value is not string stringValue)
+        if (value is not string stringValue)
         {
-            return new ValidationResult($"The field {validationContext.DisplayName} must be a string.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult($"The field {validationContext.DisplayName} must be a string.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
-        if(!_regex.IsMatch(stringValue))
+        if (!_regex.IsMatch(stringValue))
         {
-            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DataType), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, DataType), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

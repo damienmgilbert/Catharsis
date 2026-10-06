@@ -27,15 +27,16 @@ public static class AtomicFileWriter
 
         try
         {
-            using(FileStream stream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (FileStream stream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 stream.Write(data);
             }
 
             File.Move(tempPath, path, overwrite: true);
-        } catch
+        }
+        catch
         {
-            if(File.Exists(tempPath))
+            if (File.Exists(tempPath))
             {
                 File.Delete(tempPath);
             }
@@ -60,15 +61,16 @@ public static class AtomicFileWriter
 
         try
         {
-            await using(FileStream stream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            await using (FileStream stream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await stream.WriteAsync(data, cancellationToken).ConfigureAwait(false);
             }
 
             File.Move(tempPath, path, overwrite: true);
-        } catch
+        }
+        catch
         {
-            if(File.Exists(tempPath))
+            if (File.Exists(tempPath))
             {
                 File.Delete(tempPath);
             }

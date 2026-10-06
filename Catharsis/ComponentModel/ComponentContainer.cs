@@ -45,12 +45,12 @@ public sealed class ComponentContainer(bool designMode = false, IServiceProvider
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(component is null)
+        if (component is null)
         {
             return;
         }
 
-        if((name is not null) && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
+        if ((name is not null) && _sites.Any(s => string.Equals(s.Name, name, StringComparison.Ordinal)))
         {
             throw new ArgumentException($"A component named '{name}' already exists in the container.", nameof(name));
         }
@@ -68,14 +68,14 @@ public sealed class ComponentContainer(bool designMode = false, IServiceProvider
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
         _disposed = true;
 
-        for(int i = _sites.Count - 1; i >= 0; i--)
+        for (int i = _sites.Count - 1; i >= 0; i--)
         {
             IComponent component = _sites[i].Component;
             component.Site = null;
@@ -113,7 +113,7 @@ public sealed class ComponentContainer(bool designMode = false, IServiceProvider
     {
         ArgumentNullException.ThrowIfNull(serviceType);
 
-        if(serviceType == typeof(IContainer))
+        if (serviceType == typeof(IContainer))
         {
             return this;
         }
@@ -126,14 +126,14 @@ public sealed class ComponentContainer(bool designMode = false, IServiceProvider
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(component is null)
+        if (component is null)
         {
             return;
         }
 
         ComponentSite? site = _sites.FirstOrDefault(s => ReferenceEquals(s.Component, component));
 
-        if(site is null)
+        if (site is null)
         {
             return;
         }

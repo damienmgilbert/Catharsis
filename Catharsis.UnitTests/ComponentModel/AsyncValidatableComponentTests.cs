@@ -64,12 +64,13 @@ public class AsyncValidatableComponentTests
         {
             await Task.Yield();
 
-            if(propertyName == nameof(Name))
+            if (propertyName == nameof(Name))
             {
-                if(string.IsNullOrEmpty(value as string))
+                if (string.IsNullOrEmpty(value as string))
                 {
                     SetErrors(["Name must not be empty."], propertyName);
-                } else
+                }
+                else
                 {
                     ClearErrors(propertyName);
                 }

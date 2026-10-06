@@ -39,21 +39,21 @@ public static class PluginLoader
 
         Dictionary<string, PluginDescriptor> byName = new(StringComparer.OrdinalIgnoreCase);
 
-        foreach(Type type in types)
+        foreach (Type type in types)
         {
-            if(type is not { IsClass: true, IsAbstract: false } || !typeof(TContract).IsAssignableFrom(type))
+            if (type is not { IsClass: true, IsAbstract: false } || !typeof(TContract).IsAssignableFrom(type))
             {
                 continue;
             }
 
             PluginAttribute? attribute = type.GetCustomAttribute<PluginAttribute>(inherit: false);
 
-            if(attribute is null)
+            if (attribute is null)
             {
                 continue;
             }
 
-            if(!byName.TryAdd(attribute.Name, new PluginDescriptor(attribute.Name, attribute.Version, type)))
+            if (!byName.TryAdd(attribute.Name, new PluginDescriptor(attribute.Name, attribute.Version, type)))
             {
                 throw new InvalidOperationException($"Plugin name '{attribute.Name}' is declared by both {byName[attribute.Name].ImplementationType.FullName} and {type.FullName}.");
             }
@@ -102,7 +102,7 @@ public static class PluginLoader
 
         List<IPlugin> started = [];
 
-        foreach(PluginDescriptor descriptor in descriptors)
+        foreach (PluginDescriptor descriptor in descriptors)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -134,7 +134,7 @@ public static class PluginLoader
         {
             return assembly.GetTypes();
         }
-        catch(ReflectionTypeLoadException ex)
+        catch (ReflectionTypeLoadException ex)
         {
             return [.. ex.Types.OfType<Type>()];
         }

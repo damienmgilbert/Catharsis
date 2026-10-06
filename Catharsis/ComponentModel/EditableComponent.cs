@@ -23,7 +23,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     {
         Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
 
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
             snapshot[property.Name] = property.GetValue(this);
         }
@@ -33,13 +33,13 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
 
     void RestoreSnapshot(Dictionary<string, object?> snapshot)
     {
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
-            if(snapshot.TryGetValue(property.Name, out object? value))
+            if (snapshot.TryGetValue(property.Name, out object? value))
             {
                 object? current = property.GetValue(this);
 
-                if(!Equals(current, value))
+                if (!Equals(current, value))
                 {
                     property.SetValue(this, value);
                     OnPropertyChanged(property.Name);
@@ -53,7 +53,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             _snapshot = null;
             IsEditing = false;
@@ -80,7 +80,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     {
         ThrowIfDisposed();
 
-        if(IsEditing)
+        if (IsEditing)
         {
             return;
         }
@@ -96,12 +96,12 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     {
         ThrowIfDisposed();
 
-        if(!IsEditing)
+        if (!IsEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             RestoreSnapshot(_snapshot);
             _snapshot = null;
@@ -117,7 +117,7 @@ public abstract class EditableComponent : ObservableComponent, IEditableObject
     {
         ThrowIfDisposed();
 
-        if(!IsEditing)
+        if (!IsEditing)
         {
             return;
         }

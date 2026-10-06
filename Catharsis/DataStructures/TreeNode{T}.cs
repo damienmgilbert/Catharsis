@@ -46,12 +46,12 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
     ///<exception cref="InvalidOperationException">Thrown when <paramref name="child"/> is an ancestor of this node.</exception>
     public void AddChild(TreeNode<T> child)
     {
-        if(child is null)
+        if (child is null)
         {
             throw new ArgumentNullException(nameof(child), "Child node must not be null.");
         }
 
-        if(IsDescendantOf(child))
+        if (IsDescendantOf(child))
         {
             throw new InvalidOperationException("Cannot add an ancestor as a child (would create a cycle).");
         }
@@ -70,12 +70,12 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
         Queue<TreeNode<T>> queue = new();
         queue.Enqueue(this);
 
-        while(queue.Count > 0)
+        while (queue.Count > 0)
         {
             TreeNode<T> current = queue.Dequeue();
             yield return current;
 
-            foreach(TreeNode<T> child in current._children)
+            foreach (TreeNode<T> child in current._children)
             {
                 queue.Enqueue(child);
             }
@@ -91,12 +91,12 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
         Stack<TreeNode<T>> stack = new();
         stack.Push(this);
 
-        while(stack.Count > 0)
+        while (stack.Count > 0)
         {
             TreeNode<T> current = stack.Pop();
             yield return current;
 
-            for(int i = current._children.Count - 1; i >= 0; i--)
+            for (int i = current._children.Count - 1; i >= 0; i--)
             {
                 stack.Push(current._children[i]);
             }
@@ -118,9 +118,9 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
     {
         TreeNode<T>? current = Parent;
 
-        while(current is not null)
+        while (current is not null)
         {
-            if(ReferenceEquals(current, ancestor))
+            if (ReferenceEquals(current, ancestor))
             {
                 return true;
             }
@@ -138,7 +138,7 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
     ///<returns><c>true</c> if the child was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveChild(TreeNode<T> child)
     {
-        if(!_children.Remove(child))
+        if (!_children.Remove(child))
         {
             return false;
         }
@@ -155,7 +155,7 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
     {
         TreeNode<T> current = this;
 
-        while(current.Parent is not null)
+        while (current.Parent is not null)
         {
             current = current.Parent;
         }
@@ -180,7 +180,7 @@ public sealed class TreeNode<T>(T value) : IEnumerable<TreeNode<T>>
             int depth = 0;
             TreeNode<T>? current = Parent;
 
-            while(current is not null)
+            while (current is not null)
             {
                 depth++;
                 current = current.Parent;

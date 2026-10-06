@@ -47,7 +47,7 @@ public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = n
         {
             return operation();
         }
-        catch(Exception ex) when(_predicate(ex))
+        catch (Exception ex) when (_predicate(ex))
         {
             return fallback(ex);
         }
@@ -81,7 +81,7 @@ public sealed class FallbackPolicy<TResult>(Func<Exception, bool>? predicate = n
         {
             return await operation(cancellationToken).ConfigureAwait(false);
         }
-        catch(Exception ex) when(ex is not OperationCanceledException && _predicate(ex))
+        catch (Exception ex) when (ex is not OperationCanceledException && _predicate(ex))
         {
             return await fallback(ex).ConfigureAwait(false);
         }

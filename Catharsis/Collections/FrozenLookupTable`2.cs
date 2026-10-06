@@ -30,7 +30,7 @@ public sealed class FrozenLookupTable<TKey, TValue>(IEqualityComparer<TKey>? com
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(_building is null)
+        if (_building is null)
         {
             throw new InvalidOperationException("The table has already been built.");
         }
@@ -46,7 +46,7 @@ public sealed class FrozenLookupTable<TKey, TValue>(IEqualityComparer<TKey>? com
     ///<returns>This table, for fluent chaining.</returns>
     public FrozenLookupTable<TKey, TValue> Build()
     {
-        if(_building is not null)
+        if (_building is not null)
         {
             _built = _building.ToFrozenDictionary(_building.Comparer);
             _building = null;

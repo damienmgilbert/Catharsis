@@ -30,19 +30,20 @@ public sealed class PropertyObserver : IDisposable
     #region Private methods
     void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName is null)
+        if (e.PropertyName is null)
         {
             // null or empty property name means all properties changed
-            foreach(List<Action> list in _handlers.Values)
+            foreach (List<Action> list in _handlers.Values)
             {
-                foreach(Action handler in list)
+                foreach (Action handler in list)
                 {
                     handler();
                 }
             }
-        } else if(_handlers.TryGetValue(e.PropertyName, out List<Action>? list))
+        }
+        else if (_handlers.TryGetValue(e.PropertyName, out List<Action>? list))
         {
-            foreach(Action handler in list)
+            foreach (Action handler in list)
             {
                 handler();
             }
@@ -57,7 +58,7 @@ public sealed class PropertyObserver : IDisposable
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -82,7 +83,7 @@ public sealed class PropertyObserver : IDisposable
 
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(!_handlers.TryGetValue(propertyName, out List<Action>? list))
+        if (!_handlers.TryGetValue(propertyName, out List<Action>? list))
         {
             list = [];
             _handlers[propertyName] = list;

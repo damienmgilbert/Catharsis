@@ -33,7 +33,7 @@ public abstract class AggregateRoot<TId>(TId id) : Entity<TId>(id)
     {
         ArgumentNullException.ThrowIfNull(dispatcher);
 
-        while(_events.Count > 0)
+        while (_events.Count > 0)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

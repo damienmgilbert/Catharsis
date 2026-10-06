@@ -32,9 +32,9 @@ public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = 
     #region Private methods
     PropertyDescriptor? FindProperty(PropertyDescriptorCollection properties, string name)
     {
-        foreach(PropertyDescriptor prop in properties)
+        foreach (PropertyDescriptor prop in properties)
         {
-            if(string.Equals(prop.Name, name, _options.PropertyNameComparison))
+            if (string.Equals(prop.Name, name, _options.PropertyNameComparison))
             {
                 return prop;
             }
@@ -48,7 +48,7 @@ public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = 
         ValidationContext context = new(target);
         List<ValidationResult> results = [];
 
-        if(!Validator.TryValidateObject(target, context, results, validateAllProperties: true))
+        if (!Validator.TryValidateObject(target, context, results, validateAllProperties: true))
         {
             string errors = string.Join("; ", results.Select(static r => r.ErrorMessage));
             throw new ValidationException($"Validation failed after mapping to '{typeof(TTarget).Name}': {errors}");
@@ -98,18 +98,18 @@ public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = 
         PropertyDescriptorCollection sourceProperties = TypeDescriptor.GetProperties(source);
         PropertyDescriptorCollection targetProperties = TypeDescriptor.GetProperties(target);
 
-        foreach(PropertyDescriptor sourceProp in sourceProperties)
+        foreach (PropertyDescriptor sourceProp in sourceProperties)
         {
-            if(!sourceProp.CanResetValue(source) && sourceProp.IsReadOnly)
+            if (!sourceProp.CanResetValue(source) && sourceProp.IsReadOnly)
             {
                 continue;
             }
 
             PropertyDescriptor? targetProp = FindProperty(targetProperties, sourceProp.Name);
 
-            if(targetProp is null)
+            if (targetProp is null)
             {
-                if(!_options.IgnoreMissingProperties)
+                if (!_options.IgnoreMissingProperties)
                 {
                     throw new InvalidOperationException($"{$"Property '{sourceProp.Name}' exists on source type "}{$"'{typeof(TSource).Name}' but not on target type '{typeof(TTarget).Name}'."}");
                 }
@@ -117,7 +117,7 @@ public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = 
                 continue;
             }
 
-            if(targetProp.IsReadOnly)
+            if (targetProp.IsReadOnly)
             {
                 continue;
             }
@@ -126,7 +126,7 @@ public sealed class ComponentModelDtoMapper(ComponentModelDtoOptions? options = 
             targetProp.SetValue(target, value);
         }
 
-        if(_options.ValidateAfterMap)
+        if (_options.ValidateAfterMap)
         {
             ValidateTarget(target);
         }

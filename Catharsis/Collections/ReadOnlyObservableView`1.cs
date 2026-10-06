@@ -46,7 +46,7 @@ public sealed class ReadOnlyObservableView<T> : IReadOnlyList<T>, INotifyCollect
     ///</summary>
     public void Freeze()
     {
-        if(IsFrozen)
+        if (IsFrozen)
         {
             return;
         }

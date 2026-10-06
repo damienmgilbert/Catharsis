@@ -47,7 +47,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
     #region Private methods
     void EnsureCapacity(int required)
     {
-        if(required <= _buffer.Length)
+        if (required <= _buffer.Length)
         {
             return;
         }
@@ -74,7 +74,7 @@ public class ObservablePooledBuffer<T> : ObservableObject, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

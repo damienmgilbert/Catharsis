@@ -111,12 +111,12 @@ public sealed class ConverterContext
         {
             NumberStyles styles = NumberStyles.None;
 
-            if(AllowLeadingWhiteSpace)
+            if (AllowLeadingWhiteSpace)
             {
                 styles |= NumberStyles.AllowLeadingWhite;
             }
 
-            if(AllowTrailingWhiteSpace)
+            if (AllowTrailingWhiteSpace)
             {
                 styles |= NumberStyles.AllowTrailingWhite;
             }

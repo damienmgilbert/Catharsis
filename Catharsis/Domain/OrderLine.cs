@@ -20,7 +20,7 @@ public sealed class OrderLine : ValueObject
         ArgumentException.ThrowIfNullOrWhiteSpace(sku);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
 
-        if(unitPrice.Amount < 0)
+        if (unitPrice.Amount < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(unitPrice), unitPrice, "Unit price must not be negative.");
         }

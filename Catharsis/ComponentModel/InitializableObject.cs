@@ -43,7 +43,7 @@ public abstract class InitializableObject : ISupportInitializeNotification
     ///</exception>
     public void BeginInit()
     {
-        if(_isInitializing)
+        if (_isInitializing)
         {
             throw new InvalidOperationException("Initialization has already begun.");
         }
@@ -61,7 +61,7 @@ public abstract class InitializableObject : ISupportInitializeNotification
     ///</exception>
     public void EndInit()
     {
-        if(!_isInitializing)
+        if (!_isInitializing)
         {
             throw new InvalidOperationException("BeginInit must be called before EndInit.");
         }

@@ -35,7 +35,7 @@ public readonly struct ValueStopwatch
     ///<exception cref="InvalidOperationException">The stopwatch was not started.</exception>
     public TimeSpan GetElapsedTime()
     {
-        if(!IsActive)
+        if (!IsActive)
         {
             throw new InvalidOperationException("The stopwatch has not been started. Call StartNew() first.");
         }

@@ -31,12 +31,12 @@ public sealed class BiDictionary<TLeft, TRight>(IEqualityComparer<TLeft>? leftCo
         ArgumentNullException.ThrowIfNull(left);
         ArgumentNullException.ThrowIfNull(right);
 
-        if(_forward.ContainsKey(left))
+        if (_forward.ContainsKey(left))
         {
             throw new ArgumentException("The left value is already present.", nameof(left));
         }
 
-        if(_reverse.ContainsKey(right))
+        if (_reverse.ContainsKey(right))
         {
             throw new ArgumentException("The right value is already present.", nameof(right));
         }
@@ -75,7 +75,7 @@ public sealed class BiDictionary<TLeft, TRight>(IEqualityComparer<TLeft>? leftCo
     ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveByLeft(TLeft left)
     {
-        if(!_forward.TryGetValue(left, out TRight? right))
+        if (!_forward.TryGetValue(left, out TRight? right))
         {
             return false;
         }
@@ -92,7 +92,7 @@ public sealed class BiDictionary<TLeft, TRight>(IEqualityComparer<TLeft>? leftCo
     ///<returns><c>true</c> if the entry was found and removed; otherwise <c>false</c>.</returns>
     public bool RemoveByRight(TRight right)
     {
-        if(!_reverse.TryGetValue(right, out TLeft? left))
+        if (!_reverse.TryGetValue(right, out TLeft? left))
         {
             return false;
         }

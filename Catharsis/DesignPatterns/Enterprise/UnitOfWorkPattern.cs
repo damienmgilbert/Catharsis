@@ -15,17 +15,17 @@ public class UnitOfWorkPattern
     ///<param name="rollback">Invoked if <paramref name="work"/> throws, before the exception propagates.</param>
     public static void UnitOfWork(Action work, Action commit, Action rollback)
     {
-        if(work is null)
+        if (work is null)
         {
             throw new ArgumentNullException(nameof(work), "Work must not be null.");
         }
 
-        if(commit is null)
+        if (commit is null)
         {
             throw new ArgumentNullException(nameof(commit), "Commit must not be null.");
         }
 
-        if(rollback is null)
+        if (rollback is null)
         {
             throw new ArgumentNullException(nameof(rollback), "Rollback must not be null.");
         }
@@ -34,7 +34,8 @@ public class UnitOfWorkPattern
         {
             work();
             commit();
-        } catch
+        }
+        catch
         {
             rollback();
             throw;
@@ -53,17 +54,17 @@ public class UnitOfWorkPattern
     ///<returns>The result produced by <paramref name="work"/>.</returns>
     public static TResult UnitOfWork<TResult>(Func<TResult> work, Action commit, Action rollback)
     {
-        if(work is null)
+        if (work is null)
         {
             throw new ArgumentNullException(nameof(work), "Work must not be null.");
         }
 
-        if(commit is null)
+        if (commit is null)
         {
             throw new ArgumentNullException(nameof(commit), "Commit must not be null.");
         }
 
-        if(rollback is null)
+        if (rollback is null)
         {
             throw new ArgumentNullException(nameof(rollback), "Rollback must not be null.");
         }
@@ -73,7 +74,8 @@ public class UnitOfWorkPattern
             TResult result = work();
             commit();
             return result;
-        } catch
+        }
+        catch
         {
             rollback();
             throw;

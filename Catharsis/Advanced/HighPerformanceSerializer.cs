@@ -39,7 +39,7 @@ public sealed class HighPerformanceSerializer : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

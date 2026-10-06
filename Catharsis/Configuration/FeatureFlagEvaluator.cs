@@ -25,7 +25,7 @@ public sealed class FeatureFlagEvaluator(IEnumerable<FeatureFlag> flags)
         ReadOnlySpan<byte> bytes = Encoding.UTF8.GetBytes(value);
         uint hash = 2166136261;
 
-        foreach(byte b in bytes)
+        foreach (byte b in bytes)
         {
             hash ^= b;
             hash *= 16777619;
@@ -51,17 +51,17 @@ public sealed class FeatureFlagEvaluator(IEnumerable<FeatureFlag> flags)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(flagName);
 
-        if(!_flags.TryGetValue(flagName, out FeatureFlag? flag) || !flag.Enabled)
+        if (!_flags.TryGetValue(flagName, out FeatureFlag? flag) || !flag.Enabled)
         {
             return false;
         }
 
-        if(flag.RolloutPercentage >= 100)
+        if (flag.RolloutPercentage >= 100)
         {
             return true;
         }
 
-        if(flag.RolloutPercentage <= 0)
+        if (flag.RolloutPercentage <= 0)
         {
             return false;
         }

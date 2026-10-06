@@ -72,7 +72,7 @@ public class IteratorTests
     {
         // Arrange
         List<int> obj = [with(1000)];
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             obj.Add(i);
         }

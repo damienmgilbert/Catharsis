@@ -29,7 +29,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public Multimap(IEqualityComparer<TKey> comparer)
     {
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Equality comparer must not be null.");
         }
@@ -61,7 +61,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<param name="value">The value to add.</param>
     public void Add(TKey key, TValue value)
     {
-        if(!_map.TryGetValue(key, out List<TValue>? list))
+        if (!_map.TryGetValue(key, out List<TValue>? list))
         {
             list = [];
             _map[key] = list;
@@ -78,12 +78,12 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
     public void AddRange(TKey key, IEnumerable<TValue> values)
     {
-        if(values is null)
+        if (values is null)
         {
             throw new ArgumentNullException(nameof(values), "Values must not be null.");
         }
 
-        if(!_map.TryGetValue(key, out List<TValue>? list))
+        if (!_map.TryGetValue(key, out List<TValue>? list))
         {
             list = [];
             _map[key] = list;
@@ -131,17 +131,17 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<returns><c>true</c> if the value was found and removed; otherwise <c>false</c>.</returns>
     public bool Remove(TKey key, TValue value)
     {
-        if(!_map.TryGetValue(key, out List<TValue>? list))
+        if (!_map.TryGetValue(key, out List<TValue>? list))
         {
             return false;
         }
 
-        if(!list.Remove(value))
+        if (!list.Remove(value))
         {
             return false;
         }
 
-        if(list.Count == 0)
+        if (list.Count == 0)
         {
             _map.Remove(key);
         }
@@ -164,7 +164,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
     ///<returns><c>true</c> if the key exists; otherwise <c>false</c>.</returns>
     public bool TryGetValues(TKey key, [MaybeNullWhen(false)] out IReadOnlyCollection<TValue> values)
     {
-        if(_map.TryGetValue(key, out List<TValue>? list))
+        if (_map.TryGetValue(key, out List<TValue>? list))
         {
             values = list;
             return true;
@@ -195,7 +195,7 @@ public sealed class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IRea
         {
             int count = 0;
 
-            foreach(List<TValue> list in _map.Values)
+            foreach (List<TValue> list in _map.Values)
             {
                 count += list.Count;
             }

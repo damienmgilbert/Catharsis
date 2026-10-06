@@ -163,9 +163,9 @@ public class CompositeValidatorTests
         #region Public methods
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(End <= Start)
+            if (End <= Start)
             {
-                yield return new ValidationResult("End must be greater than Start.", [ nameof(End) ]);
+                yield return new ValidationResult("End must be greater than Start.", [nameof(End)]);
             }
         }
         #endregion

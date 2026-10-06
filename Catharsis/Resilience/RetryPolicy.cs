@@ -38,7 +38,7 @@ public sealed class RetryPolicy : IAsyncPolicy
         double delayMs = _initialDelay.TotalMilliseconds * Math.Pow(_backoffMultiplier, attempt);
         delayMs = Math.Min(delayMs, _maxDelay.TotalMilliseconds);
 
-        if(_useJitter)
+        if (_useJitter)
         {
             delayMs *= 0.5 + (Random.Shared.NextDouble() * 0.5);
         }
@@ -60,27 +60,27 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public TResult Execute<TResult>(Func<TResult> operation)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
         List<Exception>? exceptions = null;
 
-        for(int attempt = 0; attempt < _maxAttempts; attempt++)
+        for (int attempt = 0; attempt < _maxAttempts; attempt++)
         {
             try
             {
                 return operation();
             }
-            catch(Exception ex) when(attempt < _maxAttempts - 1 && _retryPredicate(ex))
+            catch (Exception ex) when (attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
                 exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 Thread.Sleep(ComputeDelay(attempt));
             }
-            catch(Exception ex) when(exceptions is not null && _retryPredicate(ex))
+            catch (Exception ex) when (exceptions is not null && _retryPredicate(ex))
             {
                 exceptions.Add(ex);
                 throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -100,7 +100,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public void Execute(Action operation)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
@@ -125,14 +125,14 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public async Task<TResult> ExecuteAsync<TResult>(Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken = default)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
         List<Exception>? exceptions = null;
 
-        for(int attempt = 0; attempt < _maxAttempts; attempt++)
+        for (int attempt = 0; attempt < _maxAttempts; attempt++)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -140,14 +140,14 @@ public sealed class RetryPolicy : IAsyncPolicy
             {
                 return await operation(cancellationToken).ConfigureAwait(false);
             }
-            catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
+            catch (Exception ex) when (ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
             {
                 exceptions ??= [with(_maxAttempts)];
                 exceptions.Add(ex);
 
                 await Task.Delay(ComputeDelay(attempt), cancellationToken).ConfigureAwait(false);
             }
-            catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+            catch (Exception ex) when (ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
             {
                 exceptions.Add(ex);
                 throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -168,7 +168,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public async Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
@@ -194,7 +194,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public ValueTask<TResult> ExecuteValueAsync<TResult>(Func<CancellationToken, ValueTask<TResult>> operation, CancellationToken cancellationToken = default)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
@@ -205,7 +205,7 @@ public sealed class RetryPolicy : IAsyncPolicy
         {
             List<Exception>? exceptions = null;
 
-            for(int attempt = 0; attempt < _maxAttempts; attempt++)
+            for (int attempt = 0; attempt < _maxAttempts; attempt++)
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -213,14 +213,14 @@ public sealed class RetryPolicy : IAsyncPolicy
                 {
                     return await op(ct).ConfigureAwait(false);
                 }
-                catch(Exception ex) when(ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
+                catch (Exception ex) when (ex is not OperationCanceledException && attempt < _maxAttempts - 1 && _retryPredicate(ex))
                 {
                     exceptions ??= [with(_maxAttempts)];
                     exceptions.Add(ex);
 
                     await Task.Delay(ComputeDelay(attempt), ct).ConfigureAwait(false);
                 }
-                catch(Exception ex) when(ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
+                catch (Exception ex) when (ex is not OperationCanceledException && exceptions is not null && _retryPredicate(ex))
                 {
                     exceptions.Add(ex);
                     throw new AggregateException("All retry attempts have been exhausted.", exceptions);
@@ -243,7 +243,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///</exception>
     public ValueTask ExecuteValueAsync(Func<CancellationToken, ValueTask> operation, CancellationToken cancellationToken = default)
     {
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
@@ -268,7 +268,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="multiplier"/> is less than 1.0.</exception>
     public RetryPolicy ExponentialBackoff(double multiplier = 2.0)
     {
-        if(multiplier < 1.0)
+        if (multiplier < 1.0)
         {
             throw new ArgumentOutOfRangeException(nameof(multiplier), "Backoff multiplier must be at least 1.0.");
         }
@@ -285,7 +285,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is negative.</exception>
     public RetryPolicy InitialDelay(TimeSpan delay)
     {
-        if(delay < TimeSpan.Zero)
+        if (delay < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(delay), "Initial delay must not be negative.");
         }
@@ -302,7 +302,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="attempts"/> is less than 1.</exception>
     public RetryPolicy MaxAttempts(int attempts)
     {
-        if(attempts < 1)
+        if (attempts < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(attempts), "Maximum attempts must be at least 1.");
         }
@@ -319,7 +319,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="maxDelay"/> is negative.</exception>
     public RetryPolicy MaxDelay(TimeSpan maxDelay)
     {
-        if(maxDelay < TimeSpan.Zero)
+        if (maxDelay < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(maxDelay), "Maximum delay must not be negative.");
         }
@@ -349,7 +349,7 @@ public sealed class RetryPolicy : IAsyncPolicy
     ///<exception cref="ArgumentNullException"><paramref name="predicate"/> is <c>null</c>.</exception>
     public RetryPolicy RetryWhen(Func<Exception, bool> predicate)
     {
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Retry predicate must not be null.");
         }

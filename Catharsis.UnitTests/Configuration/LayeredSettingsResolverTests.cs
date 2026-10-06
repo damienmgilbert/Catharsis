@@ -106,7 +106,8 @@ public class LayeredSettingsResolverTests
             LayeredSettingsResolver resolver = LayeredSettingsResolver.FromEnvironmentAndDefaults(defaults);
 
             Assert.AreEqual("from-env", resolver.GetValue(key));
-        } finally
+        }
+        finally
         {
             Environment.SetEnvironmentVariable(key, null);
         }

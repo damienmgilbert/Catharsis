@@ -62,7 +62,7 @@ public class SpanReaderTests
     [TestMethod]
     public void ReadByte_AtEnd_ThrowsArgumentOutOfRangeException()
     {
-        byte[] data = [ 0x01 ];
+        byte[] data = [0x01];
         SpanReader reader = new(data);
         reader.ReadByte();
 
@@ -70,7 +70,8 @@ public class SpanReaderTests
         {
             reader.ReadByte();
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -81,7 +82,7 @@ public class SpanReaderTests
     [TestMethod]
     public void ReadByte_ReadsByteAndAdvances()
     {
-        byte[] data = [ 0xAB, 0xCD ];
+        byte[] data = [0xAB, 0xCD];
         SpanReader reader = new(data);
 
         byte result = reader.ReadByte();
@@ -102,7 +103,8 @@ public class SpanReaderTests
         {
             reader.ReadBytes(-1);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -119,7 +121,8 @@ public class SpanReaderTests
         {
             reader.ReadBytes(10);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -130,7 +133,7 @@ public class SpanReaderTests
     [TestMethod]
     public void ReadBytes_ReturnsCorrectSlice()
     {
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         SpanReader reader = new(data);
         reader.ReadByte(); // skip first
 
@@ -318,7 +321,8 @@ public class SpanReaderTests
         {
             reader.Skip(-1);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -335,7 +339,8 @@ public class SpanReaderTests
         {
             reader.Skip(10);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -346,7 +351,7 @@ public class SpanReaderTests
     [TestMethod]
     public void UnreadSpan_ReturnsRemainingBytes()
     {
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         SpanReader reader = new(data);
         reader.Skip(2);
 

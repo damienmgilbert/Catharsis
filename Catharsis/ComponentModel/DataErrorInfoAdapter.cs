@@ -36,7 +36,7 @@ public sealed class DataErrorInfoAdapter(INotifyDataErrorInfo source) : IDataErr
             IEnumerable<string?>? errors = _source.GetErrors(columnName)?
                 .Cast<object>().Select(static e => e.ToString()).Where(static e => !string.IsNullOrWhiteSpace(e));
 
-            if(errors is null)
+            if (errors is null)
             {
                 return string.Empty;
             }
@@ -58,7 +58,7 @@ public sealed class DataErrorInfoAdapter(INotifyDataErrorInfo source) : IDataErr
             IEnumerable<string?>? errors = _source.GetErrors(null)?
                 .Cast<object>().Select(static e => e.ToString()).Where(static e => !string.IsNullOrWhiteSpace(e));
 
-            if(errors is null)
+            if (errors is null)
             {
                 return string.Empty;
             }

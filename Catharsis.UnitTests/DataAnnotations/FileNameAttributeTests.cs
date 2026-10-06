@@ -21,7 +21,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void AllowedExtension_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new() { AllowedExtensions = [ ".txt", ".csv" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [".txt", ".csv"] };
         ValidationContext context = CreateContext("data.csv", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("data.csv", context);
@@ -32,7 +32,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void AllowedExtensionCaseInsensitive_ReturnsSuccess()
     {
-        FileNameAttribute attribute = new() { AllowedExtensions = [ ".TXT" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [".TXT"] };
         ValidationContext context = CreateContext("readme.txt", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("readme.txt", context);
@@ -43,7 +43,7 @@ public class FileNameAttributeTests
     [TestMethod]
     public void DisallowedExtension_ReturnsFailure()
     {
-        FileNameAttribute attribute = new() { AllowedExtensions = [ ".txt", ".csv" ] };
+        FileNameAttribute attribute = new() { AllowedExtensions = [".txt", ".csv"] };
         ValidationContext context = CreateContext("image.png", nameof(TestModel.Name));
 
         ValidationResult? result = attribute.GetValidationResult("image.png", context);

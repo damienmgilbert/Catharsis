@@ -19,26 +19,26 @@ public static class TypeConversionExtensions
     ///<exception cref="NotSupportedException">The conversion is not supported.</exception>
     public static TTarget? ConvertTo<TTarget>(this object? value)
     {
-        if(value is null)
+        if (value is null)
         {
             return default;
         }
 
-        if(value is TTarget typed)
+        if (value is TTarget typed)
         {
             return typed;
         }
 
         System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(typeof(TTarget));
 
-        if(converter.CanConvertFrom(value.GetType()))
+        if (converter.CanConvertFrom(value.GetType()))
         {
             return (TTarget?)converter.ConvertFrom(value);
         }
 
         System.ComponentModel.TypeConverter sourceConverter = TypeDescriptor.GetConverter(value.GetType());
 
-        if(sourceConverter.CanConvertTo(typeof(TTarget)))
+        if (sourceConverter.CanConvertTo(typeof(TTarget)))
         {
             return (TTarget?)sourceConverter.ConvertTo(value, typeof(TTarget));
         }
@@ -161,7 +161,8 @@ public static class TypeConversionExtensions
         {
             result = value.ConvertTo<TTarget>();
             return true;
-        } catch
+        }
+        catch
         {
             result = default;
             return false;

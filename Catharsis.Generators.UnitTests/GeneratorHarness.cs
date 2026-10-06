@@ -27,7 +27,7 @@ internal static class GeneratorHarness
             using MemoryStream stream = new();
             var emit = Output.Emit(stream);
 
-            if(!emit.Success)
+            if (!emit.Success)
             {
                 throw new InvalidOperationException("Generated code did not compile: " + string.Join(Environment.NewLine, emit.Diagnostics.Where(static d => d.Severity == DiagnosticSeverity.Error)));
             }

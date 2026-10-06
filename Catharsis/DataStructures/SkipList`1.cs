@@ -51,9 +51,9 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
         Node[] update = new Node[MaxLevel];
         Node current = _head;
 
-        for(int i = _topLevel; i >= 0; i--)
+        for (int i = _topLevel; i >= 0; i--)
         {
-            while(current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
+            while (current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
             {
                 current = current.Next[i]!;
             }
@@ -63,9 +63,9 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
 
         int newLevel = RandomLevel();
 
-        if(newLevel > _topLevel)
+        if (newLevel > _topLevel)
         {
-            for(int i = _topLevel + 1; i <= newLevel; i++)
+            for (int i = _topLevel + 1; i <= newLevel; i++)
             {
                 update[i] = _head;
             }
@@ -75,7 +75,7 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
 
         Node newNode = new(value, newLevel + 1);
 
-        for(int i = 0; i <= newLevel; i++)
+        for (int i = 0; i <= newLevel; i++)
         {
             newNode.Next[i] = update[i].Next[i];
             update[i].Next[i] = newNode;
@@ -103,9 +103,9 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
     {
         Node current = _head;
 
-        for(int i = _topLevel; i >= 0; i--)
+        for (int i = _topLevel; i >= 0; i--)
         {
-            while(current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
+            while (current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
             {
                 current = current.Next[i]!;
             }
@@ -120,7 +120,7 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
     {
         Node? current = _head.Next[0];
 
-        while(current is not null)
+        while (current is not null)
         {
             yield return current.Value;
             current = current.Next[0];
@@ -137,9 +137,9 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
         Node[] update = new Node[MaxLevel];
         Node current = _head;
 
-        for(int i = _topLevel; i >= 0; i--)
+        for (int i = _topLevel; i >= 0; i--)
         {
-            while(current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
+            while (current.Next[i] is not null && _comparer.Compare(current.Next[i]!.Value, value) < 0)
             {
                 current = current.Next[i]!;
             }
@@ -149,14 +149,14 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
 
         Node? target = update[0].Next[0];
 
-        if(target is null || _comparer.Compare(target.Value, value) != 0)
+        if (target is null || _comparer.Compare(target.Value, value) != 0)
         {
             return false;
         }
 
-        for(int i = 0; i <= _topLevel; i++)
+        for (int i = 0; i <= _topLevel; i++)
         {
-            if(update[i].Next[i] != target)
+            if (update[i].Next[i] != target)
             {
                 break;
             }
@@ -164,7 +164,7 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
             update[i].Next[i] = target.Next[i];
         }
 
-        while(_topLevel > 0 && _head.Next[_topLevel] is null)
+        while (_topLevel > 0 && _head.Next[_topLevel] is null)
         {
             _topLevel--;
         }
@@ -177,7 +177,7 @@ public sealed class SkipList<T>(IComparer<T>? comparer = null, Random? random = 
     {
         int level = 0;
 
-        while(level < MaxLevel - 1 && _random.NextDouble() < LevelProbability)
+        while (level < MaxLevel - 1 && _random.NextDouble() < LevelProbability)
         {
             level++;
         }

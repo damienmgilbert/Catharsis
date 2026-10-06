@@ -18,17 +18,17 @@ public static class ListExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static LinkedList<T> AddRange<T>(this LinkedList<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source linked list must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.AddLast(item);
         }
@@ -47,18 +47,18 @@ public static class ListExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static LinkedList<T> ModifyAll<T>(this LinkedList<T> source, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source linked list must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         LinkedListNode<T>? node = source.First;
-        while(node is not null)
+        while (node is not null)
         {
             node.Value = modifier(node.Value);
             node = node.Next;
@@ -79,22 +79,22 @@ public static class ListExtensions
     ///<exception cref="ArgumentOutOfRangeException">Either index is outside the bounds of the list.</exception>
     public static List<T> MoveItem<T>(this List<T> source, int fromIndex, int toIndex)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if((fromIndex < 0) || (fromIndex >= source.Count))
+        if ((fromIndex < 0) || (fromIndex >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(fromIndex), "Source index is outside the bounds of the list.");
         }
 
-        if((toIndex < 0) || (toIndex >= source.Count))
+        if ((toIndex < 0) || (toIndex >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(toIndex), "Destination index is outside the bounds of the list.");
         }
 
-        if(fromIndex == toIndex)
+        if (fromIndex == toIndex)
         {
             return source;
         }
@@ -115,22 +115,22 @@ public static class ListExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<T>(this LinkedList<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source linked list must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
         int removed = 0;
         LinkedListNode<T>? node = source.First;
-        while(node is not null)
+        while (node is not null)
         {
             LinkedListNode<T>? next = node.Next;
-            if(predicate(node.Value))
+            if (predicate(node.Value))
             {
                 source.Remove(node);
                 removed++;
@@ -155,27 +155,27 @@ public static class ListExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> or <paramref name="count"/> is invalid.</exception>
     public static List<T> ReplaceRange<T>(this List<T> source, int index, int count, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        if(index < 0)
+        if (index < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index must not be negative.");
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        if(index + count > source.Count)
+        if (index + count > source.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Range extends beyond the list bounds.");
         }

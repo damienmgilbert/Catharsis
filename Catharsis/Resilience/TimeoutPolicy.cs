@@ -24,7 +24,7 @@ public sealed class TimeoutPolicy : IAsyncPolicy
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is not greater than zero.</exception>
     public TimeoutPolicy(TimeSpan timeout)
     {
-        if(timeout <= TimeSpan.Zero)
+        if (timeout <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be greater than zero.");
         }
@@ -52,7 +52,7 @@ public sealed class TimeoutPolicy : IAsyncPolicy
         {
             return await operation(linked.Token).ConfigureAwait(false);
         }
-        catch(OperationCanceledException) when(!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             throw new TimeoutException($"The operation did not complete within {_timeout}.");
         }

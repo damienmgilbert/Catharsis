@@ -55,7 +55,7 @@ public sealed class BufferWriterStream : Stream
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(buffer.IsEmpty)
+        if (buffer.IsEmpty)
         {
             return;
         }

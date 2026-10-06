@@ -39,7 +39,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="weight"/> is not greater than zero.</exception>
     public void Add(T item, double weight)
     {
-        if(weight <= 0)
+        if (weight <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(weight), "Weight must be greater than zero.");
         }
@@ -62,7 +62,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
-        foreach((T item, double _) in _items)
+        foreach ((T item, double _) in _items)
         {
             yield return item;
         }
@@ -76,7 +76,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">The list is empty.</exception>
     public T PickRandom(Random? random = null)
     {
-        if(_items.Count == 0)
+        if (_items.Count == 0)
         {
             throw new InvalidOperationException("The list is empty.");
         }
@@ -86,7 +86,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
 
         int index = Array.BinarySearch(cumulative, roll);
 
-        if(index < 0)
+        if (index < 0)
         {
             index = ~index;
         }
@@ -103,7 +103,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         int index = _items.FindIndex(entry => EqualityComparer<T>.Default.Equals(entry.Item, item));
 
-        if(index < 0)
+        if (index < 0)
         {
             return false;
         }
@@ -116,7 +116,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
 
     double[] EnsureCumulativeWeights()
     {
-        if(_cumulativeWeights is not null)
+        if (_cumulativeWeights is not null)
         {
             return _cumulativeWeights;
         }
@@ -124,7 +124,7 @@ public sealed class WeightedList<T> : IEnumerable<T>, IReadOnlyCollection<T>
         double[] cumulative = new double[_items.Count];
         double running = 0;
 
-        for(int i = 0; i < _items.Count; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
             running += _items[i].Weight;
             cumulative[i] = running;

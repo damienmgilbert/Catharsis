@@ -73,7 +73,7 @@ public sealed class DynamicEventDescriptor : EventDescriptor
     {
         Attribute[] result = new Attribute[collection.Count];
 
-        for(int i = 0; i < collection.Count; i++)
+        for (int i = 0; i < collection.Count; i++)
         {
             result[i] = collection[i];
         }

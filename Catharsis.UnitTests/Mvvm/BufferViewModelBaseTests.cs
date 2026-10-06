@@ -58,12 +58,12 @@ public class BufferViewModelBaseTests
         {
             LoadCoreCalled = true;
 
-            if(ShouldCancel)
+            if (ShouldCancel)
             {
                 throw new OperationCanceledException();
             }
 
-            if(ShouldThrow)
+            if (ShouldThrow)
             {
                 throw new InvalidOperationException("Test error");
             }

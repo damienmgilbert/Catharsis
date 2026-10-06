@@ -173,7 +173,7 @@ public class CronExpressionTests
         CronExpression cron = CronExpression.Parse("0 * * * *");
         DateTime after = new(2026, 1, 1, 0, 0, 0);
 
-        List<DateTime> occurrences = cron.GetNextOccurrences(after, 3).ToList();
+        List<DateTime> occurrences = [.. cron.GetNextOccurrences(after, 3)];
 
         Assert.HasCount(3, occurrences);
         Assert.AreEqual(new DateTime(2026, 1, 1, 1, 0, 0), occurrences[0]);

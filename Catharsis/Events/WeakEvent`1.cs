@@ -33,14 +33,14 @@ public sealed class WeakEvent<TArgs>
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        if(handler.GetInvocationList().Length != 1)
+        if (handler.GetInvocationList().Length != 1)
         {
             throw new ArgumentException("Multicast delegates are not supported; subscribe each handler separately.", nameof(handler));
         }
 
         Entry entry = new(new WeakEventHandler<TArgs>(handler), handler.Method, handler.Target is null ? null : new WeakReference(handler.Target));
 
-        lock(_gate)
+        lock (_gate)
         {
             _entries.Add(entry);
         }
@@ -56,11 +56,11 @@ public sealed class WeakEvent<TArgs>
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        lock(_gate)
+        lock (_gate)
         {
             int index = _entries.FindIndex(entry => entry.Method == handler.Method && ReferenceEquals(entry.Target?.Target, handler.Target));
 
-            if(index < 0)
+            if (index < 0)
             {
                 return false;
             }
@@ -80,31 +80,31 @@ public sealed class WeakEvent<TArgs>
     {
         Entry[] snapshot;
 
-        lock(_gate)
+        lock (_gate)
         {
             snapshot = [.. _entries];
         }
 
         List<Entry> dead = [];
 
-        foreach(Entry entry in snapshot)
+        foreach (Entry entry in snapshot)
         {
             try
             {
-                if(!entry.Handler.Invoke(sender, args))
+                if (!entry.Handler.Invoke(sender, args))
                 {
                     dead.Add(entry);
                 }
             }
-            catch(TargetInvocationException ex) when(ex.InnerException is not null)
+            catch (TargetInvocationException ex) when (ex.InnerException is not null)
             {
                 ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
             }
         }
 
-        if(dead.Count > 0)
+        if (dead.Count > 0)
         {
-            lock(_gate)
+            lock (_gate)
             {
                 _entries.RemoveAll(dead.Contains);
             }
@@ -118,7 +118,7 @@ public sealed class WeakEvent<TArgs>
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _entries.Count(static entry => entry.Handler.IsTargetAlive);
             }

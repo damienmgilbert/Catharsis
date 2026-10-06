@@ -52,7 +52,7 @@ public sealed class ExpressionCache
             (Type owner, string name, Type valueType) = ((Type, string, Type))key;
             PropertyInfo? property = owner.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
-            if(property?.GetMethod?.IsPublic != true || !valueType.IsAssignableFrom(property.PropertyType))
+            if (property?.GetMethod?.IsPublic != true || !valueType.IsAssignableFrom(property.PropertyType))
             {
                 throw new ArgumentException($"{owner.Name} has no public readable property '{name}' assignable to {valueType.Name}.", nameof(propertyName));
             }

@@ -17,7 +17,7 @@ public class FacadePattern
     ///<returns>The result of the simplified operation.</returns>
     public static TResult Facade<T, TResult>(T obj, Func<T, TResult> simplifiedOperation)
     {
-        if(simplifiedOperation is null)
+        if (simplifiedOperation is null)
         {
             throw new ArgumentNullException(nameof(simplifiedOperation), "Facade operation must not be null.");
         }

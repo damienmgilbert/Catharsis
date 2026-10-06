@@ -29,7 +29,7 @@ public sealed class WeightedRandomPicker<T>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="weight"/> is not greater than zero.</exception>
     public WeightedRandomPicker<T> Add(T item, double weight)
     {
-        if(weight <= 0)
+        if (weight <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(weight), "Weight must be greater than zero.");
         }
@@ -48,7 +48,7 @@ public sealed class WeightedRandomPicker<T>
     ///<exception cref="InvalidOperationException">No items have been added.</exception>
     public T Pick(Random? random = null)
     {
-        if(_entries.Count == 0)
+        if (_entries.Count == 0)
         {
             throw new InvalidOperationException("No items have been added.");
         }
@@ -58,14 +58,15 @@ public sealed class WeightedRandomPicker<T>
         int low = 0;
         int high = _entries.Count - 1;
 
-        while(low < high)
+        while (low < high)
         {
             int mid = low + ((high - low) / 2);
 
-            if(_entries[mid].CumulativeWeight <= roll)
+            if (_entries[mid].CumulativeWeight <= roll)
             {
                 low = mid + 1;
-            } else
+            }
+            else
             {
                 high = mid;
             }

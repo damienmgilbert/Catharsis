@@ -13,7 +13,7 @@ public class ImmutableSequenceTests
     [TestMethod]
     public void Add_ReturnsNewSequenceWithItem()
     {
-        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 1, 2 ]);
+        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([1, 2]);
         ImmutableSequence<int> seq2 = seq.Add(3);
         Assert.HasCount(3, seq2);
         Assert.HasCount(2, seq); // original unchanged
@@ -22,7 +22,7 @@ public class ImmutableSequenceTests
     [TestMethod]
     public void Create_FromSpan_StoresData()
     {
-        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 1, 2, 3 ]);
+        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([1, 2, 3]);
         Assert.HasCount(3, seq);
         Assert.AreEqual(2, seq[1]);
     }
@@ -47,16 +47,16 @@ public class ImmutableSequenceTests
     [TestMethod]
     public void Equals_DifferentData_ReturnsFalse()
     {
-        ImmutableSequence<int> a = ImmutableSequence<int>.Create([ 1, 2 ]);
-        ImmutableSequence<int> b = ImmutableSequence<int>.Create([ 1, 3 ]);
+        ImmutableSequence<int> a = ImmutableSequence<int>.Create([1, 2]);
+        ImmutableSequence<int> b = ImmutableSequence<int>.Create([1, 3]);
         Assert.IsFalse(a.Equals(b));
     }
 
     [TestMethod]
     public void Equals_SameData_ReturnsTrue()
     {
-        ImmutableSequence<int> a = ImmutableSequence<int>.Create([ 1, 2 ]);
-        ImmutableSequence<int> b = ImmutableSequence<int>.Create([ 1, 2 ]);
+        ImmutableSequence<int> a = ImmutableSequence<int>.Create([1, 2]);
+        ImmutableSequence<int> b = ImmutableSequence<int>.Create([1, 2]);
         Assert.IsTrue(a.Equals(b));
         Assert.IsTrue(a == b);
     }
@@ -64,7 +64,7 @@ public class ImmutableSequenceTests
     [TestMethod]
     public void Slice_ReturnsSubset()
     {
-        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([ 10, 20, 30, 40 ]);
+        ImmutableSequence<int> seq = ImmutableSequence<int>.Create([10, 20, 30, 40]);
         ImmutableSequence<int> sliced = seq.Slice(1, 2);
         Assert.HasCount(2, sliced);
         Assert.AreEqual(20, sliced[0]);

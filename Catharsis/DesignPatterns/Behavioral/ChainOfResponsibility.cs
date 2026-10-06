@@ -16,14 +16,14 @@ public class ChainOfResponsibility
     ///<returns>The original <paramref name="obj"/> after the chain completes.</returns>
     public static T Chain<T>(T obj, params Func<T, bool>[] handlers)
     {
-        if(handlers is null)
+        if (handlers is null)
         {
             throw new ArgumentNullException(nameof(handlers), "Handlers must not be null.");
         }
 
-        foreach(Func<T, bool> handler in handlers)
+        foreach (Func<T, bool> handler in handlers)
         {
-            if(handler(obj))
+            if (handler(obj))
             {
                 break;
             }

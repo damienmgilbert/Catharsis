@@ -19,7 +19,7 @@ public readonly record struct Money : IComparable<Money>, IParsable<Money>
     {
         ArgumentNullException.ThrowIfNull(currency);
 
-        if(currency.Length != 3 || !currency.All(char.IsAsciiLetter))
+        if (currency.Length != 3 || !currency.All(char.IsAsciiLetter))
         {
             throw new ArgumentException("Currency must be a three-letter code.", nameof(currency));
         }
@@ -115,14 +115,14 @@ public readonly record struct Money : IComparable<Money>, IParsable<Money>
     {
         result = default;
 
-        if(s is null)
+        if (s is null)
         {
             return false;
         }
 
         string[] parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        if(parts.Length != 2
+        if (parts.Length != 2
             || parts[1].Length != 3
             || !parts[1].All(char.IsAsciiLetter)
             || !decimal.TryParse(parts[0], NumberStyles.Number, provider ?? CultureInfo.InvariantCulture, out decimal amount))
@@ -154,7 +154,7 @@ public readonly record struct Money : IComparable<Money>, IParsable<Money>
         decimal cent = Amount < 0 ? -0.01m : 0.01m;
         Money[] result = new Money[parts];
 
-        for(int i = 0; i < parts; i++)
+        for (int i = 0; i < parts; i++)
         {
             decimal extra = remainder != 0 ? cent : 0m;
             remainder -= extra;
@@ -181,7 +181,7 @@ public readonly record struct Money : IComparable<Money>, IParsable<Money>
     #region Private methods
     private static void EnsureSameCurrency(Money left, Money right)
     {
-        if(!string.Equals(left.Currency, right.Currency, StringComparison.Ordinal))
+        if (!string.Equals(left.Currency, right.Currency, StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"Cannot combine {left.Currency} with {right.Currency}.");
         }

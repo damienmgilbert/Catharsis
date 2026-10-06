@@ -69,7 +69,7 @@ public class TreeIteratorTests
         TreeNode<int> node = new(0);
         TreeNode<int> root = node;
 
-        for(int i = 1; i <= 20_000; i++)
+        for (int i = 1; i <= 20_000; i++)
         {
             node = node.AddChild(i);
         }

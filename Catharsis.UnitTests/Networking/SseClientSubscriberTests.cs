@@ -42,7 +42,7 @@ public class SseClientSubscriberTests
         using HttpClient httpClient = new();
         SseClientSubscriber<string> subscriber = new(httpClient, server.Uri, static (_, data) => Encoding.UTF8.GetString(data));
 
-        await foreach(SseItem<string> item in subscriber.SubscribeAsync())
+        await foreach (SseItem<string> item in subscriber.SubscribeAsync())
         {
             Assert.AreEqual("hello", item.Data);
             break;
@@ -59,11 +59,11 @@ public class SseClientSubscriberTests
 
         int received = 0;
 
-        await foreach(SseItem<string> item in subscriber.SubscribeAsync())
+        await foreach (SseItem<string> item in subscriber.SubscribeAsync())
         {
             received++;
 
-            if(received == 2)
+            if (received == 2)
             {
                 break;
             }
@@ -124,12 +124,13 @@ public class SseClientSubscriberTests
         {
             try
             {
-                while(!stoppingToken.IsCancellationRequested)
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     HttpListenerContext context = await _listener.GetContextAsync().WaitAsync(stoppingToken).ConfigureAwait(false);
                     await HandleRequestAsync(context, stoppingToken).ConfigureAwait(false);
                 }
-            } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or HttpListenerException)
+            }
+            catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or HttpListenerException)
             {
             }
         }
@@ -156,7 +157,8 @@ public class SseClientSubscriberTests
             try
             {
                 await _acceptLoop.ConfigureAwait(false);
-            } catch(OperationCanceledException)
+            }
+            catch (OperationCanceledException)
             {
             }
 

@@ -28,7 +28,7 @@ public sealed class ImmutablePooledHybrid<T>(int initialCapacity = 256) : IDispo
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -46,7 +46,7 @@ public sealed class ImmutablePooledHybrid<T>(int initialCapacity = 256) : IDispo
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(!_isFrozen)
+        if (!_isFrozen)
         {
             _frozen = new ImmutableBuffer<T>(_mutableBuffer.WrittenSpan);
             _isFrozen = true;

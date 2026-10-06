@@ -44,7 +44,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     #region Private methods
     void EnsureCapacity(int required)
     {
-        if(required <= _buffer.Length)
+        if (required <= _buffer.Length)
         {
             return;
         }
@@ -86,7 +86,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(value.IsEmpty)
+        if (value.IsEmpty)
         {
             return;
         }
@@ -102,7 +102,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     ///<param name="value">The string to append.</param>
     public void Append(string? value)
     {
-        if(value is not null)
+        if (value is not null)
         {
             Append(value.AsSpan());
         }
@@ -120,10 +120,11 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
         int maxChars = Math.Max(256, _buffer.Length - _position);
         EnsureCapacity(_position + maxChars);
 
-        if(value.TryFormat(_buffer.AsSpan(_position), out int charsWritten, default, null))
+        if (value.TryFormat(_buffer.AsSpan(_position), out int charsWritten, default, null))
         {
             _position += charsWritten;
-        } else
+        }
+        else
         {
             Append(value.ToString(null, null));
         }
@@ -152,7 +153,7 @@ public sealed class PooledStringBuilder : IBufferWriter<char>, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

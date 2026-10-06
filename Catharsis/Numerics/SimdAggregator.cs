@@ -22,7 +22,7 @@ public static class SimdAggregator
     ///<exception cref="ArgumentException"><paramref name="left"/> and <paramref name="right"/> have different lengths.</exception>
     public static T Dot<T>(ReadOnlySpan<T> left, ReadOnlySpan<T> right) where T : struct, INumber<T>
     {
-        if(left.Length != right.Length)
+        if (left.Length != right.Length)
         {
             throw new ArgumentException("Sequences must have the same length.", nameof(right));
         }
@@ -30,12 +30,12 @@ public static class SimdAggregator
         T sum = T.Zero;
         int index = 0;
 
-        if(Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (left.Length >= Vector<T>.Count))
+        if (Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (left.Length >= Vector<T>.Count))
         {
             int vectorSize = Vector<T>.Count;
             Vector<T> accumulator = Vector<T>.Zero;
 
-            for(; index <= (left.Length - vectorSize); index += vectorSize)
+            for (; index <= (left.Length - vectorSize); index += vectorSize)
             {
                 accumulator += new Vector<T>(left.Slice(index, vectorSize)) * new Vector<T>(right.Slice(index, vectorSize));
             }
@@ -43,7 +43,7 @@ public static class SimdAggregator
             sum = Vector.Sum(accumulator);
         }
 
-        for(; index < left.Length; index++)
+        for (; index < left.Length; index++)
         {
             sum += left[index] * right[index];
         }
@@ -80,12 +80,12 @@ public static class SimdAggregator
         T sum = T.Zero;
         int index = 0;
 
-        if(Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
+        if (Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
         {
             int vectorSize = Vector<T>.Count;
             Vector<T> accumulator = Vector<T>.Zero;
 
-            for(; index <= (values.Length - vectorSize); index += vectorSize)
+            for (; index <= (values.Length - vectorSize); index += vectorSize)
             {
                 accumulator += new Vector<T>(values.Slice(index, vectorSize));
             }
@@ -93,7 +93,7 @@ public static class SimdAggregator
             sum = Vector.Sum(accumulator);
         }
 
-        for(; index < values.Length; index++)
+        for (; index < values.Length; index++)
         {
             sum += values[index];
         }
@@ -105,7 +105,7 @@ public static class SimdAggregator
     #region Private methods
     static T Reduce<T>(ReadOnlySpan<T> values, Func<Vector<T>, Vector<T>, Vector<T>> vectorReduce, Func<T, T, T> scalarReduce) where T : struct, INumber<T>
     {
-        if(values.IsEmpty)
+        if (values.IsEmpty)
         {
             throw new ArgumentException("Values must not be empty.", nameof(values));
         }
@@ -113,12 +113,12 @@ public static class SimdAggregator
         int index = 1;
         T result = values[0];
 
-        if(Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
+        if (Vector<T>.IsSupported && Vector.IsHardwareAccelerated && (values.Length >= Vector<T>.Count))
         {
             int vectorSize = Vector<T>.Count;
             Vector<T> accumulator = new(values[..vectorSize]);
 
-            for(index = vectorSize; index <= (values.Length - vectorSize); index += vectorSize)
+            for (index = vectorSize; index <= (values.Length - vectorSize); index += vectorSize)
             {
                 accumulator = vectorReduce(accumulator, new Vector<T>(values.Slice(index, vectorSize)));
             }
@@ -128,13 +128,13 @@ public static class SimdAggregator
 
             result = lanes[0];
 
-            for(int lane = 1; lane < vectorSize; lane++)
+            for (int lane = 1; lane < vectorSize; lane++)
             {
                 result = scalarReduce(result, lanes[lane]);
             }
         }
 
-        for(; index < values.Length; index++)
+        for (; index < values.Length; index++)
         {
             result = scalarReduce(result, values[index]);
         }

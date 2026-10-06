@@ -39,7 +39,7 @@ public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when the stack is empty.</exception>
     public T Peek()
     {
-        if(_stack.Count == 0)
+        if (_stack.Count == 0)
         {
             throw new InvalidOperationException("The stack is empty.");
         }
@@ -64,7 +64,7 @@ public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when there is nothing to redo.</exception>
     public T Redo()
     {
-        if(_undone.Count == 0)
+        if (_undone.Count == 0)
         {
             throw new InvalidOperationException("There is nothing to redo.");
         }
@@ -81,7 +81,7 @@ public sealed class HistoryStack<T> : IEnumerable<T>, IReadOnlyCollection<T>
     ///<exception cref="InvalidOperationException">Thrown when there is nothing to undo.</exception>
     public T Undo()
     {
-        if(_stack.Count == 0)
+        if (_stack.Count == 0)
         {
             throw new InvalidOperationException("There is nothing to undo.");
         }

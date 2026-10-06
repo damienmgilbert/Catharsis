@@ -54,7 +54,7 @@ public sealed partial class LoggingPolicyDecorator : IAsyncPolicy
             LogSucceeded(_logger, _name, elapsedMs);
             return result;
         }
-        catch(Exception ex) when(ex is not OperationCanceledException)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             double elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
             LogFailed(_logger, ex, _name, elapsedMs);

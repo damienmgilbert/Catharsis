@@ -35,7 +35,7 @@ public sealed class ComponentLifecycleManager : IDisposable
         _graph = graph;
         _serviceProvider = serviceProvider;
 
-        foreach(ComponentGraphNode node in graph.Nodes)
+        foreach (ComponentGraphNode node in graph.Nodes)
         {
             ComponentStateMachine machine = new ComponentStateMachine().ConfigureDefaults();
             _machines[node.Component] = machine;
@@ -48,7 +48,7 @@ public sealed class ComponentLifecycleManager : IDisposable
     {
         ComponentStateMachine machine = _machines[node.Component];
 
-        if(machine.CurrentState == ComponentState.Created)
+        if (machine.CurrentState == ComponentState.Created)
         {
             InitializeNode(node);
         }
@@ -66,7 +66,7 @@ public sealed class ComponentLifecycleManager : IDisposable
     {
         ComponentStateMachine machine = _machines[node.Component];
 
-        if(machine.CurrentState != ComponentState.Active)
+        if (machine.CurrentState != ComponentState.Active)
         {
             return;
         }
@@ -87,7 +87,7 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         ComponentActivationContext context = CreateContext(node, ComponentState.Initialized);
 
-        if(node.Component is ISupportInitialize initializable)
+        if (node.Component is ISupportInitialize initializable)
         {
             initializable.BeginInit();
             initializable.EndInit();
@@ -116,7 +116,7 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         ComponentGraphNode node = _graph.GetNode(component) ?? throw new InvalidOperationException($"Component '{component.GetType().Name}' is not in the graph.");
 
-        if(!node.AreDependenciesSatisfied)
+        if (!node.AreDependenciesSatisfied)
         {
             throw new InvalidOperationException($"Cannot activate '{node.Name}': not all dependencies are active.");
         }
@@ -134,7 +134,7 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         IReadOnlyList<ComponentGraphNode> order = _graph.GetActivationOrder();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ActivateNode(node);
@@ -153,9 +153,9 @@ public sealed class ComponentLifecycleManager : IDisposable
         ComponentGraphNode node = _graph.GetNode(component) ?? throw new InvalidOperationException($"Component '{component.GetType().Name}' is not in the graph.");
 
         // Deactivate dependents first.
-        foreach(ComponentGraphNode dependent in node.Dependents)
+        foreach (ComponentGraphNode dependent in node.Dependents)
         {
-            if(dependent.State == ComponentState.Active)
+            if (dependent.State == ComponentState.Active)
             {
                 DeactivateNode(dependent);
             }
@@ -173,7 +173,7 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         IReadOnlyList<ComponentGraphNode> order = _graph.GetDeactivationOrder();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             DeactivateNode(node);
         }
@@ -182,7 +182,7 @@ public sealed class ComponentLifecycleManager : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -191,22 +191,22 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         IReadOnlyList<ComponentGraphNode> order = _graph.GetDeactivationOrder();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             ComponentStateMachine machine = _machines[node.Component];
 
-            if(machine.CanTransitionTo(ComponentState.Deactivating))
+            if (machine.CanTransitionTo(ComponentState.Deactivating))
             {
                 machine.TryTransitionTo(ComponentState.Deactivating);
                 machine.TryTransitionTo(ComponentState.Deactivated);
             }
 
-            if(machine.CanTransitionTo(ComponentState.Disposing))
+            if (machine.CanTransitionTo(ComponentState.Disposing))
             {
                 machine.TryTransitionTo(ComponentState.Disposing);
                 node.State = ComponentState.Disposing;
 
-                if(node.Component is IDisposable disposable)
+                if (node.Component is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }
@@ -262,7 +262,7 @@ public sealed class ComponentLifecycleManager : IDisposable
 
         IReadOnlyList<ComponentGraphNode> order = _graph.GetActivationOrder();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             cancellationToken.ThrowIfCancellationRequested();
             InitializeNode(node);

@@ -52,7 +52,7 @@ public sealed class RandomStringGenerator
     ///<exception cref="ArgumentException"><paramref name="charset"/> is <c>null</c> or empty.</exception>
     public RandomStringGenerator(string charset = Alphanumeric, Random? random = null)
     {
-        if(string.IsNullOrEmpty(charset))
+        if (string.IsNullOrEmpty(charset))
         {
             throw new ArgumentException("Character set must not be null or empty.", nameof(charset));
         }
@@ -69,7 +69,7 @@ public sealed class RandomStringGenerator
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     public string Generate(int length)
     {
-        if(length < 0)
+        if (length < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(length), "Length must not be negative.");
         }
@@ -78,7 +78,7 @@ public sealed class RandomStringGenerator
         {
             (string charset, Random random) = state;
 
-            for(int i = 0; i < span.Length; i++)
+            for (int i = 0; i < span.Length; i++)
             {
                 span[i] = charset[random.Next(charset.Length)];
             }

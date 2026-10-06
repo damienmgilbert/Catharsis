@@ -44,7 +44,7 @@ public sealed class ValidationPipeline
     {
         ArgumentNullException.ThrowIfNull(rules);
 
-        foreach(IValidationRule rule in rules)
+        foreach (IValidationRule rule in rules)
         {
             ArgumentNullException.ThrowIfNull(rule);
             _rules.Add(rule);
@@ -75,12 +75,12 @@ public sealed class ValidationPipeline
 
         ValidationResultAggregator aggregator = new();
 
-        foreach(IValidationRule rule in _rules)
+        foreach (IValidationRule rule in _rules)
         {
             ValidationResult? result = rule.Validate(value, context);
             aggregator.Add(result, rule.Severity);
 
-            if(StopOnFirstError && (rule.Severity == ValidationSeverity.Error) && (result is not null) && (result != ValidationResult.Success))
+            if (StopOnFirstError && (rule.Severity == ValidationSeverity.Error) && (result is not null) && (result != ValidationResult.Success))
             {
                 break;
             }

@@ -19,7 +19,7 @@ public sealed class ComponentModelDeserializer
     {
         try
         {
-            if((value is null) || property.PropertyType.IsInstanceOfType(value))
+            if ((value is null) || property.PropertyType.IsInstanceOfType(value))
             {
                 property.SetValue(target, value);
                 return;
@@ -27,15 +27,17 @@ public sealed class ComponentModelDeserializer
 
             System.ComponentModel.TypeConverter converter = property.Converter;
 
-            if(converter.CanConvertFrom(value.GetType()))
+            if (converter.CanConvertFrom(value.GetType()))
             {
                 object? converted = converter.ConvertFrom(null, Culture, value);
                 property.SetValue(target, converted);
-            } else if(!IgnoreConversionErrors)
+            }
+            else if (!IgnoreConversionErrors)
             {
                 throw new InvalidOperationException($"{$"Cannot convert '{value.GetType().Name}' to '{property.PropertyType.Name}' "}{$"for property '{property.Name}'."}");
             }
-        } catch(Exception) when (IgnoreConversionErrors)
+        }
+        catch (Exception) when (IgnoreConversionErrors)
         {
             // Silently skip conversion errors when configured to do so.
         }
@@ -45,7 +47,7 @@ public sealed class ComponentModelDeserializer
     {
         try
         {
-            if(stringValue is null)
+            if (stringValue is null)
             {
                 property.SetValue(target, null);
                 return;
@@ -53,15 +55,17 @@ public sealed class ComponentModelDeserializer
 
             System.ComponentModel.TypeConverter converter = property.Converter;
 
-            if(converter.CanConvertFrom(typeof(string)))
+            if (converter.CanConvertFrom(typeof(string)))
             {
                 object? converted = converter.ConvertFromString(null, Culture, stringValue);
                 property.SetValue(target, converted);
-            } else if(!IgnoreConversionErrors)
+            }
+            else if (!IgnoreConversionErrors)
             {
                 throw new InvalidOperationException($"Cannot convert string to '{property.PropertyType.Name}' for property '{property.Name}'.");
             }
-        } catch(Exception) when (IgnoreConversionErrors)
+        }
+        catch (Exception) when (IgnoreConversionErrors)
         {
             // Silently skip conversion errors when configured to do so.
         }
@@ -111,9 +115,9 @@ public sealed class ComponentModelDeserializer
         {
             PropertyDescriptor? property = properties[key];
 
-            if((property is null) || property.IsReadOnly)
+            if ((property is null) || property.IsReadOnly)
             {
-                if(!IgnoreMissingProperties)
+                if (!IgnoreMissingProperties)
                 {
                     throw new InvalidOperationException($"Property '{key}' does not exist or is read-only on type '{typeof(T).Name}'.");
                 }
@@ -148,9 +152,9 @@ public sealed class ComponentModelDeserializer
         {
             PropertyDescriptor? property = properties[key];
 
-            if((property is null) || property.IsReadOnly)
+            if ((property is null) || property.IsReadOnly)
             {
-                if(!IgnoreMissingProperties)
+                if (!IgnoreMissingProperties)
                 {
                     throw new InvalidOperationException($"Property '{key}' does not exist or is read-only on type '{typeof(T).Name}'.");
                 }

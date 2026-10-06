@@ -100,7 +100,7 @@ public sealed class ComponentGraphTests
     static ComponentGraph BuildGraph(params IComponent[] components)
     {
         ComponentGraphBuilder builder = new();
-        foreach(IComponent c in components)
+        foreach (IComponent c in components)
         {
             builder.AddComponent(c);
         }

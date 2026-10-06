@@ -179,15 +179,15 @@ public sealed class ObservableDictionaryTests
         int resetCount = 0;
         dict.CollectionChanged += (s, e) =>
         {
-            if(e.Action == NotifyCollectionChangedAction.Reset)
+            if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 resetCount++;
             }
         };
 
-        using(dict.SuppressNotifications())
+        using (dict.SuppressNotifications())
         {
-            using(dict.SuppressNotifications())
+            using (dict.SuppressNotifications())
             {
                 dict.Add("a", 1);
             }
@@ -204,7 +204,7 @@ public sealed class ObservableDictionaryTests
         int collectionChangedCount = 0;
         dict.CollectionChanged += (s, e) => collectionChangedCount++;
 
-        using(dict.SuppressNotifications())
+        using (dict.SuppressNotifications())
         {
             dict.Add("a", 1);
             dict.Add("b", 2);

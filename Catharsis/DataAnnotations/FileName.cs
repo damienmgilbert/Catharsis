@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catharsis.DataAnnotations;
 
@@ -31,50 +31,50 @@ public sealed class FileNameAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
-        if(value is not string fileName)
+        if (value is not string fileName)
         {
-            return new ValidationResult("The field must be a string.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult("The field must be a string.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
-        if(string.IsNullOrWhiteSpace(fileName))
+        if (string.IsNullOrWhiteSpace(fileName))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
-        foreach(char c in fileName)
+        foreach (char c in fileName)
         {
-            if(InvalidChars.Contains(c))
+            if (InvalidChars.Contains(c))
             {
-                return new ValidationResult($"The field {validationContext.DisplayName} contains an invalid character '{c}'.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+                return new ValidationResult($"The field {validationContext.DisplayName} contains an invalid character '{c}'.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
             }
         }
 
-        if((MaxLength > 0) && (fileName.Length > MaxLength))
+        if ((MaxLength > 0) && (fileName.Length > MaxLength))
         {
-            return new ValidationResult($"The field {validationContext.DisplayName} must be at most {MaxLength} characters long.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult($"The field {validationContext.DisplayName} must be at most {MaxLength} characters long.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
-        if(AllowedExtensions is { Length: > 0 })
+        if (AllowedExtensions is { Length: > 0 })
         {
             string extension = Path.GetExtension(fileName);
             bool found = false;
-            foreach(string allowed in AllowedExtensions)
+            foreach (string allowed in AllowedExtensions)
             {
-                if(string.Equals(extension, allowed, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(extension, allowed, StringComparison.OrdinalIgnoreCase))
                 {
                     found = true;
                     break;
                 }
             }
 
-            if(!found)
+            if (!found)
             {
-                return new ValidationResult($"The field {validationContext.DisplayName} must have one of the following extensions: {string.Join(", ", AllowedExtensions)}.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+                return new ValidationResult($"The field {validationContext.DisplayName} must have one of the following extensions: {string.Join(", ", AllowedExtensions)}.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
             }
         }
 

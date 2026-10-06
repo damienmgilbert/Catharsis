@@ -53,7 +53,7 @@ public sealed class EventDebouncer<T> : IDisposable
     ///<exception cref="ObjectDisposedException">The debouncer has been disposed.</exception>
     public void Post(T value)
     {
-        lock(_gate)
+        lock (_gate)
         {
             _latest = value;
         }
@@ -83,7 +83,7 @@ public sealed class EventDebouncer<T> : IDisposable
     {
         T value;
 
-        lock(_gate)
+        lock (_gate)
         {
             value = _latest!;
         }

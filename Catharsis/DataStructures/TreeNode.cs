@@ -1,4 +1,4 @@
-﻿namespace Catharsis.DataStructures;
+namespace Catharsis.DataStructures;
 
 ///<summary>
 ///Helper class representing a tree node for testing purposes.

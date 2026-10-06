@@ -131,7 +131,7 @@ public class CertificateThumbprintValidatorTests
     #region Test helpers
     static IEnumerable<string> Chunk(string value, int size)
     {
-        for(int i = 0; i < value.Length; i += size)
+        for (int i = 0; i < value.Length; i += size)
         {
             yield return value.Substring(i, Math.Min(size, value.Length - i));
         }

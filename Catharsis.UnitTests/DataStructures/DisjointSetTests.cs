@@ -79,14 +79,14 @@ public class DisjointSetTests
     {
         DisjointSet set = new(10);
 
-        for(int i = 1; i < 10; i++)
+        for (int i = 1; i < 10; i++)
         {
             set.Union(0, i);
         }
 
         Assert.AreEqual(1, set.SetCount);
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             Assert.IsTrue(set.AreConnected(0, i));
         }

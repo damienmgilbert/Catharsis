@@ -33,22 +33,22 @@ public class SortableBindingList<T> : BindingList<T>
     #region Private methods
     static int CompareValues(object? x, object? y)
     {
-        if((x is null) && (y is null))
+        if ((x is null) && (y is null))
         {
             return 0;
         }
 
-        if(x is null)
+        if (x is null)
         {
             return -1;
         }
 
-        if(y is null)
+        if (y is null)
         {
             return 1;
         }
 
-        if(x is IComparable comparable)
+        if (x is IComparable comparable)
         {
             return comparable.CompareTo(y);
         }
@@ -65,7 +65,7 @@ public class SortableBindingList<T> : BindingList<T>
         _sortDirection = direction;
         _isSorted = true;
 
-        if(Items is List<T> items)
+        if (Items is List<T> items)
         {
             items.Sort(
             (x, y) =>
@@ -83,11 +83,11 @@ public class SortableBindingList<T> : BindingList<T>
     ///<inheritdoc/>
     protected override int FindCore(PropertyDescriptor prop, object? key)
     {
-        for(int i = 0; i < Count; i++)
+        for (int i = 0; i < Count; i++)
         {
             object? value = prop.GetValue(Items[i]);
 
-            if(Equals(value, key))
+            if (Equals(value, key))
             {
                 return i;
             }

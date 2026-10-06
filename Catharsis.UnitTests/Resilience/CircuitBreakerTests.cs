@@ -48,7 +48,7 @@ public class CircuitBreakerTests
     {
         CircuitBreaker breaker = new(3, TimeSpan.FromSeconds(1));
 
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             Assert.ThrowsExactly<InvalidOperationException>(() => breaker.Execute<int>(static () => throw new InvalidOperationException()));
         }
@@ -84,7 +84,7 @@ public class CircuitBreakerTests
     {
         CircuitBreaker breaker = new(2, TimeSpan.FromMinutes(1));
 
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             Assert.ThrowsExactly<InvalidOperationException>(() => breaker.Execute<int>(static () => throw new InvalidOperationException()));
         }

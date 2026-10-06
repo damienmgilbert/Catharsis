@@ -31,7 +31,7 @@ public class ResiliencyPipelineRegistryBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             int captured = i;
             sum += await Policy.ExecuteAsync(_ => Task.FromResult(Compute(captured)));
@@ -45,7 +45,7 @@ public class ResiliencyPipelineRegistryBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             int captured = i;
             sum += await Registry.ExecuteAsync("operation", _ => Task.FromResult(Compute(captured)));

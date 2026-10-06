@@ -37,19 +37,19 @@ public sealed class ComponentGraphNode
     #region Private methods
     static bool HasPathTo(ComponentGraphNode from, ComponentGraphNode to, HashSet<ComponentGraphNode> visited)
     {
-        if(ReferenceEquals(from, to))
+        if (ReferenceEquals(from, to))
         {
             return true;
         }
 
-        if(!visited.Add(from))
+        if (!visited.Add(from))
         {
             return false;
         }
 
-        foreach(ComponentGraphNode dep in from._dependencies)
+        foreach (ComponentGraphNode dep in from._dependencies)
         {
-            if(HasPathTo(dep, to, visited))
+            if (HasPathTo(dep, to, visited))
             {
                 return true;
             }
@@ -80,17 +80,17 @@ public sealed class ComponentGraphNode
     {
         ArgumentNullException.ThrowIfNull(dependency);
 
-        if(ReferenceEquals(this, dependency))
+        if (ReferenceEquals(this, dependency))
         {
             throw new InvalidOperationException("A node cannot depend on itself.");
         }
 
-        if(WouldCreateCycle(dependency))
+        if (WouldCreateCycle(dependency))
         {
             throw new InvalidOperationException($"Adding dependency '{dependency.Name}' to '{Name}' would create a circular reference.");
         }
 
-        if(!_dependencies.Contains(dependency))
+        if (!_dependencies.Contains(dependency))
         {
             _dependencies.Add(dependency);
             dependency._dependents.Add(this);
@@ -106,7 +106,7 @@ public sealed class ComponentGraphNode
     {
         ArgumentNullException.ThrowIfNull(dependency);
 
-        if(_dependencies.Remove(dependency))
+        if (_dependencies.Remove(dependency))
         {
             dependency._dependents.Remove(this);
             return true;

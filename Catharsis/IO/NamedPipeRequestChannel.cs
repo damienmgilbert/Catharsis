@@ -42,28 +42,29 @@ public sealed class NamedPipeRequestChannel : IAsyncDisposable
     {
         try
         {
-            while(!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 await _server.WaitForConnectionAsync(stoppingToken).ConfigureAwait(false);
 
-                using(StreamReader reader = new(_server, leaveOpen: true))
-                await using(StreamWriter writer = new(_server, leaveOpen: true) { AutoFlush = true })
+                using (StreamReader reader = new(_server, leaveOpen: true))
+                await using (StreamWriter writer = new(_server, leaveOpen: true) { AutoFlush = true })
                 {
                     string? request = await reader.ReadLineAsync(stoppingToken).ConfigureAwait(false);
 
-                    if(request is not null)
+                    if (request is not null)
                     {
                         string response = await _handler(request, stoppingToken).ConfigureAwait(false);
                         await writer.WriteLineAsync(response.AsMemory(), stoppingToken).ConfigureAwait(false);
                     }
                 }
 
-                if(_server.IsConnected)
+                if (_server.IsConnected)
                 {
                     _server.Disconnect();
                 }
             }
-        } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or IOException)
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or IOException)
         {
         }
     }
@@ -75,7 +76,7 @@ public sealed class NamedPipeRequestChannel : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -87,7 +88,8 @@ public sealed class NamedPipeRequestChannel : IAsyncDisposable
         try
         {
             await _acceptLoop.ConfigureAwait(false);
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
 

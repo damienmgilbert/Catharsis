@@ -30,7 +30,7 @@ public sealed class CertificateThumbprintValidator
             .Select(static thumbprint => thumbprint.Replace(":", "", StringComparison.Ordinal).Replace(" ", "", StringComparison.Ordinal))
             .ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
-        if(_expectedThumbprints.Count == 0)
+        if (_expectedThumbprints.Count == 0)
         {
             throw new ArgumentException("At least one expected thumbprint must be provided.", nameof(expectedThumbprints));
         }

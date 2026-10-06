@@ -17,14 +17,14 @@ public static class SpanExtensions
     ///<exception cref="ArgumentNullException"><paramref name="values"/> is <c>null</c>.</exception>
     public static bool ContainsAnyOf(this ReadOnlySpan<char> span, params string[] values)
     {
-        if(values is null)
+        if (values is null)
         {
             throw new ArgumentNullException(nameof(values), "Values must not be null.");
         }
 
-        foreach(string value in values)
+        foreach (string value in values)
         {
-            if(span.Contains(value, StringComparison.Ordinal))
+            if (span.Contains(value, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -43,9 +43,9 @@ public static class SpanExtensions
     {
         int count = 0;
 
-        foreach(char c in span)
+        foreach (char c in span)
         {
-            if(c == value)
+            if (c == value)
             {
                 count++;
             }
@@ -63,7 +63,7 @@ public static class SpanExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="maxLength"/> is negative.</exception>
     public static ReadOnlySpan<char> Truncate(this ReadOnlySpan<char> span, int maxLength)
     {
-        if(maxLength < 0)
+        if (maxLength < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(maxLength), "Maximum length must not be negative.");
         }

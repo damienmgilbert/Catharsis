@@ -37,17 +37,17 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     #region Private methods
     string PrepareInput(string text)
     {
-        if(_context.AllowLeadingWhiteSpace && _context.AllowTrailingWhiteSpace)
+        if (_context.AllowLeadingWhiteSpace && _context.AllowTrailingWhiteSpace)
         {
             return text.Trim();
         }
 
-        if(_context.AllowLeadingWhiteSpace)
+        if (_context.AllowLeadingWhiteSpace)
         {
             return text.TrimStart();
         }
 
-        if(_context.AllowTrailingWhiteSpace)
+        if (_context.AllowTrailingWhiteSpace)
         {
             return text.TrimEnd();
         }
@@ -65,7 +65,7 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     ///<inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if(value is string text)
+        if (value is string text)
         {
             CultureInfo effectiveCulture = culture ?? _context.Culture;
             string input = PrepareInput(text);
@@ -80,7 +80,7 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     {
         ArgumentNullException.ThrowIfNull(destinationType);
 
-        if((value is T typedValue) && (destinationType == typeof(string)))
+        if ((value is T typedValue) && (destinationType == typeof(string)))
         {
             CultureInfo effectiveCulture = culture ?? _context.Culture;
             return typedValue.ToString(_context.Format, effectiveCulture);
@@ -92,12 +92,12 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     ///<inheritdoc/>
     public override bool IsValid(ITypeDescriptorContext? context, object? value)
     {
-        if(value is T)
+        if (value is T)
         {
             return true;
         }
 
-        if(value is string text)
+        if (value is string text)
         {
             string input = PrepareInput(text);
             return T.TryParse(input, _context.Culture, out _);
@@ -118,20 +118,20 @@ public class CultureAwareConverter<T>(ConverterContext? context = null) : System
     ///</returns>
     public bool TryFormatSpan(T value, Span<char> destination, out int charsWritten)
     {
-        if(value is ISpanFormattable spanFormattable)
+        if (value is ISpanFormattable spanFormattable)
         {
             return spanFormattable.TryFormat(destination, out charsWritten, _context.Format, _context.Culture);
         }
 
         string formatted = value.ToString(_context.Format, _context.Culture);
 
-        if(formatted is null)
+        if (formatted is null)
         {
             charsWritten = 0;
             return true;
         }
 
-        if(formatted.Length <= destination.Length)
+        if (formatted.Length <= destination.Length)
         {
             formatted.AsSpan().CopyTo(destination);
             charsWritten = formatted.Length;

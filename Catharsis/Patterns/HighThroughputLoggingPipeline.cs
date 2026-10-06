@@ -30,7 +30,7 @@ public sealed class HighThroughputLoggingPipeline(ILogger logger, int flushThres
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -56,7 +56,7 @@ public sealed class HighThroughputLoggingPipeline(ILogger logger, int flushThres
         _bufferLogger.Log(level, message);
         _entryCount++;
 
-        if(_entryCount % _flushThreshold == 0)
+        if (_entryCount % _flushThreshold == 0)
         {
             _bufferLogger.Flush();
         }

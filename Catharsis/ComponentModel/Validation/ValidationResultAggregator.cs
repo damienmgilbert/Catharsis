@@ -21,7 +21,7 @@ public sealed class ValidationResultAggregator
     ///<param name="severity">The severity of the result.</param>
     public void Add(ValidationResult? result, ValidationSeverity severity = ValidationSeverity.Error)
     {
-        if((result is null) || (result == ValidationResult.Success))
+        if ((result is null) || (result == ValidationResult.Success))
         {
             return;
         }
@@ -38,7 +38,7 @@ public sealed class ValidationResultAggregator
     {
         ArgumentNullException.ThrowIfNull(results);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             Add(result, severity);
         }

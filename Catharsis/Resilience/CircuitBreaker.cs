@@ -38,12 +38,12 @@ public sealed class CircuitBreaker : IAsyncPolicy
     ///</exception>
     public CircuitBreaker(int failureThreshold, TimeSpan breakDuration, TimeProvider? timeProvider = null)
     {
-        if(failureThreshold < 1)
+        if (failureThreshold < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(failureThreshold), "Failure threshold must be at least 1.");
         }
 
-        if(breakDuration < TimeSpan.Zero)
+        if (breakDuration < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(breakDuration), "Break duration must not be negative.");
         }
@@ -72,7 +72,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
             OnSuccess();
             return result;
         }
-        catch(Exception ex) when(ex is not OperationCanceledException)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             OnFailure();
             throw;
@@ -116,7 +116,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
             OnSuccess();
             return result;
         }
-        catch(Exception ex) when(ex is not OperationCanceledException)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             OnFailure();
             throw;
@@ -146,7 +146,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
     ///</summary>
     public void Reset()
     {
-        lock(_gate)
+        lock (_gate)
         {
             _state = CircuitState.Closed;
             _consecutiveFailures = 0;
@@ -155,14 +155,14 @@ public sealed class CircuitBreaker : IAsyncPolicy
 
     void OnBeforeExecute()
     {
-        lock(_gate)
+        lock (_gate)
         {
-            if(_state != CircuitState.Open)
+            if (_state != CircuitState.Open)
             {
                 return;
             }
 
-            if(_timeProvider.GetElapsedTime(_openedAtTimestamp).CompareTo(_breakDuration) >= 0)
+            if (_timeProvider.GetElapsedTime(_openedAtTimestamp).CompareTo(_breakDuration) >= 0)
             {
                 _state = CircuitState.HalfOpen;
                 return;
@@ -174,7 +174,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
 
     void OnSuccess()
     {
-        lock(_gate)
+        lock (_gate)
         {
             _consecutiveFailures = 0;
             _state = CircuitState.Closed;
@@ -183,9 +183,9 @@ public sealed class CircuitBreaker : IAsyncPolicy
 
     void OnFailure()
     {
-        lock(_gate)
+        lock (_gate)
         {
-            if(_state == CircuitState.HalfOpen)
+            if (_state == CircuitState.HalfOpen)
             {
                 Open();
                 return;
@@ -193,7 +193,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
 
             _consecutiveFailures++;
 
-            if(_consecutiveFailures >= _failureThreshold)
+            if (_consecutiveFailures >= _failureThreshold)
             {
                 Open();
             }
@@ -216,7 +216,7 @@ public sealed class CircuitBreaker : IAsyncPolicy
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _state;
             }

@@ -28,7 +28,7 @@ public class SpanTokenizerTests
     public void Reset_AllowsReTokenization()
     {
         SpanTokenizer tokenizer = new("a,b".AsSpan(), ',');
-        while(tokenizer.TryGetNext(out _))
+        while (tokenizer.TryGetNext(out _))
         {
         }
         Assert.IsFalse(tokenizer.HasMore);
@@ -36,7 +36,7 @@ public class SpanTokenizerTests
         tokenizer.Reset("x,y,z".AsSpan());
         Assert.IsTrue(tokenizer.HasMore);
         int count = 0;
-        while(tokenizer.TryGetNext(out _))
+        while (tokenizer.TryGetNext(out _))
         {
             count++;
         }
@@ -68,7 +68,7 @@ public class SpanTokenizerTests
         SpanTokenizer tokenizer = new("a,b,c".AsSpan(), ',');
         List<string> tokens = [];
 
-        while(tokenizer.TryGetNext(out ReadOnlySpan<char> token))
+        while (tokenizer.TryGetNext(out ReadOnlySpan<char> token))
         {
             tokens.Add(token.ToString());
         }

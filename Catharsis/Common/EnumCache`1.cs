@@ -18,7 +18,7 @@ public static class EnumCache<TEnum> where TEnum : struct, Enum
     {
         Dictionary<string, TEnum> map = new(StringComparer.Ordinal);
 
-        foreach(TEnum value in Enum.GetValues<TEnum>())
+        foreach (TEnum value in Enum.GetValues<TEnum>())
         {
             map[value.ToString()] = value;
         }

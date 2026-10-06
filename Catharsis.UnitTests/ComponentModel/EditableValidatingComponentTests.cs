@@ -123,7 +123,7 @@ public sealed class EditableValidatingComponentTests
         bool raised = false;
         c.PropertyChanged += (s, e) =>
         {
-            if(e.PropertyName == "Name")
+            if (e.PropertyName == "Name")
             {
                 raised = true;
             }

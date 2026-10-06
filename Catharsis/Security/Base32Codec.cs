@@ -29,11 +29,11 @@ public static class Base32Codec
         int bitBuffer = 0;
         int bitCount = 0;
 
-        foreach(char c in trimmed)
+        foreach (char c in trimmed)
         {
             int index = Alphabet.IndexOf(char.ToUpperInvariant(c));
 
-            if(index < 0)
+            if (index < 0)
             {
                 throw new FormatException($"'{c}' is not a valid base32 character.");
             }
@@ -41,7 +41,7 @@ public static class Base32Codec
             bitBuffer = ((bitBuffer << 5) | index) & 0xFFF;
             bitCount += 5;
 
-            if(bitCount >= 8)
+            if (bitCount >= 8)
             {
                 bitCount -= 8;
                 output.Add((byte)((bitBuffer >> bitCount) & 0xFF));
@@ -58,7 +58,7 @@ public static class Base32Codec
     ///<returns>The base32-encoded, <c>=</c>-padded representation of <paramref name="data"/>.</returns>
     public static string Encode(ReadOnlySpan<byte> data)
     {
-        if(data.IsEmpty)
+        if (data.IsEmpty)
         {
             return string.Empty;
         }
@@ -67,24 +67,24 @@ public static class Base32Codec
         int bitBuffer = 0;
         int bitCount = 0;
 
-        foreach(byte b in data)
+        foreach (byte b in data)
         {
             bitBuffer = ((bitBuffer << 8) | b) & 0xFFF;
             bitCount += 8;
 
-            while(bitCount >= 5)
+            while (bitCount >= 5)
             {
                 bitCount -= 5;
                 result.Append(Alphabet[(bitBuffer >> bitCount) & 0x1F]);
             }
         }
 
-        if(bitCount > 0)
+        if (bitCount > 0)
         {
             result.Append(Alphabet[(bitBuffer << (5 - bitCount)) & 0x1F]);
         }
 
-        while((result.Length % 8) != 0)
+        while ((result.Length % 8) != 0)
         {
             result.Append('=');
         }

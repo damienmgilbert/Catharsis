@@ -32,7 +32,7 @@ public class MultimapTests
     public void AddRange_StoresMultipleValues()
     {
         Multimap<string, int> mm = [];
-        mm.AddRange("key", [ 1, 2, 3 ]);
+        mm.AddRange("key", [1, 2, 3]);
         Assert.AreEqual(3, mm.ValueCount);
     }
 

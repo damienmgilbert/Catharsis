@@ -128,7 +128,7 @@ public class RetryPolicyTests
         int result = policy.Execute(() =>
         {
             callCount++;
-            if(callCount < 3)
+            if (callCount < 3)
             {
                 throw new InvalidOperationException("transient");
             }
@@ -209,7 +209,7 @@ public class RetryPolicyTests
         int result = await policy.ExecuteAsync(ct =>
         {
             callCount++;
-            if(callCount < 3)
+            if (callCount < 3)
             {
                 throw new InvalidOperationException("transient");
             }
@@ -297,7 +297,7 @@ public class RetryPolicyTests
         int result = await policy.ExecuteValueAsync(ct =>
         {
             callCount++;
-            if(callCount < 3)
+            if (callCount < 3)
             {
                 throw new InvalidOperationException("transient");
             }
@@ -380,7 +380,7 @@ public class RetryPolicyTests
         int result = policy.Execute(() =>
         {
             callCount++;
-            if(callCount < 2)
+            if (callCount < 2)
             {
                 throw new InvalidOperationException("transient");
             }
@@ -426,7 +426,7 @@ public class RetryPolicyTests
         int result = policy.Execute(() =>
         {
             callCount++;
-            if(callCount < 2)
+            if (callCount < 2)
             {
                 throw new Exception("transient error");
             }

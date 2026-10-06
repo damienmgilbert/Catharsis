@@ -11,7 +11,7 @@ public class GeneratedCodeTests
     [TestMethod]
     public void OrderStatus_ToStringFast_MatchesToString()
     {
-        foreach(OrderStatus status in Enum.GetValues<OrderStatus>())
+        foreach (OrderStatus status in Enum.GetValues<OrderStatus>())
         {
             Assert.AreEqual(status.ToString(), status.ToStringFast());
         }

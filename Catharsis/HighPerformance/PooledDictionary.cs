@@ -91,7 +91,7 @@ public sealed class PooledDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

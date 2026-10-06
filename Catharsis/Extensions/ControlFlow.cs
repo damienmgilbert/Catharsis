@@ -1,4 +1,4 @@
-﻿namespace Catharsis.Extensions;
+namespace Catharsis.Extensions;
 
 ///<summary>
 ///Provides fluent flow-control extension methods for any type. These helpers allow conditional execution and loop-style
@@ -23,7 +23,7 @@ public static class ControlFlow
     ///</remarks>
     public static T DoUntil<T>(this T obj, Func<T, bool> condition, Action<T> action)
     {
-        while(!condition(obj))
+        while (!condition(obj))
         {
             action(obj);
         }
@@ -36,18 +36,18 @@ public static class ControlFlow
     ///</summary>
     public static async Task<T> DoUntilAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        while(!(await condition(obj, cancellation).ConfigureAwait(false)))
+        while (!(await condition(obj, cancellation).ConfigureAwait(false)))
         {
             cancellation.ThrowIfCancellationRequested();
             await action(obj, cancellation).ConfigureAwait(false);
@@ -61,23 +61,23 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask<T> DoUntilAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             // Consume the completed ValueTask exactly once; hand the slow path a fresh
             // instance rather than re-awaiting the one already read here.
-            if(conditionTask.Result)
+            if (conditionTask.Result)
             {
                 return ValueTask.FromResult(obj);
             }
@@ -89,11 +89,11 @@ public static class ControlFlow
 
         static async ValueTask<T> SlowPath(T obj, ValueTask<bool> initial, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation)
         {
-            if(!(await initial.ConfigureAwait(false)))
+            if (!(await initial.ConfigureAwait(false)))
             {
                 await action(obj, cancellation).ConfigureAwait(false);
 
-                while(!(await condition(obj, cancellation).ConfigureAwait(false)))
+                while (!(await condition(obj, cancellation).ConfigureAwait(false)))
                 {
                     cancellation.ThrowIfCancellationRequested();
                     await action(obj, cancellation).ConfigureAwait(false);
@@ -118,7 +118,7 @@ public static class ControlFlow
     ///</remarks>
     public static T DoWhile<T>(this T obj, Func<T, bool> condition, Action<T> action)
     {
-        while(condition(obj))
+        while (condition(obj))
         {
             action(obj);
         }
@@ -131,18 +131,18 @@ public static class ControlFlow
     ///</summary>
     public static async Task<T> DoWhileAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        while(await condition(obj, cancellation).ConfigureAwait(false))
+        while (await condition(obj, cancellation).ConfigureAwait(false))
         {
             cancellation.ThrowIfCancellationRequested();
             await action(obj, cancellation).ConfigureAwait(false);
@@ -156,23 +156,23 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask<T> DoWhileAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             // Consume the completed ValueTask exactly once; hand the slow path a fresh
             // instance rather than re-awaiting the one already read here.
-            if(!conditionTask.Result)
+            if (!conditionTask.Result)
             {
                 return ValueTask.FromResult(obj);
             }
@@ -184,11 +184,11 @@ public static class ControlFlow
 
         static async ValueTask<T> SlowPath(T obj, ValueTask<bool> initial, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation)
         {
-            if(await initial.ConfigureAwait(false))
+            if (await initial.ConfigureAwait(false))
             {
                 await action(obj, cancellation).ConfigureAwait(false);
 
-                while(await condition(obj, cancellation).ConfigureAwait(false))
+                while (await condition(obj, cancellation).ConfigureAwait(false))
                 {
                     cancellation.ThrowIfCancellationRequested();
                     await action(obj, cancellation).ConfigureAwait(false);
@@ -208,7 +208,7 @@ public static class ControlFlow
     ///<param name="action">The action to execute when the condition is satisfied.</param>
     public static void If<T>(this T obj, Func<T, bool> condition, Action<T> action)
     {
-        if(condition(obj))
+        if (condition(obj))
         {
             action(obj);
         }
@@ -219,18 +219,18 @@ public static class ControlFlow
     ///</summary>
     public static async Task IfAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        if(await condition(obj, cancellation).ConfigureAwait(false))
+        if (await condition(obj, cancellation).ConfigureAwait(false))
         {
             await action(obj, cancellation).ConfigureAwait(false);
         }
@@ -242,19 +242,19 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask IfAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return conditionTask.Result ? action(obj, cancellation) : ValueTask.CompletedTask;
         }
@@ -263,7 +263,7 @@ public static class ControlFlow
 
         static async ValueTask SlowPath(T obj, ValueTask<bool> conditionTask, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation)
         {
-            if(await conditionTask.ConfigureAwait(false))
+            if (await conditionTask.ConfigureAwait(false))
             {
                 await action(obj, cancellation).ConfigureAwait(false);
             }
@@ -281,10 +281,11 @@ public static class ControlFlow
     ///<param name="elseAction">The action to execute when the condition is <c>false</c>.</param>
     public static void IfElse<T>(this T obj, Func<T, bool> condition, Action<T> ifAction, Action<T> elseAction)
     {
-        if(condition(obj))
+        if (condition(obj))
         {
             ifAction(obj);
-        } else
+        }
+        else
         {
             elseAction(obj);
         }
@@ -296,26 +297,27 @@ public static class ControlFlow
     ///</summary>
     public static async Task IfElseAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task> ifAction, Func<T, CancellationToken, Task> elseAction, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(ifAction is null)
+        if (ifAction is null)
         {
             throw new ArgumentNullException(nameof(ifAction), "If action must not be null.");
         }
 
-        if(elseAction is null)
+        if (elseAction is null)
         {
             throw new ArgumentNullException(nameof(elseAction), "Else action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        if(await condition(obj, cancellation).ConfigureAwait(false))
+        if (await condition(obj, cancellation).ConfigureAwait(false))
         {
             await ifAction(obj, cancellation).ConfigureAwait(false);
-        } else
+        }
+        else
         {
             await elseAction(obj, cancellation).ConfigureAwait(false);
         }
@@ -327,24 +329,24 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask IfElseAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> ifAction, Func<T, CancellationToken, ValueTask> elseAction, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(ifAction is null)
+        if (ifAction is null)
         {
             throw new ArgumentNullException(nameof(ifAction), "If action must not be null.");
         }
 
-        if(elseAction is null)
+        if (elseAction is null)
         {
             throw new ArgumentNullException(nameof(elseAction), "Else action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return conditionTask.Result ? ifAction(obj, cancellation) : elseAction(obj, cancellation);
         }
@@ -353,10 +355,11 @@ public static class ControlFlow
 
         static async ValueTask SlowPath(T obj, ValueTask<bool> conditionTask, Func<T, CancellationToken, ValueTask> ifAction, Func<T, CancellationToken, ValueTask> elseAction, CancellationToken cancellation)
         {
-            if(await conditionTask.ConfigureAwait(false))
+            if (await conditionTask.ConfigureAwait(false))
             {
                 await ifAction(obj, cancellation).ConfigureAwait(false);
-            } else
+            }
+            else
             {
                 await elseAction(obj, cancellation).ConfigureAwait(false);
             }
@@ -373,7 +376,7 @@ public static class ControlFlow
     ///<param name="action">The action to execute when the condition is not satisfied.</param>
     public static void IfNot<T>(this T obj, Func<T, bool> condition, Action<T> action)
     {
-        if(!condition(obj))
+        if (!condition(obj))
         {
             action(obj);
         }
@@ -384,18 +387,18 @@ public static class ControlFlow
     ///</summary>
     public static async Task IfNotAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        if(!(await condition(obj, cancellation).ConfigureAwait(false)))
+        if (!(await condition(obj, cancellation).ConfigureAwait(false)))
         {
             await action(obj, cancellation).ConfigureAwait(false);
         }
@@ -407,19 +410,19 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask IfNotAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return (!conditionTask.Result) ? action(obj, cancellation) : ValueTask.CompletedTask;
         }
@@ -428,7 +431,7 @@ public static class ControlFlow
 
         static async ValueTask SlowPath(T obj, ValueTask<bool> conditionTask, Func<T, CancellationToken, ValueTask> action, CancellationToken cancellation)
         {
-            if(!(await conditionTask.ConfigureAwait(false)))
+            if (!(await conditionTask.ConfigureAwait(false)))
             {
                 await action(obj, cancellation).ConfigureAwait(false);
             }
@@ -453,12 +456,12 @@ public static class ControlFlow
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
     public static async Task<T> ReturnIfAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task<T>> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
@@ -471,19 +474,19 @@ public static class ControlFlow
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
     public static ValueTask<T> ReturnIfAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return conditionTask.Result ? action(obj, cancellation) : ValueTask.FromResult(obj);
         }
@@ -511,17 +514,17 @@ public static class ControlFlow
     ///</summary>
     public static async Task<T> ReturnIfElseAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task<T>> ifAction, Func<T, CancellationToken, Task<T>> elseAction, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(ifAction is null)
+        if (ifAction is null)
         {
             throw new ArgumentNullException(nameof(ifAction), "If action must not be null.");
         }
 
-        if(elseAction is null)
+        if (elseAction is null)
         {
             throw new ArgumentNullException(nameof(elseAction), "Else action must not be null.");
         }
@@ -536,24 +539,24 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask<T> ReturnIfElseAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask<T>> ifAction, Func<T, CancellationToken, ValueTask<T>> elseAction, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(ifAction is null)
+        if (ifAction is null)
         {
             throw new ArgumentNullException(nameof(ifAction), "If action must not be null.");
         }
 
-        if(elseAction is null)
+        if (elseAction is null)
         {
             throw new ArgumentNullException(nameof(elseAction), "Else action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return conditionTask.Result ? ifAction(obj, cancellation) : elseAction(obj, cancellation);
         }
@@ -582,12 +585,12 @@ public static class ControlFlow
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
     public static async Task<T> ReturnIfNotAsync<T>(this T obj, Func<T, CancellationToken, Task<bool>> condition, Func<T, CancellationToken, Task<T>> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
@@ -600,19 +603,19 @@ public static class ControlFlow
     ///Asynchronously returns the result of <paramref name="action"/> when <paramref name="condition"/> evaluates to
     public static ValueTask<T> ReturnIfNotAsync<T>(this T obj, Func<T, CancellationToken, ValueTask<bool>> condition, Func<T, CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default)
     {
-        if(condition is null)
+        if (condition is null)
         {
             throw new ArgumentNullException(nameof(condition), "Condition function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
         ValueTask<bool> conditionTask = condition(obj, cancellation);
-        if(conditionTask.IsCompletedSuccessfully)
+        if (conditionTask.IsCompletedSuccessfully)
         {
             return (!conditionTask.Result) ? action(obj, cancellation) : ValueTask.FromResult(obj);
         }
@@ -643,13 +646,13 @@ public static class ControlFlow
     ///</summary>
     public static Task<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, Task<T>> action, CancellationToken cancellation = default) where T : class?
     {
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
 
         cancellation.ThrowIfCancellationRequested();
-        if(obj is not null)
+        if (obj is not null)
         {
             return Task.FromResult(obj);
         }
@@ -663,7 +666,7 @@ public static class ControlFlow
     ///</summary>
     public static ValueTask<T> ReturnIfNullAsync<T>(this T obj, Func<CancellationToken, ValueTask<T>> action, CancellationToken cancellation = default) where T : class?
     {
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }

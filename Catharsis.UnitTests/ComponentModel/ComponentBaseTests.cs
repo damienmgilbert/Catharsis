@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Catharsis.ComponentModel;
 
 namespace Catharsis.UnitTests.ComponentModel;
@@ -799,7 +799,7 @@ public class ComponentBaseTests
 
         public void Add(IComponent? component, string? name)
         {
-            if(component is not null)
+            if (component is not null)
             {
                 _components.Add(component);
             }
@@ -813,7 +813,7 @@ public class ComponentBaseTests
         {
             RemoveCallCount++;
             LastRemovedComponent = component;
-            if(component is not null)
+            if (component is not null)
             {
                 _components.Remove(component);
             }
@@ -821,7 +821,7 @@ public class ComponentBaseTests
         #endregion
 
         #region Public properties
-        public ComponentCollection Components => new([ .. _components ]);
+        public ComponentCollection Components => new([.. _components]);
 
         public IComponent? LastRemovedComponent { get; private set; }
 

@@ -30,7 +30,7 @@ public sealed class ValidationContextFactory(IServiceProvider? serviceProvider =
     {
         ValidationContext context = (_serviceProvider is not null) ? (new ValidationContext(instance, _serviceProvider, _items)) : ((_items is not null) ? (new ValidationContext(instance, _items)) : (new ValidationContext(instance)));
 
-        if(memberName is not null)
+        if (memberName is not null)
         {
             context.MemberName = memberName;
         }

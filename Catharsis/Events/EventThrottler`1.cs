@@ -44,11 +44,11 @@ public sealed class EventThrottler<T>
     ///<returns><c>true</c> if the action ran; <c>false</c> if the call was throttled.</returns>
     public bool TryInvoke(T value)
     {
-        lock(_gate)
+        lock (_gate)
         {
             long now = _timeProvider.GetTimestamp();
 
-            if(_lastRun is long last && _timeProvider.GetElapsedTime(last, now) < _interval)
+            if (_lastRun is long last && _timeProvider.GetElapsedTime(last, now) < _interval)
             {
                 return false;
             }
@@ -65,7 +65,7 @@ public sealed class EventThrottler<T>
     ///</summary>
     public void Reset()
     {
-        lock(_gate)
+        lock (_gate)
         {
             _lastRun = null;
         }

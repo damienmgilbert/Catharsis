@@ -18,20 +18,20 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static int AddRange<T>(this ISet<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         int added = 0;
-        foreach(T item in items)
+        foreach (T item in items)
         {
-            if(source.Add(item))
+            if (source.Add(item))
             {
                 added++;
             }
@@ -50,20 +50,20 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static int RemoveRange<T>(this ISet<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         int removed = 0;
-        foreach(T item in items)
+        foreach (T item in items)
         {
-            if(source.Remove(item))
+            if (source.Remove(item))
             {
                 removed++;
             }
@@ -82,12 +82,12 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<T>(this HashSet<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -105,12 +105,12 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<T>(this SortedSet<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -128,18 +128,18 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ISet<T> ReplaceWith<T>(this ISet<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         source.Clear();
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Add(item);
         }
@@ -157,12 +157,12 @@ public static class SetExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static bool Toggle<T>(this ISet<T> source, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(!source.Remove(item))
+        if (!source.Remove(item))
         {
             source.Add(item);
             return true;

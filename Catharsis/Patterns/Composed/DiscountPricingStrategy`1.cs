@@ -26,7 +26,7 @@ public sealed class DiscountPricingStrategy<TItem> : IPricingStrategy<TItem>
     {
         ArgumentNullException.ThrowIfNull(inner);
 
-        if(discount < Percentage.FromFraction(0m) || discount > Percentage.FromFraction(1m))
+        if (discount < Percentage.FromFraction(0m) || discount > Percentage.FromFraction(1m))
         {
             throw new ArgumentOutOfRangeException(nameof(discount), discount, "Discount must be between 0% and 100%.");
         }

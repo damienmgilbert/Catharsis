@@ -59,7 +59,7 @@ public sealed class MinMaxHeap<T>
         ArgumentNullException.ThrowIfNull(items);
         _comparer = comparer ?? Comparer<T>.Default;
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             Add(item);
         }
@@ -138,7 +138,7 @@ public sealed class MinMaxHeap<T>
 
     void EnsureNotEmpty()
     {
-        if(_items.Count == 0)
+        if (_items.Count == 0)
         {
             throw new InvalidOperationException("The heap is empty.");
         }
@@ -150,15 +150,16 @@ public sealed class MinMaxHeap<T>
         _items[index] = _items[lastIndex];
         _items.RemoveAt(lastIndex);
 
-        if(index >= _items.Count)
+        if (index >= _items.Count)
         {
             return;
         }
 
-        if(IsMinLevel(index))
+        if (IsMinLevel(index))
         {
             PushDownMin(index);
-        } else
+        }
+        else
         {
             PushDownMax(index);
         }
@@ -182,7 +183,7 @@ public sealed class MinMaxHeap<T>
         int level = 0;
         long value = index + 1;
 
-        while(value > 1)
+        while (value > 1)
         {
             value >>= 1;
             level++;
@@ -195,30 +196,33 @@ public sealed class MinMaxHeap<T>
     #region Push up (used after Add)
     void PushUp(int i)
     {
-        if(i == 0)
+        if (i == 0)
         {
             return;
         }
 
         int parent = Parent(i);
 
-        if(IsMinLevel(i))
+        if (IsMinLevel(i))
         {
-            if(_comparer.Compare(_items[i], _items[parent]) > 0)
+            if (_comparer.Compare(_items[i], _items[parent]) > 0)
             {
                 Swap(i, parent);
                 PushUpMax(parent);
-            } else
+            }
+            else
             {
                 PushUpMin(i);
             }
-        } else
+        }
+        else
         {
-            if(_comparer.Compare(_items[i], _items[parent]) < 0)
+            if (_comparer.Compare(_items[i], _items[parent]) < 0)
             {
                 Swap(i, parent);
                 PushUpMin(parent);
-            } else
+            }
+            else
             {
                 PushUpMax(i);
             }
@@ -227,14 +231,14 @@ public sealed class MinMaxHeap<T>
 
     void PushUpMin(int i)
     {
-        if(!HasGrandparent(i))
+        if (!HasGrandparent(i))
         {
             return;
         }
 
         int grandparent = Parent(Parent(i));
 
-        if(_comparer.Compare(_items[i], _items[grandparent]) < 0)
+        if (_comparer.Compare(_items[i], _items[grandparent]) < 0)
         {
             Swap(i, grandparent);
             PushUpMin(grandparent);
@@ -243,14 +247,14 @@ public sealed class MinMaxHeap<T>
 
     void PushUpMax(int i)
     {
-        if(!HasGrandparent(i))
+        if (!HasGrandparent(i))
         {
             return;
         }
 
         int grandparent = Parent(Parent(i));
 
-        if(_comparer.Compare(_items[i], _items[grandparent]) > 0)
+        if (_comparer.Compare(_items[i], _items[grandparent]) > 0)
         {
             Swap(i, grandparent);
             PushUpMax(grandparent);
@@ -266,43 +270,43 @@ public sealed class MinMaxHeap<T>
         int left = LeftChild(i);
         int right = RightChild(i);
 
-        if(left < count)
+        if (left < count)
         {
             buffer[found++] = left;
         }
 
-        if(right < count)
+        if (right < count)
         {
             buffer[found++] = right;
         }
 
-        if(left < count)
+        if (left < count)
         {
             int leftLeft = LeftChild(left);
             int leftRight = RightChild(left);
 
-            if(leftLeft < count)
+            if (leftLeft < count)
             {
                 buffer[found++] = leftLeft;
             }
 
-            if(leftRight < count)
+            if (leftRight < count)
             {
                 buffer[found++] = leftRight;
             }
         }
 
-        if(right < count)
+        if (right < count)
         {
             int rightLeft = LeftChild(right);
             int rightRight = RightChild(right);
 
-            if(rightLeft < count)
+            if (rightLeft < count)
             {
                 buffer[found++] = rightLeft;
             }
 
-            if(rightRight < count)
+            if (rightRight < count)
             {
                 buffer[found++] = rightRight;
             }
@@ -316,36 +320,37 @@ public sealed class MinMaxHeap<T>
         Span<int> candidates = stackalloc int[6];
         int count = GetChildrenAndGrandchildren(i, candidates);
 
-        if(count == 0)
+        if (count == 0)
         {
             return;
         }
 
         int m = candidates[0];
 
-        for(int k = 1; k < count; k++)
+        for (int k = 1; k < count; k++)
         {
-            if(_comparer.Compare(_items[candidates[k]], _items[m]) < 0)
+            if (_comparer.Compare(_items[candidates[k]], _items[m]) < 0)
             {
                 m = candidates[k];
             }
         }
 
-        if(IsGrandchild(i, m))
+        if (IsGrandchild(i, m))
         {
-            if(_comparer.Compare(_items[m], _items[i]) < 0)
+            if (_comparer.Compare(_items[m], _items[i]) < 0)
             {
                 Swap(m, i);
                 int parentOfM = Parent(m);
 
-                if(_comparer.Compare(_items[m], _items[parentOfM]) > 0)
+                if (_comparer.Compare(_items[m], _items[parentOfM]) > 0)
                 {
                     Swap(m, parentOfM);
                 }
 
                 PushDownMin(m);
             }
-        } else if(_comparer.Compare(_items[m], _items[i]) < 0)
+        }
+        else if (_comparer.Compare(_items[m], _items[i]) < 0)
         {
             Swap(m, i);
         }
@@ -356,36 +361,37 @@ public sealed class MinMaxHeap<T>
         Span<int> candidates = stackalloc int[6];
         int count = GetChildrenAndGrandchildren(i, candidates);
 
-        if(count == 0)
+        if (count == 0)
         {
             return;
         }
 
         int m = candidates[0];
 
-        for(int k = 1; k < count; k++)
+        for (int k = 1; k < count; k++)
         {
-            if(_comparer.Compare(_items[candidates[k]], _items[m]) > 0)
+            if (_comparer.Compare(_items[candidates[k]], _items[m]) > 0)
             {
                 m = candidates[k];
             }
         }
 
-        if(IsGrandchild(i, m))
+        if (IsGrandchild(i, m))
         {
-            if(_comparer.Compare(_items[m], _items[i]) > 0)
+            if (_comparer.Compare(_items[m], _items[i]) > 0)
             {
                 Swap(m, i);
                 int parentOfM = Parent(m);
 
-                if(_comparer.Compare(_items[m], _items[parentOfM]) < 0)
+                if (_comparer.Compare(_items[m], _items[parentOfM]) < 0)
                 {
                     Swap(m, parentOfM);
                 }
 
                 PushDownMax(m);
             }
-        } else if(_comparer.Compare(_items[m], _items[i]) > 0)
+        }
+        else if (_comparer.Compare(_items[m], _items[i]) > 0)
         {
             Swap(m, i);
         }

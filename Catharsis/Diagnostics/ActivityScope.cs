@@ -31,7 +31,7 @@ public sealed class ActivityScope : IDisposable
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        if(Activity is null)
+        if (Activity is null)
         {
             return;
         }

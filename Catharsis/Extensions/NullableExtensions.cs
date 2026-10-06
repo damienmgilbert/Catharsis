@@ -19,7 +19,7 @@ public static class NullableExtensions
     ///<exception cref="ArgumentNullException"><paramref name="map"/> is <c>null</c>.</exception>
     public static TResult? Map<T, TResult>(this T? value, Func<T, TResult> map) where T : struct where TResult : struct
     {
-        if(map is null)
+        if (map is null)
         {
             throw new ArgumentNullException(nameof(map), "Map function must not be null.");
         }
@@ -39,12 +39,12 @@ public static class NullableExtensions
     ///<exception cref="ArgumentNullException"><paramref name="some"/> or <paramref name="none"/> is <c>null</c>.</exception>
     public static TResult Match<T, TResult>(this T? value, Func<T, TResult> some, Func<TResult> none) where T : struct
     {
-        if(some is null)
+        if (some is null)
         {
             throw new ArgumentNullException(nameof(some), "Some function must not be null.");
         }
 
-        if(none is null)
+        if (none is null)
         {
             throw new ArgumentNullException(nameof(none), "None function must not be null.");
         }

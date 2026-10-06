@@ -10,12 +10,12 @@ public sealed partial class Order
     ///<exception cref="InvalidOperationException">The order is not a draft, or has no lines.</exception>
     public void Confirm()
     {
-        if(Status != OrderStatus.Draft)
+        if (Status != OrderStatus.Draft)
         {
             throw new InvalidOperationException($"Only a draft order can be confirmed, but this one is {Status.ToStringFast()}.");
         }
 
-        if(_lines.Count == 0)
+        if (_lines.Count == 0)
         {
             throw new InvalidOperationException("An order with no lines cannot be confirmed.");
         }
@@ -34,7 +34,7 @@ public sealed partial class Order
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(reason);
 
-        if(Status == OrderStatus.Cancelled)
+        if (Status == OrderStatus.Cancelled)
         {
             throw new InvalidOperationException("The order is already cancelled.");
         }

@@ -18,7 +18,7 @@ public class BufferProcessingServiceTests
         ILogger<BufferProcessingService> logger = NullLoggerFactory.Instance.CreateLogger<BufferProcessingService>();
         using BufferProcessingService service = new(new EchoProcessor(), logger);
 
-        byte[] result = service.Process([ 1, 2, 3 ]);
+        byte[] result = service.Process([1, 2, 3]);
 
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, result);
         Assert.AreEqual(3, service.TotalBytesProcessed);

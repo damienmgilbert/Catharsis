@@ -34,7 +34,7 @@ public sealed class SseClientSubscriber<T>(HttpClient httpClient, Uri requestUri
         HttpRequestMessage request = new(HttpMethod.Get, _requestUri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
 
-        if(_lastEventId is not null)
+        if (_lastEventId is not null)
         {
             request.Headers.Add("Last-Event-ID", _lastEventId);
         }
@@ -54,37 +54,38 @@ public sealed class SseClientSubscriber<T>(HttpClient httpClient, Uri requestUri
     ///<returns>An asynchronous sequence of every event received, across any number of reconnects.</returns>
     public async IAsyncEnumerable<SseItem<T>> SubscribeAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        while(!cancellationToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             Stream stream = await _retryPolicy.ExecuteAsync(OpenStreamAsync, cancellationToken).ConfigureAwait(false);
 
-            await using(stream.ConfigureAwait(false))
+            await using (stream.ConfigureAwait(false))
             {
                 SseParser<T> parser = SseParser.Create(stream, _itemParser);
                 IAsyncEnumerator<SseItem<T>> enumerator = parser.EnumerateAsync(cancellationToken).GetAsyncEnumerator(cancellationToken);
 
-                await using(enumerator.ConfigureAwait(false))
+                await using (enumerator.ConfigureAwait(false))
                 {
-                    while(true)
+                    while (true)
                     {
                         bool moved;
 
                         try
                         {
                             moved = await enumerator.MoveNextAsync().ConfigureAwait(false);
-                        } catch(IOException)
+                        }
+                        catch (IOException)
                         {
                             break;
                         }
 
-                        if(!moved)
+                        if (!moved)
                         {
                             break;
                         }
 
                         SseItem<T> item = enumerator.Current;
 
-                        if(item.EventId is not null)
+                        if (item.EventId is not null)
                         {
                             _lastEventId = item.EventId;
                         }

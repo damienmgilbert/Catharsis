@@ -24,9 +24,9 @@ public sealed class AsyncAutoResetEvent(bool initialState = false)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(_signaled)
+            if (_signaled)
             {
                 _signaled = false;
                 return Task.CompletedTask;
@@ -35,7 +35,7 @@ public sealed class AsyncAutoResetEvent(bool initialState = false)
             TaskCompletionSource tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
             _waiters.Enqueue(tcs);
 
-            if(cancellationToken.CanBeCanceled)
+            if (cancellationToken.CanBeCanceled)
             {
                 CancellationTokenRegistration registration = cancellationToken.Register(static state => ((TaskCompletionSource)state!).TrySetCanceled(), tcs);
                 tcs.Task.ContinueWith(static (_, state) => ((CancellationTokenRegistration)state!).Dispose(), registration, TaskScheduler.Default);
@@ -51,13 +51,13 @@ public sealed class AsyncAutoResetEvent(bool initialState = false)
     ///</summary>
     public void Set()
     {
-        while(true)
+        while (true)
         {
             TaskCompletionSource? toRelease = null;
 
-            lock(_gate)
+            lock (_gate)
             {
-                if(_waiters.Count > 0)
+                if (_waiters.Count > 0)
                 {
                     toRelease = _waiters.Dequeue();
                 }
@@ -68,7 +68,7 @@ public sealed class AsyncAutoResetEvent(bool initialState = false)
                 }
             }
 
-            if(toRelease.TrySetResult())
+            if (toRelease.TrySetResult())
             {
                 return;
             }

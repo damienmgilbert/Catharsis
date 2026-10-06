@@ -11,14 +11,14 @@ public static class SequenceCartesianProduct
     {
         IReadOnlyList<T>[] materialized = [.. sequences.Select(static s => (IReadOnlyList<T>)[.. s])];
 
-        if(materialized.Length == 0)
+        if (materialized.Length == 0)
         {
             yield break;
         }
 
-        foreach(IReadOnlyList<T> sequence in materialized)
+        foreach (IReadOnlyList<T> sequence in materialized)
         {
-            if(sequence.Count == 0)
+            if (sequence.Count == 0)
             {
                 yield break;
             }
@@ -26,11 +26,11 @@ public static class SequenceCartesianProduct
 
         int[] indices = new int[materialized.Length];
 
-        while(true)
+        while (true)
         {
             T[] combination = new T[materialized.Length];
 
-            for(int i = 0; i < materialized.Length; i++)
+            for (int i = 0; i < materialized.Length; i++)
             {
                 combination[i] = materialized[i][indices[i]];
             }
@@ -39,11 +39,11 @@ public static class SequenceCartesianProduct
 
             int pointer = materialized.Length - 1;
 
-            while(pointer >= 0)
+            while (pointer >= 0)
             {
                 indices[pointer]++;
 
-                if(indices[pointer] < materialized[pointer].Count)
+                if (indices[pointer] < materialized[pointer].Count)
                 {
                     break;
                 }
@@ -52,7 +52,7 @@ public static class SequenceCartesianProduct
                 pointer--;
             }
 
-            if(pointer < 0)
+            if (pointer < 0)
             {
                 yield break;
             }

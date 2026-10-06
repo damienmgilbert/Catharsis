@@ -26,7 +26,7 @@ public class HighThroughputLoggingPipelineTests
         ILogger logger = NullLoggerFactory.Instance.CreateLogger("test");
         HighThroughputLoggingPipeline pipeline = new(logger, flushThreshold: 3);
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             pipeline.Log(LogLevel.Information, $"msg {i}");
         }

@@ -31,7 +31,7 @@ public sealed class DynamicComponentProxy(object component) : DynamicObject
 
         PropertyInfo? property = _component.GetType().GetProperty(binder.Name, BindingFlags.Public | BindingFlags.Instance);
 
-        if((property is null) || !property.CanRead)
+        if ((property is null) || !property.CanRead)
         {
             result = null;
             return false;
@@ -48,7 +48,7 @@ public sealed class DynamicComponentProxy(object component) : DynamicObject
 
         PropertyInfo? property = _component.GetType().GetProperty(binder.Name, BindingFlags.Public | BindingFlags.Instance);
 
-        if((property is null) || !property.CanWrite)
+        if ((property is null) || !property.CanWrite)
         {
             return false;
         }

@@ -33,7 +33,7 @@ public sealed class HttpClientMetricsListener : IDisposable
         {
             InstrumentPublished = (instrument, listener) =>
             {
-                if(instrument.Meter.Name == HttpClientMeterName)
+                if (instrument.Meter.Name == HttpClientMeterName)
                 {
                     listener.EnableMeasurementEvents(instrument, this);
                 }
@@ -57,7 +57,7 @@ public sealed class HttpClientMetricsListener : IDisposable
     ///</summary>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }

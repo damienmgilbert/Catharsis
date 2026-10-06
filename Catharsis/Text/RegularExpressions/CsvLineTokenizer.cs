@@ -20,7 +20,7 @@ public sealed class CsvLineTokenizer(char delimiter = ',', char quote = '"')
     ///<exception cref="ArgumentNullException"><paramref name="line"/> is <c>null</c>.</exception>
     public IReadOnlyList<string> Tokenize(string line)
     {
-        if(line is null)
+        if (line is null)
         {
             throw new ArgumentNullException(nameof(line), "Line must not be null.");
         }
@@ -30,15 +30,15 @@ public sealed class CsvLineTokenizer(char delimiter = ',', char quote = '"')
         bool inQuotes = false;
         int index = 0;
 
-        while(index < line.Length)
+        while (index < line.Length)
         {
             char c = line[index];
 
-            if(inQuotes)
+            if (inQuotes)
             {
-                if(c == quote)
+                if (c == quote)
                 {
-                    if(((index + 1) < line.Length) && (line[index + 1] == quote))
+                    if (((index + 1) < line.Length) && (line[index + 1] == quote))
                     {
                         current.Append(quote);
                         index += 2;
@@ -52,16 +52,19 @@ public sealed class CsvLineTokenizer(char delimiter = ',', char quote = '"')
 
                 current.Append(c);
                 index++;
-            } else if(c == quote)
+            }
+            else if (c == quote)
             {
                 inQuotes = true;
                 index++;
-            } else if(c == delimiter)
+            }
+            else if (c == delimiter)
             {
                 fields.Add(current.ToString());
                 current.Clear();
                 index++;
-            } else
+            }
+            else
             {
                 current.Append(c);
                 index++;

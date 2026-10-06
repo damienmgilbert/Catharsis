@@ -30,7 +30,7 @@ public static class DebugOnlyValidator<T>
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        if(!predicate(value))
+        if (!predicate(value))
         {
             throw new InvalidOperationException(message ?? "Debug-only validation failed.");
         }

@@ -28,7 +28,7 @@ public sealed class ThrottledService<TResult>(Func<CancellationToken, Task<TResu
     ///<returns><c>true</c> if a token was available and the delegate was invoked; otherwise <c>false</c>.</returns>
     public bool TryInvoke(CancellationToken cancellationToken, out Task<TResult>? result)
     {
-        if(_limiter.TryAcquire())
+        if (_limiter.TryAcquire())
         {
             result = _action(cancellationToken);
             return true;

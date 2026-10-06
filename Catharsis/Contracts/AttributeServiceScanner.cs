@@ -38,18 +38,18 @@ public static class AttributeServiceScanner
 
         List<ServiceRegistration> found = [];
 
-        foreach(Type type in types.Where(IsConcreteClass))
+        foreach (Type type in types.Where(IsConcreteClass))
         {
             ServiceAttribute? attribute = type.GetCustomAttribute<ServiceAttribute>(inherit: false);
 
-            if(attribute is null)
+            if (attribute is null)
             {
                 continue;
             }
 
             Type serviceType = attribute.ServiceType ?? type;
 
-            if(!serviceType.IsAssignableFrom(type))
+            if (!serviceType.IsAssignableFrom(type))
             {
                 throw new InvalidOperationException($"{type.FullName} is declared as a {serviceType.FullName} service but does not implement it.");
             }
@@ -87,16 +87,16 @@ public static class AttributeServiceScanner
 
         List<DecoratorRegistration> found = [];
 
-        foreach(Type type in types.Where(IsConcreteClass))
+        foreach (Type type in types.Where(IsConcreteClass))
         {
             DecoratorForAttribute? attribute = type.GetCustomAttribute<DecoratorForAttribute>(inherit: false);
 
-            if(attribute is null)
+            if (attribute is null)
             {
                 continue;
             }
 
-            if(!attribute.ServiceType.IsAssignableFrom(type))
+            if (!attribute.ServiceType.IsAssignableFrom(type))
             {
                 throw new InvalidOperationException($"{type.FullName} is declared as a decorator of {attribute.ServiceType.FullName} but does not implement it.");
             }
@@ -117,7 +117,7 @@ public static class AttributeServiceScanner
         {
             return assembly.GetTypes();
         }
-        catch(ReflectionTypeLoadException ex)
+        catch (ReflectionTypeLoadException ex)
         {
             return [.. ex.Types.OfType<Type>()];
         }

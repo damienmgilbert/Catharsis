@@ -26,7 +26,7 @@ public sealed class EnumRangeAttribute : ValidationAttribute
     {
         ArgumentNullException.ThrowIfNull(enumType);
 
-        if(!enumType.IsEnum)
+        if (!enumType.IsEnum)
         {
             throw new ArgumentException("The specified type must be an enum type.", nameof(enumType));
         }
@@ -39,7 +39,7 @@ public sealed class EnumRangeAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
@@ -49,19 +49,20 @@ public sealed class EnumRangeAttribute : ValidationAttribute
         try
         {
             isValid = Enum.IsDefined(EnumType, value) || IsFlagsCombinationDefined(value);
-        } catch(ArgumentException)
+        }
+        catch (ArgumentException)
         {
             isValid = false;
         }
 
-        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+        return isValid ? ValidationResult.Success : new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
     }
     #endregion
 
     #region Private methods
     bool IsFlagsCombinationDefined(object value)
     {
-        if(Attribute.GetCustomAttribute(EnumType, typeof(FlagsAttribute)) is null)
+        if (Attribute.GetCustomAttribute(EnumType, typeof(FlagsAttribute)) is null)
         {
             return false;
         }
@@ -71,13 +72,14 @@ public sealed class EnumRangeAttribute : ValidationAttribute
             long numericValue = Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture);
             long allDefinedBits = 0;
 
-            foreach(object definedValue in Enum.GetValues(EnumType))
+            foreach (object definedValue in Enum.GetValues(EnumType))
             {
                 allDefinedBits |= Convert.ToInt64(definedValue, System.Globalization.CultureInfo.InvariantCulture);
             }
 
             return (numericValue & ~allDefinedBits) == 0;
-        } catch(Exception exception) when(exception is InvalidCastException or FormatException or OverflowException)
+        }
+        catch (Exception exception) when (exception is InvalidCastException or FormatException or OverflowException)
         {
             return false;
         }

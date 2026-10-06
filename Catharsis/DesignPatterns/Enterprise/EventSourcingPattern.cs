@@ -18,19 +18,19 @@ public class EventSourcingPattern
     ///<returns>The state resulting from replaying every event in <paramref name="events"/> onto <paramref name="initialState"/>.</returns>
     public static TState Replay<TState, TEvent>(TState initialState, IEnumerable<TEvent> events, Func<TState, TEvent, TState> apply)
     {
-        if(events is null)
+        if (events is null)
         {
             throw new ArgumentNullException(nameof(events), "Events must not be null.");
         }
 
-        if(apply is null)
+        if (apply is null)
         {
             throw new ArgumentNullException(nameof(apply), "Apply function must not be null.");
         }
 
         TState state = initialState;
 
-        foreach(TEvent @event in events)
+        foreach (TEvent @event in events)
         {
             state = apply(state, @event);
         }

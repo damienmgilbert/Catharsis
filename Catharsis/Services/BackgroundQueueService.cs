@@ -42,17 +42,19 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
     {
         try
         {
-            await foreach(Func<CancellationToken, Task> workItem in _channel.Reader.ReadAllAsync(stoppingToken).ConfigureAwait(false))
+            await foreach (Func<CancellationToken, Task> workItem in _channel.Reader.ReadAllAsync(stoppingToken).ConfigureAwait(false))
             {
                 try
                 {
                     await workItem(stoppingToken).ConfigureAwait(false);
-                } catch(Exception exception) when(exception is not OperationCanceledException)
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
                     LogWorkItemFailed(exception);
                 }
             }
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
     }
@@ -80,7 +82,7 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -93,7 +95,8 @@ public sealed partial class BackgroundQueueService : IAsyncDisposable
         try
         {
             await _processingLoop.ConfigureAwait(false);
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
 

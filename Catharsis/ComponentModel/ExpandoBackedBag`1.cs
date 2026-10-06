@@ -35,9 +35,9 @@ public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
     ///<inheritdoc/>
     public IEnumerator<KeyValuePair<string, T>> GetEnumerator()
     {
-        foreach(KeyValuePair<string, object?> entry in Storage)
+        foreach (KeyValuePair<string, object?> entry in Storage)
         {
-            if(entry.Value is T typed)
+            if (entry.Value is T typed)
             {
                 yield return new KeyValuePair<string, T>(entry.Key, typed);
             }
@@ -69,7 +69,7 @@ public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(Storage.TryGetValue(key, out object? raw) && (raw is T typed))
+        if (Storage.TryGetValue(key, out object? raw) && (raw is T typed))
         {
             value = typed;
             return true;
@@ -103,7 +103,7 @@ public sealed class ExpandoBackedBag<T> : IEnumerable<KeyValuePair<string, T>>
         {
             ArgumentNullException.ThrowIfNull(key);
 
-            if(!TryGetValue(key, out T? value))
+            if (!TryGetValue(key, out T? value))
             {
                 throw new KeyNotFoundException($"The key '{key}' was not found.");
             }

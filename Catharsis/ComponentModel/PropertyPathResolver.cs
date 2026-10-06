@@ -31,9 +31,9 @@ public static class PropertyPathResolver
 
         object? current = source;
 
-        foreach(string segment in path.Split('.'))
+        foreach (string segment in path.Split('.'))
         {
-            if(current is null)
+            if (current is null)
             {
                 return null;
             }
@@ -61,11 +61,11 @@ public static class PropertyPathResolver
         string[] segments = path.Split('.');
         object current = source;
 
-        for(int index = 0; index < (segments.Length - 1); index++)
+        for (int index = 0; index < (segments.Length - 1); index++)
         {
             object? next = GetPropertyOrThrow(current, segments[index], path).GetValue(current);
 
-            if(next is null)
+            if (next is null)
             {
                 throw new InvalidOperationException($"Cannot traverse through a null value at '{segments[index]}'.");
             }

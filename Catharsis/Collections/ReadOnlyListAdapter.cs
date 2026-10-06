@@ -22,7 +22,7 @@ public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is <c>null</c>.</exception>
     public ReadOnlyListAdapter(IList<T> source)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
@@ -44,22 +44,22 @@ public sealed class ReadOnlyListAdapter<T> : IReadOnlyList<T>, ICollection
     ///<inheritdoc/>
     void ICollection.CopyTo(Array array, int index)
     {
-        if(array is null)
+        if (array is null)
         {
             throw new ArgumentNullException(nameof(array), "Destination array must not be null.");
         }
 
-        if(index < 0)
+        if (index < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index must not be negative.");
         }
 
-        if(array.Length - index < _source.Count)
+        if (array.Length - index < _source.Count)
         {
             throw new ArgumentException("The destination array does not have enough space.", nameof(array));
         }
 
-        for(int i = 0; i < _source.Count; i++)
+        for (int i = 0; i < _source.Count; i++)
         {
             array.SetValue(_source[i], index + i);
         }

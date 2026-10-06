@@ -25,19 +25,20 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
     {
         try
         {
-            using(client)
+            using (client)
             {
                 await using NetworkStream stream = client.GetStream();
                 using StreamReader reader = new(stream, Encoding.UTF8);
                 await using StreamWriter writer = new(stream, Encoding.UTF8) { AutoFlush = true };
 
                 string? line;
-                while((line = await reader.ReadLineAsync(stoppingToken).ConfigureAwait(false)) is not null)
+                while ((line = await reader.ReadLineAsync(stoppingToken).ConfigureAwait(false)) is not null)
                 {
                     await writer.WriteLineAsync(line.AsMemory(), stoppingToken).ConfigureAwait(false);
                 }
             }
-        } catch(Exception exception) when(exception is IOException or SocketException or ObjectDisposedException or OperationCanceledException)
+        }
+        catch (Exception exception) when (exception is IOException or SocketException or ObjectDisposedException or OperationCanceledException)
         {
         }
     }
@@ -46,12 +47,13 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
     {
         try
         {
-            while(!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 TcpClient client = await _listener.AcceptTcpClientAsync(stoppingToken).ConfigureAwait(false);
                 _ = HandleClientAsync(client, stoppingToken);
             }
-        } catch(Exception exception) when(exception is OperationCanceledException or ObjectDisposedException or SocketException)
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or ObjectDisposedException or SocketException)
         {
         }
     }
@@ -67,7 +69,7 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_started)
+        if (_started)
         {
             throw new InvalidOperationException("The server has already been started.");
         }
@@ -82,7 +84,7 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -92,12 +94,13 @@ public sealed class TcpEchoServer(IPAddress? address = null, int port = 0) : IAs
         await _stoppingSource.CancelAsync().ConfigureAwait(false);
         _listener.Stop();
 
-        if(_acceptLoop is not null)
+        if (_acceptLoop is not null)
         {
             try
             {
                 await _acceptLoop.ConfigureAwait(false);
-            } catch(OperationCanceledException)
+            }
+            catch (OperationCanceledException)
             {
             }
         }

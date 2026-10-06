@@ -18,9 +18,9 @@ public sealed class ComponentEventAggregator
     #region Private methods
     void Unsubscribe<TEvent>(Action<TEvent> handler)
     {
-        lock(_gate)
+        lock (_gate)
         {
-            if(_subscribers.TryGetValue(typeof(TEvent), out List<Delegate>? handlers))
+            if (_subscribers.TryGetValue(typeof(TEvent), out List<Delegate>? handlers))
             {
                 handlers.Remove(handler);
             }
@@ -42,9 +42,9 @@ public sealed class ComponentEventAggregator
 
         List<Action<TEvent>> snapshot;
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(!_subscribers.TryGetValue(typeof(TEvent), out List<Delegate>? handlers))
+            if (!_subscribers.TryGetValue(typeof(TEvent), out List<Delegate>? handlers))
             {
                 return;
             }
@@ -52,7 +52,7 @@ public sealed class ComponentEventAggregator
             snapshot = [.. handlers.Cast<Action<TEvent>>()];
         }
 
-        foreach(Action<TEvent> handler in snapshot)
+        foreach (Action<TEvent> handler in snapshot)
         {
             handler(@event);
         }
@@ -69,7 +69,7 @@ public sealed class ComponentEventAggregator
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        lock(_gate)
+        lock (_gate)
         {
             List<Delegate> handlers = _subscribers.GetOrAdd(typeof(TEvent), static _ => []);
             handlers.Add(handler);

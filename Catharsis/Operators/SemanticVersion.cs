@@ -67,7 +67,7 @@ public readonly struct SemanticVersion : IEquatable<SemanticVersion>, IComparabl
     {
         version = default;
 
-        if(string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(text))
         {
             return false;
         }
@@ -76,12 +76,12 @@ public readonly struct SemanticVersion : IEquatable<SemanticVersion>, IComparabl
         string? prerelease = null;
         int dash = text.IndexOf('-', StringComparison.Ordinal);
 
-        if(dash >= 0)
+        if (dash >= 0)
         {
             core = text[..dash];
             prerelease = text[(dash + 1)..];
 
-            if(prerelease.Length == 0)
+            if (prerelease.Length == 0)
             {
                 return false;
             }
@@ -89,7 +89,7 @@ public readonly struct SemanticVersion : IEquatable<SemanticVersion>, IComparabl
 
         string[] parts = core.Split('.');
 
-        if(parts.Length != 3
+        if (parts.Length != 3
             || !int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out int major)
             || !int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out int minor)
             || !int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out int patch))
@@ -115,22 +115,22 @@ public readonly struct SemanticVersion : IEquatable<SemanticVersion>, IComparabl
     {
         int result = Major.CompareTo(other.Major);
 
-        if(result == 0)
+        if (result == 0)
         {
             result = Minor.CompareTo(other.Minor);
         }
 
-        if(result == 0)
+        if (result == 0)
         {
             result = Patch.CompareTo(other.Patch);
         }
 
-        if(result != 0)
+        if (result != 0)
         {
             return result;
         }
 
-        if(PrereleaseLabel.Length == 0)
+        if (PrereleaseLabel.Length == 0)
         {
             return other.PrereleaseLabel.Length == 0 ? 0 : 1;
         }

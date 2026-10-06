@@ -69,16 +69,17 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
 
         bool isValid = Validator.TryValidateObject(instance, context, results, validateAllProperties: true);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             List<string> members = [.. result.MemberNames];
 
-            if(members.Count == 0)
+            if (members.Count == 0)
             {
                 _errors.AddError(string.Empty, new ErrorInfo(result.ErrorMessage ?? "Validation failed."));
-            } else
+            }
+            else
             {
-                foreach(string member in members)
+                foreach (string member in members)
                 {
                     _errors.AddError(member, new ErrorInfo(result.ErrorMessage ?? "Validation failed.", PropertyName: member));
                 }
@@ -111,7 +112,7 @@ public sealed class DataAnnotationValidator : INotifyDataErrorInfo
 
         bool isValid = Validator.TryValidateProperty(value, context, results);
 
-        foreach(ValidationResult result in results)
+        foreach (ValidationResult result in results)
         {
             _errors.AddError(propertyName, new ErrorInfo(result.ErrorMessage ?? "Validation failed.", PropertyName: propertyName));
         }

@@ -164,7 +164,7 @@ public class CommandPatternTests
         // Act
         CommandPattern.Command(obj, execute, undo, undoHistory);
         // Assert
-        if(provideHistory)
+        if (provideHistory)
         {
             Assert.HasCount(expectedHistoryCount, undoHistory!);
         }

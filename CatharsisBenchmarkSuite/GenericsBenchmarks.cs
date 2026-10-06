@@ -22,7 +22,7 @@ public class ExpressionMapperBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             PersonDto dto = new() { Name = Source.Name, Age = Source.Age, City = Source.City };
             sum += dto.Age;
@@ -36,7 +36,7 @@ public class ExpressionMapperBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += Compiled(Source).Age;
         }
@@ -49,11 +49,11 @@ public class ExpressionMapperBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             PersonDto dto = new();
 
-            foreach(PropertyInfo destination in DestinationProperties)
+            foreach (PropertyInfo destination in DestinationProperties)
             {
                 PropertyInfo? match = Array.Find(SourceProperties, p => p.Name == destination.Name);
                 destination.SetValue(dto, match?.GetValue(Source));
@@ -97,7 +97,7 @@ public class ExpressionCacheBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += (int)Property.GetValue(Instance)!;
         }
@@ -111,7 +111,7 @@ public class ExpressionCacheBenchmarks
         Func<Sample, int> getter = _cache.GetGetter<Sample, int>(nameof(Sample.Number));
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += getter(Instance);
         }
@@ -141,7 +141,7 @@ public class EnumMapBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += _dictionary[(Level)(i % 3)];
         }
@@ -154,7 +154,7 @@ public class EnumMapBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += _map[(Level)(i % 3)];
         }

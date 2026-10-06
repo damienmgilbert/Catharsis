@@ -17,7 +17,7 @@ public class Adapter
     ///<returns>The adapted representation of <paramref name="obj"/>.</returns>
     public static TResult Adapt<T, TResult>(T obj, Func<T, TResult> adapter)
     {
-        if(adapter is null)
+        if (adapter is null)
         {
             throw new ArgumentNullException(nameof(adapter), "Adapter function must not be null.");
         }

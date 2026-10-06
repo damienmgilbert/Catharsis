@@ -21,7 +21,7 @@ public readonly struct NumericRange<T> : IEquatable<NumericRange<T>>
     ///<exception cref="ArgumentException"><paramref name="end"/> is less than <paramref name="start"/>.</exception>
     public NumericRange(T start, T end)
     {
-        if(end < start)
+        if (end < start)
         {
             throw new ArgumentException("End must not be less than start.", nameof(end));
         }
@@ -55,7 +55,7 @@ public readonly struct NumericRange<T> : IEquatable<NumericRange<T>>
     ///<returns><c>true</c> if the ranges overlap.</returns>
     public bool TryIntersect(NumericRange<T> other, out NumericRange<T> result)
     {
-        if(!Overlaps(other))
+        if (!Overlaps(other))
         {
             result = default;
             return false;
@@ -77,7 +77,7 @@ public readonly struct NumericRange<T> : IEquatable<NumericRange<T>>
     ///<exception cref="InvalidOperationException">This range has zero length.</exception>
     public T Remap(T value, NumericRange<T> target)
     {
-        if(Length == T.Zero)
+        if (Length == T.Zero)
         {
             throw new InvalidOperationException("Cannot remap from a zero-length range.");
         }
@@ -123,7 +123,7 @@ public readonly struct NumericRange<T> : IEquatable<NumericRange<T>>
     #region Private methods
     IEnumerable<T> StepIterator(T step)
     {
-        for(T current = Start; current <= End; current += step)
+        for (T current = Start; current <= End; current += step)
         {
             yield return current;
         }

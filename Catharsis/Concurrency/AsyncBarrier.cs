@@ -22,7 +22,7 @@ public sealed class AsyncBarrier
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="participantCount"/> is less than 1.</exception>
     public AsyncBarrier(int participantCount)
     {
-        if(participantCount < 1)
+        if (participantCount < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(participantCount), "Participant count must be at least 1.");
         }
@@ -41,12 +41,12 @@ public sealed class AsyncBarrier
     {
         TaskCompletionSource phase;
 
-        lock(_gate)
+        lock (_gate)
         {
             phase = _phase;
             _remaining--;
 
-            if(_remaining == 0)
+            if (_remaining == 0)
             {
                 _remaining = _participantCount;
                 _phase = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

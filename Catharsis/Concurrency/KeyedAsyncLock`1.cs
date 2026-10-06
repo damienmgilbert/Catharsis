@@ -66,9 +66,9 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        lock(_gate)
+        lock (_gate)
         {
-            if(!_entries.TryGetValue(key, out Entry? entry))
+            if (!_entries.TryGetValue(key, out Entry? entry))
             {
                 entry = new Entry();
                 _entries.Add(key, entry);
@@ -81,11 +81,11 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
 
     void Release(TKey key, Entry entry)
     {
-        lock(_gate)
+        lock (_gate)
         {
             entry.RefCount--;
 
-            if(entry.RefCount == 0 && _entries.TryGetValue(key, out Entry? current) && current == entry)
+            if (entry.RefCount == 0 && _entries.TryGetValue(key, out Entry? current) && current == entry)
             {
                 _entries.Remove(key);
                 entry.Semaphore.Dispose();
@@ -102,7 +102,7 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
     {
         get
         {
-            lock(_gate)
+            lock (_gate)
             {
                 return _entries.Count;
             }
@@ -128,7 +128,7 @@ public sealed class KeyedAsyncLock<TKey>(IEqualityComparer<TKey>? comparer = nul
         #region Public methods
         public void Dispose()
         {
-            if(Interlocked.Exchange(ref _released, 1) == 0)
+            if (Interlocked.Exchange(ref _released, 1) == 0)
             {
                 entry.Semaphore.Release();
                 owner.Release(key, entry);

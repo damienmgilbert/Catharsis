@@ -87,7 +87,7 @@ public class DecoratorTests
         int obj = 0;
         Func<int, int> incrementor = static x => x + 1;
         Func<int, int>[] decorators = new Func<int, int>[100];
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             decorators[i] = incrementor;
         }

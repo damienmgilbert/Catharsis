@@ -61,10 +61,11 @@ public sealed class SpanJsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterO
     ///<param name="propertyName">The property name, or <c>null</c> to start an unnamed (top-level or array-element) array.</param>
     public void WriteStartArray(string? propertyName = null)
     {
-        if(propertyName is null)
+        if (propertyName is null)
         {
             _writer.WriteStartArray();
-        } else
+        }
+        else
         {
             _writer.WriteStartArray(propertyName);
         }
@@ -76,10 +77,11 @@ public sealed class SpanJsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterO
     ///<param name="propertyName">The property name, or <c>null</c> to start an unnamed (top-level or array-element) object.</param>
     public void WriteStartObject(string? propertyName = null)
     {
-        if(propertyName is null)
+        if (propertyName is null)
         {
             _writer.WriteStartObject();
-        } else
+        }
+        else
         {
             _writer.WriteStartObject(propertyName);
         }

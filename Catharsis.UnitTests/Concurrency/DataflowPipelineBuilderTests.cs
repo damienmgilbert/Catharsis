@@ -42,7 +42,7 @@ public class DataflowPipelineBuilderTests
             .Transform(x => x * 2)
             .ActionBlock(results.Add);
 
-        foreach(int value in Enumerable.Range(1, 5))
+        foreach (int value in Enumerable.Range(1, 5))
         {
             await pipeline.SendAsync(value);
         }

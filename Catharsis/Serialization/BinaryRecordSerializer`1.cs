@@ -28,7 +28,7 @@ public sealed class BinaryRecordSerializer<T> where T : new()
     ///</remarks>
     public BinaryRecordSerializer()
     {
-        if(_fields.Length == 0)
+        if (_fields.Length == 0)
         {
             throw new InvalidOperationException($"Type '{typeof(T).Name}' has no properties decorated with [BinaryField].");
         }
@@ -39,37 +39,37 @@ public sealed class BinaryRecordSerializer<T> where T : new()
 
     static object ReadValue(BinaryReader reader, Type type)
     {
-        if(type == typeof(int))
+        if (type == typeof(int))
         {
             return reader.ReadInt32();
         }
 
-        if(type == typeof(long))
+        if (type == typeof(long))
         {
             return reader.ReadInt64();
         }
 
-        if(type == typeof(short))
+        if (type == typeof(short))
         {
             return reader.ReadInt16();
         }
 
-        if(type == typeof(byte))
+        if (type == typeof(byte))
         {
             return reader.ReadByte();
         }
 
-        if(type == typeof(float))
+        if (type == typeof(float))
         {
             return reader.ReadSingle();
         }
 
-        if(type == typeof(double))
+        if (type == typeof(double))
         {
             return reader.ReadDouble();
         }
 
-        if(type == typeof(bool))
+        if (type == typeof(bool))
         {
             return reader.ReadBoolean();
         }
@@ -79,7 +79,7 @@ public sealed class BinaryRecordSerializer<T> where T : new()
 
     static void WriteValue(BinaryWriter writer, Type type, object? value)
     {
-        switch(value)
+        switch (value)
         {
             case int i:
                 writer.Write(i);
@@ -121,7 +121,7 @@ public sealed class BinaryRecordSerializer<T> where T : new()
         using MemoryStream stream = new(data.ToArray());
         using BinaryReader reader = new(stream);
 
-        foreach(PropertyInfo property in _fields)
+        foreach (PropertyInfo property in _fields)
         {
             property.SetValue(record, ReadValue(reader, property.PropertyType));
         }
@@ -142,7 +142,7 @@ public sealed class BinaryRecordSerializer<T> where T : new()
         using MemoryStream stream = new();
         using BinaryWriter writer = new(stream);
 
-        foreach(PropertyInfo property in _fields)
+        foreach (PropertyInfo property in _fields)
         {
             WriteValue(writer, property.PropertyType, property.GetValue(record));
         }

@@ -35,7 +35,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     {
         PropertyInfo? prop = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-        if((prop is null) || !prop.CanWrite)
+        if ((prop is null) || !prop.CanWrite)
         {
             return;
         }
@@ -45,7 +45,8 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
         try
         {
             prop.SetValue(this, value);
-        } finally
+        }
+        finally
         {
             _isTrackingSuspended = false;
         }
@@ -78,7 +79,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     ///</returns>
     protected bool SetTrackedProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if(EqualityComparer<T>.Default.Equals(field, value))
+        if (EqualityComparer<T>.Default.Equals(field, value))
         {
             return false;
         }
@@ -88,7 +89,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
         T? oldValue = field;
         field = value;
 
-        if(!_isTrackingSuspended && (propertyName is not null))
+        if (!_isTrackingSuspended && (propertyName is not null))
         {
             _changes.Record(propertyName, oldValue, value);
         }
@@ -120,7 +121,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     {
         ChangeEntry? entry = _changes.Redo();
 
-        if(entry is null)
+        if (entry is null)
         {
             return null;
         }
@@ -141,11 +142,12 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
         {
             IReadOnlyList<ChangeEntry> entries = _changes.GetAll();
 
-            for(int i = entries.Count - 1; i >= 0; i--)
+            for (int i = entries.Count - 1; i >= 0; i--)
             {
                 ApplyPropertyValue(entries[i].PropertyName, entries[i].OldValue);
             }
-        } finally
+        }
+        finally
         {
             _isTrackingSuspended = false;
             _changes.Clear();
@@ -157,7 +159,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
     {
         ChangeEntry? entry = _changes.Undo();
 
-        if(entry is null)
+        if (entry is null)
         {
             return null;
         }
@@ -201,7 +203,7 @@ public abstract class ChangeTrackingComponent : IChangeTrackable, INotifyPropert
         #region Public methods
         public void Dispose()
         {
-            if(_disposed)
+            if (_disposed)
             {
                 return;
             }

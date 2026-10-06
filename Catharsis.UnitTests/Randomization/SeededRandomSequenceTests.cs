@@ -39,7 +39,7 @@ public class SeededRandomSequenceTests
         SeededRandomSequence a = new(999);
         SeededRandomSequence b = new(999);
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             Assert.AreEqual(a.Next(), b.Next());
         }
@@ -66,7 +66,7 @@ public class SeededRandomSequenceTests
     {
         SeededRandomSequence sequence = new(1);
 
-        for(int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
             int value = sequence.Next(10);
             Assert.IsTrue(value is >= 0 and < 10);
@@ -78,7 +78,7 @@ public class SeededRandomSequenceTests
     {
         SeededRandomSequence sequence = new(1);
 
-        for(int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
             int value = sequence.Next(5, 10);
             Assert.IsTrue(value is >= 5 and < 10);

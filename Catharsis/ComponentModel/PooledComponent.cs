@@ -19,7 +19,7 @@ public abstract class PooledComponent : ComponentBase
     ///<inheritdoc/>
     protected override void Dispose(bool disposing)
     {
-        if(disposing && IsActive)
+        if (disposing && IsActive)
         {
             OnReset();
             IsActive = false;
@@ -49,7 +49,7 @@ public abstract class PooledComponent : ComponentBase
     {
         ThrowIfDisposed();
 
-        if(!IsActive)
+        if (!IsActive)
         {
             throw new InvalidOperationException("The component is not active.");
         }
@@ -67,7 +67,7 @@ public abstract class PooledComponent : ComponentBase
     {
         ThrowIfDisposed();
 
-        if(IsActive)
+        if (IsActive)
         {
             throw new InvalidOperationException("The component is already active.");
         }
@@ -87,7 +87,7 @@ public abstract class PooledComponent : ComponentBase
     {
         ThrowIfDisposed();
 
-        if(!IsActive)
+        if (!IsActive)
         {
             throw new InvalidOperationException("The component is not active.");
         }

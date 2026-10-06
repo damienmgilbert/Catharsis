@@ -1,4 +1,4 @@
-﻿namespace Catharsis.Collections;
+namespace Catharsis.Collections;
 
 ///<summary>
 ///A collection that invokes a callback when an item is added. Wraps a <see cref="List{T}"/> and implements

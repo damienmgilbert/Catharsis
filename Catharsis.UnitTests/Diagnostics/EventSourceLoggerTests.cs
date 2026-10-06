@@ -59,7 +59,7 @@ public class EventSourceLoggerTests
         #region Public methods
         protected override void OnEventSourceCreated(EventSource eventSource)
         {
-            if(eventSource.Name == "Catharsis-Diagnostics")
+            if (eventSource.Name == "Catharsis-Diagnostics")
             {
                 EnableEvents(eventSource, EventLevel.Verbose);
             }

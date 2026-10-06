@@ -69,7 +69,7 @@ public class WeightedListTests
         list.Add("c", 3);
         Random random = new(123);
 
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             Assert.IsTrue(list.PickRandom(random) is "a" or "b" or "c");
         }
@@ -85,9 +85,9 @@ public class WeightedListTests
 
         int commonCount = 0;
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
-            if(list.PickRandom(random) == "common")
+            if (list.PickRandom(random) == "common")
             {
                 commonCount++;
             }

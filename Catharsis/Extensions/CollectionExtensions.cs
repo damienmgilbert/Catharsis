@@ -18,17 +18,17 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ICollection<T> AddRange<T>(this ICollection<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source collection must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Add(item);
         }
@@ -48,23 +48,23 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the valid insert range.</exception>
     public static IList<T> InsertRange<T>(this IList<T> source, int index, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        if((index < 0) || (index > source.Count))
+        if ((index < 0) || (index > source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the valid insert range.");
         }
 
         int offset = 0;
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Insert(index + offset, item);
             offset++;
@@ -83,17 +83,17 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static IList<T> ModifyAll<T>(this IList<T> source, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        for(int i = 0; i < source.Count; i++)
+        for (int i = 0; i < source.Count; i++)
         {
             source[i] = modifier(source[i]);
         }
@@ -112,24 +112,24 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="predicate"/>, or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static IList<T> ModifyWhere<T>(this IList<T> source, Func<T, bool> predicate, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        for(int i = 0; i < source.Count; i++)
+        for (int i = 0; i < source.Count; i++)
         {
-            if(predicate(source[i]))
+            if (predicate(source[i]))
             {
                 source[i] = modifier(source[i]);
             }
@@ -148,20 +148,20 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static int RemoveRange<T>(this ICollection<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source collection must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         int removed = 0;
-        foreach(T item in items)
+        foreach (T item in items)
         {
-            if(source.Remove(item))
+            if (source.Remove(item))
             {
                 removed++;
             }
@@ -182,27 +182,27 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> or <paramref name="count"/> is invalid.</exception>
     public static IList<T> RemoveRange<T>(this IList<T> source, int index, int count)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(index < 0)
+        if (index < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index must not be negative.");
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
-        if(index + count > source.Count)
+        if (index + count > source.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Range extends beyond the list bounds.");
         }
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             source.RemoveAt(index);
         }
@@ -220,21 +220,21 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<T>(this ICollection<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source collection must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
         List<T> toRemove = [.. source.Where(predicate)];
         int removed = 0;
-        foreach(T item in toRemove)
+        foreach (T item in toRemove)
         {
-            if(source.Remove(item))
+            if (source.Remove(item))
             {
                 removed++;
             }
@@ -254,16 +254,16 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
     public static int ReplaceAll<T>(this IList<T> source, T oldItem, T newItem)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         int count = 0;
-        for(int i = 0; i < source.Count; i++)
+        for (int i = 0; i < source.Count; i++)
         {
-            if(comparer.Equals(source[i], oldItem))
+            if (comparer.Equals(source[i], oldItem))
             {
                 source[i] = newItem;
                 count++;
@@ -285,12 +285,12 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of the list.</exception>
     public static IList<T> ReplaceAt<T>(this IList<T> source, int index, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if((index < 0) || (index >= source.Count))
+        if ((index < 0) || (index >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the bounds of the list.");
         }
@@ -311,17 +311,17 @@ public static class CollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException">Either index is outside the bounds of the list.</exception>
     public static IList<T> Swap<T>(this IList<T> source, int indexA, int indexB)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if((indexA < 0) || (indexA >= source.Count))
+        if ((indexA < 0) || (indexA >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(indexA), "Index A is outside the bounds of the list.");
         }
 
-        if((indexB < 0) || (indexB >= source.Count))
+        if ((indexB < 0) || (indexB >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(indexB), "Index B is outside the bounds of the list.");
         }

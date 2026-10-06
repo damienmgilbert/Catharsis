@@ -41,7 +41,7 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     {
         PropertyInfo? dependentProp = context.ObjectType.GetProperty(DependentProperty);
 
-        if(dependentProp is null)
+        if (dependentProp is null)
         {
             return false;
         }
@@ -55,14 +55,14 @@ public sealed class RequiredIfAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(!IsConditionMet(validationContext))
+        if (!IsConditionMet(validationContext))
         {
             return ValidationResult.Success;
         }
 
-        if((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
+        if ((value is null) || (DisallowEmptyStrings && (value is string { Length: 0 })))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

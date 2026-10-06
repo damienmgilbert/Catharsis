@@ -20,7 +20,7 @@ public class MemoCacheBenchmarks
     {
         ConcurrentDictionary<int, int> dictionary = new();
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             dictionary.GetOrAdd(i % KeySpace, static k => k * 2);
         }
@@ -33,7 +33,7 @@ public class MemoCacheBenchmarks
     {
         MemoCache<int, int> cache = new();
 
-        for(int i = 0; i < OperationCount; i++)
+        for (int i = 0; i < OperationCount; i++)
         {
             cache.GetOrAdd(i % KeySpace, static k => k * 2);
         }

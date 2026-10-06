@@ -18,7 +18,7 @@ public class RetryPolicyBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += Compute(i);
         }
@@ -31,7 +31,7 @@ public class RetryPolicyBenchmarks
     {
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             int captured = i;
             sum += Policy.Execute(() => Compute(captured));

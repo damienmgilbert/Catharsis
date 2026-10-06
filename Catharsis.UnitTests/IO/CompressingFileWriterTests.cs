@@ -32,7 +32,8 @@ public class CompressingFileWriterTests
             using StreamReader reader = new(gzipStream, Encoding.UTF8);
 
             Assert.AreEqual("hello, world", reader.ReadToEnd());
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -52,7 +53,8 @@ public class CompressingFileWriterTests
             using StreamReader reader = new(brotliStream, Encoding.UTF8);
 
             Assert.AreEqual("hello, brotli", reader.ReadToEnd());
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -73,7 +75,8 @@ public class CompressingFileWriterTests
             using StreamReader reader = new(gzipStream, Encoding.UTF8);
 
             Assert.AreEqual("second", reader.ReadToEnd());
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }
@@ -90,7 +93,8 @@ public class CompressingFileWriterTests
         {
             CompressingFileWriter.Write(path, "data"u8);
             Assert.HasCount(1, Directory.GetFiles(directory));
-        } finally
+        }
+        finally
         {
             Directory.Delete(directory, recursive: true);
         }
@@ -117,7 +121,8 @@ public class CompressingFileWriterTests
             using StreamReader reader = new(gzipStream, Encoding.UTF8);
 
             Assert.AreEqual("async hello", await reader.ReadToEndAsync());
-        } finally
+        }
+        finally
         {
             File.Delete(path);
         }

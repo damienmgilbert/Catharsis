@@ -77,7 +77,7 @@ public sealed class FlexibleEntity : IChangeTrackable
         get => Get<object?>(path);
         set
         {
-            if(!Set(path, value))
+            if (!Set(path, value))
             {
                 throw new ValidationException($"One or more validation rules rejected the value for '{path}'.");
             }
@@ -111,9 +111,9 @@ public sealed class FlexibleEntity : IChangeTrackable
         string[] segments = path.Split('.');
         FlexibleEntity target = this;
 
-        for(int index = 0; index < (segments.Length - 1); index++)
+        for (int index = 0; index < (segments.Length - 1); index++)
         {
-            if(target.GetRaw(segments[index]) is not FlexibleEntity nested)
+            if (target.GetRaw(segments[index]) is not FlexibleEntity nested)
             {
                 return;
             }
@@ -133,18 +133,18 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         FlexibleEntity target = this;
 
-        for(int index = 0; index < (segments.Length - 1); index++)
+        for (int index = 0; index < (segments.Length - 1); index++)
         {
             object? next = target.GetRaw(segments[index]);
 
-            if(next is null)
+            if (next is null)
             {
                 FlexibleEntity created = new(target._root, target.FullPath(segments[index]));
                 target.SetRawAndRecord(segments[index], created);
                 next = created;
             }
 
-            if(next is not FlexibleEntity nested)
+            if (next is not FlexibleEntity nested)
             {
                 throw new InvalidOperationException($"Cannot traverse into '{segments[index]}': the value at that point is not a {nameof(FlexibleEntity)}.");
             }
@@ -157,12 +157,12 @@ public sealed class FlexibleEntity : IChangeTrackable
 
     bool SetLeaf(string propertyName, object? value)
     {
-        if(_validationPipelines.TryGetValue(propertyName, out ValidationPipeline? pipeline))
+        if (_validationPipelines.TryGetValue(propertyName, out ValidationPipeline? pipeline))
         {
             ValidationContext context = _validationContextFactory.CreatePropertyContext(this, propertyName);
             ValidationResultAggregator aggregator = pipeline.Execute(value, context);
 
-            if(aggregator.HasErrors)
+            if (aggregator.HasErrors)
             {
                 Errors.SetErrors(propertyName, [.. aggregator.GetAll().Select(entry => new ErrorInfo(entry.Result.ErrorMessage ?? "Validation failed.", entry.Severity, propertyName))]);
                 return false;
@@ -183,9 +183,9 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         FlexibleEntity target = this;
 
-        for(int index = 0; index < (segments.Length - 1); index++)
+        for (int index = 0; index < (segments.Length - 1); index++)
         {
-            if(target.GetRaw(segments[index]) is not FlexibleEntity nested)
+            if (target.GetRaw(segments[index]) is not FlexibleEntity nested)
             {
                 return null;
             }
@@ -212,7 +212,7 @@ public sealed class FlexibleEntity : IChangeTrackable
         ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
         ArgumentNullException.ThrowIfNull(rule);
 
-        if(!_validationPipelines.TryGetValue(propertyName, out ValidationPipeline? pipeline))
+        if (!_validationPipelines.TryGetValue(propertyName, out ValidationPipeline? pipeline))
         {
             pipeline = new ValidationPipeline();
             _validationPipelines[propertyName] = pipeline;
@@ -238,7 +238,7 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         DynamicTypeDescriptor descriptor = new();
 
-        foreach(string propertyName in PropertyNames)
+        foreach (string propertyName in PropertyNames)
         {
             string capturedName = propertyName;
             descriptor.AddProperty(new DynamicPropertyDescriptor(capturedName, typeof(object), typeof(FlexibleEntity), getter: component => ((FlexibleEntity)component).Get<object?>(capturedName), setter: (component, value) => ((FlexibleEntity)component).Set(capturedName, value)));
@@ -265,7 +265,7 @@ public sealed class FlexibleEntity : IChangeTrackable
         string[] segments = path.Split('.');
         FlexibleEntity? parent = TryResolveParentForRead(segments);
 
-        if(parent is null)
+        if (parent is null)
         {
             return default;
         }
@@ -296,12 +296,12 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         ArgumentNullException.ThrowIfNull(snapshot);
 
-        foreach(string propertyName in PropertyNames)
+        foreach (string propertyName in PropertyNames)
         {
             _storage.Remove(propertyName);
         }
 
-        foreach((string propertyName, object? value) in snapshot)
+        foreach ((string propertyName, object? value) in snapshot)
         {
             ApplyRaw(propertyName, value);
         }
@@ -368,7 +368,7 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         ChangeEntry? entry = _root._changeSetStorage.Redo();
 
-        if(entry is not null)
+        if (entry is not null)
         {
             _root.ApplyRawAtPath(entry.PropertyName, entry.NewValue);
         }
@@ -381,7 +381,7 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         IReadOnlyList<ChangeEntry> entries = _root._changeSetStorage.GetAll();
 
-        for(int index = entries.Count - 1; index >= 0; index--)
+        for (int index = entries.Count - 1; index >= 0; index--)
         {
             _root.ApplyRawAtPath(entries[index].PropertyName, entries[index].OldValue);
         }
@@ -394,7 +394,7 @@ public sealed class FlexibleEntity : IChangeTrackable
     {
         ChangeEntry? entry = _root._changeSetStorage.Undo();
 
-        if(entry is not null)
+        if (entry is not null)
         {
             _root.ApplyRawAtPath(entry.PropertyName, entry.OldValue);
         }

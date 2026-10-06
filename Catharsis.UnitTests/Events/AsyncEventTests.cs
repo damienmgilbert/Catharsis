@@ -53,7 +53,7 @@ public class AsyncEventTests
         TaskCompletionSource gate = new(TaskCreationOptions.RunContinuationsAsynchronously);
         int started = 0;
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             evt.Subscribe(async (_, _, _) => { Interlocked.Increment(ref started); await gate.Task; });
         }

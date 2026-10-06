@@ -93,7 +93,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
     {
         ICustomTypeDescriptor? parent = base.GetTypeDescriptor(objectType, instance);
 
-        if(!_registry.HasMetadata(objectType))
+        if (!_registry.HasMetadata(objectType))
         {
             return new CachedTypeDescriptor(parent, _cache, objectType);
         }
@@ -164,12 +164,12 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
         {
             Dictionary<string, EventDescriptor> merged = [with(StringComparer.Ordinal)];
 
-            foreach(EventDescriptor evt in baseEvents)
+            foreach (EventDescriptor evt in baseEvents)
             {
                 merged[evt.Name] = evt;
             }
 
-            foreach(EventMetadata metadata in registeredMetadata)
+            foreach (EventMetadata metadata in registeredMetadata)
             {
                 merged[metadata.Name] = new DynamicEventDescriptor(
                                         metadata,
@@ -185,19 +185,19 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
                 });
             }
 
-            return new EventDescriptorCollection([ .. merged.Values ]);
+            return new EventDescriptorCollection([.. merged.Values]);
         }
 
         static PropertyDescriptorCollection MergeProperties(PropertyDescriptorCollection baseProperties, IReadOnlyList<PropertyMetadata> registeredMetadata)
         {
             Dictionary<string, PropertyDescriptor> merged = [with(StringComparer.Ordinal)];
 
-            foreach(PropertyDescriptor prop in baseProperties)
+            foreach (PropertyDescriptor prop in baseProperties)
             {
                 merged[prop.Name] = prop;
             }
 
-            foreach(PropertyMetadata metadata in registeredMetadata)
+            foreach (PropertyMetadata metadata in registeredMetadata)
             {
                 merged[metadata.Name] = new DynamicPropertyDescriptor(
                                         metadata,
@@ -215,7 +215,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
                 });
             }
 
-            return new PropertyDescriptorCollection([ .. merged.Values ]);
+            return new PropertyDescriptorCollection([.. merged.Values]);
         }
         #endregion
 
@@ -225,7 +225,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
             EventDescriptorCollection baseEvents = _cache.GetEvents(_componentType);
             IReadOnlyList<EventMetadata> registeredMetadata = _registry.GetEvents(_componentType);
 
-            if(registeredMetadata.Count == 0)
+            if (registeredMetadata.Count == 0)
             {
                 return baseEvents;
             }
@@ -237,22 +237,22 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
         {
             EventDescriptorCollection all = GetEvents();
 
-            if((attributes is null) || (attributes.Length == 0))
+            if ((attributes is null) || (attributes.Length == 0))
             {
                 return all;
             }
 
             List<EventDescriptor> filtered = [];
 
-            foreach(EventDescriptor evt in all)
+            foreach (EventDescriptor evt in all)
             {
-                if(evt.Attributes.Matches(attributes))
+                if (evt.Attributes.Matches(attributes))
                 {
                     filtered.Add(evt);
                 }
             }
 
-            return new EventDescriptorCollection([ .. filtered ]);
+            return new EventDescriptorCollection([.. filtered]);
         }
 
         public override PropertyDescriptorCollection GetProperties()
@@ -260,7 +260,7 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
             PropertyDescriptorCollection baseProperties = _cache.GetProperties(_componentType);
             IReadOnlyList<PropertyMetadata> registeredMetadata = _registry.GetProperties(_componentType);
 
-            if(registeredMetadata.Count == 0)
+            if (registeredMetadata.Count == 0)
             {
                 return baseProperties;
             }
@@ -272,22 +272,22 @@ public sealed class ComponentTypeDescriptionProvider : TypeDescriptionProvider
         {
             PropertyDescriptorCollection all = GetProperties();
 
-            if((attributes is null) || (attributes.Length == 0))
+            if ((attributes is null) || (attributes.Length == 0))
             {
                 return all;
             }
 
             List<PropertyDescriptor> filtered = [];
 
-            foreach(PropertyDescriptor prop in all)
+            foreach (PropertyDescriptor prop in all)
             {
-                if(prop.Attributes.Matches(attributes))
+                if (prop.Attributes.Matches(attributes))
                 {
                     filtered.Add(prop);
                 }
             }
 
-            return new PropertyDescriptorCollection([ .. filtered ]);
+            return new PropertyDescriptorCollection([.. filtered]);
         }
         #endregion
     }

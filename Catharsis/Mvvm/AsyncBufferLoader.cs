@@ -44,7 +44,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
     ///</summary>
     public void Clear()
     {
-        if(_buffer is not null)
+        if (_buffer is not null)
         {
             _pool.Return(_buffer);
             _buffer = null;
@@ -56,7 +56,7 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -90,17 +90,17 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
             int totalRead = 0;
             int bytesRead;
 
-            while((bytesRead = await stream.ReadAsync(_buffer.AsMemory(totalRead, Math.Min(bufferSize, _buffer.Length - totalRead)), cancellationToken)) > 0)
+            while ((bytesRead = await stream.ReadAsync(_buffer.AsMemory(totalRead, Math.Min(bufferSize, _buffer.Length - totalRead)), cancellationToken)) > 0)
             {
                 totalRead += bytesRead;
                 BytesLoaded = totalRead;
 
-                if(totalLength > 0)
+                if (totalLength > 0)
                 {
                     LoadProgress = ((double)totalRead) / totalLength;
                 }
 
-                if(totalRead + bufferSize > _buffer.Length)
+                if (totalRead + bufferSize > _buffer.Length)
                 {
                     byte[] newBuffer = _pool.Rent(_buffer.Length * 2);
                     _buffer.AsSpan(0, totalRead).CopyTo(newBuffer);
@@ -110,7 +110,8 @@ public class AsyncBufferLoader : ObservableObject, IDisposable
             }
 
             LoadProgress = 1.0;
-        } finally
+        }
+        finally
         {
             IsLoading = false;
         }

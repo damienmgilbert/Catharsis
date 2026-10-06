@@ -36,12 +36,12 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     {
         ArgumentNullException.ThrowIfNull(converters);
 
-        if(converters.Length == 0)
+        if (converters.Length == 0)
         {
             throw new ArgumentException("At least one converter must be provided.", nameof(converters));
         }
 
-        _converters = [ .. converters ];
+        _converters = [.. converters];
     }
 
     ///<summary>
@@ -59,9 +59,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     {
         ArgumentNullException.ThrowIfNull(converters);
 
-        _converters = [ .. converters ];
+        _converters = [.. converters];
 
-        if(_converters.Length == 0)
+        if (_converters.Length == 0)
         {
             throw new ArgumentException("At least one converter must be provided.", nameof(converters));
         }
@@ -72,9 +72,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.CanConvertFrom(context, sourceType))
+            if (converter.CanConvertFrom(context, sourceType))
             {
                 return true;
             }
@@ -86,14 +86,14 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
     {
-        if(destinationType is null)
+        if (destinationType is null)
         {
             return false;
         }
 
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.CanConvertTo(context, destinationType))
+            if (converter.CanConvertTo(context, destinationType))
             {
                 return true;
             }
@@ -107,17 +107,19 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     {
         Type sourceType = value.GetType();
 
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.CanConvertFrom(context, sourceType))
+            if (converter.CanConvertFrom(context, sourceType))
             {
                 try
                 {
                     return converter.ConvertFrom(context, culture, value);
-                } catch(NotSupportedException)
+                }
+                catch (NotSupportedException)
                 {
                     // Try next converter
-                } catch(FormatException)
+                }
+                catch (FormatException)
                 {
                     // Try next converter
                 }
@@ -132,17 +134,19 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     {
         ArgumentNullException.ThrowIfNull(destinationType);
 
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.CanConvertTo(context, destinationType))
+            if (converter.CanConvertTo(context, destinationType))
             {
                 try
                 {
                     return converter.ConvertTo(context, culture, value, destinationType);
-                } catch(NotSupportedException)
+                }
+                catch (NotSupportedException)
                 {
                     // Try next converter
-                } catch(FormatException)
+                }
+                catch (FormatException)
                 {
                     // Try next converter
                 }
@@ -155,9 +159,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override StandardValuesCollection? GetStandardValues(ITypeDescriptorContext? context)
     {
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.GetStandardValuesSupported(context))
+            if (converter.GetStandardValuesSupported(context))
             {
                 return converter.GetStandardValues(context);
             }
@@ -169,9 +173,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override bool GetStandardValuesExclusive(ITypeDescriptorContext? context)
     {
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.GetStandardValuesSupported(context))
+            if (converter.GetStandardValuesSupported(context))
             {
                 return converter.GetStandardValuesExclusive(context);
             }
@@ -183,9 +187,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override bool GetStandardValuesSupported(ITypeDescriptorContext? context)
     {
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.GetStandardValuesSupported(context))
+            if (converter.GetStandardValuesSupported(context))
             {
                 return true;
             }
@@ -197,9 +201,9 @@ public sealed class CompositeTypeConverter : System.ComponentModel.TypeConverter
     ///<inheritdoc/>
     public override bool IsValid(ITypeDescriptorContext? context, object? value)
     {
-        foreach(System.ComponentModel.TypeConverter converter in _converters)
+        foreach (System.ComponentModel.TypeConverter converter in _converters)
         {
-            if(converter.IsValid(context, value))
+            if (converter.IsValid(context, value))
             {
                 return true;
             }

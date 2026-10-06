@@ -42,7 +42,7 @@ public class EventDebouncerTests
         TaskCompletionSource second = new(TaskCreationOptions.RunContinuationsAsynchronously);
         using EventDebouncer<int> debouncer = new(Quiet, value =>
         {
-            lock(seen)
+            lock (seen)
             {
                 seen.Add(value);
                 (seen.Count == 1 ? first : second).TrySetResult();

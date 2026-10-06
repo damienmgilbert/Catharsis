@@ -45,7 +45,7 @@ public sealed class MemoryMappedSpanAccessor : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -69,7 +69,7 @@ public sealed class MemoryMappedSpanAccessor : IDisposable
         int available = Math.Min(buffer.Length, _length - offset);
         Guard.IsGreaterThanOrEqualTo(available, 0);
 
-        for(int i = 0; i < available; i++)
+        for (int i = 0; i < available; i++)
         {
             buffer[i] = _accessor.ReadByte(offset + i);
         }

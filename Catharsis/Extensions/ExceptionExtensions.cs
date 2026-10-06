@@ -11,18 +11,19 @@ public static class ExceptionExtensions
     {
         yield return exception;
 
-        if(exception is AggregateException aggregate)
+        if (exception is AggregateException aggregate)
         {
-            foreach(Exception inner in aggregate.Flatten().InnerExceptions)
+            foreach (Exception inner in aggregate.Flatten().InnerExceptions)
             {
-                foreach(Exception nested in FlattenIterator(inner))
+                foreach (Exception nested in FlattenIterator(inner))
                 {
                     yield return nested;
                 }
             }
-        } else if(exception.InnerException is not null)
+        }
+        else if (exception.InnerException is not null)
         {
-            foreach(Exception nested in FlattenIterator(exception.InnerException))
+            foreach (Exception nested in FlattenIterator(exception.InnerException))
             {
                 yield return nested;
             }
@@ -41,7 +42,7 @@ public static class ExceptionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="exception"/> is <c>null</c>.</exception>
     public static IEnumerable<Exception> Flatten(this Exception exception)
     {
-        if(exception is null)
+        if (exception is null)
         {
             throw new ArgumentNullException(nameof(exception), "Exception must not be null.");
         }
@@ -58,12 +59,12 @@ public static class ExceptionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="exception"/> or <paramref name="separator"/> is <c>null</c>.</exception>
     public static string GetAllMessages(this Exception exception, string separator = " -> ")
     {
-        if(exception is null)
+        if (exception is null)
         {
             throw new ArgumentNullException(nameof(exception), "Exception must not be null.");
         }
 
-        if(separator is null)
+        if (separator is null)
         {
             throw new ArgumentNullException(nameof(separator), "Separator must not be null.");
         }
@@ -81,22 +82,24 @@ public static class ExceptionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="exception"/> is <c>null</c>.</exception>
     public static Exception GetRootCause(this Exception exception)
     {
-        if(exception is null)
+        if (exception is null)
         {
             throw new ArgumentNullException(nameof(exception), "Exception must not be null.");
         }
 
         Exception current = exception;
 
-        while(true)
+        while (true)
         {
-            if(current is AggregateException { InnerExceptions.Count: > 0 } aggregate)
+            if (current is AggregateException { InnerExceptions.Count: > 0 } aggregate)
             {
                 current = aggregate.InnerExceptions[0];
-            } else if(current.InnerException is not null)
+            }
+            else if (current.InnerException is not null)
             {
                 current = current.InnerException;
-            } else
+            }
+            else
             {
                 return current;
             }

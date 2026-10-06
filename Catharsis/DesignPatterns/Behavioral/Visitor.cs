@@ -18,12 +18,12 @@ public class Visitor
     ///<returns>The original <paramref name="obj"/> after the visit.</returns>
     public static T Accept<T, TVisitor>(T obj, TVisitor visitor, Action<TVisitor, T> visit)
     {
-        if(visitor is null)
+        if (visitor is null)
         {
             throw new ArgumentNullException(nameof(visitor), "Visitor must not be null.");
         }
 
-        if(visit is null)
+        if (visit is null)
         {
             throw new ArgumentNullException(nameof(visit), "Visit action must not be null.");
         }
@@ -45,12 +45,12 @@ public class Visitor
     ///<returns>The result of the visit.</returns>
     public static TResult Accept<T, TVisitor, TResult>(T obj, TVisitor visitor, Func<TVisitor, T, TResult> visit)
     {
-        if(visitor is null)
+        if (visitor is null)
         {
             throw new ArgumentNullException(nameof(visitor), "Visitor must not be null.");
         }
 
-        if(visit is null)
+        if (visit is null)
         {
             throw new ArgumentNullException(nameof(visit), "Visit function must not be null.");
         }

@@ -18,17 +18,17 @@ public class TemplateMethod
     ///<returns>The original <paramref name="obj"/> after the algorithm completes.</returns>
     public static T Template<T>(T obj, Action<T> setup, Action<T> hook, Action<T> teardown)
     {
-        if(setup is null)
+        if (setup is null)
         {
             throw new ArgumentNullException(nameof(setup), "Setup action must not be null.");
         }
 
-        if(hook is null)
+        if (hook is null)
         {
             throw new ArgumentNullException(nameof(hook), "Hook action must not be null.");
         }
 
-        if(teardown is null)
+        if (teardown is null)
         {
             throw new ArgumentNullException(nameof(teardown), "Teardown action must not be null.");
         }
@@ -52,17 +52,17 @@ public class TemplateMethod
     ///<returns>The result of <paramref name="operation"/>.</returns>
     public static TResult Template<T, TResult>(T obj, Action<T> setup, Func<T, TResult> operation, Action<T> teardown)
     {
-        if(setup is null)
+        if (setup is null)
         {
             throw new ArgumentNullException(nameof(setup), "Setup action must not be null.");
         }
 
-        if(operation is null)
+        if (operation is null)
         {
             throw new ArgumentNullException(nameof(operation), "Operation must not be null.");
         }
 
-        if(teardown is null)
+        if (teardown is null)
         {
             throw new ArgumentNullException(nameof(teardown), "Teardown action must not be null.");
         }

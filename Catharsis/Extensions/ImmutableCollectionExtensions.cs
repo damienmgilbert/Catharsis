@@ -17,18 +17,18 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> AddRange<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> items) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         ImmutableDictionary<TKey, TValue>.Builder builder = source.ToBuilder();
-        foreach(KeyValuePair<TKey, TValue> kvp in items)
+        foreach (KeyValuePair<TKey, TValue> kvp in items)
         {
             builder[kvp.Key] = kvp.Value;
         }
@@ -40,14 +40,14 @@ public static class ImmutableCollectionExtensions
     ///Returns a tuple of the dequeued items and the remaining <see cref="ImmutableQueue{T}"/> after removing up to
     public static (IReadOnlyList<T> Items, ImmutableQueue<T> Remaining) DequeueRange<T>(this ImmutableQueue<T> source, int count)
     {
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
         List<T> result = [with(count)];
         ImmutableQueue<T> queue = source;
-        for(int i = 0; (i < count) && !queue.IsEmpty; i++)
+        for (int i = 0; (i < count) && !queue.IsEmpty; i++)
         {
             queue = queue.Dequeue(out T? item);
             result.Add(item);
@@ -62,13 +62,13 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableQueue<T> EnqueueRange<T>(this ImmutableQueue<T> source, IEnumerable<T> items)
     {
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         ImmutableQueue<T> queue = source;
-        foreach(T item in items)
+        foreach (T item in items)
         {
             queue = queue.Enqueue(item);
         }
@@ -88,13 +88,13 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableArray<T> ModifyAll<T>(this ImmutableArray<T> source, Func<T, T> modifier)
     {
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableArray<T>.Builder builder = source.ToBuilder();
-        for(int i = 0; i < builder.Count; i++)
+        for (int i = 0; i < builder.Count; i++)
         {
             builder[i] = modifier(builder[i]);
         }
@@ -107,18 +107,18 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableList<T> ModifyAll<T>(this ImmutableList<T> source, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableList<T>.Builder builder = source.ToBuilder();
-        for(int i = 0; i < builder.Count; i++)
+        for (int i = 0; i < builder.Count; i++)
         {
             builder[i] = modifier(builder[i]);
         }
@@ -132,18 +132,18 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableDictionary<TKey, TValue>.Builder builder = source.ToBuilder();
-        foreach(TKey key in source.Keys)
+        foreach (TKey key in source.Keys)
         {
             builder[key] = modifier(key, source[key]);
         }
@@ -156,19 +156,19 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableHashSet<T> ModifyAll<T>(this ImmutableHashSet<T> source, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableHashSet<T>.Builder builder = source.ToBuilder();
         builder.Clear();
-        foreach(T item in source)
+        foreach (T item in source)
         {
             builder.Add(modifier(item));
         }
@@ -182,18 +182,18 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableSortedDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableSortedDictionary<TKey, TValue>.Builder builder = source.ToBuilder();
-        foreach(TKey key in source.Keys)
+        foreach (TKey key in source.Keys)
         {
             builder[key] = modifier(key, source[key]);
         }
@@ -207,20 +207,20 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableArray<T> ModifyWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate, Func<T, T> modifier)
     {
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableArray<T>.Builder builder = source.ToBuilder();
-        for(int i = 0; i < builder.Count; i++)
+        for (int i = 0; i < builder.Count; i++)
         {
-            if(predicate(builder[i]))
+            if (predicate(builder[i]))
             {
                 builder[i] = modifier(builder[i]);
             }
@@ -235,25 +235,25 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableList<T> ModifyWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate, Func<T, T> modifier)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
         ImmutableList<T>.Builder builder = source.ToBuilder();
-        for(int i = 0; i < builder.Count; i++)
+        for (int i = 0; i < builder.Count; i++)
         {
-            if(predicate(builder[i]))
+            if (predicate(builder[i]))
             {
                 builder[i] = modifier(builder[i]);
             }
@@ -266,14 +266,14 @@ public static class ImmutableCollectionExtensions
     ///Returns a tuple of the popped items and the remaining <see cref="ImmutableStack{T}"/> after removing up to
     public static (IReadOnlyList<T> Items, ImmutableStack<T> Remaining) PopRange<T>(this ImmutableStack<T> source, int count)
     {
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
         List<T> result = [with(count)];
         ImmutableStack<T> stack = source;
-        for(int i = 0; (i < count) && !stack.IsEmpty; i++)
+        for (int i = 0; (i < count) && !stack.IsEmpty; i++)
         {
             stack = stack.Pop(out T? item);
             result.Add(item);
@@ -288,13 +288,13 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableStack<T> PushRange<T>(this ImmutableStack<T> source, IEnumerable<T> items)
     {
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
         ImmutableStack<T> stack = source;
-        foreach(T item in items)
+        foreach (T item in items)
         {
             stack = stack.Push(item);
         }
@@ -308,12 +308,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> RemoveRange<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> keys) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(keys is null)
+        if (keys is null)
         {
             throw new ArgumentNullException(nameof(keys), "Keys must not be null.");
         }
@@ -327,7 +327,7 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableArray<T> RemoveWhere<T>(this ImmutableArray<T> source, Func<T, bool> predicate)
     {
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -342,12 +342,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableList<T> RemoveWhere<T>(this ImmutableList<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -361,12 +361,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableDictionary<TKey, TValue> RemoveWhere<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -382,12 +382,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableHashSet<T> RemoveWhere<T>(this ImmutableHashSet<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -403,12 +403,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableSortedSet<T> RemoveWhere<T>(this ImmutableSortedSet<T> source, Func<T, bool> predicate)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source set must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -424,12 +424,12 @@ public static class ImmutableCollectionExtensions
     ///</summary>
     public static ImmutableSortedDictionary<TKey, TValue> RemoveWhere<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
@@ -442,7 +442,7 @@ public static class ImmutableCollectionExtensions
     ///Returns a new <see cref="ImmutableArray{T}"/> with the element at <paramref name="index"/> replaced by
     public static ImmutableArray<T> ReplaceAt<T>(this ImmutableArray<T> source, int index, T item)
     {
-        if((index < 0) || (index >= source.Length))
+        if ((index < 0) || (index >= source.Length))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the bounds of the array.");
         }
@@ -454,12 +454,12 @@ public static class ImmutableCollectionExtensions
     ///Returns a new <see cref="ImmutableList{T}"/> with the element at <paramref name="index"/> replaced by
     public static ImmutableList<T> ReplaceAt<T>(this ImmutableList<T> source, int index, T item)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source list must not be null.");
         }
 
-        if((index < 0) || (index >= source.Count))
+        if ((index < 0) || (index >= source.Count))
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is outside the bounds of the list.");
         }

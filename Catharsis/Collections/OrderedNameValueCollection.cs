@@ -59,7 +59,7 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
     ///<inheritdoc/>
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
     {
-        foreach(DictionaryEntry entry in _inner)
+        foreach (DictionaryEntry entry in _inner)
         {
             yield return new KeyValuePair<string, string>((string)entry.Key, (string)entry.Value!);
         }
@@ -84,7 +84,7 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(!_inner.Contains(key))
+        if (!_inner.Contains(key))
         {
             return false;
         }
@@ -112,7 +112,7 @@ public sealed class OrderedNameValueCollection : IEnumerable<KeyValuePair<string
         {
             ArgumentNullException.ThrowIfNull(key);
 
-            if(!_inner.Contains(key))
+            if (!_inner.Contains(key))
             {
                 throw new KeyNotFoundException($"The key '{key}' was not found.");
             }

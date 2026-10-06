@@ -36,7 +36,7 @@ public sealed class DelimitedRecordReader<T>(char delimiter = ',') where T : new
 
         string? headerLine = reader.ReadLine();
 
-        if(headerLine is null)
+        if (headerLine is null)
         {
             yield break;
         }
@@ -46,9 +46,9 @@ public sealed class DelimitedRecordReader<T>(char delimiter = ',') where T : new
 
         string? line;
 
-        while((line = reader.ReadLine()) is not null)
+        while ((line = reader.ReadLine()) is not null)
         {
-            if(line.Length == 0)
+            if (line.Length == 0)
             {
                 continue;
             }
@@ -56,11 +56,11 @@ public sealed class DelimitedRecordReader<T>(char delimiter = ',') where T : new
             IReadOnlyList<string> fields = _tokenizer.Tokenize(line);
             T record = new();
 
-            for(int index = 0; (index < fields.Count) && (index < mapping.Length); index++)
+            for (int index = 0; (index < fields.Count) && (index < mapping.Length); index++)
             {
                 PropertyInfo? property = mapping[index];
 
-                if(property is not null)
+                if (property is not null)
                 {
                     property.SetValue(record, ConvertField(fields[index], property.PropertyType));
                 }

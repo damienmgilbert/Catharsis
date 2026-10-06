@@ -37,14 +37,14 @@ public static class XElementPathResolver
         string[] segments = SplitPath(path);
         XElement? current = root;
 
-        for(int index = 0; index < segments.Length; index++)
+        for (int index = 0; index < segments.Length; index++)
         {
             string segment = segments[index];
             bool isLastSegment = index == (segments.Length - 1);
 
-            if(segment.StartsWith('@'))
+            if (segment.StartsWith('@'))
             {
-                if(!isLastSegment)
+                if (!isLastSegment)
                 {
                     throw new ArgumentException("An attribute segment ('@name') must be the last segment in the path.", nameof(path));
                 }
@@ -52,7 +52,7 @@ public static class XElementPathResolver
                 return current?.Attribute(segment[1..])?.Value;
             }
 
-            if(current is null)
+            if (current is null)
             {
                 return null;
             }
@@ -82,18 +82,18 @@ public static class XElementPathResolver
         string[] segments = SplitPath(path);
         XElement current = root;
 
-        for(int index = 0; index < (segments.Length - 1); index++)
+        for (int index = 0; index < (segments.Length - 1); index++)
         {
             string segment = segments[index];
 
-            if(segment.StartsWith('@'))
+            if (segment.StartsWith('@'))
             {
                 throw new ArgumentException("An attribute segment ('@name') must be the last segment in the path.", nameof(path));
             }
 
             XElement? child = current.Element(segment);
 
-            if(child is null)
+            if (child is null)
             {
                 child = new XElement(segment);
                 current.Add(child);
@@ -104,7 +104,7 @@ public static class XElementPathResolver
 
         string lastSegment = segments[^1];
 
-        if(lastSegment.StartsWith('@'))
+        if (lastSegment.StartsWith('@'))
         {
             current.SetAttributeValue(lastSegment[1..], value);
             return;
@@ -112,10 +112,11 @@ public static class XElementPathResolver
 
         XElement? existingChild = current.Element(lastSegment);
 
-        if(existingChild is null)
+        if (existingChild is null)
         {
             current.Add(new XElement(lastSegment, value));
-        } else
+        }
+        else
         {
             existingChild.Value = value ?? string.Empty;
         }

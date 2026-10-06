@@ -19,7 +19,7 @@ public static class RoundRobinIterator
     {
         ArgumentNullException.ThrowIfNull(sources);
 
-        foreach(IEnumerable<T> source in sources)
+        foreach (IEnumerable<T> source in sources)
         {
             ArgumentNullException.ThrowIfNull(source);
         }
@@ -49,16 +49,16 @@ public static class RoundRobinIterator
 
         try
         {
-            foreach(IEnumerable<T> source in sources)
+            foreach (IEnumerable<T> source in sources)
             {
                 active.Add(source.GetEnumerator());
             }
 
-            while(active.Count > 0)
+            while (active.Count > 0)
             {
-                for(int i = 0; i < active.Count;)
+                for (int i = 0; i < active.Count;)
                 {
-                    if(active[i].MoveNext())
+                    if (active[i].MoveNext())
                     {
                         yield return active[i].Current;
                         i++;
@@ -73,7 +73,7 @@ public static class RoundRobinIterator
         }
         finally
         {
-            foreach(IEnumerator<T> enumerator in active)
+            foreach (IEnumerator<T> enumerator in active)
             {
                 enumerator.Dispose();
             }
@@ -82,9 +82,9 @@ public static class RoundRobinIterator
 
     static IEnumerable<T> CycleIterator<T>(IReadOnlyList<T> items)
     {
-        while(items.Count > 0)
+        while (items.Count > 0)
         {
-            for(int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 yield return items[i];
             }

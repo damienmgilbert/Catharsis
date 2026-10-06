@@ -51,7 +51,7 @@ public static class GenericMathExtensions
     ///<exception cref="ArgumentException"><paramref name="min"/> equals <paramref name="max"/>.</exception>
     public static double NormalizeTo<T>(this T value, T min, T max) where T : INumber<T>
     {
-        if(min == max)
+        if (min == max)
         {
             throw new ArgumentException("Minimum and maximum must not be equal.", nameof(max));
         }

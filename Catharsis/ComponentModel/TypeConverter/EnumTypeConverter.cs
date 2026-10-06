@@ -32,16 +32,16 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///<inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if(value is string text)
+        if (value is string text)
         {
             ReadOnlySpan<char> trimmed = text.AsSpan().Trim();
 
-            if(trimmed.IsEmpty)
+            if (trimmed.IsEmpty)
             {
                 throw new FormatException($"Cannot convert an empty string to {s_enumType.Name}.");
             }
 
-            if(TryParseSpan(trimmed, out TEnum result))
+            if (TryParseSpan(trimmed, out TEnum result))
             {
                 return result;
             }
@@ -49,7 +49,7 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
             throw new FormatException($"'{text}' is not a valid value for {s_enumType.Name}.");
         }
 
-        if(value.GetType() == s_underlyingType)
+        if (value.GetType() == s_underlyingType)
         {
             return (TEnum)Enum.ToObject(s_enumType, value);
         }
@@ -62,14 +62,14 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     {
         ArgumentNullException.ThrowIfNull(destinationType);
 
-        if(value is TEnum enumValue)
+        if (value is TEnum enumValue)
         {
-            if(destinationType == typeof(string))
+            if (destinationType == typeof(string))
             {
                 return FormatEnum(enumValue);
             }
 
-            if(destinationType == s_underlyingType)
+            if (destinationType == s_underlyingType)
             {
                 return Convert.ChangeType(enumValue, s_underlyingType, culture);
             }
@@ -95,12 +95,12 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///<inheritdoc/>
     public override bool IsValid(ITypeDescriptorContext? context, object? value)
     {
-        if(value is TEnum)
+        if (value is TEnum)
         {
             return true;
         }
 
-        if(value is string text)
+        if (value is string text)
         {
             return TryParseSpan(text.AsSpan().Trim(), out _);
         }
@@ -118,7 +118,7 @@ public sealed class EnumTypeConverter<TEnum> : System.ComponentModel.TypeConvert
     ///</exception>
     public static TEnum ParseSpan(ReadOnlySpan<char> span)
     {
-        if(TryParseSpan(span, out TEnum result))
+        if (TryParseSpan(span, out TEnum result))
         {
             return result;
         }

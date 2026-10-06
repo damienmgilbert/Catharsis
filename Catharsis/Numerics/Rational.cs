@@ -26,12 +26,12 @@ public readonly struct Rational : IEquatable<Rational>, IComparable<Rational>
     ///<exception cref="DivideByZeroException"><paramref name="denominator"/> is zero.</exception>
     public Rational(BigInteger numerator, BigInteger denominator)
     {
-        if(denominator.IsZero)
+        if (denominator.IsZero)
         {
             throw new DivideByZeroException("Denominator must not be zero.");
         }
 
-        if(denominator.Sign < 0)
+        if (denominator.Sign < 0)
         {
             numerator = -numerator;
             denominator = -denominator;

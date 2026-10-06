@@ -33,14 +33,14 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     #region Private methods
     static bool MatchesAttributes(PropertyDescriptor property, Attribute[]? attributes)
     {
-        if((attributes is null) || (attributes.Length == 0))
+        if ((attributes is null) || (attributes.Length == 0))
         {
             return true;
         }
 
-        foreach(Attribute attribute in attributes)
+        foreach (Attribute attribute in attributes)
         {
-            if(!property.Attributes.Contains(attribute))
+            if (!property.Attributes.Contains(attribute))
             {
                 return false;
             }
@@ -61,7 +61,7 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     {
         ArgumentNullException.ThrowIfNull(property);
 
-        if(_properties.Any(p => p.Name == property.Name))
+        if (_properties.Any(p => p.Name == property.Name))
         {
             throw new ArgumentException($"A property named '{property.Name}' already exists.", nameof(property));
         }
@@ -103,7 +103,7 @@ public class DynamicTypeDescriptor : CustomTypeDescriptor
     {
         int index = _properties.FindIndex(p => p.Name == propertyName);
 
-        if(index < 0)
+        if (index < 0)
         {
             return false;
         }

@@ -19,12 +19,12 @@ public class AbstractFactoryPattern
     ///<returns>The product created via the abstract factory.</returns>
     public static TResult AbstractFactory<T, TFactory, TResult>(T obj, TFactory factory, Func<TFactory, T, TResult> create)
     {
-        if(factory is null)
+        if (factory is null)
         {
             throw new ArgumentNullException(nameof(factory), "Factory must not be null.");
         }
 
-        if(create is null)
+        if (create is null)
         {
             throw new ArgumentNullException(nameof(create), "Create function must not be null.");
         }

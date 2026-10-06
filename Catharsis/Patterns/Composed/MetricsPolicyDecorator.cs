@@ -45,12 +45,12 @@ public sealed class MetricsPolicyDecorator : IAsyncPolicy
         {
             return await _inner.ExecuteAsync(operation, cancellationToken).ConfigureAwait(false);
         }
-        catch(OperationCanceledException)
+        catch (OperationCanceledException)
         {
             Interlocked.Increment(ref _cancellations);
             throw;
         }
-        catch(Exception)
+        catch (Exception)
         {
             Interlocked.Increment(ref _failures);
             throw;

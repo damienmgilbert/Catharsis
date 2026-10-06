@@ -25,9 +25,9 @@ public static class EnumExtensions
     ///<returns>Each individual flag that is set in <paramref name="value"/>.</returns>
     public static IEnumerable<TEnum> GetFlags<TEnum>(this TEnum value) where TEnum : struct, Enum
     {
-        foreach(TEnum candidate in Enum.GetValues<TEnum>())
+        foreach (TEnum candidate in Enum.GetValues<TEnum>())
         {
-            if(Convert.ToUInt64(candidate, System.Globalization.CultureInfo.InvariantCulture) != 0 && value.HasFlag(candidate))
+            if (Convert.ToUInt64(candidate, System.Globalization.CultureInfo.InvariantCulture) != 0 && value.HasFlag(candidate))
             {
                 yield return candidate;
             }
@@ -63,9 +63,9 @@ public static class EnumExtensions
     ///<returns><c>true</c> if <paramref name="value"/> is a named member; otherwise <c>false</c>.</returns>
     public static bool IsDefined<TEnum>(this TEnum value) where TEnum : struct, Enum
     {
-        foreach(TEnum candidate in Enum.GetValues<TEnum>())
+        foreach (TEnum candidate in Enum.GetValues<TEnum>())
         {
-            if(candidate.Equals(value))
+            if (candidate.Equals(value))
             {
                 return true;
             }

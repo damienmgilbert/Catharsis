@@ -17,7 +17,7 @@ public class MoneyBenchmarks
     {
         decimal sum = 0m;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += i * 0.01m;
         }
@@ -31,7 +31,7 @@ public class MoneyBenchmarks
         Money sum = new(0m, "USD");
         Money step = new(0.01m, "USD");
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             sum += step * i;
         }
@@ -55,7 +55,7 @@ public class MatrixBenchmarks
     {
         double[] values = new double[Size * Size];
 
-        for(int i = 0; i < values.Length; i++)
+        for (int i = 0; i < values.Length; i++)
         {
             values[i] = i % 7;
             _array[i / Size, i % Size] = values[i];
@@ -69,13 +69,13 @@ public class MatrixBenchmarks
     {
         double[,] result = new double[Size, Size];
 
-        for(int r = 0; r < Size; r++)
+        for (int r = 0; r < Size; r++)
         {
-            for(int c = 0; c < Size; c++)
+            for (int c = 0; c < Size; c++)
             {
                 double sum = 0;
 
-                for(int k = 0; k < Size; k++)
+                for (int k = 0; k < Size; k++)
                 {
                     sum += _array[r, k] * _array[k, c];
                 }

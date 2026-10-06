@@ -45,7 +45,7 @@ public sealed class HashCodeCombiner
 
         HashCode hashCode = new();
 
-        foreach(object? value in values)
+        foreach (object? value in values)
         {
             hashCode.Add(value);
         }

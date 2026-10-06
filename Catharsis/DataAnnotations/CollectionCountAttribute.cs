@@ -38,7 +38,7 @@ public sealed class CollectionCountAttribute : ValidationAttribute
     #region Private methods
     static int CountElements(IEnumerable enumerable)
     {
-        if(enumerable is ICollection collection)
+        if (enumerable is ICollection collection)
         {
             return collection.Count;
         }
@@ -47,11 +47,12 @@ public sealed class CollectionCountAttribute : ValidationAttribute
         IEnumerator enumerator = enumerable.GetEnumerator();
         try
         {
-            while(enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
                 count++;
             }
-        } finally
+        }
+        finally
         {
             (enumerator as IDisposable)?.Dispose();
         }
@@ -64,23 +65,23 @@ public sealed class CollectionCountAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
-        if(value is not IEnumerable enumerable)
+        if (value is not IEnumerable enumerable)
         {
-            return new ValidationResult($"The field {validationContext.DisplayName} must be a collection.", (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult($"The field {validationContext.DisplayName} must be a collection.", (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         int count = CountElements(enumerable);
 
-        if((count < Minimum) || (count > Maximum))
+        if ((count < Minimum) || (count > Maximum))
         {
             string message = (Maximum == int.MaxValue) ? ($"The field {validationContext.DisplayName} must contain at least {Minimum} element(s).") : ($"The field {validationContext.DisplayName} must contain between {Minimum} and {Maximum} element(s).");
 
-            return new ValidationResult(message, (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(message, (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

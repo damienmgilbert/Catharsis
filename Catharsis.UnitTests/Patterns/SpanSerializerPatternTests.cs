@@ -36,7 +36,7 @@ public class SpanSerializerPatternTests
     [TestMethod]
     public void SerializeBatch_And_DeserializeBatch_RoundTrip()
     {
-        SpanSerializerPattern.SensorReading[] readings =[ new(1, 20.0f, 50.0f, 100L), new(2, 30.0f, 70.0f, 200L), ];
+        SpanSerializerPattern.SensorReading[] readings = [new(1, 20.0f, 50.0f, 100L), new(2, 30.0f, 70.0f, 200L),];
 
         byte[] data = SpanSerializerPattern.SerializeBatch(readings);
 

@@ -24,7 +24,7 @@ public class HighPerformanceSerializerTests
     public void Serialize_ReturnsPooledArray()
     {
         using HighPerformanceSerializer serializer = new();
-        TestSerializable obj = new([ 1, 2, 3 ]);
+        TestSerializable obj = new([1, 2, 3]);
 
         byte[] result = serializer.Serialize(obj, out int bytesWritten);
 
@@ -38,7 +38,7 @@ public class HighPerformanceSerializerTests
     public void SerializeToMemoryOwner_ReturnsOwner()
     {
         using HighPerformanceSerializer serializer = new();
-        TestSerializable obj = new([ 10, 20 ]);
+        TestSerializable obj = new([10, 20]);
 
         using MemoryOwner<byte> owner = serializer.SerializeToMemoryOwner(obj);
 

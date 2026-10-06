@@ -26,7 +26,7 @@ public static class ExpressionComposer
 
         Expression<Func<T, bool>>? result = null;
 
-        foreach(Expression<Func<T, bool>> predicate in predicates)
+        foreach (Expression<Func<T, bool>> predicate in predicates)
         {
             result = result is null ? predicate : AndAlso(result, predicate);
         }
@@ -71,7 +71,7 @@ public static class ExpressionComposer
         ArgumentNullException.ThrowIfNull(first, nameof(first));
         ArgumentNullException.ThrowIfNull(second, nameof(second));
 
-        Expression inlined = RebindParameters(second.Body, second.Parameters, [ first.Body ]);
+        Expression inlined = RebindParameters(second.Body, second.Parameters, [first.Body]);
         return Expression.Lambda<Func<TInput, TOutput>>(inlined, first.Parameters);
     }
 
@@ -148,7 +148,7 @@ public static class ExpressionComposer
 
         Expression<Func<T, bool>>? result = null;
 
-        foreach(Expression<Func<T, bool>> predicate in predicates)
+        foreach (Expression<Func<T, bool>> predicate in predicates)
         {
             result = result is null ? predicate : OrElse(result, predicate);
         }
@@ -186,7 +186,7 @@ public static class ExpressionComposer
 
         Expression body = lambda.Body;
 
-        foreach(KeyValuePair<ParameterExpression, ParameterExpression> kvp in parameterMap)
+        foreach (KeyValuePair<ParameterExpression, ParameterExpression> kvp in parameterMap)
         {
             body = new ReplacingVisitor(kvp.Key, kvp.Value).Visit(body);
         }
@@ -210,14 +210,14 @@ public static class ExpressionComposer
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         ArgumentNullException.ThrowIfNull(target, nameof(target));
 
-        if(source.Count != target.Count)
+        if (source.Count != target.Count)
         {
             throw new ArgumentException($"Source parameter count ({source.Count}) must match target expression count ({target.Count}).", nameof(target));
         }
 
         Expression result = expression;
 
-        for(int i = 0; i < source.Count; i++)
+        for (int i = 0; i < source.Count; i++)
         {
             result = new ReplacingVisitor(source[i], target[i]).Visit(result);
         }
@@ -274,11 +274,11 @@ public static class ExpressionComposer
         #region Protected methods
         protected override Expression VisitInvocation(InvocationExpression node)
         {
-            if(node.Expression is LambdaExpression lambda)
+            if (node.Expression is LambdaExpression lambda)
             {
                 Expression body = lambda.Body;
 
-                for(int i = 0; i < lambda.Parameters.Count; i++)
+                for (int i = 0; i < lambda.Parameters.Count; i++)
                 {
                     body = new ReplacingVisitor(lambda.Parameters[i], Visit(node.Arguments[i])).Visit(body);
                 }

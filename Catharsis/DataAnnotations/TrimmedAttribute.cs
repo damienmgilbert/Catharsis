@@ -26,14 +26,14 @@ public sealed class TrimmedAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null or string { Length: 0 })
+        if (value is null or string { Length: 0 })
         {
             return ValidationResult.Success;
         }
 
-        if((value is not string text) || (text.AsSpan().Trim().Length != text.Length))
+        if ((value is not string text) || (text.AsSpan().Trim().Length != text.Length))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

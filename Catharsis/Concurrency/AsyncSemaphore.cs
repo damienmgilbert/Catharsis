@@ -42,7 +42,7 @@ public sealed class AsyncSemaphore : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -95,7 +95,7 @@ public sealed class AsyncSemaphore : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_semaphore.Wait(0))
+        if (_semaphore.Wait(0))
         {
             handle = new SemaphoreHandle(_semaphore);
             return true;
@@ -122,7 +122,7 @@ public sealed class AsyncSemaphore : IDisposable
         #region Public methods
         public void Dispose()
         {
-            if(Interlocked.Exchange(ref _released, 1) == 0)
+            if (Interlocked.Exchange(ref _released, 1) == 0)
             {
                 semaphore.Release();
             }

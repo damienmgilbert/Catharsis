@@ -64,16 +64,17 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
         get => _dictionary[key];
         set
         {
-            if(_dictionary.TryGetValue(key, out TValue? oldValue))
+            if (_dictionary.TryGetValue(key, out TValue? oldValue))
             {
-                if(EqualityComparer<TValue>.Default.Equals(oldValue, value))
+                if (EqualityComparer<TValue>.Default.Equals(oldValue, value))
                 {
                     return;
                 }
 
                 _dictionary[key] = value;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, new KeyValuePair<TKey, TValue>(key, value), new KeyValuePair<TKey, TValue>(key, oldValue)));
-            } else
+            }
+            else
             {
                 _dictionary[key] = value;
                 OnCountChanged();
@@ -94,7 +95,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///<inheritdoc/>
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
     {
-        if(!((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item))
+        if (!((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item))
         {
             return false;
         }
@@ -133,7 +134,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///<param name="e">The event args.</param>
     protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        if(_suppressionCount == 0)
+        if (_suppressionCount == 0)
         {
             CollectionChanged?.Invoke(this, e);
         }
@@ -145,7 +146,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///<param name="e">The event args.</param>
     protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if(_suppressionCount == 0)
+        if (_suppressionCount == 0)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -164,7 +165,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///<inheritdoc/>
     public void Clear()
     {
-        if(_dictionary.Count == 0)
+        if (_dictionary.Count == 0)
         {
             return;
         }
@@ -182,7 +183,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
     ///<inheritdoc/>
     public bool Remove(TKey key)
     {
-        if(!_dictionary.TryGetValue(key, out TValue? value))
+        if (!_dictionary.TryGetValue(key, out TValue? value))
         {
             return false;
         }
@@ -232,14 +233,14 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IRe
         #region Public methods
         public void Dispose()
         {
-            if(_disposed)
+            if (_disposed)
             {
                 return;
             }
 
             _disposed = true;
 
-            if(Interlocked.Decrement(ref _owner._suppressionCount) == 0)
+            if (Interlocked.Decrement(ref _owner._suppressionCount) == 0)
             {
                 _owner.OnCountChanged();
                 _owner.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));

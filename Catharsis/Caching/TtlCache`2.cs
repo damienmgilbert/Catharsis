@@ -48,7 +48,7 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="defaultTtl"/> is not greater than zero.</exception>
     public TtlCache(TimeSpan defaultTtl, IEqualityComparer<TKey>? comparer, TimeProvider? timeProvider = null)
     {
-        if(defaultTtl <= TimeSpan.Zero)
+        if (defaultTtl <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(defaultTtl), "Default TTL must be greater than zero.");
         }
@@ -72,9 +72,9 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
         DateTimeOffset now = _timeProvider.GetUtcNow();
         int removed = 0;
 
-        foreach(KeyValuePair<TKey, Entry> entry in _entries)
+        foreach (KeyValuePair<TKey, Entry> entry in _entries)
         {
-            if(entry.Value.ExpiresAt <= now && _entries.TryRemove(entry.Key, out _))
+            if (entry.Value.ExpiresAt <= now && _entries.TryRemove(entry.Key, out _))
             {
                 removed++;
             }
@@ -103,7 +103,7 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(ttl <= TimeSpan.Zero)
+        if (ttl <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(ttl), "TTL must be greater than zero.");
         }
@@ -132,9 +132,9 @@ public sealed class TtlCache<TKey, TValue> where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if(_entries.TryGetValue(key, out Entry entry))
+        if (_entries.TryGetValue(key, out Entry entry))
         {
-            if(entry.ExpiresAt > _timeProvider.GetUtcNow())
+            if (entry.ExpiresAt > _timeProvider.GetUtcNow())
             {
                 value = entry.Value;
                 return true;

@@ -77,9 +77,9 @@ public class FeatureFlagEvaluatorTests
 
         int enabledCount = 0;
 
-        for(int i = 0; i < 200; i++)
+        for (int i = 0; i < 200; i++)
         {
-            if(evaluator.IsEnabled("beta", $"user-{i}"))
+            if (evaluator.IsEnabled("beta", $"user-{i}"))
             {
                 enabledCount++;
             }

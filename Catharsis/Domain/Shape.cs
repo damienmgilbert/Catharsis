@@ -58,7 +58,7 @@ public abstract class Shape : IComparable<Shape>
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is zero, negative, infinite or NaN.</exception>
     protected static double RequirePositive(double value, string paramName)
     {
-        if(!(value > 0) || double.IsInfinity(value))
+        if (!(value > 0) || double.IsInfinity(value))
         {
             throw new ArgumentOutOfRangeException(paramName, value, "A dimension must be a positive, finite number.");
         }

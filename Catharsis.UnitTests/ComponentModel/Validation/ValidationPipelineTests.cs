@@ -43,7 +43,7 @@ public sealed class ValidationPipelineTests
     {
         ValidationPipeline pipeline = new();
 
-        pipeline.AddRules([ new PassingRule(), new PassingRule() ]);
+        pipeline.AddRules([new PassingRule(), new PassingRule()]);
 
         Assert.AreEqual(2, pipeline.Count);
     }

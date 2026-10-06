@@ -45,7 +45,7 @@ public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObj
     ///</summary>
     public void BeginEdit()
     {
-        if(_isEditing)
+        if (_isEditing)
         {
             return;
         }
@@ -59,12 +59,12 @@ public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObj
     ///</summary>
     public void CancelEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             Value = _snapshot;
         }
@@ -78,7 +78,7 @@ public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObj
     ///</summary>
     public void EndEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
@@ -92,7 +92,7 @@ public class EditableRecord<T>(T value) : BindableRecord<T>(value), IEditableObj
     ///</summary>
     public void RejectChanges()
     {
-        if(_acceptedValue is not null)
+        if (_acceptedValue is not null)
         {
             Value = _acceptedValue;
         }

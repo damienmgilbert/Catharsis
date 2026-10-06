@@ -98,7 +98,7 @@ public class WeakEventTests
         WeakEvent<int> evt = new();
         WeakReference weak = SubscribeTransient(evt);
 
-        for(int i = 0; i < 5 && weak.IsAlive; i++)
+        for (int i = 0; i < 5 && weak.IsAlive; i++)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();

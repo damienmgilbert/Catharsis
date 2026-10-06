@@ -56,12 +56,12 @@ public static class WindowedIterator
         long nextStart = 0;
         long total = 0;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             buffer.Add(item);
             total++;
 
-            while(nextStart + size <= total)
+            while (nextStart + size <= total)
             {
                 yield return [.. buffer.GetRange((int)(nextStart - consumed), size)];
 
@@ -73,9 +73,9 @@ public static class WindowedIterator
             }
         }
 
-        if(includePartial)
+        if (includePartial)
         {
-            while(nextStart < total)
+            while (nextStart < total)
             {
                 yield return [.. buffer.GetRange((int)(nextStart - consumed), (int)(total - nextStart))];
 
@@ -89,9 +89,9 @@ public static class WindowedIterator
         bool hasPrevious = false;
         T previous = default!;
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
-            if(hasPrevious)
+            if (hasPrevious)
             {
                 yield return (previous, item);
             }

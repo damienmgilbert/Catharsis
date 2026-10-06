@@ -26,11 +26,11 @@ public static class SequenceTopN
 
         MinMaxHeap<T> heap = new(comparer);
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             heap.Add(item);
 
-            if(heap.Count > count)
+            if (heap.Count > count)
             {
                 heap.ExtractMax();
             }
@@ -38,7 +38,7 @@ public static class SequenceTopN
 
         List<T> result = new(heap.Count);
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             result.Add(heap.ExtractMin());
         }
@@ -63,11 +63,11 @@ public static class SequenceTopN
 
         MinMaxHeap<T> heap = new(comparer);
 
-        foreach(T item in source)
+        foreach (T item in source)
         {
             heap.Add(item);
 
-            if(heap.Count > count)
+            if (heap.Count > count)
             {
                 heap.ExtractMin();
             }
@@ -75,7 +75,7 @@ public static class SequenceTopN
 
         List<T> result = new(heap.Count);
 
-        while(heap.Count > 0)
+        while (heap.Count > 0)
         {
             result.Add(heap.ExtractMax());
         }

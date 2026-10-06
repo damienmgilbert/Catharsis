@@ -49,7 +49,7 @@ public static class AsyncEnumerableAdapter
     #region Private methods
     static async IAsyncEnumerable<T> Iterate<T>(IEnumerable<T> source, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        foreach(T item in source)
+        foreach (T item in source)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -65,7 +65,7 @@ public static class AsyncEnumerableAdapter
 
         try
         {
-            while(enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
+            while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
             {
                 yield return enumerator.Current;
             }

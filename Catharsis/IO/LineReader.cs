@@ -53,14 +53,14 @@ public sealed class LineReader(Stream stream, Encoding? encoding = null, int buf
         {
             int read;
 
-            while((read = reader.Read(buffer, carryLength, buffer.Length - carryLength)) > 0)
+            while ((read = reader.Read(buffer, carryLength, buffer.Length - carryLength)) > 0)
             {
                 int total = carryLength + read;
                 int consumed = 0;
 
                 int newlineIndex;
 
-                while((newlineIndex = Array.IndexOf(buffer, '\n', consumed, total - consumed)) >= 0)
+                while ((newlineIndex = Array.IndexOf(buffer, '\n', consumed, total - consumed)) >= 0)
                 {
                     onLine(TrimTrailingCarriageReturn(buffer.AsSpan(consumed, newlineIndex - consumed)), state);
                     consumed = newlineIndex + 1;
@@ -68,23 +68,25 @@ public sealed class LineReader(Stream stream, Encoding? encoding = null, int buf
 
                 carryLength = total - consumed;
 
-                if(carryLength == buffer.Length)
+                if (carryLength == buffer.Length)
                 {
                     char[] biggerBuffer = ArrayPool<char>.Shared.Rent(buffer.Length * 2);
                     Array.Copy(buffer, consumed, biggerBuffer, 0, carryLength);
                     ArrayPool<char>.Shared.Return(buffer);
                     buffer = biggerBuffer;
-                } else if(carryLength > 0)
+                }
+                else if (carryLength > 0)
                 {
                     Array.Copy(buffer, consumed, buffer, 0, carryLength);
                 }
             }
 
-            if(carryLength > 0)
+            if (carryLength > 0)
             {
                 onLine(TrimTrailingCarriageReturn(buffer.AsSpan(0, carryLength)), state);
             }
-        } finally
+        }
+        finally
         {
             ArrayPool<char>.Shared.Return(buffer);
         }

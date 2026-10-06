@@ -20,9 +20,9 @@ public class DirectoryWatcherDebouncedTests
     {
         DateTime deadline = DateTime.UtcNow + timeout;
 
-        while(DateTime.UtcNow < deadline)
+        while (DateTime.UtcNow < deadline)
         {
-            if(condition())
+            if (condition())
             {
                 return true;
             }
@@ -61,7 +61,8 @@ public class DirectoryWatcherDebouncedTests
 
             bool fired = await WaitForAsync(() => fireCount > 0, TimeSpan.FromSeconds(5));
             Assert.IsTrue(fired);
-        } finally
+        }
+        finally
         {
             Directory.Delete(directory, recursive: true);
         }
@@ -81,7 +82,7 @@ public class DirectoryWatcherDebouncedTests
             watcher.Changed += (_, _) => Interlocked.Increment(ref fireCount);
             watcher.Start();
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 File.WriteAllText(filePath, $"update-{i}");
                 await Task.Delay(10);
@@ -91,7 +92,8 @@ public class DirectoryWatcherDebouncedTests
             await Task.Delay(200);
 
             Assert.IsTrue(fireCount < 10);
-        } finally
+        }
+        finally
         {
             Directory.Delete(directory, recursive: true);
         }
@@ -108,7 +110,8 @@ public class DirectoryWatcherDebouncedTests
             watcher.Dispose();
 
             Assert.ThrowsExactly<ObjectDisposedException>(watcher.Start);
-        } finally
+        }
+        finally
         {
             Directory.Delete(directory, recursive: true);
         }

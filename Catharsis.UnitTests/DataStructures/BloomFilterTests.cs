@@ -57,12 +57,12 @@ public class BloomFilterTests
     {
         BloomFilter<int> filter = new(1000, 0.01);
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             filter.Add(i);
         }
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             Assert.IsTrue(filter.MightContain(i));
         }
@@ -73,16 +73,16 @@ public class BloomFilterTests
     {
         BloomFilter<int> filter = new(1000, 0.01);
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             filter.Add(i);
         }
 
         int falsePositives = 0;
 
-        for(int i = 1_000_000; i < 1_010_000; i++)
+        for (int i = 1_000_000; i < 1_010_000; i++)
         {
-            if(filter.MightContain(i))
+            if (filter.MightContain(i))
             {
                 falsePositives++;
             }

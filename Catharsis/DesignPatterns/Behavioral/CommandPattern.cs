@@ -18,14 +18,14 @@ public class CommandPattern
     ///<returns>The original <paramref name="obj"/> after execution.</returns>
     public static T Command<T>(T obj, Action<T> execute, Action<T>? undo = null, ICollection<Action<T>>? undoHistory = null)
     {
-        if(execute is null)
+        if (execute is null)
         {
             throw new ArgumentNullException(nameof(execute), "Execute action must not be null.");
         }
 
         execute(obj);
 
-        if((undo is not null) && (undoHistory is not null))
+        if ((undo is not null) && (undoHistory is not null))
         {
             undoHistory.Add(undo);
         }

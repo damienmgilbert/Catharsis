@@ -38,7 +38,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
     ///</summary>
     public void AcceptChanges()
     {
-        if(!IsChanged)
+        if (!IsChanged)
         {
             return;
         }
@@ -53,7 +53,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
     ///</summary>
     public void RejectChanges()
     {
-        if(!IsChanged)
+        if (!IsChanged)
         {
             return;
         }
@@ -82,7 +82,7 @@ public sealed class ChangeTracker<T>(T initialValue) : IRevertibleChangeTracking
         get => _currentValue;
         set
         {
-            if(EqualityComparer<T>.Default.Equals(_currentValue, value))
+            if (EqualityComparer<T>.Default.Equals(_currentValue, value))
             {
                 return;
             }

@@ -52,11 +52,11 @@ public sealed class StepWorkflowOrchestrator
     ///</summary>
     static Exception UnwrapSingleFailure(Exception exception)
     {
-        if(exception is AggregateException aggregate)
+        if (exception is AggregateException aggregate)
         {
             Exception[] distinctCauses = [.. aggregate.Flatten().InnerExceptions.Distinct()];
 
-            if(distinctCauses.Length == 1)
+            if (distinctCauses.Length == 1)
             {
                 return distinctCauses[0];
             }
@@ -69,7 +69,7 @@ public sealed class StepWorkflowOrchestrator
     {
         WorkflowStepComponent step = (WorkflowStepComponent)node.Component;
 
-        if(node.Dependencies.Any(dependency => faulted.ContainsKey(dependency)))
+        if (node.Dependencies.Any(dependency => faulted.ContainsKey(dependency)))
         {
             node.State = ComponentState.Faulted;
             faulted[node] = true;
@@ -82,21 +82,23 @@ public sealed class StepWorkflowOrchestrator
 
         try
         {
-            if(step.RetryPolicy is not null)
+            if (step.RetryPolicy is not null)
             {
                 await step.RetryPolicy.ExecuteAsync(async ct =>
                 {
                     await step.Action(ct).ConfigureAwait(false);
                     return true;
                 }, cancellationToken).ConfigureAwait(false);
-            } else
+            }
+            else
             {
                 await step.Action(cancellationToken).ConfigureAwait(false);
             }
 
             node.State = ComponentState.Active;
             await _eventBus.PublishAsync(new WorkflowStepEvent(step.Name, ComponentState.Active, null, DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);
-        } catch(Exception ex) when(ex is not OperationCanceledException)
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
             node.State = ComponentState.Faulted;
             faulted[node] = true;
@@ -126,7 +128,7 @@ public sealed class StepWorkflowOrchestrator
         ArgumentNullException.ThrowIfNull(action);
         ArgumentNullException.ThrowIfNull(dependsOn);
 
-        if(_steps.ContainsKey(name))
+        if (_steps.ContainsKey(name))
         {
             throw new InvalidOperationException($"A step named '{name}' is already registered.");
         }
@@ -135,9 +137,9 @@ public sealed class StepWorkflowOrchestrator
         // completely untouched instead of registering the step with only some of its dependency edges.
         WorkflowStepComponent[] dependencySteps = new WorkflowStepComponent[dependsOn.Length];
 
-        for(int index = 0; index < dependsOn.Length; index++)
+        for (int index = 0; index < dependsOn.Length; index++)
         {
-            if(!_steps.TryGetValue(dependsOn[index], out WorkflowStepComponent? dependencyStep))
+            if (!_steps.TryGetValue(dependsOn[index], out WorkflowStepComponent? dependencyStep))
             {
                 throw new InvalidOperationException($"Step '{name}' depends on '{dependsOn[index]}', which is not registered. Register dependencies before the steps that depend on them.");
             }
@@ -149,7 +151,7 @@ public sealed class StepWorkflowOrchestrator
         _steps.Add(name, step);
         _builder.AddComponent(step, name);
 
-        foreach(WorkflowStepComponent dependencyStep in dependencySteps)
+        foreach (WorkflowStepComponent dependencyStep in dependencySteps)
         {
             _builder.AddDependency(step, dependencyStep);
         }
@@ -168,21 +170,21 @@ public sealed class StepWorkflowOrchestrator
         ComponentGraph graph = _builder.Build();
         IReadOnlyList<ComponentGraphNode> order = graph.GetActivationOrder();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             node.State = ComponentState.Created;
         }
 
         Dictionary<ComponentGraphNode, int> waveByNode = new();
 
-        foreach(ComponentGraphNode node in order)
+        foreach (ComponentGraphNode node in order)
         {
             waveByNode[node] = ComputeWave(node, waveByNode);
         }
 
         ConcurrentDictionary<ComponentGraphNode, bool> faulted = new();
 
-        foreach(IGrouping<int, ComponentGraphNode> wave in order.GroupBy(node => waveByNode[node]).OrderBy(static group => group.Key))
+        foreach (IGrouping<int, ComponentGraphNode> wave in order.GroupBy(node => waveByNode[node]).OrderBy(static group => group.Key))
         {
             cancellationToken.ThrowIfCancellationRequested();
             await Task.WhenAll(wave.Select(node => ExecuteNodeAsync(node, faulted, cancellationToken))).ConfigureAwait(false);

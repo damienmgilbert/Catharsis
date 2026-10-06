@@ -32,7 +32,7 @@ public class AsyncSemaphoreTests
     {
         using AsyncSemaphore semaphore = new(1);
 
-        using(semaphore.Wait())
+        using (semaphore.Wait())
         {
             Assert.AreEqual(0, semaphore.CurrentCount);
         }
@@ -45,7 +45,7 @@ public class AsyncSemaphoreTests
     {
         using AsyncSemaphore semaphore = new(1);
 
-        using(await semaphore.WaitAsync())
+        using (await semaphore.WaitAsync())
         {
             Assert.AreEqual(0, semaphore.CurrentCount);
         }
@@ -58,7 +58,7 @@ public class AsyncSemaphoreTests
     {
         using AsyncSemaphore semaphore = new(1);
 
-        using(await semaphore.WaitValueAsync())
+        using (await semaphore.WaitValueAsync())
         {
             Assert.AreEqual(0, semaphore.CurrentCount);
         }
@@ -95,9 +95,9 @@ public class AsyncSemaphoreTests
 
         async Task RunAsync()
         {
-            using(await semaphore.WaitAsync())
+            using (await semaphore.WaitAsync())
             {
-                lock(gate)
+                lock (gate)
                 {
                     concurrent++;
                     maxObserved = Math.Max(maxObserved, concurrent);
@@ -105,7 +105,7 @@ public class AsyncSemaphoreTests
 
                 await Task.Delay(20);
 
-                lock(gate)
+                lock (gate)
                 {
                     concurrent--;
                 }

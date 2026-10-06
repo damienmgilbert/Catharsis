@@ -25,7 +25,7 @@ public class StreamingSequenceReaderTests
     public async Task ReadAllAsync_ReadsEntireStream()
     {
         using StreamingSequenceReader reader = new();
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
         using MemoryStream stream = new(data);
 
         ReadOnlySequence<byte> sequence = await reader.ReadAllAsync(stream);

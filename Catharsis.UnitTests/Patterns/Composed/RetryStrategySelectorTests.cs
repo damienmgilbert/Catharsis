@@ -28,7 +28,7 @@ public class RetryStrategySelectorTests
     {
         JitteredDelayCalculator full = Selector().Select(JitterStrategy.Full);
 
-        for(int i = 0; i < 50; i++)
+        for (int i = 0; i < 50; i++)
         {
             TimeSpan delay = full.ComputeDelay(2);
             Assert.IsTrue(delay >= TimeSpan.Zero && delay <= TimeSpan.FromMilliseconds(400));
@@ -40,7 +40,7 @@ public class RetryStrategySelectorTests
     {
         JitteredDelayCalculator equal = Selector().Select(JitterStrategy.Equal);
 
-        for(int i = 0; i < 50; i++)
+        for (int i = 0; i < 50; i++)
         {
             TimeSpan delay = equal.ComputeDelay(2);
             Assert.IsTrue(delay >= TimeSpan.FromMilliseconds(200) && delay <= TimeSpan.FromMilliseconds(400));

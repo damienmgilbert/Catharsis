@@ -72,7 +72,7 @@ public class PolicyWrapTests
         int result = await wrap.ExecuteAsync(ct =>
         {
             attempts++;
-            if(attempts < 2)
+            if (attempts < 2)
             {
                 throw new InvalidOperationException("transient");
             }

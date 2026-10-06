@@ -28,7 +28,7 @@ public sealed class BusinessCalendar(IEnumerable<DateOnly>? holidays = null, IEn
     {
         int direction = Math.Sign(businessDays);
 
-        if(direction == 0)
+        if (direction == 0)
         {
             return date;
         }
@@ -36,11 +36,11 @@ public sealed class BusinessCalendar(IEnumerable<DateOnly>? holidays = null, IEn
         int remaining = Math.Abs(businessDays);
         DateOnly current = date;
 
-        while(remaining > 0)
+        while (remaining > 0)
         {
             current = current.AddDays(direction);
 
-            if(IsBusinessDay(current))
+            if (IsBusinessDay(current))
             {
                 remaining--;
             }
@@ -63,9 +63,9 @@ public sealed class BusinessCalendar(IEnumerable<DateOnly>? holidays = null, IEn
 
         int count = 0;
 
-        for(DateOnly date = rangeStart; date <= rangeEnd; date = date.AddDays(1))
+        for (DateOnly date = rangeStart; date <= rangeEnd; date = date.AddDays(1))
         {
-            if(IsBusinessDay(date))
+            if (IsBusinessDay(date))
             {
                 count++;
             }

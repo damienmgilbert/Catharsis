@@ -31,7 +31,7 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
     ///</exception>
     public MutuallyExclusiveAttribute(params string[] propertyNames) : base("Only one of the following may be specified: {0}.")
     {
-        if(propertyNames.Length < 2)
+        if (propertyNames.Length < 2)
         {
             throw new ArgumentException("At least two property names are required for mutual exclusion.", nameof(propertyNames));
         }
@@ -56,30 +56,30 @@ public sealed class MutuallyExclusiveAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }
 
         List<string> populated = [];
 
-        foreach(string propertyName in PropertyNames)
+        foreach (string propertyName in PropertyNames)
         {
             PropertyInfo? property = value.GetType().GetProperty(propertyName);
-            if(property is null)
+            if (property is null)
             {
                 return new ValidationResult($"Unknown property: {propertyName}.");
             }
 
             object? propertyValue = property.GetValue(value);
 
-            if(HasValue(propertyValue))
+            if (HasValue(propertyValue))
             {
                 populated.Add(propertyName);
             }
         }
 
-        if(populated.Count > 1)
+        if (populated.Count > 1)
         {
             string group = GroupName ?? string.Join(", ", PropertyNames);
             return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, group), populated);

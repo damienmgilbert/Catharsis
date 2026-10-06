@@ -21,17 +21,17 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ConcurrentBag<T> AddRange<T>(this ConcurrentBag<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source bag must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Add(item);
         }
@@ -52,17 +52,17 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ConcurrentDictionary<TKey, TValue> AddRange<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> items) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(KeyValuePair<TKey, TValue> kvp in items)
+        foreach (KeyValuePair<TKey, TValue> kvp in items)
         {
             source.AddOrUpdate(kvp.Key, kvp.Value, (_, _) => kvp.Value);
         }
@@ -82,17 +82,17 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static BlockingCollection<T> AddRange<T>(this BlockingCollection<T> source, IEnumerable<T> items, CancellationToken cancellationToken = default)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source collection must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Add(item, cancellationToken);
         }
@@ -111,18 +111,18 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative.</exception>
     public static List<T> DequeueRange<T>(this ConcurrentQueue<T> source, int count)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source queue must not be null.");
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
         List<T> result = [with(count)];
-        for(int i = 0; (i < count) && source.TryDequeue(out T? item); i++)
+        for (int i = 0; (i < count) && source.TryDequeue(out T? item); i++)
         {
             result.Add(item);
         }
@@ -141,17 +141,17 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ConcurrentQueue<T> EnqueueRange<T>(this ConcurrentQueue<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source queue must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
 
-        foreach(T item in items)
+        foreach (T item in items)
         {
             source.Enqueue(item);
         }
@@ -171,17 +171,17 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="modifier"/> is <c>null</c>.</exception>
     public static ConcurrentDictionary<TKey, TValue> ModifyAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> source, Func<TKey, TValue, TValue> modifier) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(modifier is null)
+        if (modifier is null)
         {
             throw new ArgumentNullException(nameof(modifier), "Modifier function must not be null.");
         }
 
-        foreach(TKey key in source.Keys.ToList())
+        foreach (TKey key in source.Keys.ToList())
         {
             source.AddOrUpdate(key, k => modifier(k, default!), (k, v) => modifier(k, v));
         }
@@ -200,12 +200,12 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative.</exception>
     public static List<T> PopRange<T>(this ConcurrentStack<T> source, int count)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source stack must not be null.");
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
@@ -226,12 +226,12 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="items"/> is <c>null</c>.</exception>
     public static ConcurrentStack<T> PushRange<T>(this ConcurrentStack<T> source, IEnumerable<T> items)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source stack must not be null.");
         }
 
-        if(items is null)
+        if (items is null)
         {
             throw new ArgumentNullException(nameof(items), "Items must not be null.");
         }
@@ -253,20 +253,20 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keys"/> is <c>null</c>.</exception>
     public static int RemoveRange<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> source, IEnumerable<TKey> keys) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(keys is null)
+        if (keys is null)
         {
             throw new ArgumentNullException(nameof(keys), "Keys must not be null.");
         }
 
         int removed = 0;
-        foreach(TKey key in keys)
+        foreach (TKey key in keys)
         {
-            if(source.TryRemove(key, out _))
+            if (source.TryRemove(key, out _))
             {
                 removed++;
             }
@@ -287,21 +287,21 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is <c>null</c>.</exception>
     public static int RemoveWhere<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> source, Func<KeyValuePair<TKey, TValue>, bool> predicate) where TKey : notnull
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source dictionary must not be null.");
         }
 
-        if(predicate is null)
+        if (predicate is null)
         {
             throw new ArgumentNullException(nameof(predicate), "Predicate must not be null.");
         }
 
         List<TKey> keysToRemove = [.. source.Where(predicate).Select(static kvp => kvp.Key)];
         int removed = 0;
-        foreach(TKey key in keysToRemove)
+        foreach (TKey key in keysToRemove)
         {
-            if(source.TryRemove(key, out _))
+            if (source.TryRemove(key, out _))
             {
                 removed++;
             }
@@ -321,18 +321,18 @@ public static class ConcurrentCollectionExtensions
     ///<exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative.</exception>
     public static List<T> TakeRange<T>(this BlockingCollection<T> source, int count)
     {
-        if(source is null)
+        if (source is null)
         {
             throw new ArgumentNullException(nameof(source), "Source collection must not be null.");
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must not be negative.");
         }
 
         List<T> result = [with(count)];
-        for(int i = 0; (i < count) && source.TryTake(out T? item); i++)
+        for (int i = 0; (i < count) && source.TryTake(out T? item); i++)
         {
             result.Add(item);
         }

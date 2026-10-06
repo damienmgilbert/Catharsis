@@ -46,10 +46,11 @@ public readonly ref struct BitSpan
         set
         {
             Guard.IsInRange(index, 0, _bitLength);
-            if(value)
+            if (value)
             {
                 _bytes[index >> 3] |= (byte)(1 << (index & 7));
-            } else
+            }
+            else
             {
                 _bytes[index >> 3] &= (byte)~(1 << (index & 7));
             }
@@ -65,7 +66,7 @@ public readonly ref struct BitSpan
     public void And(BitSpan other)
     {
         Guard.IsEqualTo(other.ByteLength, ByteLength);
-        for(int i = 0; i < _bytes.Length; i++)
+        for (int i = 0; i < _bytes.Length; i++)
         {
             _bytes[i] &= other._bytes[i];
         }
@@ -93,7 +94,7 @@ public readonly ref struct BitSpan
     ///</summary>
     public void Not()
     {
-        for(int i = 0; i < _bytes.Length; i++)
+        for (int i = 0; i < _bytes.Length; i++)
         {
             _bytes[i] = (byte)~_bytes[i];
         }
@@ -106,7 +107,7 @@ public readonly ref struct BitSpan
     public void Or(BitSpan other)
     {
         Guard.IsEqualTo(other.ByteLength, ByteLength);
-        for(int i = 0; i < _bytes.Length; i++)
+        for (int i = 0; i < _bytes.Length; i++)
         {
             _bytes[i] |= other._bytes[i];
         }
@@ -119,7 +120,7 @@ public readonly ref struct BitSpan
     public readonly int PopCount()
     {
         int count = 0;
-        foreach(byte b in _bytes)
+        foreach (byte b in _bytes)
         {
             count += BitOperations.PopCount(b);
         }

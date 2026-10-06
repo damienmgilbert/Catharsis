@@ -78,9 +78,9 @@ public sealed class TypeMetadataReader(ComponentReflectionCache? componentCache 
 
         List<(PropertyInfo, TAttribute)> result = [];
 
-        foreach(PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            foreach(TAttribute attribute in GetAttributes<TAttribute>(property))
+            foreach (TAttribute attribute in GetAttributes<TAttribute>(property))
             {
                 result.Add((property, attribute));
             }
@@ -111,9 +111,9 @@ public sealed class TypeMetadataReader(ComponentReflectionCache? componentCache 
 
         List<(PropertyDescriptor, TAttribute)> result = [];
 
-        foreach(PropertyDescriptor descriptor in _componentCache.GetProperties(type))
+        foreach (PropertyDescriptor descriptor in _componentCache.GetProperties(type))
         {
-            foreach(TAttribute attribute in descriptor.Attributes.OfType<TAttribute>())
+            foreach (TAttribute attribute in descriptor.Attributes.OfType<TAttribute>())
             {
                 result.Add((descriptor, attribute));
             }

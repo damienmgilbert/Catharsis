@@ -29,7 +29,7 @@ public sealed class AssertionScope : IDisposable
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        if(!condition)
+        if (!condition)
         {
             _failures.Add(message);
         }
@@ -52,7 +52,7 @@ public sealed class AssertionScope : IDisposable
     ///<exception cref="AggregateException">One or more failures were recorded.</exception>
     public void ThrowIfAny()
     {
-        if(_thrown || (_failures.Count == 0))
+        if (_thrown || (_failures.Count == 0))
         {
             return;
         }

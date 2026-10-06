@@ -42,13 +42,13 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
     {
         MethodInfo? method = ValidatorType.GetMethod(MethodName, BindingFlags.Public | BindingFlags.Static);
 
-        if((method is null) || (method.ReturnType != typeof(bool)))
+        if ((method is null) || (method.ReturnType != typeof(bool)))
         {
             return new ValidationResult($"Predicate method '{ValidatorType.Name}.{MethodName}' was not found or does not return bool.");
         }
 
         ParameterInfo[] parameters = method.GetParameters();
-        if(parameters.Length != 1)
+        if (parameters.Length != 1)
         {
             return new ValidationResult($"Predicate method '{ValidatorType.Name}.{MethodName}' must accept exactly one parameter.");
         }
@@ -56,16 +56,17 @@ public sealed class PredicateValidationAttribute : ValidationAttribute
         bool result;
         try
         {
-            object? invokeResult = method.Invoke(null, [ value ]);
+            object? invokeResult = method.Invoke(null, [value]);
             result = invokeResult is true;
-        } catch(TargetInvocationException ex)
+        }
+        catch (TargetInvocationException ex)
         {
             return new ValidationResult($"Predicate method '{ValidatorType.Name}.{MethodName}' threw an exception: {ex.InnerException?.Message ?? ex.Message}.");
         }
 
-        if(!result)
+        if (!result)
         {
-            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, ValidatorType.Name, MethodName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, ValidatorType.Name, MethodName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

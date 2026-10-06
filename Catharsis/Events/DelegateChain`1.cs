@@ -54,7 +54,7 @@ public sealed class DelegateChain<T>
     {
         T current = input;
 
-        foreach(Func<T, T> step in _steps)
+        foreach (Func<T, T> step in _steps)
         {
             current = step(current);
         }

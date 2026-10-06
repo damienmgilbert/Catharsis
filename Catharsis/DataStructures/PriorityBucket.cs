@@ -32,7 +32,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="comparer"/> is <c>null</c>.</exception>
     public PriorityBucket(IComparer<TPriority> comparer)
     {
-        if(comparer is null)
+        if (comparer is null)
         {
             throw new ArgumentNullException(nameof(comparer), "Priority comparer must not be null.");
         }
@@ -111,7 +111,7 @@ public sealed class PriorityBucket<TElement, TPriority> : IEnumerable<TElement>,
     ///<returns><c>true</c> if an element was dequeued; <c>false</c> if the queue was empty.</returns>
     public bool TryDequeue([MaybeNullWhen(false)] out TElement element, [MaybeNullWhen(false)] out TPriority priority)
     {
-        if(_queue.TryDequeue(out element, out priority))
+        if (_queue.TryDequeue(out element, out priority))
         {
             _elements.Remove(element);
             return true;

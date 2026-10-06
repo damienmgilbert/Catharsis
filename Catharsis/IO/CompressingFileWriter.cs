@@ -48,16 +48,17 @@ public static class CompressingFileWriter
 
         try
         {
-            using(FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            using(Stream compressionStream = CreateCompressionStream(fileStream, format))
+            using (FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (Stream compressionStream = CreateCompressionStream(fileStream, format))
             {
                 compressionStream.Write(data);
             }
 
             File.Move(tempPath, path, overwrite: true);
-        } catch
+        }
+        catch
         {
-            if(File.Exists(tempPath))
+            if (File.Exists(tempPath))
             {
                 File.Delete(tempPath);
             }
@@ -83,16 +84,17 @@ public static class CompressingFileWriter
 
         try
         {
-            await using(FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            await using(Stream compressionStream = CreateCompressionStream(fileStream, format))
+            await using (FileStream fileStream = new(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            await using (Stream compressionStream = CreateCompressionStream(fileStream, format))
             {
                 await compressionStream.WriteAsync(data, cancellationToken).ConfigureAwait(false);
             }
 
             File.Move(tempPath, path, overwrite: true);
-        } catch
+        }
+        catch
         {
-            if(File.Exists(tempPath))
+            if (File.Exists(tempPath))
             {
                 File.Delete(tempPath);
             }

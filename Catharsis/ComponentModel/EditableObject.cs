@@ -19,7 +19,7 @@ public abstract class EditableObject : IEditableObject
     {
         Dictionary<string, object?> snapshot = [with(StringComparer.Ordinal)];
 
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
             snapshot[property.Name] = property.GetValue(this);
         }
@@ -29,9 +29,9 @@ public abstract class EditableObject : IEditableObject
 
     void RestoreSnapshot(Dictionary<string, object?> snapshot)
     {
-        foreach(PropertyInfo property in GetEditableProperties())
+        foreach (PropertyInfo property in GetEditableProperties())
         {
-            if(snapshot.TryGetValue(property.Name, out object? value))
+            if (snapshot.TryGetValue(property.Name, out object? value))
             {
                 property.SetValue(this, value);
             }
@@ -53,7 +53,7 @@ public abstract class EditableObject : IEditableObject
     ///</summary>
     public void BeginEdit()
     {
-        if(_isEditing)
+        if (_isEditing)
         {
             return;
         }
@@ -67,12 +67,12 @@ public abstract class EditableObject : IEditableObject
     ///</summary>
     public void CancelEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }
 
-        if(_snapshot is not null)
+        if (_snapshot is not null)
         {
             RestoreSnapshot(_snapshot);
             _snapshot = null;
@@ -86,7 +86,7 @@ public abstract class EditableObject : IEditableObject
     ///</summary>
     public void EndEdit()
     {
-        if(!_isEditing)
+        if (!_isEditing)
         {
             return;
         }

@@ -17,12 +17,12 @@ public class CompositePattern
     ///<returns>The original <paramref name="obj"/> after the action has been applied to the entire tree.</returns>
     public static T Composite<T>(T obj, Func<T, IEnumerable<T>> getChildren, Action<T> action)
     {
-        if(getChildren is null)
+        if (getChildren is null)
         {
             throw new ArgumentNullException(nameof(getChildren), "GetChildren function must not be null.");
         }
 
-        if(action is null)
+        if (action is null)
         {
             throw new ArgumentNullException(nameof(action), "Action must not be null.");
         }
@@ -34,7 +34,7 @@ public class CompositePattern
         {
             action(node);
 
-            foreach(T child in getChildren(node))
+            foreach (T child in getChildren(node))
             {
                 Visit(child, getChildren, action);
             }

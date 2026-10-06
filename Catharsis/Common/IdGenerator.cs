@@ -27,22 +27,23 @@ public sealed class IdGenerator(DateTimeOffset? epoch = null)
     ///<returns>A new, strictly increasing identifier.</returns>
     public long NextId()
     {
-        lock(_lock)
+        lock (_lock)
         {
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _epochMilliseconds;
 
-            if(timestamp == _lastTimestamp)
+            if (timestamp == _lastTimestamp)
             {
                 _sequence = (_sequence + 1) & MaxSequence;
 
-                if(_sequence == 0)
+                if (_sequence == 0)
                 {
-                    while(timestamp <= _lastTimestamp)
+                    while (timestamp <= _lastTimestamp)
                     {
                         timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _epochMilliseconds;
                     }
                 }
-            } else
+            }
+            else
             {
                 _sequence = 0;
             }

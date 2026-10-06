@@ -17,7 +17,7 @@ public class MemoryOwnerExtensionsTests
         using MemoryOwner<int> owner = MemoryOwner<int>.Allocate(3);
         owner.Fill(99);
         owner.Clear();
-        foreach(int v in owner.Span)
+        foreach (int v in owner.Span)
         {
             Assert.AreEqual(0, v);
         }
@@ -28,7 +28,7 @@ public class MemoryOwnerExtensionsTests
     {
         using MemoryOwner<int> owner = MemoryOwner<int>.Allocate(5);
         owner.Fill(42);
-        foreach(int v in owner.Span)
+        foreach (int v in owner.Span)
         {
             Assert.AreEqual(42, v);
         }
@@ -38,7 +38,7 @@ public class MemoryOwnerExtensionsTests
     public void SliceCopy_ReturnsSlicedCopy()
     {
         using MemoryOwner<int> owner = MemoryOwner<int>.Allocate(5);
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             owner.Span[i] = i * 10;
         }
@@ -62,7 +62,7 @@ public class MemoryOwnerExtensionsTests
     [TestMethod]
     public void ToMemoryOwner_FromSpan_CopiesData()
     {
-        ReadOnlySpan<int> data = [ 1, 2, 3 ];
+        ReadOnlySpan<int> data = [1, 2, 3];
         using MemoryOwner<int> owner = data.ToMemoryOwner();
         Assert.AreEqual(3, owner.Length);
         Assert.AreEqual(1, owner.Span[0]);

@@ -21,7 +21,7 @@ public sealed class WildcardMatcher
     ///<exception cref="ArgumentNullException"><paramref name="pattern"/> is <c>null</c>.</exception>
     public WildcardMatcher(string pattern, bool ignoreCase = false)
     {
-        if(pattern is null)
+        if (pattern is null)
         {
             throw new ArgumentNullException(nameof(pattern), "Pattern must not be null.");
         }
@@ -42,7 +42,7 @@ public sealed class WildcardMatcher
     ///<exception cref="ArgumentNullException"><paramref name="input"/> is <c>null</c>.</exception>
     public bool IsMatch(string input)
     {
-        if(input is null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }

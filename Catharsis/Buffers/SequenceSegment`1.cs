@@ -12,7 +12,7 @@ sealed class SequenceSegment<T> : ReadOnlySequenceSegment<T>
     public SequenceSegment(ReadOnlyMemory<T> memory, SequenceSegment<T>? previous)
     {
         Memory = memory;
-        if(previous is not null)
+        if (previous is not null)
         {
             RunningIndex = previous.RunningIndex + previous.Memory.Length;
             previous.Next = this;

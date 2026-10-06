@@ -49,7 +49,7 @@ public sealed class NetworkMonitor : IAsyncDisposable
 
         _endpoints = [.. endpoints.Distinct()];
 
-        if(_endpoints.Count == 0)
+        if (_endpoints.Count == 0)
         {
             throw new ArgumentException("At least one distinct endpoint must be supplied.", nameof(endpoints));
         }
@@ -75,7 +75,7 @@ public sealed class NetworkMonitor : IAsyncDisposable
     ///<returns>The corresponding endpoint status.</returns>
     public static EndpointStatus DetermineStatus(CircuitState circuitState, double successRatio)
     {
-        if(circuitState == CircuitState.Open)
+        if (circuitState == CircuitState.Open)
         {
             return EndpointStatus.Down;
         }
@@ -103,7 +103,7 @@ public sealed class NetworkMonitor : IAsyncDisposable
     ///<param name="cancellationToken">A token that can abandon the sweep between endpoints.</param>
     public async Task PollOnceAsync(CancellationToken cancellationToken = default)
     {
-        foreach(Uri endpoint in _endpoints)
+        foreach (Uri endpoint in _endpoints)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -113,15 +113,17 @@ public sealed class NetworkMonitor : IAsyncDisposable
             {
                 await breaker.ExecuteAsync(async ct =>
                 {
-                    if(!await _pingSweep.PingAsync(endpoint, ct).ConfigureAwait(false))
+                    if (!await _pingSweep.PingAsync(endpoint, ct).ConfigureAwait(false))
                     {
                         throw new PingSweepFailedSignal();
                     }
                 }, cancellationToken).ConfigureAwait(false);
-            } catch(PingSweepFailedSignal)
+            }
+            catch (PingSweepFailedSignal)
             {
                 // Expected: the ping failed; the circuit breaker has already recorded the failure.
-            } catch(CircuitBreakerOpenException)
+            }
+            catch (CircuitBreakerOpenException)
             {
                 // Expected: the circuit is already open for this endpoint, so no ping was attempted.
             }
@@ -129,7 +131,7 @@ public sealed class NetworkMonitor : IAsyncDisposable
             EndpointStatus previous = _lastStatus[endpoint];
             EndpointStatus current = DetermineStatus(breaker.State, _healthTracker.GetSuccessRatio(endpoint));
 
-            if(current != previous)
+            if (current != previous)
             {
                 _lastStatus[endpoint] = current;
                 await _eventBus.PublishAsync(new EndpointStatusChangedEvent(endpoint, previous, current, DateTimeOffset.UtcNow), cancellationToken).ConfigureAwait(false);

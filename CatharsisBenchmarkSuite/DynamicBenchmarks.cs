@@ -19,7 +19,7 @@ public class FlexibleEntityBenchmarks
         Dictionary<string, object?> storage = new();
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             storage["Value"] = i;
             sum += (int)storage["Value"]!;
@@ -34,7 +34,7 @@ public class FlexibleEntityBenchmarks
         FlexibleEntity entity = new();
         int sum = 0;
 
-        for(int i = 0; i < CallCount; i++)
+        for (int i = 0; i < CallCount; i++)
         {
             entity.Set("Value", i);
             sum += entity.Get<int>("Value");

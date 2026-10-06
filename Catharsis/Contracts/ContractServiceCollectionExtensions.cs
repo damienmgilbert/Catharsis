@@ -87,30 +87,30 @@ public static class ContractServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(serviceType);
         ArgumentNullException.ThrowIfNull(decoratorType);
 
-        if(decoratorType.IsAbstract || !serviceType.IsAssignableFrom(decoratorType))
+        if (decoratorType.IsAbstract || !serviceType.IsAssignableFrom(decoratorType))
         {
             throw new ArgumentException($"{decoratorType.FullName} must be a concrete implementation of {serviceType.FullName}.", nameof(decoratorType));
         }
 
         int index = -1;
 
-        for(int i = services.Count - 1; i >= 0; i--)
+        for (int i = services.Count - 1; i >= 0; i--)
         {
-            if(services[i].ServiceType == serviceType)
+            if (services[i].ServiceType == serviceType)
             {
                 index = i;
                 break;
             }
         }
 
-        if(index < 0)
+        if (index < 0)
         {
             throw new InvalidOperationException($"No registration of {serviceType.FullName} exists to decorate.");
         }
 
         ServiceDescriptor original = services[index];
 
-        if(original.IsKeyedService)
+        if (original.IsKeyedService)
         {
             throw new InvalidOperationException("Keyed services cannot be decorated.");
         }
@@ -144,7 +144,7 @@ public static class ContractServiceCollectionExtensions
     #region Private methods
     static IServiceCollection Register(IServiceCollection services, IEnumerable<ServiceRegistration> registrations, IEnumerable<DecoratorRegistration> decorators)
     {
-        foreach(ServiceRegistration registration in registrations)
+        foreach (ServiceRegistration registration in registrations)
         {
             Type implementation = registration.ImplementationType;
 
@@ -153,7 +153,7 @@ public static class ContractServiceCollectionExtensions
                 : new ServiceDescriptor(registration.ServiceType, implementation, registration.Lifetime));
         }
 
-        foreach(DecoratorRegistration decorator in decorators.OrderBy(static d => d.Order))
+        foreach (DecoratorRegistration decorator in decorators.OrderBy(static d => d.Order))
         {
             services.AddDecorator(decorator.ServiceType, decorator.DecoratorType);
         }
@@ -163,12 +163,12 @@ public static class ContractServiceCollectionExtensions
 
     static object CreateInner(IServiceProvider provider, ServiceDescriptor original)
     {
-        if(original.ImplementationInstance is not null)
+        if (original.ImplementationInstance is not null)
         {
             return original.ImplementationInstance;
         }
 
-        if(original.ImplementationFactory is not null)
+        if (original.ImplementationFactory is not null)
         {
             return original.ImplementationFactory(provider);
         }

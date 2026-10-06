@@ -20,7 +20,7 @@ public sealed class AsyncManualResetEvent
     {
         _tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        if(initialState)
+        if (initialState)
         {
             _tcs.TrySetResult();
         }
@@ -36,16 +36,16 @@ public sealed class AsyncManualResetEvent
     ///</summary>
     public void Reset()
     {
-        while(true)
+        while (true)
         {
             TaskCompletionSource current = _tcs;
 
-            if(!current.Task.IsCompleted)
+            if (!current.Task.IsCompleted)
             {
                 return;
             }
 
-            if(Interlocked.CompareExchange(ref _tcs, new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously), current) == current)
+            if (Interlocked.CompareExchange(ref _tcs, new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously), current) == current)
             {
                 return;
             }

@@ -69,7 +69,7 @@ public class WeightedRandomPickerTests
         picker.Add("a", 1).Add("b", 2).Add("c", 3);
         Random random = new(123);
 
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             string picked = picker.Pick(random);
             Assert.IsTrue(picked is "a" or "b" or "c");
@@ -85,9 +85,9 @@ public class WeightedRandomPickerTests
 
         int commonCount = 0;
 
-        for(int i = 0; i < 1000; i++)
+        for (int i = 0; i < 1000; i++)
         {
-            if(picker.Pick(random) == "common")
+            if (picker.Pick(random) == "common")
             {
                 commonCount++;
             }

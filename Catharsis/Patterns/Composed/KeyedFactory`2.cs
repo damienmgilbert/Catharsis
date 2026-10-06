@@ -56,7 +56,7 @@ public sealed class KeyedFactory<TKey, T>(IEqualityComparer<TKey>? comparer)
     ///<returns><c>true</c> if the key is registered.</returns>
     public bool TryCreate(TKey key, out T product)
     {
-        if(_creators.TryGet(key, out Func<T>? creator))
+        if (_creators.TryGet(key, out Func<T>? creator))
         {
             product = creator();
             return true;

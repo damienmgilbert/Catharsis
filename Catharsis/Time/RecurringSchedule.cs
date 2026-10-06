@@ -30,7 +30,7 @@ public sealed class RecurringSchedule(DayOfWeek dayOfWeek, TimeOnly timeOfDay, T
         candidateDate = candidateDate.AddDays(daysUntil);
         DateTime candidateLocal = candidateDate.ToDateTime(TimeOfDay);
 
-        if(candidateLocal <= localAfter)
+        if (candidateLocal <= localAfter)
         {
             candidateDate = candidateDate.AddDays(7);
             candidateLocal = candidateDate.ToDateTime(TimeOfDay);

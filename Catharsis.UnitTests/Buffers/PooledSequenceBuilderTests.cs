@@ -65,10 +65,10 @@ public class PooledSequenceBuilderTests
     {
         using PooledSequenceBuilder<byte> builder = new(16);
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             Span<byte> span = builder.GetSpan(16);
-            for(int j = 0; j < 16; j++)
+            for (int j = 0; j < 16; j++)
             {
                 span[j] = (byte)(i * 16 + j);
             }
@@ -79,7 +79,7 @@ public class PooledSequenceBuilderTests
         ReadOnlySequence<byte> sequence = builder.Build();
         byte[] result = sequence.ToArray();
 
-        for(int i = 0; i < 80; i++)
+        for (int i = 0; i < 80; i++)
         {
             Assert.AreEqual((byte)i, result[i], $"Mismatch at index {i}.");
         }
@@ -94,10 +94,10 @@ public class PooledSequenceBuilderTests
         using PooledSequenceBuilder<byte> builder = new(16);
 
         // Write enough data to span multiple segments
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             Span<byte> span = builder.GetSpan(16);
-            for(int j = 0; j < 16; j++)
+            for (int j = 0; j < 16; j++)
             {
                 span[j] = (byte)(i * 16 + j);
             }

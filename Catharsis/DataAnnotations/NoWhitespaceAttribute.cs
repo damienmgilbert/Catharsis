@@ -24,14 +24,14 @@ public sealed class NoWhitespaceAttribute : ValidationAttribute
     ///<inheritdoc/>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if(value is null or string { Length: 0 })
+        if (value is null or string { Length: 0 })
         {
             return ValidationResult.Success;
         }
 
-        if((value is not string text) || text.Any(char.IsWhiteSpace))
+        if ((value is not string text) || text.Any(char.IsWhiteSpace))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

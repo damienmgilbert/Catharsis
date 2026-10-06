@@ -21,7 +21,7 @@ public sealed record ComponentVerb(string Text, Action Action, string? Descripti
     ///</exception>
     public void Invoke()
     {
-        if(!Enabled)
+        if (!Enabled)
         {
             throw new InvalidOperationException($"The verb '{Text}' is not currently enabled.");
         }

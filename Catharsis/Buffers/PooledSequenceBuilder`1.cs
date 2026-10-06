@@ -49,7 +49,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
     void EnsureBuffer(int sizeHint)
     {
         int required = Math.Max(sizeHint, 1);
-        if((_currentBuffer is not null) && (_currentOffset + required <= _currentBuffer.Length))
+        if ((_currentBuffer is not null) && (_currentOffset + required <= _currentBuffer.Length))
         {
             return;
         }
@@ -62,12 +62,13 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
 
     void FlushCurrent()
     {
-        if((_currentBuffer is not null) && (_currentOffset > 0))
+        if ((_currentBuffer is not null) && (_currentOffset > 0))
         {
             _segments.Add(new PooledSegment(_currentBuffer, _currentOffset));
             _currentBuffer = null;
             _currentOffset = 0;
-        } else if((_currentBuffer is not null) && (_currentOffset == 0))
+        }
+        else if ((_currentBuffer is not null) && (_currentOffset == 0))
         {
             _pool.Return(_currentBuffer);
             _currentBuffer = null;
@@ -76,14 +77,14 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
 
     void ReturnSegments()
     {
-        foreach(PooledSegment seg in _segments)
+        foreach (PooledSegment seg in _segments)
         {
             _pool.Return(seg.Array);
         }
 
         _segments.Clear();
 
-        if(_currentBuffer is not null)
+        if (_currentBuffer is not null)
         {
             _pool.Return(_currentBuffer);
             _currentBuffer = null;
@@ -99,7 +100,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         Guard.IsGreaterThanOrEqualTo(count, 0);
 
-        if((_currentBuffer is null) || (_currentOffset + count > _currentBuffer.Length))
+        if ((_currentBuffer is null) || (_currentOffset + count > _currentBuffer.Length))
         {
             ThrowHelper.ThrowArgumentOutOfRangeException(nameof(count), "Cannot advance past the end of the current buffer.");
         }
@@ -117,12 +118,12 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         FlushCurrent();
 
-        if(_segments.Count == 0)
+        if (_segments.Count == 0)
         {
             return ReadOnlySequence<T>.Empty;
         }
 
-        if(_segments.Count == 1)
+        if (_segments.Count == 1)
         {
             return new ReadOnlySequence<T>(_segments[0].Array, 0, _segments[0].Length);
         }
@@ -130,7 +131,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         SequenceSegment<T>? first = null;
         SequenceSegment<T>? last = null;
 
-        foreach(PooledSegment seg in _segments)
+        foreach (PooledSegment seg in _segments)
         {
             SequenceSegment<T> node = new(seg.Array.AsMemory(0, seg.Length), last);
             first ??= node;
@@ -143,7 +144,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -188,7 +189,7 @@ public sealed class PooledSequenceBuilder<T> : IBufferWriter<T>, IDisposable
         get
         {
             long total = 0;
-            foreach(PooledSegment seg in _segments)
+            foreach (PooledSegment seg in _segments)
             {
                 total += seg.Length;
             }

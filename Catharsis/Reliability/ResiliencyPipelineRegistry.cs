@@ -55,13 +55,13 @@ public sealed class ResiliencyPipelineRegistry
     ///</summary>
     static bool TryCastCached<TResult>(object? cached, out TResult result)
     {
-        if(cached is TResult typed)
+        if (cached is TResult typed)
         {
             result = typed;
             return true;
         }
 
-        if((cached is null) && (default(TResult) is null))
+        if ((cached is null) && (default(TResult) is null))
         {
             result = default!;
             return true;
@@ -79,7 +79,7 @@ public sealed class ResiliencyPipelineRegistry
     ///</summary>
     async Task PublishIfChangedAsync(string name, PipelineRegistration registration, CancellationToken cancellationToken)
     {
-        if(registration.CircuitBreaker is null)
+        if (registration.CircuitBreaker is null)
         {
             return;
         }
@@ -87,11 +87,11 @@ public sealed class ResiliencyPipelineRegistry
         CircuitState currentState = registration.CircuitBreaker.State;
         CircuitState previousState;
 
-        lock(registration.Gate)
+        lock (registration.Gate)
         {
             previousState = registration.LastPublishedState;
 
-            if(currentState == previousState)
+            if (currentState == previousState)
             {
                 return;
             }
@@ -125,7 +125,7 @@ public sealed class ResiliencyPipelineRegistry
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(operation);
 
-        if(!_pipelines.TryGetValue(name, out PipelineRegistration? registration))
+        if (!_pipelines.TryGetValue(name, out PipelineRegistration? registration))
         {
             throw new InvalidOperationException($"No resiliency pipeline is registered under the name '{name}'.");
         }
@@ -135,15 +135,17 @@ public sealed class ResiliencyPipelineRegistry
             TResult result = await registration.Pipeline.ExecuteAsync(operation, cancellationToken).ConfigureAwait(false);
             _lastKnownGood.Set(name, result);
             return result;
-        } catch(Exception ex) when(ex is not OperationCanceledException)
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            if(_lastKnownGood.TryGetValue(name, out object? cached) && TryCastCached(cached, out TResult staleResult))
+            if (_lastKnownGood.TryGetValue(name, out object? cached) && TryCastCached(cached, out TResult staleResult))
             {
                 return staleResult;
             }
 
             throw;
-        } finally
+        }
+        finally
         {
             // Uses CancellationToken.None: the transition already happened (or didn't) regardless of whether
             // cancellationToken itself was signaled, and publishing must not be defeated by that same cancellation.

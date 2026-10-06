@@ -59,19 +59,19 @@ public sealed class IntervalTree<T> where T : IComparable<T>
 
     static void FindOverlapping(Node? node, Interval<T> query, List<Interval<T>> results)
     {
-        if(node is null || node.MaxEnd.CompareTo(query.Start) < 0)
+        if (node is null || node.MaxEnd.CompareTo(query.Start) < 0)
         {
             return;
         }
 
         FindOverlapping(node.Left, query, results);
 
-        if(node.Interval.Overlaps(query))
+        if (node.Interval.Overlaps(query))
         {
             results.Add(node.Interval);
         }
 
-        if(node.Interval.Start.CompareTo(query.End) <= 0)
+        if (node.Interval.Start.CompareTo(query.End) <= 0)
         {
             FindOverlapping(node.Right, query, results);
         }
@@ -79,15 +79,16 @@ public sealed class IntervalTree<T> where T : IComparable<T>
 
     static Node Insert(Node? node, Interval<T> interval)
     {
-        if(node is null)
+        if (node is null)
         {
             return new Node(interval);
         }
 
-        if(interval.Start.CompareTo(node.Interval.Start) < 0)
+        if (interval.Start.CompareTo(node.Interval.Start) < 0)
         {
             node.Left = Insert(node.Left, interval);
-        } else
+        }
+        else
         {
             node.Right = Insert(node.Right, interval);
         }
@@ -100,12 +101,12 @@ public sealed class IntervalTree<T> where T : IComparable<T>
     {
         T max = node.Interval.End;
 
-        if(node.Left is not null && node.Left.MaxEnd.CompareTo(max) > 0)
+        if (node.Left is not null && node.Left.MaxEnd.CompareTo(max) > 0)
         {
             max = node.Left.MaxEnd;
         }
 
-        if(node.Right is not null && node.Right.MaxEnd.CompareTo(max) > 0)
+        if (node.Right is not null && node.Right.MaxEnd.CompareTo(max) > 0)
         {
             max = node.Right.MaxEnd;
         }

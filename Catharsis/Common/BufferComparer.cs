@@ -19,10 +19,10 @@ public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> w
     public static int Compare(ReadOnlySpan<T> x, ReadOnlySpan<T> y)
     {
         int minLength = Math.Min(x.Length, y.Length);
-        for(int i = 0; i < minLength; i++)
+        for (int i = 0; i < minLength; i++)
         {
             int cmp = x[i].CompareTo(y[i]);
-            if(cmp != 0)
+            if (cmp != 0)
             {
                 return cmp;
             }
@@ -38,17 +38,17 @@ public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> w
     ///<returns>A negative value if x &lt; y, zero if equal, positive if x &gt; y.</returns>
     public int Compare(T[]? x, T[]? y)
     {
-        if(ReferenceEquals(x, y))
+        if (ReferenceEquals(x, y))
         {
             return 0;
         }
 
-        if(x is null)
+        if (x is null)
         {
             return -1;
         }
 
-        if(y is null)
+        if (y is null)
         {
             return 1;
         }
@@ -72,12 +72,12 @@ public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> w
     ///<returns><c>true</c> if both arrays have equal length and elements; otherwise <c>false</c>.</returns>
     public bool Equals(T[]? x, T[]? y)
     {
-        if(ReferenceEquals(x, y))
+        if (ReferenceEquals(x, y))
         {
             return true;
         }
 
-        if((x is null) || (y is null))
+        if ((x is null) || (y is null))
         {
             return false;
         }
@@ -93,7 +93,7 @@ public sealed class BufferComparer<T> : IEqualityComparer<T[]>, IComparer<T[]> w
     public static int GetHashCode(ReadOnlySpan<T> span)
     {
         HashCode hash = new();
-        foreach(T item in span)
+        foreach (T item in span)
         {
             hash.Add(item);
         }

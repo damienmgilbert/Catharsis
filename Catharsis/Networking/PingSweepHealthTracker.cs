@@ -44,15 +44,17 @@ public sealed class PingSweepHealthTracker(EndpointHealthTracker healthTracker, 
             using Ping ping = new();
             PingReply reply = await ping.SendPingAsync(endpoint.Host, _timeout, cancellationToken: cancellationToken).ConfigureAwait(false);
             success = reply.Status == IPStatus.Success;
-        } catch(PingException)
+        }
+        catch (PingException)
         {
             success = false;
         }
 
-        if(success)
+        if (success)
         {
             _healthTracker.RecordSuccess(endpoint);
-        } else
+        }
+        else
         {
             _healthTracker.RecordFailure(endpoint);
         }
@@ -75,7 +77,7 @@ public sealed class PingSweepHealthTracker(EndpointHealthTracker healthTracker, 
         bool[] results = await Task.WhenAll(endpointArray.Select(endpoint => PingAsync(endpoint, cancellationToken))).ConfigureAwait(false);
 
         Dictionary<Uri, bool> map = new(endpointArray.Length);
-        for(int index = 0; index < endpointArray.Length; index++)
+        for (int index = 0; index < endpointArray.Length; index++)
         {
             map[endpointArray[index]] = results[index];
         }

@@ -23,7 +23,7 @@ public sealed class ValidatingCollection<T> : Collection<T>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="validator"/> is <c>null</c>.</exception>
     public ValidatingCollection(Predicate<T> validator)
     {
-        if(validator is null)
+        if (validator is null)
         {
             throw new ArgumentNullException(nameof(validator), "Validator predicate must not be null.");
         }
@@ -51,7 +51,7 @@ public sealed class ValidatingCollection<T> : Collection<T>
     #region Private methods
     void ThrowIfInvalid(T item)
     {
-        if(!_validator(item))
+        if (!_validator(item))
         {
             throw new ArgumentException("The item does not satisfy the validation rule.", nameof(item));
         }

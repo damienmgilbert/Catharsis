@@ -15,7 +15,7 @@ public sealed class AsyncBufferLock : IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -68,7 +68,7 @@ public sealed class AsyncBufferLock : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(_semaphore.Wait(0))
+        if (_semaphore.Wait(0))
         {
             handle = new LockHandle(_semaphore);
             return true;
@@ -95,7 +95,7 @@ public sealed class AsyncBufferLock : IDisposable
         #region Public methods
         public void Dispose()
         {
-            if(Interlocked.Exchange(ref _released, 1) == 0)
+            if (Interlocked.Exchange(ref _released, 1) == 0)
             {
                 semaphore.Release();
             }

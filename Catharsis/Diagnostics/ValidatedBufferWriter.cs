@@ -34,7 +34,7 @@ public sealed class ValidatedBufferWriter<T> : IBufferWriter<T>
     ///<inheritdoc/>
     public void Advance(int count)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsGreaterThanOrEqualTo(count, 0);
             Guard.IsLessThanOrEqualTo(count, _lastSpanSize - _pendingAdvance, nameof(count));
@@ -48,14 +48,14 @@ public sealed class ValidatedBufferWriter<T> : IBufferWriter<T>
     ///<inheritdoc/>
     public Memory<T> GetMemory(int sizeHint = 0)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsGreaterThanOrEqualTo(sizeHint, 0);
         }
 
         Memory<T> memory = _inner.GetMemory(sizeHint);
 
-        if(Mode == ValidationMode.Full)
+        if (Mode == ValidationMode.Full)
         {
             Guard.IsGreaterThan(memory.Length, 0, "The inner writer returned an empty memory block.");
         }
@@ -68,14 +68,14 @@ public sealed class ValidatedBufferWriter<T> : IBufferWriter<T>
     ///<inheritdoc/>
     public Span<T> GetSpan(int sizeHint = 0)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsGreaterThanOrEqualTo(sizeHint, 0);
         }
 
         Span<T> span = _inner.GetSpan(sizeHint);
 
-        if(Mode == ValidationMode.Full)
+        if (Mode == ValidationMode.Full)
         {
             Guard.IsGreaterThan(span.Length, 0, "The inner writer returned an empty span.");
         }

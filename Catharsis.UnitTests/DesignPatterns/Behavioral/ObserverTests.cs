@@ -114,7 +114,7 @@ public class ObserverTests
         string obj = "many";
         int invocationCount = 0;
         Action<string>[] observers = new Action<string>[100];
-        for(int i = 0; i < observers.Length; i++)
+        for (int i = 0; i < observers.Length; i++)
         {
             observers[i] = x => invocationCount++;
         }

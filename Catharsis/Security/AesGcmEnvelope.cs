@@ -47,7 +47,7 @@ public sealed class AesGcmEnvelope(byte[] key) : IDisposable
     ///<exception cref="CryptographicException">The tag does not match, or the envelope has been tampered with.</exception>
     public byte[] Decrypt(ReadOnlySpan<byte> envelope)
     {
-        if(envelope.Length < (NonceSize + TagSize))
+        if (envelope.Length < (NonceSize + TagSize))
         {
             throw new ArgumentException("Envelope is too short to contain a nonce and tag.", nameof(envelope));
         }

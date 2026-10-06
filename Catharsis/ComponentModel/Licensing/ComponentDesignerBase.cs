@@ -36,12 +36,12 @@ public abstract class ComponentDesignerBase : IDisposable
     ///</param>
     protected virtual void Dispose(bool disposing)
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
 
-        if(disposing)
+        if (disposing)
         {
             Context = null;
             ActionList = null;
@@ -103,7 +103,7 @@ public abstract class ComponentDesignerBase : IDisposable
         ArgumentNullException.ThrowIfNull(component);
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(Context is not null)
+        if (Context is not null)
         {
             throw new InvalidOperationException("The designer has already been initialized.");
         }

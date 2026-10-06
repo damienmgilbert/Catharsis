@@ -17,7 +17,7 @@ public static class TaskExtensions
         {
             await task.ConfigureAwait(false);
         }
-        catch(Exception ex) when(onException is not null)
+        catch (Exception ex) when (onException is not null)
         {
             onException(ex);
         }
@@ -41,7 +41,7 @@ public static class TaskExtensions
     ///<exception cref="ArgumentNullException"><paramref name="task"/> is <c>null</c>.</exception>
     public static void FireAndForget(this Task task, Action<Exception>? onException = null)
     {
-        if(task is null)
+        if (task is null)
         {
             throw new ArgumentNullException(nameof(task), "Task must not be null.");
         }
@@ -58,18 +58,18 @@ public static class TaskExtensions
     ///<exception cref="ArgumentNullException"><paramref name="tasks"/> is <c>null</c>.</exception>
     public static async Task WhenAllOrFirstException(this IEnumerable<Task> tasks)
     {
-        if(tasks is null)
+        if (tasks is null)
         {
             throw new ArgumentNullException(nameof(tasks), "Tasks must not be null.");
         }
 
         List<Task> remaining = [.. tasks];
 
-        while(remaining.Count > 0)
+        while (remaining.Count > 0)
         {
             Task completed = await Task.WhenAny(remaining).ConfigureAwait(false);
 
-            if(completed.IsFaulted)
+            if (completed.IsFaulted)
             {
                 await completed.ConfigureAwait(false);
             }

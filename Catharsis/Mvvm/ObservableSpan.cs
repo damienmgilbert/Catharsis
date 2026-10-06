@@ -56,7 +56,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -87,7 +87,7 @@ public class ObservableSpan<T> : ObservableObject, IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if(data.Length > _buffer.Length)
+        if (data.Length > _buffer.Length)
         {
             _pool.Return(_buffer);
             _buffer = _pool.Rent(data.Length);

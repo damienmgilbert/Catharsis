@@ -79,7 +79,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     {
         Attribute[] result = new Attribute[collection.Count];
 
-        for(int i = 0; i < collection.Count; i++)
+        for (int i = 0; i < collection.Count; i++)
         {
             result[i] = collection[i];
         }
@@ -102,7 +102,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     ///<inheritdoc/>
     public override void ResetValue(object component)
     {
-        if((_defaultValue is not null) && (_setter is not null))
+        if ((_defaultValue is not null) && (_setter is not null))
         {
             SetValue(component, _defaultValue);
         }
@@ -113,7 +113,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     {
         ArgumentNullException.ThrowIfNull(component);
 
-        if(_setter is null)
+        if (_setter is null)
         {
             throw new InvalidOperationException($"Property '{Name}' is read-only.");
         }
@@ -125,7 +125,7 @@ public sealed class DynamicPropertyDescriptor : PropertyDescriptor
     ///<inheritdoc/>
     public override bool ShouldSerializeValue(object component)
     {
-        if(_defaultValue is null)
+        if (_defaultValue is null)
         {
             return true;
         }

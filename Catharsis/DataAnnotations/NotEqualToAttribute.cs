@@ -34,17 +34,17 @@ public sealed class NotEqualToAttribute : ValidationAttribute
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         PropertyInfo? otherPropertyInfo = validationContext.ObjectType.GetProperty(OtherProperty);
-        if(otherPropertyInfo is null)
+        if (otherPropertyInfo is null)
         {
             return new ValidationResult($"Unknown property: {OtherProperty}.");
         }
 
         object? otherValue = otherPropertyInfo.GetValue(validationContext.ObjectInstance);
 
-        if(Equals(value, otherValue))
+        if (Equals(value, otherValue))
         {
             string otherDisplayName = OtherPropertyDisplayName ?? OtherProperty;
-            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, otherDisplayName), (validationContext.MemberName is not null) ? [ validationContext.MemberName ] : null);
+            return new ValidationResult(string.Format(CultureInfo.CurrentCulture, ErrorMessageString, validationContext.DisplayName, otherDisplayName), (validationContext.MemberName is not null) ? [validationContext.MemberName] : null);
         }
 
         return ValidationResult.Success;

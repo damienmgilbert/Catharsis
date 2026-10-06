@@ -21,14 +21,14 @@ public sealed class RegexReplacer
     ///<exception cref="ArgumentNullException"><paramref name="input"/> is <c>null</c>.</exception>
     public string Apply(string input)
     {
-        if(input is null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }
 
         string result = input;
 
-        foreach((Regex pattern, string replacement) in _rules)
+        foreach ((Regex pattern, string replacement) in _rules)
         {
             result = pattern.Replace(result, replacement);
         }
@@ -46,21 +46,21 @@ public sealed class RegexReplacer
         return this;
     }
 
-        ///<summary>
-///Appends a replacement rule using a pre-compiled <see cref="Regex"/> instance.
-///</summary>
+    ///<summary>
+    ///Appends a replacement rule using a pre-compiled <see cref="Regex"/> instance.
+    ///</summary>
     ///<param name="pattern">The regex pattern to match.</param>
     ///<param name="replacement">The replacement string (supports group references such as <c>$1</c>).</param>
     ///<returns>The current <see cref="RegexReplacer"/> instance for fluent chaining.</returns>
     ///<exception cref="ArgumentNullException">
     public RegexReplacer Replace(Regex pattern, string replacement)
     {
-        if(pattern is null)
+        if (pattern is null)
         {
             throw new ArgumentNullException(nameof(pattern), "Pattern must not be null.");
         }
 
-        if(replacement is null)
+        if (replacement is null)
         {
             throw new ArgumentNullException(nameof(replacement), "Replacement must not be null.");
         }
@@ -82,12 +82,12 @@ public sealed class RegexReplacer
     ///<exception cref="ArgumentNullException">
     public RegexReplacer Replace(string pattern, string replacement, RegexOptions options = RegexOptions.None)
     {
-        if(pattern is null)
+        if (pattern is null)
         {
             throw new ArgumentNullException(nameof(pattern), "Pattern must not be null.");
         }
 
-        if(replacement is null)
+        if (replacement is null)
         {
             throw new ArgumentNullException(nameof(replacement), "Replacement must not be null.");
         }

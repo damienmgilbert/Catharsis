@@ -46,7 +46,7 @@ public sealed partial class SequenceParserService
 
         SequenceParseStatus status = _parser.TryParse(sequence, out consumed, out examined);
 
-        switch(status)
+        switch (status)
         {
             case SequenceParseStatus.Success:
                 SuccessCount++;
@@ -73,15 +73,16 @@ public sealed partial class SequenceParserService
     {
         int messageCount = 0;
 
-        while(sequence.Length > 0)
+        while (sequence.Length > 0)
         {
             SequenceParseStatus status = Parse(in sequence, out SequencePosition consumed, out SequencePosition examined);
 
-            if(status == SequenceParseStatus.Success)
+            if (status == SequenceParseStatus.Success)
             {
                 messageCount++;
                 sequence = sequence.Slice(consumed);
-            } else
+            }
+            else
             {
                 break;
             }

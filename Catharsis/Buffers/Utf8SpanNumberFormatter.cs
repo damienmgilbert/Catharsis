@@ -23,11 +23,11 @@ public static class Utf8SpanNumberFormatter
 
         int size = InitialBufferSize;
 
-        while(true)
+        while (true)
         {
             Span<byte> span = destination.GetSpan(size);
 
-            if(tryFormat(value, span, out int bytesWritten, format))
+            if (tryFormat(value, span, out int bytesWritten, format))
             {
                 destination.Advance(bytesWritten);
                 return bytesWritten;

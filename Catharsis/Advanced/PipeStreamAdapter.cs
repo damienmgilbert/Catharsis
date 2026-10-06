@@ -40,7 +40,7 @@ public sealed class PipeStreamAdapter : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -50,7 +50,7 @@ public sealed class PipeStreamAdapter : IAsyncDisposable
         await Reader.CompleteAsync().ConfigureAwait(false);
         await Writer.CompleteAsync().ConfigureAwait(false);
 
-        if(!_leaveOpen)
+        if (!_leaveOpen)
         {
             await _stream.DisposeAsync().ConfigureAwait(false);
         }

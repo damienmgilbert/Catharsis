@@ -71,7 +71,7 @@ public class SseEventStreamWriterTests
     #region Private methods
     static async IAsyncEnumerable<SseItem<T>> CreateItems<T>(params SseItem<T>[] items)
     {
-        foreach(SseItem<T> item in items)
+        foreach (SseItem<T> item in items)
         {
             yield return item;
             await Task.Yield();

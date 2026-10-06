@@ -16,11 +16,12 @@ public readonly struct TimeOnlyRange : IEquatable<TimeOnlyRange>
     ///<param name="end">The other bound of the range.</param>
     public TimeOnlyRange(TimeOnly start, TimeOnly end)
     {
-        if(start > end)
+        if (start > end)
         {
             Start = end;
             End = start;
-        } else
+        }
+        else
         {
             Start = start;
             End = end;
@@ -64,7 +65,7 @@ public readonly struct TimeOnlyRange : IEquatable<TimeOnlyRange>
     ///<returns>The intersecting range, or <c>null</c> if no overlap exists.</returns>
     public TimeOnlyRange? Intersect(TimeOnlyRange other)
     {
-        if(!Overlaps(other))
+        if (!Overlaps(other))
         {
             return null;
         }

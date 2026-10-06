@@ -16,11 +16,12 @@ public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
     ///<param name="end">The other bound of the range.</param>
     public DateOnlyRange(DateOnly start, DateOnly end)
     {
-        if(start > end)
+        if (start > end)
         {
             Start = end;
             End = start;
-        } else
+        }
+        else
         {
             Start = start;
             End = end;
@@ -64,7 +65,7 @@ public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
     ///<returns>The intersecting range, or <c>null</c> if no overlap exists.</returns>
     public DateOnlyRange? Intersect(DateOnlyRange other)
     {
-        if(!Overlaps(other))
+        if (!Overlaps(other))
         {
             return null;
         }
@@ -85,7 +86,7 @@ public readonly struct DateOnlyRange : IEquatable<DateOnlyRange>
     ///<returns>A sequence of every date in the range.</returns>
     public IEnumerable<DateOnly> ToDates()
     {
-        for(DateOnly date = Start; date <= End; date = date.AddDays(1))
+        for (DateOnly date = Start; date <= End; date = date.AddDays(1))
         {
             yield return date;
         }

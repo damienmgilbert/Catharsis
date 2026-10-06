@@ -26,7 +26,7 @@ public sealed class GraphemeClusterEnumerator(string value) : IEnumerable<string
     {
         TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(_value);
 
-        while(enumerator.MoveNext())
+        while (enumerator.MoveNext())
         {
             yield return (string)enumerator.Current;
         }

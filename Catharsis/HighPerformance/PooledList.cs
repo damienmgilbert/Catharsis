@@ -66,7 +66,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     #region Private methods
     void EnsureCapacity(int required)
     {
-        if(required <= _items.Length)
+        if (required <= _items.Length)
         {
             return;
         }
@@ -103,7 +103,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     ///<inheritdoc/>
     public void Clear()
     {
-        if(RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
         {
             Array.Clear(_items, 0, _count);
         }
@@ -119,7 +119,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     ///<inheritdoc/>
     public void Dispose()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -134,7 +134,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     ///<inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
-        for(int i = 0; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
             yield return _items[i];
         }
@@ -150,7 +150,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
         Guard.IsInRange(index, 0, _count + 1);
         EnsureCapacity(_count + 1);
 
-        if(index < _count)
+        if (index < _count)
         {
             Array.Copy(_items, index, _items, index + 1, _count - index);
         }
@@ -163,7 +163,7 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
     public bool Remove(T item)
     {
         int index = IndexOf(item);
-        if(index < 0)
+        if (index < 0)
         {
             return false;
         }
@@ -179,12 +179,12 @@ public sealed class PooledList<T> : IList<T>, IReadOnlyList<T>, IDisposable
         Guard.IsInRange(index, 0, _count);
 
         _count--;
-        if(index < _count)
+        if (index < _count)
         {
             Array.Copy(_items, index + 1, _items, index, _count - index);
         }
 
-        if(RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
         {
             _items[_count] = default!;
         }

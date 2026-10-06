@@ -68,7 +68,7 @@ public sealed class EventCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     ///<returns><c>true</c> if the item was found and removed; otherwise <c>false</c>.</returns>
     public bool Remove(T item)
     {
-        if(!_items.Remove(item))
+        if (!_items.Remove(item))
         {
             return false;
         }

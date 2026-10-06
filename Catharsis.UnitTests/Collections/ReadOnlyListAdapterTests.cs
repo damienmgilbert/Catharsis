@@ -112,7 +112,7 @@ public class ReadOnlyListAdapterTests
         IEnumerable adapter = new ReadOnlyListAdapter<int>(source);
         List<object?> items = [];
 
-        foreach(object? item in adapter)
+        foreach (object? item in adapter)
         {
             items.Add(item);
         }

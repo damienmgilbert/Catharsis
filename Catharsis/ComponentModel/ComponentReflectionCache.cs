@@ -93,22 +93,22 @@ public sealed class ComponentReflectionCache
 
         EventDescriptorCollection all = GetEvents(componentType);
 
-        if((attributes is null) || (attributes.Length == 0))
+        if ((attributes is null) || (attributes.Length == 0))
         {
             return all;
         }
 
         List<EventDescriptor> filtered = [];
 
-        foreach(EventDescriptor evt in all)
+        foreach (EventDescriptor evt in all)
         {
-            if(evt.Attributes.Matches(attributes))
+            if (evt.Attributes.Matches(attributes))
             {
                 filtered.Add(evt);
             }
         }
 
-        return new EventDescriptorCollection([ .. filtered ]);
+        return new EventDescriptorCollection([.. filtered]);
     }
 
     ///<summary>
@@ -142,22 +142,22 @@ public sealed class ComponentReflectionCache
 
         PropertyDescriptorCollection all = GetProperties(componentType);
 
-        if((attributes is null) || (attributes.Length == 0))
+        if ((attributes is null) || (attributes.Length == 0))
         {
             return all;
         }
 
         List<PropertyDescriptor> filtered = [];
 
-        foreach(PropertyDescriptor prop in all)
+        foreach (PropertyDescriptor prop in all)
         {
-            if(prop.Attributes.Matches(attributes))
+            if (prop.Attributes.Matches(attributes))
             {
                 filtered.Add(prop);
             }
         }
 
-        return new PropertyDescriptorCollection([ .. filtered ]);
+        return new PropertyDescriptorCollection([.. filtered]);
     }
 
     ///<summary>

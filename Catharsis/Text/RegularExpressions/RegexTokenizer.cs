@@ -22,7 +22,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="pattern"/> is <c>null</c>.</exception>
     public RegexTokenizer(Regex pattern)
     {
-        if(pattern is null)
+        if (pattern is null)
         {
             throw new ArgumentNullException(nameof(pattern), "Pattern must not be null.");
         }
@@ -42,7 +42,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="pattern"/> is <c>null</c>.</exception>
     public RegexTokenizer(string pattern, RegexOptions options = RegexOptions.None)
     {
-        if(pattern is null)
+        if (pattern is null)
         {
             throw new ArgumentNullException(nameof(pattern), "Pattern must not be null.");
         }
@@ -65,7 +65,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="input"/> is <c>null</c>.</exception>
     public int Count(string input)
     {
-        if(input is null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }
@@ -84,7 +84,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="input"/> is <c>null</c>.</exception>
     public string[] Split(string input)
     {
-        if(input is null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }
@@ -101,7 +101,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
     ///<exception cref="ArgumentNullException">Thrown when <paramref name="input"/> is <c>null</c>.</exception>
     public IReadOnlyList<MatchResult> Tokenize(string input)
     {
-        if(input is null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input), "Input must not be null.");
         }
@@ -109,7 +109,7 @@ public sealed class RegexTokenizer : IEnumerable<MatchResult>
         MatchCollection matches = _pattern.Matches(input);
         List<MatchResult> tokens = [with(matches.Count)];
 
-        foreach(Match match in matches)
+        foreach (Match match in matches)
         {
             tokens.Add(new MatchResult(match.Value, match.Index, match.Length));
         }

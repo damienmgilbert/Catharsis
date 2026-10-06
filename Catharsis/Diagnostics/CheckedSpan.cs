@@ -35,7 +35,7 @@ public readonly ref struct CheckedSpan<T>
     {
         get
         {
-            if(Mode >= ValidationMode.BoundsOnly)
+            if (Mode >= ValidationMode.BoundsOnly)
             {
                 Guard.IsInRange(index, 0, _span.Length);
             }
@@ -62,7 +62,7 @@ public readonly ref struct CheckedSpan<T>
     ///<param name="destination">The destination span.</param>
     public readonly void CopyTo(Span<T> destination)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsGreaterThanOrEqualTo(destination.Length, _span.Length);
         }
@@ -84,7 +84,7 @@ public readonly ref struct CheckedSpan<T>
     ///<returns>A new <see cref="CheckedSpan{T}"/> over the slice.</returns>
     public CheckedSpan<T> Slice(int start, int length)
     {
-        if(Mode >= ValidationMode.BoundsOnly)
+        if (Mode >= ValidationMode.BoundsOnly)
         {
             Guard.IsGreaterThanOrEqualTo(start, 0);
             Guard.IsGreaterThanOrEqualTo(length, 0);

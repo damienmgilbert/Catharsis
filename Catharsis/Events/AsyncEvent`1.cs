@@ -87,11 +87,11 @@ public sealed class AsyncEvent<TArgs>
     {
         ImmutableArray<AsyncEventHandler<TArgs>> snapshot = _handlers;
 
-        if(parallel)
+        if (parallel)
         {
             Task[] running = new Task[snapshot.Length];
 
-            for(int i = 0; i < snapshot.Length; i++)
+            for (int i = 0; i < snapshot.Length; i++)
             {
                 running[i] = snapshot[i](sender, args, cancellationToken);
             }
@@ -100,7 +100,7 @@ public sealed class AsyncEvent<TArgs>
             return;
         }
 
-        foreach(AsyncEventHandler<TArgs> handler in snapshot)
+        foreach (AsyncEventHandler<TArgs> handler in snapshot)
         {
             cancellationToken.ThrowIfCancellationRequested();
             await handler(sender, args, cancellationToken).ConfigureAwait(false);
@@ -125,7 +125,7 @@ public sealed class AsyncEvent<TArgs>
     #region Private methods
     void Add(AsyncEventHandler<TArgs> handler)
     {
-        lock(_gate)
+        lock (_gate)
         {
             _handlers = _handlers.Add(handler);
         }
@@ -133,7 +133,7 @@ public sealed class AsyncEvent<TArgs>
 
     void Remove(AsyncEventHandler<TArgs> handler)
     {
-        lock(_gate)
+        lock (_gate)
         {
             _handlers = _handlers.Remove(handler);
         }

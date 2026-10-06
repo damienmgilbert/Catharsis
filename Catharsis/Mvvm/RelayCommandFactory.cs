@@ -30,10 +30,12 @@ public static class RelayCommandFactory
             try
             {
                 await execute();
-            } catch(Exception exception) when(onException is not null)
+            }
+            catch (Exception exception) when (onException is not null)
             {
                 onException(exception);
-            } finally
+            }
+            finally
             {
                 onBusyChanged?.Invoke(false);
             }
@@ -62,10 +64,12 @@ public static class RelayCommandFactory
             try
             {
                 await execute(parameter);
-            } catch(Exception exception) when(onException is not null)
+            }
+            catch (Exception exception) when (onException is not null)
             {
                 onException(exception);
-            } finally
+            }
+            finally
             {
                 onBusyChanged?.Invoke(false);
             }

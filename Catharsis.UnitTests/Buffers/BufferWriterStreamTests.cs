@@ -89,7 +89,7 @@ public class BufferWriterStreamTests
     public void Length_AfterWrite_ReflectsBytesWritten()
     {
         using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
-        byte[] data = [ 1, 2, 3, 4, 5 ];
+        byte[] data = [1, 2, 3, 4, 5];
 
         stream.Write(data, 0, data.Length);
 
@@ -114,7 +114,7 @@ public class BufferWriterStreamTests
     public void Position_Get_ReturnsBytesWritten()
     {
         using BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
-        stream.Write([ 10, 20, 30 ]);
+        stream.Write([10, 20, 30]);
 
         Assert.AreEqual(3L, stream.Position);
     }
@@ -172,7 +172,7 @@ public class BufferWriterStreamTests
         BufferWriterStream stream = new(new ArrayBufferWriter<byte>());
         stream.Dispose();
 
-        Assert.ThrowsExactly<ObjectDisposedException>(() => stream.Write([ 1 ], 0, 1));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => stream.Write([1], 0, 1));
     }
 
     ///<summary>
@@ -183,7 +183,7 @@ public class BufferWriterStreamTests
     {
         ArrayBufferWriter<byte> writer = new();
         using BufferWriterStream stream = new(writer);
-        byte[] data = [ 10, 20, 30, 40, 50 ];
+        byte[] data = [10, 20, 30, 40, 50];
 
         stream.Write(data, 1, 3);
 
@@ -213,9 +213,9 @@ public class BufferWriterStreamTests
         ArrayBufferWriter<byte> writer = new();
         using BufferWriterStream stream = new(writer);
 
-        stream.Write([ 1, 2 ]);
+        stream.Write([1, 2]);
         stream.WriteByte(3);
-        stream.Write([ 4, 5, 6 ]);
+        stream.Write([4, 5, 6]);
 
         Assert.AreEqual(6L, stream.Length);
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4, 5, 6 }, writer.WrittenSpan.ToArray());
@@ -229,7 +229,7 @@ public class BufferWriterStreamTests
     {
         ArrayBufferWriter<byte> writer = new();
         using BufferWriterStream stream = new(writer);
-        ReadOnlySpan<byte> data = [ 1, 2, 3 ];
+        ReadOnlySpan<byte> data = [1, 2, 3];
 
         stream.Write(data);
 
@@ -244,7 +244,7 @@ public class BufferWriterStreamTests
     {
         ArrayBufferWriter<byte> writer = new();
         using BufferWriterStream stream = new(writer);
-        byte[] data = [ 5, 6, 7 ];
+        byte[] data = [5, 6, 7];
 
         await stream.WriteAsync(data, 0, data.Length, CancellationToken.None);
 

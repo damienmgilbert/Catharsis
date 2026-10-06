@@ -37,26 +37,28 @@ public sealed class PipelineChannelBridge : IAsyncDisposable
     {
         try
         {
-            while(true)
+            while (true)
             {
                 ReadResult result = await _pipe.Reader.ReadAsync(stoppingToken).ConfigureAwait(false);
                 ReadOnlySequence<byte> buffer = result.Buffer;
 
-                foreach(ReadOnlyMemory<byte> segment in buffer)
+                foreach (ReadOnlyMemory<byte> segment in buffer)
                 {
                     await _channel.WriteAsync(segment, stoppingToken).ConfigureAwait(false);
                 }
 
                 _pipe.Reader.AdvanceTo(buffer.End);
 
-                if(result.IsCompleted)
+                if (result.IsCompleted)
                 {
                     break;
                 }
             }
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
-        } finally
+        }
+        finally
         {
             await _pipe.Reader.CompleteAsync().ConfigureAwait(false);
             _channel.Complete();
@@ -70,7 +72,7 @@ public sealed class PipelineChannelBridge : IAsyncDisposable
     ///</summary>
     public async ValueTask DisposeAsync()
     {
-        if(_disposed)
+        if (_disposed)
         {
             return;
         }
@@ -82,7 +84,8 @@ public sealed class PipelineChannelBridge : IAsyncDisposable
         try
         {
             await _pumpTask.ConfigureAwait(false);
-        } catch(OperationCanceledException)
+        }
+        catch (OperationCanceledException)
         {
         }
 

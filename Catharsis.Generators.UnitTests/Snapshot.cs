@@ -14,7 +14,7 @@ internal static class Snapshot
         string path = Path.Combine(Path.GetDirectoryName(callerPath)!, "Snapshots", snapshotName);
         string normalized = Normalize(actual);
 
-        if(Environment.GetEnvironmentVariable("UPDATE_SNAPSHOTS") == "1")
+        if (Environment.GetEnvironmentVariable("UPDATE_SNAPSHOTS") == "1")
         {
             File.WriteAllText(path, normalized + "\n");
             return;

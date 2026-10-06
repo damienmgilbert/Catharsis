@@ -52,7 +52,7 @@ public class WindowedIteratorTests
 
         IEnumerable<int> Source()
         {
-            for(int i = 1; i <= 100; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 read++;
                 yield return i;

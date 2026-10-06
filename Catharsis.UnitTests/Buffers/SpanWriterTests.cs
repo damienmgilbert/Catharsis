@@ -116,7 +116,7 @@ public class SpanWriterTests
     [TestMethod]
     public void Skip_AdvancesAndClearsBytes()
     {
-        byte[] data = [ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF ];
+        byte[] data = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
         SpanWriter writer = new(data);
 
         writer.Skip(3);
@@ -140,7 +140,8 @@ public class SpanWriterTests
         {
             writer.Skip(-1);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -157,7 +158,8 @@ public class SpanWriterTests
         {
             writer.Skip(10);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -190,7 +192,8 @@ public class SpanWriterTests
         {
             writer.WriteByte(0x02);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -223,7 +226,8 @@ public class SpanWriterTests
         {
             writer.WriteBytes([1, 2, 3, 4]);
             Assert.Fail("Expected ArgumentOutOfRangeException was not thrown.");
-        } catch(ArgumentOutOfRangeException)
+        }
+        catch (ArgumentOutOfRangeException)
         {
         }
     }
@@ -236,7 +240,7 @@ public class SpanWriterTests
     {
         byte[] data = new byte[10];
         SpanWriter writer = new(data);
-        byte[] source = [ 0xAA, 0xBB, 0xCC ];
+        byte[] source = [0xAA, 0xBB, 0xCC];
 
         writer.WriteBytes(source);
 

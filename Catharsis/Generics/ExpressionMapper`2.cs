@@ -63,13 +63,13 @@ public sealed class ExpressionMapper<TSource, TDest>
         ParameterExpression sourceParameter = ExpressionFactory.Parameter(typeof(TSource), "source");
         List<MemberBinding> bindings = [];
 
-        foreach(PropertyInfo destination in typeof(TDest).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.SetMethod?.IsPublic == true))
+        foreach (PropertyInfo destination in typeof(TDest).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(static p => p.SetMethod?.IsPublic == true))
         {
             Expression? value = null;
 
-            if(_overrides.TryGetValue(destination, out LambdaExpression? mapping))
+            if (_overrides.TryGetValue(destination, out LambdaExpression? mapping))
             {
-                if(mapping is not null)
+                if (mapping is not null)
                 {
                     value = ExpressionComposer.RebindParameters(mapping.Body, mapping.Parameters, [sourceParameter]);
                 }
@@ -78,13 +78,13 @@ public sealed class ExpressionMapper<TSource, TDest>
             {
                 PropertyInfo? match = typeof(TSource).GetProperty(destination.Name, BindingFlags.Public | BindingFlags.Instance);
 
-                if(match?.GetMethod?.IsPublic == true && destination.PropertyType.IsAssignableFrom(match.PropertyType))
+                if (match?.GetMethod?.IsPublic == true && destination.PropertyType.IsAssignableFrom(match.PropertyType))
                 {
                     value = ExpressionFactory.Convert(ExpressionFactory.Property(sourceParameter, match), destination.PropertyType);
                 }
             }
 
-            if(value is not null)
+            if (value is not null)
             {
                 bindings.Add(ExpressionFactory.Bind(destination, value));
             }
@@ -101,7 +101,7 @@ public sealed class ExpressionMapper<TSource, TDest>
 
         Expression body = selector.Body is UnaryExpression { NodeType: ExpressionType.Convert } convert ? convert.Operand : selector.Body;
 
-        if(body is MemberExpression { Member: PropertyInfo property, Expression: ParameterExpression } && property.SetMethod?.IsPublic == true)
+        if (body is MemberExpression { Member: PropertyInfo property, Expression: ParameterExpression } && property.SetMethod?.IsPublic == true)
         {
             return property;
         }
